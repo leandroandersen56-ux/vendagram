@@ -52,6 +52,7 @@ function AppRoutes() {
           <Route index element={<PanelOverview />} />
           <Route path="anuncios" element={<PanelListings />} />
           <Route path="anuncios/novo" element={<CreateListingPanel />} />
+          <Route path="anuncios/editar/:id" element={<EditListingPanel />} />
           <Route path="transacoes" element={<PanelTransactions />} />
           <Route path="carteira" element={<PanelWallet />} />
           <Route path="notificacoes" element={<PanelNotifications />} />
