@@ -55,7 +55,7 @@ export const MOCK_LISTINGS: Listing[] = [
     sellerName: 'GameMaster99',
     sellerRating: 4.8,
     sellerSales: 23,
-    platform: 'freefire',
+    platform: 'free_fire',
     title: 'Conta Free Fire Nível 75 - Full Skin',
     description: 'Conta com todas as skins raras, incluindo Angelical e Lendárias. Level 75, mais de 200 diamantes. Rank Heroico.',
     price: 350,
