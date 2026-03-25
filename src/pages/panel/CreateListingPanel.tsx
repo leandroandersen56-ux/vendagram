@@ -38,8 +38,8 @@ const ACCOUNT_FEATURES: Record<string, string[]> = {
   ],
   instagram: [
     "Sem restrições", "Sem doc vinculado", "Email de criação", "Conta verificada",
-    "2FA ativo", "Monetização ativa", "Página disponível", "Alcance alto",
-    "Conta engajada", "Pronto pra alterar nome"
+    "2FA ativo", "Monetização ativa", "Página disponível", "Conta engajada",
+    "Pronto pra alterar nome", "Podemos negociar"
   ],
   tiktok: [
     "Sem restrições", "Sem doc vinculado", "Email de criação", "Conta verificada",
