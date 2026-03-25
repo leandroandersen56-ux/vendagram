@@ -93,12 +93,21 @@ export default function ListingDetail() {
                   <p className="text-xs text-muted-foreground">+ 10% taxa de segurança (paga pelo vendedor)</p>
                 </div>
 
-                <Link to={`/transaction/${listing.id}`}>
-                  <Button variant="hero" className="w-full py-6 text-base" size="lg">
-                    <ShoppingCart className="h-5 w-5 mr-2" />
-                    Comprar com Segurança
-                  </Button>
-                </Link>
+                <Button
+                  variant="hero"
+                  className="w-full py-6 text-base"
+                  size="lg"
+                  onClick={() => {
+                    if (isAuthenticated) {
+                      navigate(`/transaction/${listing.id}`);
+                    } else {
+                      openAuth(`/transaction/${listing.id}`);
+                    }
+                  }}
+                >
+                  <ShoppingCart className="h-5 w-5 mr-2" />
+                  Comprar com Segurança
+                </Button>
 
                 <Button variant="glass" className="w-full" onClick={handleWhatsAppShare}>
                   <MessageCircle className="h-4 w-4 mr-2" />
