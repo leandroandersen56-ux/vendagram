@@ -86,6 +86,8 @@ const GAME_ITEM_SUGGESTIONS: Record<string, string[]> = {
 
 const NEEDS_NICHO = ["instagram", "tiktok", "youtube", "facebook"];
 const NEEDS_REGION = ["instagram", "tiktok", "facebook", "youtube"];
+const NEEDS_ALCANCE = ["instagram", "facebook"];
+const NEEDS_GENERO = ["instagram"];
 const IS_GAME = ["free_fire", "valorant", "fortnite", "roblox", "clash_royale"];
 
 export default function CreateListing() {
