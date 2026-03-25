@@ -56,6 +56,14 @@ export default function PanelListings() {
       setLoading(false);
       return;
     }
+
+    // Claim demo listings on first access
+    const DEMO_SELLER = "00000000-0000-0000-0000-000000000001";
+    await supabase
+      .from("listings")
+      .update({ seller_id: user.id } as any)
+      .eq("seller_id", DEMO_SELLER);
+
     const { data, error } = await supabase
       .from("listings")
       .select("id, title, price, category, status, created_at")
