@@ -10,6 +10,8 @@ import { useAuth } from "@/contexts/AuthContext";
 
 export default function ListingDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const { isAuthenticated, openAuth } = useAuth();
   const listing = MOCK_LISTINGS.find((l) => l.id === id);
 
   if (!listing) {
