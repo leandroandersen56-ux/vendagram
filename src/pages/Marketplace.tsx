@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Search, SlidersHorizontal, X } from "lucide-react";
+import { Search, SlidersHorizontal, X, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -9,7 +9,8 @@ import { Badge } from "@/components/ui/badge";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ListingCard from "@/components/ListingCard";
-import { MOCK_LISTINGS, PLATFORMS } from "@/lib/mock-data";
+import { PLATFORMS, type Listing } from "@/lib/mock-data";
+import { supabase } from "@/integrations/supabase/client";
 
 export default function Marketplace() {
   const [searchParams] = useSearchParams();
@@ -18,16 +19,54 @@ export default function Marketplace() {
   const [platform, setPlatform] = useState(initialPlatform);
   const [sortBy, setSortBy] = useState("recent");
   const [showFilters, setShowFilters] = useState(false);
+  const [listings, setListings] = useState<Listing[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const filtered = MOCK_LISTINGS.filter((l) => {
-    if (platform !== "all" && l.platform !== platform) return false;
-    if (search && !l.title.toLowerCase().includes(search.toLowerCase())) return false;
-    return l.status === "active";
-  }).sort((a, b) => {
-    if (sortBy === "price-asc") return a.price - b.price;
-    if (sortBy === "price-desc") return b.price - a.price;
-    return 0;
-  });
+  useEffect(() => {
+    const fetchListings = async () => {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("listings")
+        .select("*")
+        .eq("status", "active")
+        .order("created_at", { ascending: false });
+
+      if (!error && data) {
+        const mapped: Listing[] = data.map((row) => ({
+          id: row.id,
+          sellerId: row.seller_id,
+          sellerName: "Vendedor",
+          sellerRating: 5.0,
+          sellerSales: 0,
+          platform: row.category === "free_fire" ? "free_fire" : row.category,
+          title: row.title,
+          description: row.description || "",
+          price: Number(row.price),
+          status: row.status as Listing["status"],
+          screenshots: row.screenshots || [],
+          fields: (row.highlights && typeof row.highlights === "object" && !Array.isArray(row.highlights))
+            ? (row.highlights as Record<string, string | number | boolean>)
+            : {},
+          createdAt: row.created_at,
+        }));
+        setListings(mapped);
+      }
+      setLoading(false);
+    };
+    fetchListings();
+  }, []);
+
+  const filtered = listings
+    .filter((l) => {
+      if (platform !== "all" && l.platform !== platform) return false;
+      if (search && !l.title.toLowerCase().includes(search.toLowerCase())) return false;
+      return true;
+    })
+    .sort((a, b) => {
+      if (sortBy === "price-asc") return a.price - b.price;
+      if (sortBy === "price-desc") return b.price - a.price;
+      return 0;
+    });
 
   return (
     <div className="min-h-screen bg-background">
@@ -114,7 +153,11 @@ export default function Marketplace() {
           </div>
 
           {/* Results */}
-          {filtered.length > 0 ? (
+          {loading ? (
+            <div className="flex items-center justify-center py-20">
+              <Loader2 className="h-6 w-6 animate-spin text-primary" />
+            </div>
+          ) : filtered.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filtered.map((listing) => (
                 <ListingCard key={listing.id} listing={listing} />
