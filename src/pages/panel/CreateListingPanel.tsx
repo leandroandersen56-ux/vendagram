@@ -363,6 +363,24 @@ export default function CreateListing() {
           </div>
         )}
 
+        {/* Alcance + Gênero (Instagram) */}
+        {(showAlcance || showGenero) && (
+          <div className="grid grid-cols-2 gap-3">
+            {showAlcance && (
+              <div className="space-y-2">
+                <Label className="text-foreground">Alcance</Label>
+                <Input value={alcance} onChange={(e) => setAlcance(e.target.value)} placeholder="Ex: 4,1 milhões" className="bg-card border-border" />
+              </div>
+            )}
+            {showGenero && (
+              <div className="space-y-2">
+                <Label className="text-foreground">Gênero do público</Label>
+                <Input value={genero} onChange={(e) => setGenero(e.target.value)} placeholder="Ex: M: 93% / F: 7%" className="bg-card border-border" />
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Items da conta (games) */}
         {isGame && (
           <div className="space-y-3">
