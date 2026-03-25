@@ -167,7 +167,7 @@ export const GAME_STEPS = [
 ];
 
 export function getPlatformSteps(platform: string): string[] {
-  const gameCategories = ['freefire', 'valorant'];
+  const gameCategories = ['free_fire', 'valorant'];
   return gameCategories.includes(platform) ? GAME_STEPS : SOCIAL_MEDIA_STEPS;
 }
 

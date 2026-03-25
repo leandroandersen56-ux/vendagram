@@ -13,7 +13,7 @@ import { PLATFORMS } from "@/lib/mock-data";
 import { useToast } from "@/hooks/use-toast";
 
 const PLATFORM_FIELDS: Record<string, { key: string; label: string; type: 'text' | 'number' | 'boolean' }[]> = {
-  freefire: [
+  free_fire: [
     { key: 'level', label: 'Nível da conta', type: 'number' },
     { key: 'diamonds', label: 'Número de diamantes', type: 'number' },
     { key: 'skins', label: 'Número de skins', type: 'number' },
