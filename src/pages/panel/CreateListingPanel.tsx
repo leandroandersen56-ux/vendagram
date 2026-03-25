@@ -14,22 +14,57 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
-const FOLLOWER_RANGES = [
-  "0 - 500", "500 - 1K", "1K - 5K", "5K - 10K", "10K - 50K", "50K - 100K", "100K - 500K", "500K+"
+const NICHES = [
+  "Humor", "Sensível", "Curiosidades", "Motivacional", "Finanças", "Fitness",
+  "Beleza", "Moda", "Games", "Música", "Receitas", "Animais", "Notícias",
+  "Esportes", "Educação", "Tecnologia", "Empreendedorismo", "Lifestyle", "Outro"
 ];
 
+const REGIONS = ["100% BR 🇧🇷", "Misto", "Internacional", "EUA", "Europa", "Outro"];
+
 const ACCOUNT_FEATURES: Record<string, string[]> = {
-  free_fire: ["Sem restrições", "Email de criação", "Vinculada ao Facebook", "Vinculada ao Google", "Conta antiga", "Skins raras"],
-  instagram: ["Sem restrições", "Sem doc vinculado", "Email de criação", "100% seguidores BR", "Conta verificada", "2FA ativo", "Monetização ativa"],
-  tiktok: ["Sem restrições", "Sem doc vinculado", "Email de criação", "100% seguidores BR", "Conta verificada", "2FA ativo", "Shop ativo", "Lives liberadas"],
-  facebook: ["Sem restrições", "Marketplace ativo", "Página vinculada", "Conta antiga", "Sem doc vinculado"],
-  youtube: ["Monetizado", "Sem strikes", "Sem restrições", "Conta antiga", "100% inscritos BR"],
-  valorant: ["Sem restrições", "Skins raras", "Conta antiga", "Rank alto"],
-  fortnite: ["Sem restrições", "Skins raras", "Conta antiga", "Battle Pass"],
-  roblox: ["Sem restrições", "Robux inclusos", "Conta antiga", "Items raros"],
-  clash_royale: ["Sem restrições", "Conta alta", "Cards maxados", "Gems inclusos"],
-  other: ["Sem restrições", "Email de criação", "Conta antiga"],
+  free_fire: [
+    "Sem restrições", "Email de criação", "Vinculada ao Facebook", "Vinculada ao Google",
+    "Conta antiga", "Skins raras", "Rank alto", "Diamantes inclusos"
+  ],
+  instagram: [
+    "Sem restrições", "Sem doc vinculado", "Email de criação", "Conta verificada",
+    "2FA ativo", "Monetização ativa", "Página disponível", "Alcance alto",
+    "Conta engajada", "Pronto pra alterar nome"
+  ],
+  tiktok: [
+    "Sem restrições", "Sem doc vinculado", "Email de criação", "Conta verificada",
+    "2FA ativo", "Shop ativo", "Lives liberadas", "Conta engajada",
+    "Faço ADM", "Pronto pra alterar nome"
+  ],
+  facebook: [
+    "Sem restrições", "Sem doc vinculado", "Email de criação", "Marketplace ativo",
+    "Página vinculada", "Conta antiga", "Pronto pra alterar nome"
+  ],
+  youtube: [
+    "Monetizado", "Sem strikes", "Sem restrições", "Email de criação",
+    "Conta antiga", "Canal engajado"
+  ],
+  valorant: [
+    "Sem restrições", "Email de criação", "Skins raras", "Conta antiga",
+    "Rank alto", "Agentes desbloqueados"
+  ],
+  fortnite: [
+    "Sem restrições", "Email de criação", "Skins raras", "Conta antiga", "Battle Pass"
+  ],
+  roblox: [
+    "Sem restrições", "Email de criação", "Robux inclusos", "Conta antiga", "Items raros"
+  ],
+  clash_royale: [
+    "Sem restrições", "Email de criação", "Conta alta", "Cards maxados", "Gems inclusos"
+  ],
+  other: [
+    "Sem restrições", "Email de criação", "Sem doc vinculado", "Conta antiga"
+  ],
 };
+
+const NEEDS_NICHO = ["instagram", "tiktok", "youtube", "facebook"];
+const NEEDS_REGION = ["instagram", "tiktok", "facebook", "youtube"];
 
 export default function CreateListing() {
   const navigate = useNavigate();
@@ -40,12 +75,16 @@ export default function CreateListing() {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [followers, setFollowers] = useState("");
+  const [nicho, setNicho] = useState("");
+  const [region, setRegion] = useState("");
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [step, setStep] = useState<"form" | "preview">("form");
   const [loading, setLoading] = useState(false);
 
   const features = ACCOUNT_FEATURES[platform] || [];
+  const showNicho = NEEDS_NICHO.includes(platform);
+  const showRegion = NEEDS_REGION.includes(platform);
 
   const toggleFeature = (feat: string) => {
     setSelectedFeatures((prev) =>
@@ -66,6 +105,8 @@ export default function CreateListing() {
     setLoading(true);
     const highlights: Record<string, string | boolean> = {};
     if (followers) highlights["Seguidores"] = followers;
+    if (nicho) highlights["Nicho"] = nicho;
+    if (region) highlights["Região"] = region;
     selectedFeatures.forEach((f) => (highlights[f] = true));
 
     const { error } = await supabase.from("listings").insert({
@@ -91,24 +132,24 @@ export default function CreateListing() {
     return (
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
         <Button variant="ghost" onClick={() => setStep("form")} className="mb-6 text-muted-foreground">
-          <ArrowLeft className="h-4 w-4 mr-2" /> Voltar ao formulário
+          <ArrowLeft className="h-4 w-4 mr-2" /> Voltar
         </Button>
-        <Card className="bg-card border-border p-6 space-y-4">
-          <h2 className="text-xl font-bold text-foreground">Preview do Anúncio</h2>
-          <div className="space-y-2">
-            <p className="text-sm text-muted-foreground">Plataforma: <span className="text-foreground">{PLATFORMS.find((p) => p.id === platform)?.name}</span></p>
-            <p className="text-sm text-muted-foreground">Título: <span className="text-foreground">{title}</span></p>
-            <p className="text-sm text-muted-foreground">Preço: <span className="text-primary font-bold">R$ {price}</span></p>
-            {followers && <p className="text-sm text-muted-foreground">Seguidores: <span className="text-foreground">{followers}</span></p>}
-            {description && <p className="text-sm text-muted-foreground">Descrição: <span className="text-foreground">{description}</span></p>}
-            {selectedFeatures.length > 0 && (
-              <div className="flex flex-wrap gap-2 pt-2">
-                {selectedFeatures.map((f) => (
-                  <span key={f} className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">✅ {f}</span>
-                ))}
-              </div>
-            )}
-          </div>
+        <Card className="bg-card border-border p-6 space-y-3">
+          <h2 className="text-lg font-bold text-foreground mb-2">Preview do Anúncio</h2>
+          <p className="text-sm text-muted-foreground">Plataforma: <span className="text-foreground">{PLATFORMS.find((p) => p.id === platform)?.icon} {PLATFORMS.find((p) => p.id === platform)?.name}</span></p>
+          <p className="text-sm text-muted-foreground">Título: <span className="text-foreground font-medium">{title}</span></p>
+          <p className="text-sm text-muted-foreground">Preço: <span className="text-primary font-bold">R$ {price}</span></p>
+          {followers && <p className="text-sm text-muted-foreground">Seguidores: <span className="text-foreground">{followers}</span></p>}
+          {nicho && <p className="text-sm text-muted-foreground">Nicho: <span className="text-foreground">{nicho}</span></p>}
+          {region && <p className="text-sm text-muted-foreground">Região: <span className="text-foreground">{region}</span></p>}
+          {description && <p className="text-sm text-muted-foreground">Descrição: <span className="text-foreground">{description}</span></p>}
+          {selectedFeatures.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 pt-1">
+              {selectedFeatures.map((f) => (
+                <span key={f} className="text-xs bg-primary/10 text-primary px-2.5 py-1 rounded-full">✅ {f}</span>
+              ))}
+            </div>
+          )}
           <div className="flex gap-3 pt-4">
             <Button variant="glass" onClick={() => setStep("form")}>Editar</Button>
             <Button variant="hero" onClick={handleSubmit} disabled={loading}>
@@ -123,13 +164,13 @@ export default function CreateListing() {
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
       <h1 className="text-xl font-bold text-foreground mb-2">Criar Anúncio</h1>
-      <p className="text-muted-foreground text-sm mb-6">Preencha os detalhes da conta que deseja vender</p>
+      <p className="text-muted-foreground text-sm mb-6">Monte seu anúncio como nos grupos — rápido e direto</p>
 
       <div className="space-y-5 max-w-2xl">
         {/* Plataforma */}
         <div className="space-y-2">
           <Label className="text-foreground">Plataforma *</Label>
-          <Select value={platform} onValueChange={(v) => { setPlatform(v); setSelectedFeatures([]); }}>
+          <Select value={platform} onValueChange={(v) => { setPlatform(v); setSelectedFeatures([]); setNicho(""); setRegion(""); }}>
             <SelectTrigger className="bg-card border-border">
               <SelectValue placeholder="Selecione a plataforma" />
             </SelectTrigger>
@@ -144,49 +185,76 @@ export default function CreateListing() {
         {/* Título */}
         <div className="space-y-2">
           <Label className="text-foreground">Título *</Label>
-          <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Ex: Conta TikTok BR 2K seguidores" className="bg-card border-border" />
+          <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Ex: VENDO CONTA TIKTOK BR 2K SEGUIDORES" className="bg-card border-border" />
         </div>
 
-        {/* Seguidores */}
-        <div className="space-y-2">
-          <Label className="text-foreground">Seguidores / Nível</Label>
-          <Select value={followers} onValueChange={setFollowers}>
-            <SelectTrigger className="bg-card border-border">
-              <SelectValue placeholder="Selecione a faixa" />
-            </SelectTrigger>
-            <SelectContent>
-              {FOLLOWER_RANGES.map((r) => (
-                <SelectItem key={r} value={r}>{r}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        {/* Linha: Seguidores + Preço */}
+        <div className="grid grid-cols-2 gap-3">
+          <div className="space-y-2">
+            <Label className="text-foreground">Seguidores / Nível</Label>
+            <Input value={followers} onChange={(e) => setFollowers(e.target.value)} placeholder="Ex: 2k+, 5.5K, Nível 75" className="bg-card border-border" />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-foreground">Valor (R$) *</Label>
+            <Input type="number" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="130" className="bg-card border-border" />
+          </div>
         </div>
 
-        {/* Preço */}
-        <div className="space-y-2">
-          <Label className="text-foreground">Preço (R$) *</Label>
-          <Input type="number" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="130" className="bg-card border-border" />
-        </div>
+        {/* Linha: Nicho + Região (condicional) */}
+        {(showNicho || showRegion) && (
+          <div className="grid grid-cols-2 gap-3">
+            {showNicho && (
+              <div className="space-y-2">
+                <Label className="text-foreground">Nicho</Label>
+                <Select value={nicho} onValueChange={setNicho}>
+                  <SelectTrigger className="bg-card border-border">
+                    <SelectValue placeholder="Selecione o nicho" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {NICHES.map((n) => (
+                      <SelectItem key={n} value={n}>{n}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+            {showRegion && (
+              <div className="space-y-2">
+                <Label className="text-foreground">Região dos seguidores</Label>
+                <Select value={region} onValueChange={setRegion}>
+                  <SelectTrigger className="bg-card border-border">
+                    <SelectValue placeholder="Selecione a região" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {REGIONS.map((r) => (
+                      <SelectItem key={r} value={r}>{r}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Descrição */}
         <div className="space-y-2">
-          <Label className="text-foreground">Descrição</Label>
-          <Textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Detalhes adicionais da conta..." className="bg-card border-border min-h-[80px]" />
+          <Label className="text-foreground">Descrição (opcional)</Label>
+          <Textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Detalhes extras, quantidade disponível, etc." className="bg-card border-border min-h-[70px]" />
         </div>
 
         {/* Screenshots */}
         <div className="space-y-2">
           <Label className="text-foreground">Screenshots (até 8)</Label>
-          <div className="border-2 border-dashed border-border rounded-lg p-6 text-center cursor-pointer hover:border-primary/30 transition-colors">
-            <Upload className="h-7 w-7 text-muted-foreground mx-auto mb-2" />
+          <div className="border-2 border-dashed border-border rounded-lg p-5 text-center cursor-pointer hover:border-primary/30 transition-colors">
+            <Upload className="h-6 w-6 text-muted-foreground mx-auto mb-1" />
             <p className="text-sm text-muted-foreground">Arraste ou clique para enviar</p>
           </div>
         </div>
 
-        {/* Features como chips selecionáveis */}
+        {/* Features como chips */}
         {features.length > 0 && (
-          <div className="space-y-3">
-            <Label className="text-foreground">Características da conta</Label>
+          <div className="space-y-2">
+            <Label className="text-foreground">Características ✅</Label>
             <div className="flex flex-wrap gap-2">
               {features.map((feat) => {
                 const active = selectedFeatures.includes(feat);
@@ -195,7 +263,7 @@ export default function CreateListing() {
                     key={feat}
                     type="button"
                     onClick={() => toggleFeature(feat)}
-                    className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
+                    className={`px-3 py-1.5 rounded-full text-sm border transition-all ${
                       active
                         ? "bg-primary/20 border-primary text-primary"
                         : "bg-card border-border text-muted-foreground hover:border-primary/30"
@@ -213,12 +281,12 @@ export default function CreateListing() {
         <div className="flex items-start gap-2">
           <Checkbox checked={acceptTerms} onCheckedChange={(c) => setAcceptTerms(!!c)} />
           <Label className="text-sm text-muted-foreground leading-relaxed">
-            Aceito os termos de uso e confirmo que sou o proprietário legítimo da conta.
+            Confirmo que sou o proprietário legítimo desta conta.
           </Label>
         </div>
 
         {/* Ações */}
-        <div className="flex gap-3 pt-2">
+        <div className="flex gap-3 pt-1 pb-6">
           <Button variant="glass" onClick={() => setStep("preview")} disabled={!title || !platform}>
             <Eye className="h-4 w-4 mr-2" /> Preview
           </Button>
