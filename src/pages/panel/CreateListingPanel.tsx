@@ -38,28 +38,60 @@ const FEATURES: Record<string, string[]> = {
     "Conta antiga", "Canal engajado"
   ],
   valorant: [
-    "Sem restrições", "Email de criação", "Skins raras", "Conta antiga",
-    "Rank alto", "Agentes desbloqueados"
+    "Sem restrições", "Email de criação", "Full acesso", "Conta antiga",
+    "Todos agentes desbloqueados", "Aceita negociação", "Garantia após compra"
   ],
-  fortnite: ["Sem restrições", "Email de criação", "Skins raras", "Conta antiga", "Battle Pass"],
-  roblox: ["Sem restrições", "Email de criação", "Robux inclusos", "Conta antiga", "Items raros"],
-  clash_royale: ["Sem restrições", "Email de criação", "Conta alta", "Cards maxados", "Gems inclusos"],
+  fortnite: [
+    "Sem restrições", "Email de criação", "Full acesso", "Conta OG",
+    "Skins raras", "Aceita negociação", "Garantia após compra"
+  ],
+  roblox: [
+    "Sem restrições", "Email de criação", "Full acesso", "Conta antiga",
+    "Items limitados", "Aceita negociação", "Garantia após compra"
+  ],
+  clash_royale: [
+    "Sem restrições", "Email de criação", "Full acesso", "Conta maxada",
+    "Aceita negociação", "Garantia após compra"
+  ],
   other: ["Sem restrições", "Email de criação", "Sem doc vinculado", "Conta antiga"],
 };
 
 const GAME_ITEMS: Record<string, string[]> = {
-  free_fire: ["Peitorais", "Passes", "Emotes", "Armas Evolutivas", "Punhos", "Calça Angelical", "Bandeirão", "Sombra"],
-  valorant: ["Skins", "Buddies", "Sprays", "Cards", "Títulos"],
-  fortnite: ["Skins", "Picos", "Mochilas", "Planadores", "Emotes", "Battle Pass"],
-  roblox: ["Robux", "Items Limitados", "Game Passes", "Acessórios"],
-  clash_royale: ["Cards Maxados", "Emotes", "Tower Skins", "Gems"],
+  free_fire: [
+    "Peitorais", "Passes", "Emotes", "Armas Evolutivas", "Punhos",
+    "Calça Angelical", "Bandeirão", "Sombra", "Cabelo", "Prime"
+  ],
+  valorant: [
+    "Skins de Vandal", "Skins de Phantom", "Facas", "Buddies", "Sprays",
+    "Cards", "Títulos", "Valorant Points", "Radianite"
+  ],
+  fortnite: [
+    "Skins OG", "Picos", "Mochilas", "Planadores", "Emotes",
+    "V-Bucks", "Battle Pass", "Wraps"
+  ],
+  roblox: [
+    "Robux", "Items Limitados", "Game Passes", "Acessórios",
+    "Roupas exclusivas", "Badges"
+  ],
+  clash_royale: [
+    "Cards Maxados", "Emotes", "Tower Skins", "Gems",
+    "Troféus", "Nível do Rei"
+  ],
+};
+
+const GAME_RANKS: Record<string, string[]> = {
+  free_fire: ["Bronze", "Prata", "Ouro", "Platina", "Diamante", "Mestre", "Desafiante", "Grandmaster"],
+  valorant: ["Ferro", "Bronze", "Prata", "Ouro", "Platina", "Diamante", "Ascendente", "Imortal", "Radiante"],
+  fortnite: [],
+  roblox: [],
+  clash_royale: ["Arena 1-5", "Arena 6-10", "Arena 11-15", "Desafiante", "Mestre", "Campeão", "Top Ladder"],
 };
 
 const LOGIN_TYPES: Record<string, string[]> = {
   free_fire: ["Google", "Facebook", "VK", "Apple", "Huawei"],
-  valorant: ["Riot Games", "Google", "Facebook"],
-  fortnite: ["Epic Games", "PlayStation", "Xbox"],
-  roblox: ["Email", "Google", "Facebook"],
+  valorant: ["Riot Games", "Google", "Facebook", "Apple"],
+  fortnite: ["Epic Games", "PlayStation", "Xbox", "Nintendo", "PC"],
+  roblox: ["Email", "Google", "Facebook", "Apple"],
   clash_royale: ["Supercell ID", "Google", "Apple"],
 };
 
