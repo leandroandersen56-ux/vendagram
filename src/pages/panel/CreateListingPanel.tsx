@@ -38,8 +38,8 @@ const ACCOUNT_FEATURES: Record<string, string[]> = {
   ],
   instagram: [
     "Sem restrições", "Sem doc vinculado", "Email de criação", "Conta verificada",
-    "2FA ativo", "Monetização ativa", "Página disponível", "Alcance alto",
-    "Conta engajada", "Pronto pra alterar nome"
+    "2FA ativo", "Monetização ativa", "Página disponível", "Conta engajada",
+    "Pronto pra alterar nome", "Podemos negociar"
   ],
   tiktok: [
     "Sem restrições", "Sem doc vinculado", "Email de criação", "Conta verificada",
@@ -86,6 +86,8 @@ const GAME_ITEM_SUGGESTIONS: Record<string, string[]> = {
 
 const NEEDS_NICHO = ["instagram", "tiktok", "youtube", "facebook"];
 const NEEDS_REGION = ["instagram", "tiktok", "facebook", "youtube"];
+const NEEDS_ALCANCE = ["instagram", "facebook"];
+const NEEDS_GENERO = ["instagram"];
 const IS_GAME = ["free_fire", "valorant", "fortnite", "roblox", "clash_royale"];
 
 export default function CreateListing() {
@@ -100,6 +102,8 @@ export default function CreateListing() {
   const [followers, setFollowers] = useState("");
   const [nicho, setNicho] = useState("");
   const [region, setRegion] = useState("");
+  const [alcance, setAlcance] = useState("");
+  const [genero, setGenero] = useState("");
   const [loginType, setLoginType] = useState("");
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
   const [items, setItems] = useState<string[]>([]);
@@ -111,6 +115,8 @@ export default function CreateListing() {
   const features = ACCOUNT_FEATURES[platform] || [];
   const showNicho = NEEDS_NICHO.includes(platform);
   const showRegion = NEEDS_REGION.includes(platform);
+  const showAlcance = NEEDS_ALCANCE.includes(platform);
+  const showGenero = NEEDS_GENERO.includes(platform);
   const isGame = IS_GAME.includes(platform);
   const loginOptions = LOGIN_TYPES[platform] || [];
   const itemSuggestions = GAME_ITEM_SUGGESTIONS[platform] || [];
@@ -148,6 +154,8 @@ export default function CreateListing() {
     if (followers) highlights["Seguidores"] = followers;
     if (nicho) highlights["Nicho"] = nicho;
     if (region) highlights["Região"] = region;
+    if (alcance) highlights["Alcance"] = alcance;
+    if (genero) highlights["Gênero"] = genero;
     if (loginType) highlights["Login"] = loginType;
     if (originalPrice) highlights["Preço original"] = originalPrice;
     if (items.length > 0) highlights["Itens"] = items;
@@ -180,6 +188,8 @@ export default function CreateListing() {
     setSelectedFeatures([]);
     setNicho("");
     setRegion("");
+    setAlcance("");
+    setGenero("");
     setLoginType("");
     setItems([]);
     setNewItem("");
@@ -209,6 +219,8 @@ export default function CreateListing() {
           {followers && <p className="text-sm text-muted-foreground">Seguidores: <span className="text-foreground">{followers}</span></p>}
           {nicho && <p className="text-sm text-muted-foreground">Nicho: <span className="text-foreground">{nicho}</span></p>}
           {region && <p className="text-sm text-muted-foreground">Região: <span className="text-foreground">{region}</span></p>}
+          {alcance && <p className="text-sm text-muted-foreground">Alcance: <span className="text-foreground">{alcance}</span></p>}
+          {genero && <p className="text-sm text-muted-foreground">Gênero: <span className="text-foreground">{genero}</span></p>}
 
           {/* Items list */}
           {items.length > 0 && (
@@ -348,6 +360,24 @@ export default function CreateListing() {
                     ))}
                   </SelectContent>
                 </Select>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Alcance + Gênero (Instagram) */}
+        {(showAlcance || showGenero) && (
+          <div className="grid grid-cols-2 gap-3">
+            {showAlcance && (
+              <div className="space-y-2">
+                <Label className="text-foreground">Alcance</Label>
+                <Input value={alcance} onChange={(e) => setAlcance(e.target.value)} placeholder="Ex: 4,1 milhões" className="bg-card border-border" />
+              </div>
+            )}
+            {showGenero && (
+              <div className="space-y-2">
+                <Label className="text-foreground">Gênero do público</Label>
+                <Input value={genero} onChange={(e) => setGenero(e.target.value)} placeholder="Ex: M: 93% / F: 7%" className="bg-card border-border" />
               </div>
             )}
           </div>
