@@ -154,6 +154,8 @@ export default function CreateListing() {
     if (followers) highlights["Seguidores"] = followers;
     if (nicho) highlights["Nicho"] = nicho;
     if (region) highlights["Região"] = region;
+    if (alcance) highlights["Alcance"] = alcance;
+    if (genero) highlights["Gênero"] = genero;
     if (loginType) highlights["Login"] = loginType;
     if (originalPrice) highlights["Preço original"] = originalPrice;
     if (items.length > 0) highlights["Itens"] = items;
