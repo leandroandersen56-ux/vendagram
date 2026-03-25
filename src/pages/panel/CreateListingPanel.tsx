@@ -336,6 +336,29 @@ export default function CreateListing() {
           </div>
         )}
 
+        {/* ── Rank (games com rank) ── */}
+        {(GAME_RANKS[platform] || []).length > 0 && (
+          <div className="space-y-2">
+            <Label className="text-foreground text-xs uppercase tracking-wide">Rank / Elo</Label>
+            <div className="flex flex-wrap gap-2">
+              {GAME_RANKS[platform].map((r) => (
+                <button
+                  key={r}
+                  type="button"
+                  onClick={() => setRank(rank === r ? "" : r)}
+                  className={`px-3 py-1.5 rounded-full text-sm border transition-all ${
+                    rank === r
+                      ? "bg-primary/20 border-primary text-primary font-medium"
+                      : "bg-card border-border text-muted-foreground hover:border-primary/30"
+                  }`}
+                >
+                  {rank === r ? "✅" : "○"} {r}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* ── Nicho (social) ── */}
         {isSocial && (
           <div className="space-y-2">
