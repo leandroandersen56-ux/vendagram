@@ -170,6 +170,7 @@ export default function CreateListing() {
     if (alcance) highlights["Alcance"] = alcance;
     if (genero) highlights["Gênero"] = genero;
     if (loginType) highlights["Login"] = loginType;
+    if (rank) highlights["Rank"] = rank;
     if (originalPrice) highlights["Preço original"] = originalPrice;
     if (items.length > 0) highlights["Itens"] = items;
     feats.forEach((f) => (highlights[f] = true));
