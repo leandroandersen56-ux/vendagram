@@ -1,20 +1,109 @@
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
-import { Plus, Eye, Pause, Trash2, Edit } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Plus, Eye, Pause, Play, Trash2, Edit, Loader2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { MOCK_LISTINGS, formatBRL, getPlatform } from "@/lib/mock-data";
+import { formatBRL, PLATFORMS } from "@/lib/mock-data";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
+type ListingRow = {
+  id: string;
+  title: string;
+  price: number;
+  category: string;
+  status: string;
+  created_at: string;
+};
+
+const statusMap: Record<string, { label: string; className: string }> = {
+  active: { label: "Ativo", className: "bg-success/10 text-success" },
+  sold: { label: "Vendido", className: "bg-primary/10 text-primary" },
+  draft: { label: "Rascunho", className: "bg-warning/10 text-warning" },
+  removed: { label: "Removido", className: "bg-destructive/10 text-destructive" },
+};
+
+function getCategoryInfo(category: string) {
+  const map: Record<string, { icon: string; name: string; color: string }> = {};
+  PLATFORMS.forEach((p) => {
+    map[p.id] = p;
+    if (p.id === "freefire") map["free_fire"] = p;
+  });
+  return map[category] || { icon: "🌐", name: category, color: "#7C3AED" };
+}
 
 export default function PanelListings() {
-  // Mock: user's own listings
-  const myListings = MOCK_LISTINGS.slice(0, 3);
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [listings, setListings] = useState<ListingRow[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const statusMap: Record<string, { label: string; className: string }> = {
-    active: { label: "Ativo", className: "bg-success/10 text-success" },
-    sold: { label: "Vendido", className: "bg-primary/10 text-primary" },
-    paused: { label: "Pausado", className: "bg-warning/10 text-warning" },
+  const fetchListings = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+    const { data, error } = await supabase
+      .from("listings")
+      .select("id, title, price, category, status, created_at")
+      .eq("seller_id", user.id)
+      .order("created_at", { ascending: false });
+
+    if (!error && data) setListings(data);
+    setLoading(false);
   };
+
+  useEffect(() => { fetchListings(); }, []);
+
+  const toggleStatus = async (listing: ListingRow) => {
+    const newStatus = listing.status === "active" ? "draft" : "active";
+    const { error } = await supabase
+      .from("listings")
+      .update({ status: newStatus as any })
+      .eq("id", listing.id);
+
+    if (error) {
+      toast({ title: "Erro ao alterar status", variant: "destructive" });
+    } else {
+      toast({ title: newStatus === "active" ? "Anúncio ativado!" : "Anúncio pausado!" });
+      fetchListings();
+    }
+  };
+
+  const deleteListing = async (id: string) => {
+    const { error } = await supabase
+      .from("listings")
+      .update({ status: "removed" as any })
+      .eq("id", id);
+
+    if (error) {
+      toast({ title: "Erro ao remover", variant: "destructive" });
+    } else {
+      toast({ title: "Anúncio removido!" });
+      fetchListings();
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="h-6 w-6 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  const visibleListings = listings.filter((l) => l.status !== "removed");
 
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
@@ -27,29 +116,62 @@ export default function PanelListings() {
         </Link>
       </div>
 
-      {myListings.length > 0 ? (
+      {visibleListings.length > 0 ? (
         <div className="space-y-3">
-          {myListings.map((listing) => {
-            const platform = getPlatform(listing.platform);
-            const st = statusMap[listing.status] || statusMap.active;
+          {visibleListings.map((listing) => {
+            const cat = getCategoryInfo(listing.category);
+            const st = statusMap[listing.status] || statusMap.draft;
             return (
               <Card key={listing.id} className="bg-card border-border p-4">
                 <div className="flex items-center gap-4">
-                  <div className="h-14 w-14 rounded-lg flex items-center justify-center text-2xl shrink-0" style={{ background: `${platform.color}15` }}>
-                    {platform.icon}
+                  <div className="h-14 w-14 rounded-lg flex items-center justify-center text-2xl shrink-0" style={{ background: `${cat.color}15` }}>
+                    {cat.icon}
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-foreground text-sm truncate">{listing.title}</p>
                     <div className="flex items-center gap-2 mt-1">
                       <Badge className={`${st.className} border-0 text-[10px]`}>{st.label}</Badge>
-                      <span className="text-xs text-muted-foreground">{platform.name}</span>
+                      <span className="text-xs text-muted-foreground">{cat.name}</span>
                     </div>
                   </div>
                   <p className="text-lg font-bold text-primary shrink-0">{formatBRL(listing.price)}</p>
                   <div className="flex gap-1 shrink-0">
-                    <Button variant="ghost" size="icon" className="h-8 w-8"><Eye className="h-3 w-3" /></Button>
-                    <Button variant="ghost" size="icon" className="h-8 w-8"><Edit className="h-3 w-3" /></Button>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive"><Trash2 className="h-3 w-3" /></Button>
+                    <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => navigate(`/listing/${listing.id}`)} title="Ver anúncio">
+                      <Eye className="h-3 w-3" />
+                    </Button>
+                    <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => navigate(`/painel/anuncios/editar/${listing.id}`)} title="Editar">
+                      <Edit className="h-3 w-3" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8"
+                      onClick={() => toggleStatus(listing)}
+                      title={listing.status === "active" ? "Pausar" : "Ativar"}
+                    >
+                      {listing.status === "active" ? <Pause className="h-3 w-3" /> : <Play className="h-3 w-3" />}
+                    </Button>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" title="Remover">
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Remover anúncio?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Essa ação irá remover o anúncio do marketplace. Você não poderá desfazer.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                          <AlertDialogAction onClick={() => deleteListing(listing.id)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                            Remover
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </div>
                 </div>
               </Card>
