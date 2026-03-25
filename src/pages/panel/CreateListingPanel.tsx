@@ -219,6 +219,8 @@ export default function CreateListing() {
           {followers && <p className="text-sm text-muted-foreground">Seguidores: <span className="text-foreground">{followers}</span></p>}
           {nicho && <p className="text-sm text-muted-foreground">Nicho: <span className="text-foreground">{nicho}</span></p>}
           {region && <p className="text-sm text-muted-foreground">Região: <span className="text-foreground">{region}</span></p>}
+          {alcance && <p className="text-sm text-muted-foreground">Alcance: <span className="text-foreground">{alcance}</span></p>}
+          {genero && <p className="text-sm text-muted-foreground">Gênero: <span className="text-foreground">{genero}</span></p>}
 
           {/* Items list */}
           {items.length > 0 && (
