@@ -1,18 +1,62 @@
+import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Star, Shield, Share2, ShoppingCart, CheckCircle2, Clock, MessageCircle } from "lucide-react";
+import { ArrowLeft, Star, Shield, Share2, ShoppingCart, CheckCircle2, Clock, MessageCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { MOCK_LISTINGS, formatBRL, getPlatform } from "@/lib/mock-data";
+import { formatBRL, getPlatform } from "@/lib/mock-data";
+import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function ListingDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { isAuthenticated, openAuth } = useAuth();
-  const listing = MOCK_LISTINGS.find((l) => l.id === id);
+  const [listing, setListing] = useState<any>(null);
+  const [seller, setSeller] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchListing() {
+      if (!id) return;
+      const { data, error } = await supabase
+        .from("listings")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+      if (error || !data) {
+        setLoading(false);
+        return;
+      }
+
+      setListing(data);
+
+      // Fetch seller profile
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("user_id", data.seller_id)
+        .single();
+
+      if (profile) setSeller(profile);
+      setLoading(false);
+    }
+    fetchListing();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <div className="flex items-center justify-center pt-40">
+          <Loader2 className="h-6 w-6 animate-spin text-primary" />
+        </div>
+      </div>
+    );
+  }
 
   if (!listing) {
     return (
@@ -27,19 +71,31 @@ export default function ListingDetail() {
     );
   }
 
-  const platform = getPlatform(listing.platform);
+  const platform = getPlatform(listing.category);
+  const highlights = (listing.highlights && typeof listing.highlights === "object" && !Array.isArray(listing.highlights))
+    ? listing.highlights as Record<string, any>
+    : {};
+
+  const sellerName = seller?.name || "Vendedor";
+  const sellerRating = seller?.avg_rating || 5.0;
+  const sellerSales = seller?.total_sales || 0;
 
   const handleWhatsAppShare = () => {
-    const message = `🎮 Vendo conta ${platform.name} - ${listing.title} por ${formatBRL(listing.price)} 🔒 Compra 100% segura com escrow automático: ${window.location.origin}/listing/${listing.id}`;
+    const message = `🎮 ${listing.title} por ${formatBRL(listing.price)} 🔒 Compra segura: ${window.location.origin}/listing/${listing.id}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
   };
+
+  // Separate features (boolean) from info fields (string values)
+  const infoFields = Object.entries(highlights).filter(([_, v]) => typeof v === "string");
+  const featureFlags = Object.entries(highlights).filter(([_, v]) => v === true);
+  const itemsList = highlights["Itens"] as string[] | undefined;
+  const originalPrice = highlights["Preço original"] as string | undefined;
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       <div className="container mx-auto px-4 pt-24 pb-16">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-          {/* Back button */}
           <Link to="/marketplace" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6">
             <ArrowLeft className="h-4 w-4" />
             Voltar ao Marketplace
@@ -64,31 +120,56 @@ export default function ListingDetail() {
                     <Badge className="bg-success/10 text-success border-0">Disponível</Badge>
                   </div>
                   <h1 className="text-2xl font-bold text-foreground mb-3">{listing.title}</h1>
-                  <p className="text-muted-foreground text-sm leading-relaxed">{listing.description}</p>
+                  {listing.description && (
+                    <p className="text-muted-foreground text-sm leading-relaxed whitespace-pre-line">{listing.description}</p>
+                  )}
                 </div>
 
-                {/* Account details */}
-                <div>
-                  <h3 className="font-semibold text-foreground mb-4">Detalhes da Conta</h3>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                    {Object.entries(listing.fields).map(([key, value]) => (
-                      <div key={key} className="bg-muted rounded-lg p-3">
-                        <p className="text-xs text-muted-foreground mb-1">{key}</p>
-                        <p className="text-sm font-medium text-foreground">
-                          {typeof value === "boolean" ? (value ? "✅ Sim" : "❌ Não") : String(value)}
-                        </p>
-                      </div>
+                {/* Info fields (Seguidores, Nicho, Região, etc.) */}
+                {infoFields.length > 0 && (
+                  <div>
+                    <h3 className="font-semibold text-foreground mb-4">Detalhes da Conta</h3>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                      {infoFields.filter(([k]) => k !== "Preço original" && k !== "Itens").map(([key, value]) => (
+                        <div key={key} className="bg-muted rounded-lg p-3">
+                          <p className="text-xs text-muted-foreground mb-1">{key}</p>
+                          <p className="text-sm font-medium text-foreground">{String(value)}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Items list */}
+                {itemsList && itemsList.length > 0 && (
+                  <div>
+                    <h3 className="font-semibold text-foreground mb-3">Itens da Conta</h3>
+                    <div className="space-y-1.5">
+                      {itemsList.map((item, i) => (
+                        <p key={i} className="text-sm text-muted-foreground">▸ {item}</p>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Feature flags */}
+                {featureFlags.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {featureFlags.map(([key]) => (
+                      <span key={key} className="text-xs bg-primary/10 text-primary px-2.5 py-1 rounded-full">✅ {key}</span>
                     ))}
                   </div>
-                </div>
+                )}
               </div>
             </div>
 
             {/* Sidebar */}
             <div className="space-y-6">
-              {/* Purchase card */}
               <div className="bg-card border border-border rounded-lg p-6 space-y-4 sticky top-24">
                 <div className="text-center">
+                  {originalPrice && (
+                    <p className="text-sm text-muted-foreground line-through mb-1">R$ {originalPrice}</p>
+                  )}
                   <p className="text-3xl font-display font-bold text-primary mb-1">{formatBRL(listing.price)}</p>
                   <p className="text-xs text-muted-foreground">+ 10% taxa de segurança (paga pelo vendedor)</p>
                 </div>
@@ -121,7 +202,6 @@ export default function ListingDetail() {
                   Copiar Link
                 </Button>
 
-                {/* Trust badges */}
                 <div className="space-y-3 pt-4 border-t border-border">
                   {[
                     { icon: <Shield className="h-4 w-4" />, text: "Escrow automático" },
@@ -141,17 +221,17 @@ export default function ListingDetail() {
                 <h3 className="font-semibold text-foreground mb-4">Vendedor</h3>
                 <div className="flex items-center gap-3 mb-4">
                   <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
-                    {listing.sellerName[0]}
+                    {sellerName[0]}
                   </div>
                   <div>
-                    <p className="font-medium text-foreground">{listing.sellerName}</p>
+                    <p className="font-medium text-foreground">{sellerName}</p>
                     <div className="flex items-center gap-1 text-xs text-muted-foreground">
                       <Star className="h-3 w-3 text-warning fill-warning" />
-                      {listing.sellerRating} · {listing.sellerSales} vendas
+                      {sellerRating} · {sellerSales} vendas
                     </div>
                   </div>
                 </div>
-                {listing.sellerSales >= 5 && (
+                {sellerSales >= 5 && (
                   <Badge className="bg-primary/10 text-primary border-0 text-xs">
                     <CheckCircle2 className="h-3 w-3 mr-1" /> Vendedor Verificado
                   </Badge>
