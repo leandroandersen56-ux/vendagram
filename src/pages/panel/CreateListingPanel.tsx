@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, Upload, Eye, Plus, Trash2 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { ArrowLeft, Upload, Eye } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -11,94 +11,109 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Card } from "@/components/ui/card";
 import { PLATFORMS } from "@/lib/mock-data";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
-const PLATFORM_FIELDS: Record<string, { key: string; label: string; type: 'text' | 'number' | 'boolean' }[]> = {
-  free_fire: [
-    { key: 'level', label: 'Nível da conta', type: 'number' },
-    { key: 'diamonds', label: 'Número de diamantes', type: 'number' },
-    { key: 'skins', label: 'Número de skins', type: 'number' },
-    { key: 'rank', label: 'Rank atual', type: 'text' },
-    { key: 'facebook_linked', label: 'Vinculada ao Facebook?', type: 'boolean' },
-    { key: 'google_linked', label: 'Vinculada ao Google?', type: 'boolean' },
-    { key: 'region', label: 'Região da conta', type: 'text' },
-  ],
-  instagram: [
-    { key: 'followers', label: 'Número de seguidores', type: 'text' },
-    { key: 'following', label: 'Número de seguindo', type: 'text' },
-    { key: 'engagement', label: 'Nível de engajamento (%)', type: 'text' },
-    { key: 'niche', label: 'Nicho/tema do perfil', type: 'text' },
-    { key: 'verified', label: 'Conta verificada?', type: 'boolean' },
-    { key: '2fa', label: 'Autenticação em dois fatores?', type: 'boolean' },
-  ],
-  tiktok: [
-    { key: 'followers', label: 'Número de seguidores', type: 'text' },
-    { key: 'likes', label: 'Total de likes', type: 'text' },
-    { key: 'niche', label: 'Nicho/tema', type: 'text' },
-    { key: 'verified', label: 'Conta verificada?', type: 'boolean' },
-    { key: '2fa', label: '2FA ativo?', type: 'boolean' },
-  ],
-  facebook: [
-    { key: 'friends', label: 'Número de amigos', type: 'number' },
-    { key: 'page_linked', label: 'Tem página vinculada?', type: 'boolean' },
-    { key: 'marketplace', label: 'Marketplace ativo?', type: 'boolean' },
-    { key: 'restrictions', label: 'Conta tem restrições?', type: 'boolean' },
-  ],
-  youtube: [
-    { key: 'subscribers', label: 'Inscritos', type: 'text' },
-    { key: 'total_views', label: 'Total de visualizações', type: 'text' },
-    { key: 'monetized', label: 'Monetizado?', type: 'boolean' },
-    { key: 'niche', label: 'Nicho', type: 'text' },
-  ],
-  valorant: [
-    { key: 'rank', label: 'Rank atual', type: 'text' },
-    { key: 'skins', label: 'Número de skins', type: 'number' },
-    { key: 'agents', label: 'Agentes desbloqueados', type: 'text' },
-  ],
+const FOLLOWER_RANGES = [
+  "0 - 500", "500 - 1K", "1K - 5K", "5K - 10K", "10K - 50K", "50K - 100K", "100K - 500K", "500K+"
+];
+
+const ACCOUNT_FEATURES: Record<string, string[]> = {
+  free_fire: ["Sem restrições", "Email de criação", "Vinculada ao Facebook", "Vinculada ao Google", "Conta antiga", "Skins raras"],
+  instagram: ["Sem restrições", "Sem doc vinculado", "Email de criação", "100% seguidores BR", "Conta verificada", "2FA ativo", "Monetização ativa"],
+  tiktok: ["Sem restrições", "Sem doc vinculado", "Email de criação", "100% seguidores BR", "Conta verificada", "2FA ativo", "Shop ativo", "Lives liberadas"],
+  facebook: ["Sem restrições", "Marketplace ativo", "Página vinculada", "Conta antiga", "Sem doc vinculado"],
+  youtube: ["Monetizado", "Sem strikes", "Sem restrições", "Conta antiga", "100% inscritos BR"],
+  valorant: ["Sem restrições", "Skins raras", "Conta antiga", "Rank alto"],
+  fortnite: ["Sem restrições", "Skins raras", "Conta antiga", "Battle Pass"],
+  roblox: ["Sem restrições", "Robux inclusos", "Conta antiga", "Items raros"],
+  clash_royale: ["Sem restrições", "Conta alta", "Cards maxados", "Gems inclusos"],
+  other: ["Sem restrições", "Email de criação", "Conta antiga"],
 };
 
 export default function CreateListing() {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user } = useAuth();
   const [platform, setPlatform] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
-  const [fields, setFields] = useState<Record<string, string | boolean>>({});
-  const [customFields, setCustomFields] = useState<{ key: string; value: string }[]>([]);
+  const [followers, setFollowers] = useState("");
+  const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
   const [acceptTerms, setAcceptTerms] = useState(false);
-  const [step, setStep] = useState<'form' | 'preview'>('form');
+  const [step, setStep] = useState<"form" | "preview">("form");
+  const [loading, setLoading] = useState(false);
 
-  const platformFields = PLATFORM_FIELDS[platform] || [];
+  const features = ACCOUNT_FEATURES[platform] || [];
 
-  const handleSubmit = () => {
+  const toggleFeature = (feat: string) => {
+    setSelectedFeatures((prev) =>
+      prev.includes(feat) ? prev.filter((f) => f !== feat) : [...prev, feat]
+    );
+  };
+
+  const handleSubmit = async () => {
     if (!platform || !title || !price || !acceptTerms) {
       toast({ title: "Preencha todos os campos obrigatórios", variant: "destructive" });
       return;
     }
-    toast({ title: "Anúncio criado com sucesso!", description: "Seu anúncio está sendo revisado." });
-    navigate("/painel/anuncios");
+    if (!user) {
+      toast({ title: "Faça login para publicar", variant: "destructive" });
+      return;
+    }
+
+    setLoading(true);
+    const highlights: Record<string, string | boolean> = {};
+    if (followers) highlights["Seguidores"] = followers;
+    selectedFeatures.forEach((f) => (highlights[f] = true));
+
+    const { error } = await supabase.from("listings").insert({
+      title,
+      description,
+      price: parseFloat(price),
+      category: platform as any,
+      seller_id: user.id,
+      highlights,
+      status: "active",
+    });
+
+    setLoading(false);
+    if (error) {
+      toast({ title: "Erro ao criar anúncio", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Anúncio publicado com sucesso!" });
+      navigate("/painel/anuncios");
+    }
   };
 
-  if (step === 'preview') {
+  if (step === "preview") {
     return (
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-        <Button variant="ghost" onClick={() => setStep('form')} className="mb-6 text-muted-foreground">
+        <Button variant="ghost" onClick={() => setStep("form")} className="mb-6 text-muted-foreground">
           <ArrowLeft className="h-4 w-4 mr-2" /> Voltar ao formulário
         </Button>
         <Card className="bg-card border-border p-6 space-y-4">
           <h2 className="text-xl font-bold text-foreground">Preview do Anúncio</h2>
-          <div className="space-y-3">
-            <p className="text-sm text-muted-foreground">Plataforma: <span className="text-foreground">{PLATFORMS.find(p => p.id === platform)?.name}</span></p>
+          <div className="space-y-2">
+            <p className="text-sm text-muted-foreground">Plataforma: <span className="text-foreground">{PLATFORMS.find((p) => p.id === platform)?.name}</span></p>
             <p className="text-sm text-muted-foreground">Título: <span className="text-foreground">{title}</span></p>
             <p className="text-sm text-muted-foreground">Preço: <span className="text-primary font-bold">R$ {price}</span></p>
-            <p className="text-sm text-muted-foreground">Descrição: <span className="text-foreground">{description}</span></p>
-            {Object.entries(fields).map(([k, v]) => (
-              <p key={k} className="text-sm text-muted-foreground">{k}: <span className="text-foreground">{typeof v === 'boolean' ? (v ? 'Sim' : 'Não') : v}</span></p>
-            ))}
+            {followers && <p className="text-sm text-muted-foreground">Seguidores: <span className="text-foreground">{followers}</span></p>}
+            {description && <p className="text-sm text-muted-foreground">Descrição: <span className="text-foreground">{description}</span></p>}
+            {selectedFeatures.length > 0 && (
+              <div className="flex flex-wrap gap-2 pt-2">
+                {selectedFeatures.map((f) => (
+                  <span key={f} className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">✅ {f}</span>
+                ))}
+              </div>
+            )}
           </div>
           <div className="flex gap-3 pt-4">
-            <Button variant="glass" onClick={() => setStep('form')}>Editar</Button>
-            <Button variant="hero" onClick={handleSubmit}>Publicar Anúncio</Button>
+            <Button variant="glass" onClick={() => setStep("form")}>Editar</Button>
+            <Button variant="hero" onClick={handleSubmit} disabled={loading}>
+              {loading ? "Publicando..." : "Publicar Anúncio"}
+            </Button>
           </div>
         </Card>
       </motion.div>
@@ -110,10 +125,11 @@ export default function CreateListing() {
       <h1 className="text-xl font-bold text-foreground mb-2">Criar Anúncio</h1>
       <p className="text-muted-foreground text-sm mb-6">Preencha os detalhes da conta que deseja vender</p>
 
-      <div className="space-y-6 max-w-2xl">
+      <div className="space-y-5 max-w-2xl">
+        {/* Plataforma */}
         <div className="space-y-2">
           <Label className="text-foreground">Plataforma *</Label>
-          <Select value={platform} onValueChange={(v) => { setPlatform(v); setFields({}); }}>
+          <Select value={platform} onValueChange={(v) => { setPlatform(v); setSelectedFeatures([]); }}>
             <SelectTrigger className="bg-card border-border">
               <SelectValue placeholder="Selecione a plataforma" />
             </SelectTrigger>
@@ -125,98 +141,89 @@ export default function CreateListing() {
           </Select>
         </div>
 
+        {/* Título */}
         <div className="space-y-2">
           <Label className="text-foreground">Título *</Label>
-          <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Ex: Conta Free Fire Nível 70" className="bg-card border-border" />
+          <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Ex: Conta TikTok BR 2K seguidores" className="bg-card border-border" />
         </div>
 
+        {/* Seguidores */}
         <div className="space-y-2">
-          <Label className="text-foreground">Descrição</Label>
-          <Textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Descreva sua conta em detalhes..." className="bg-card border-border min-h-[100px]" />
+          <Label className="text-foreground">Seguidores / Nível</Label>
+          <Select value={followers} onValueChange={setFollowers}>
+            <SelectTrigger className="bg-card border-border">
+              <SelectValue placeholder="Selecione a faixa" />
+            </SelectTrigger>
+            <SelectContent>
+              {FOLLOWER_RANGES.map((r) => (
+                <SelectItem key={r} value={r}>{r}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
+        {/* Preço */}
         <div className="space-y-2">
           <Label className="text-foreground">Preço (R$) *</Label>
-          <Input type="number" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="0,00" className="bg-card border-border" />
+          <Input type="number" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="130" className="bg-card border-border" />
         </div>
 
+        {/* Descrição */}
+        <div className="space-y-2">
+          <Label className="text-foreground">Descrição</Label>
+          <Textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Detalhes adicionais da conta..." className="bg-card border-border min-h-[80px]" />
+        </div>
+
+        {/* Screenshots */}
         <div className="space-y-2">
           <Label className="text-foreground">Screenshots (até 8)</Label>
-          <div className="border-2 border-dashed border-border rounded-lg p-8 text-center cursor-pointer hover:border-primary/30 transition-colors">
-            <Upload className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-            <p className="text-sm text-muted-foreground">Arraste ou clique para enviar imagens</p>
-            <p className="text-xs text-muted-foreground mt-1">PNG, JPG até 5MB cada</p>
+          <div className="border-2 border-dashed border-border rounded-lg p-6 text-center cursor-pointer hover:border-primary/30 transition-colors">
+            <Upload className="h-7 w-7 text-muted-foreground mx-auto mb-2" />
+            <p className="text-sm text-muted-foreground">Arraste ou clique para enviar</p>
           </div>
         </div>
 
-        {platformFields.length > 0 && (
-          <div className="space-y-4 p-4 bg-card border border-border rounded-lg">
-            <h3 className="font-semibold text-foreground text-sm">Detalhes da Conta</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {platformFields.map((f) => (
-                <div key={f.key} className="space-y-1">
-                  <Label className="text-sm text-muted-foreground">{f.label}</Label>
-                  {f.type === 'boolean' ? (
-                    <div className="flex items-center gap-2 mt-1">
-                      <Checkbox
-                        checked={fields[f.label] as boolean || false}
-                        onCheckedChange={(checked) => setFields({ ...fields, [f.label]: !!checked })}
-                      />
-                      <span className="text-sm text-foreground">{fields[f.label] ? 'Sim' : 'Não'}</span>
-                    </div>
-                  ) : (
-                    <Input
-                      type={f.type === 'number' ? 'number' : 'text'}
-                      value={fields[f.label] as string || ''}
-                      onChange={(e) => setFields({ ...fields, [f.label]: e.target.value })}
-                      className="bg-muted border-border"
-                    />
-                  )}
-                </div>
-              ))}
+        {/* Features como chips selecionáveis */}
+        {features.length > 0 && (
+          <div className="space-y-3">
+            <Label className="text-foreground">Características da conta</Label>
+            <div className="flex flex-wrap gap-2">
+              {features.map((feat) => {
+                const active = selectedFeatures.includes(feat);
+                return (
+                  <button
+                    key={feat}
+                    type="button"
+                    onClick={() => toggleFeature(feat)}
+                    className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
+                      active
+                        ? "bg-primary/20 border-primary text-primary"
+                        : "bg-card border-border text-muted-foreground hover:border-primary/30"
+                    }`}
+                  >
+                    {active ? "✅" : "○"} {feat}
+                  </button>
+                );
+              })}
             </div>
           </div>
         )}
 
-        {platform === 'other' && (
-          <div className="space-y-3">
-            <Label className="text-foreground">Campos Personalizados</Label>
-            {customFields.map((cf, i) => (
-              <div key={i} className="flex gap-2">
-                <Input placeholder="Nome do campo" value={cf.key} onChange={(e) => {
-                  const updated = [...customFields];
-                  updated[i].key = e.target.value;
-                  setCustomFields(updated);
-                }} className="bg-card border-border" />
-                <Input placeholder="Valor" value={cf.value} onChange={(e) => {
-                  const updated = [...customFields];
-                  updated[i].value = e.target.value;
-                  setCustomFields(updated);
-                }} className="bg-card border-border" />
-                <Button variant="ghost" size="icon" onClick={() => setCustomFields(customFields.filter((_, j) => j !== i))}>
-                  <Trash2 className="h-4 w-4 text-destructive" />
-                </Button>
-              </div>
-            ))}
-            <Button variant="glass" size="sm" onClick={() => setCustomFields([...customFields, { key: '', value: '' }])}>
-              <Plus className="h-4 w-4 mr-1" /> Adicionar Campo
-            </Button>
-          </div>
-        )}
-
+        {/* Termos */}
         <div className="flex items-start gap-2">
           <Checkbox checked={acceptTerms} onCheckedChange={(c) => setAcceptTerms(!!c)} />
           <Label className="text-sm text-muted-foreground leading-relaxed">
-            Aceito os termos de uso e confirmo que sou o proprietário legítimo da conta anunciada.
+            Aceito os termos de uso e confirmo que sou o proprietário legítimo da conta.
           </Label>
         </div>
 
-        <div className="flex gap-3 pt-4">
-          <Button variant="glass" onClick={() => setStep('preview')} disabled={!title || !platform}>
+        {/* Ações */}
+        <div className="flex gap-3 pt-2">
+          <Button variant="glass" onClick={() => setStep("preview")} disabled={!title || !platform}>
             <Eye className="h-4 w-4 mr-2" /> Preview
           </Button>
-          <Button variant="hero" onClick={handleSubmit} disabled={!acceptTerms || !title || !platform || !price}>
-            Publicar Anúncio
+          <Button variant="hero" onClick={handleSubmit} disabled={!acceptTerms || !title || !platform || !price || loading}>
+            {loading ? "Publicando..." : "Publicar Anúncio"}
           </Button>
         </div>
       </div>
