@@ -44,7 +44,7 @@ const ACCOUNT_FEATURES: Record<string, string[]> = {
   tiktok: [
     "Sem restrições", "Sem doc vinculado", "Email de criação", "Conta verificada",
     "2FA ativo", "Shop ativo", "Lives liberadas", "Conta engajada",
-    "Faço ADM", "Pronto pra alterar nome"
+    "Pronto pra alterar nome"
   ],
   facebook: [
     "Sem restrições", "Sem doc vinculado", "Email de criação", "Marketplace ativo",
