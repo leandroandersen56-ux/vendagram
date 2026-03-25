@@ -68,11 +68,9 @@ export default function Index() {
                   <ArrowRight className="h-5 w-5 ml-1" />
                 </Button>
               </Link>
-              <Link to="/create-listing">
-                <Button variant="glass" size="lg" className="text-base px-8 py-6">
+              <Button variant="glass" size="lg" className="text-base px-8 py-6" onClick={handleSell}>
                   Vender Minha Conta
                 </Button>
-              </Link>
             </motion.div>
 
             {/* Trust stats */}
