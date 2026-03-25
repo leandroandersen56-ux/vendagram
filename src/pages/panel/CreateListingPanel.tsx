@@ -102,6 +102,8 @@ export default function CreateListing() {
   const [followers, setFollowers] = useState("");
   const [nicho, setNicho] = useState("");
   const [region, setRegion] = useState("");
+  const [alcance, setAlcance] = useState("");
+  const [genero, setGenero] = useState("");
   const [loginType, setLoginType] = useState("");
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
   const [items, setItems] = useState<string[]>([]);
@@ -113,6 +115,8 @@ export default function CreateListing() {
   const features = ACCOUNT_FEATURES[platform] || [];
   const showNicho = NEEDS_NICHO.includes(platform);
   const showRegion = NEEDS_REGION.includes(platform);
+  const showAlcance = NEEDS_ALCANCE.includes(platform);
+  const showGenero = NEEDS_GENERO.includes(platform);
   const isGame = IS_GAME.includes(platform);
   const loginOptions = LOGIN_TYPES[platform] || [];
   const itemSuggestions = GAME_ITEM_SUGGESTIONS[platform] || [];
