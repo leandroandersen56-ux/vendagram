@@ -122,6 +122,7 @@ export default function CreateListing() {
   const [alcance, setAlcance] = useState("");
   const [genero, setGenero] = useState("");
   const [loginType, setLoginType] = useState("");
+  const [rank, setRank] = useState("");
   const [description, setDescription] = useState("");
   const [feats, setFeats] = useState<string[]>([]);
   const [items, setItems] = useState<string[]>([]);
