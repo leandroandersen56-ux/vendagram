@@ -86,7 +86,7 @@ export default function Index() {
       </section>
 
       {/* How it works */}
-      <section className="py-24 bg-card/30">
+      <section id="how-it-works" className="py-24 bg-card/30">
         <div className="container mx-auto px-4">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center mb-16">
             <motion.h2 custom={0} variants={fadeUp} className="text-3xl font-display font-bold text-foreground mb-4">
