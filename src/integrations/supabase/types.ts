@@ -1,0 +1,668 @@
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
+
+export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "14.4"
+  }
+  public: {
+    Tables: {
+      credentials: {
+        Row: {
+          created_at: string
+          data_encrypted: string
+          delivered_at: string | null
+          id: string
+          transaction_id: string
+        }
+        Insert: {
+          created_at?: string
+          data_encrypted: string
+          delivered_at?: string | null
+          id?: string
+          transaction_id: string
+        }
+        Update: {
+          created_at?: string
+          data_encrypted?: string
+          delivered_at?: string | null
+          id?: string
+          transaction_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "credentials_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      disputes: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          opened_by: string
+          resolution: string | null
+          screenshot_url: string | null
+          status: Database["public"]["Enums"]["dispute_status"]
+          transaction_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          id?: string
+          opened_by: string
+          resolution?: string | null
+          screenshot_url?: string | null
+          status?: Database["public"]["Enums"]["dispute_status"]
+          transaction_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          opened_by?: string
+          resolution?: string | null
+          screenshot_url?: string | null
+          status?: Database["public"]["Enums"]["dispute_status"]
+          transaction_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "disputes_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      listings: {
+        Row: {
+          category: Database["public"]["Enums"]["listing_category"]
+          created_at: string
+          description: string | null
+          followers_count: number | null
+          highlights: Json | null
+          id: string
+          includes: string | null
+          level: number | null
+          platform_username: string | null
+          price: number
+          screenshots: string[] | null
+          seller_id: string
+          status: Database["public"]["Enums"]["listing_status"]
+          title: string
+          updated_at: string
+          views_count: number
+        }
+        Insert: {
+          category?: Database["public"]["Enums"]["listing_category"]
+          created_at?: string
+          description?: string | null
+          followers_count?: number | null
+          highlights?: Json | null
+          id?: string
+          includes?: string | null
+          level?: number | null
+          platform_username?: string | null
+          price: number
+          screenshots?: string[] | null
+          seller_id: string
+          status?: Database["public"]["Enums"]["listing_status"]
+          title: string
+          updated_at?: string
+          views_count?: number
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["listing_category"]
+          created_at?: string
+          description?: string | null
+          followers_count?: number | null
+          highlights?: Json | null
+          id?: string
+          includes?: string | null
+          level?: number | null
+          platform_username?: string | null
+          price?: number
+          screenshots?: string[] | null
+          seller_id?: string
+          status?: Database["public"]["Enums"]["listing_status"]
+          title?: string
+          updated_at?: string
+          views_count?: number
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          link: string | null
+          read: boolean
+          title: string
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          link?: string | null
+          read?: boolean
+          title: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          link?: string | null
+          read?: boolean
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      platform_settings: {
+        Row: {
+          id: string
+          key: string
+          updated_at: string
+          value: string
+        }
+        Insert: {
+          id?: string
+          key: string
+          updated_at?: string
+          value: string
+        }
+        Update: {
+          id?: string
+          key?: string
+          updated_at?: string
+          value?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          avg_rating: number
+          cpf: string | null
+          created_at: string
+          email: string | null
+          id: string
+          is_verified: boolean
+          name: string | null
+          phone: string | null
+          pix_key: string | null
+          total_purchases: number
+          total_reviews: number
+          total_sales: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          avg_rating?: number
+          cpf?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_verified?: boolean
+          name?: string | null
+          phone?: string | null
+          pix_key?: string | null
+          total_purchases?: number
+          total_reviews?: number
+          total_sales?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          avg_rating?: number
+          cpf?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_verified?: boolean
+          name?: string | null
+          phone?: string | null
+          pix_key?: string | null
+          total_purchases?: number
+          total_reviews?: number
+          total_sales?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      reviews: {
+        Row: {
+          comment: string | null
+          created_at: string
+          id: string
+          rating: number
+          reviewed_id: string
+          reviewer_id: string
+          transaction_id: string
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          rating: number
+          reviewed_id: string
+          reviewer_id: string
+          transaction_id: string
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          rating?: number
+          reviewed_id?: string
+          reviewer_id?: string
+          transaction_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      transaction_steps: {
+        Row: {
+          confirmed_at: string | null
+          confirmed_by_buyer: boolean
+          confirmed_by_seller: boolean
+          created_at: string
+          id: string
+          problem_description: string | null
+          problem_reported: boolean
+          step_index: number
+          step_label: string
+          transaction_id: string
+        }
+        Insert: {
+          confirmed_at?: string | null
+          confirmed_by_buyer?: boolean
+          confirmed_by_seller?: boolean
+          created_at?: string
+          id?: string
+          problem_description?: string | null
+          problem_reported?: boolean
+          step_index: number
+          step_label: string
+          transaction_id: string
+        }
+        Update: {
+          confirmed_at?: string | null
+          confirmed_by_buyer?: boolean
+          confirmed_by_seller?: boolean
+          created_at?: string
+          id?: string
+          problem_description?: string | null
+          problem_reported?: boolean
+          step_index?: number
+          step_label?: string
+          transaction_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transaction_steps_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      transactions: {
+        Row: {
+          amount: number
+          buyer_id: string
+          cancelled_at: string | null
+          completed_at: string | null
+          created_at: string
+          id: string
+          listing_id: string
+          paid_at: string | null
+          platform_fee: number
+          seller_id: string
+          seller_receives: number
+          status: Database["public"]["Enums"]["transaction_status"]
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          buyer_id: string
+          cancelled_at?: string | null
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          listing_id: string
+          paid_at?: string | null
+          platform_fee?: number
+          seller_id: string
+          seller_receives?: number
+          status?: Database["public"]["Enums"]["transaction_status"]
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          buyer_id?: string
+          cancelled_at?: string | null
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          listing_id?: string
+          paid_at?: string | null
+          platform_fee?: number
+          seller_id?: string
+          seller_receives?: number
+          status?: Database["public"]["Enums"]["transaction_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transactions_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      wallets: {
+        Row: {
+          balance: number
+          created_at: string
+          id: string
+          pending: number
+          total_earned: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          balance?: number
+          created_at?: string
+          id?: string
+          pending?: number
+          total_earned?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          balance?: number
+          created_at?: string
+          id?: string
+          pending?: number
+          total_earned?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      withdrawals: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          pix_key: string
+          processed_at: string | null
+          status: Database["public"]["Enums"]["withdrawal_status"]
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: string
+          pix_key: string
+          processed_at?: string | null
+          status?: Database["public"]["Enums"]["withdrawal_status"]
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          pix_key?: string
+          processed_at?: string | null
+          status?: Database["public"]["Enums"]["withdrawal_status"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+    }
+    Enums: {
+      app_role: "admin" | "moderator" | "user"
+      dispute_status: "open" | "under_review" | "resolved" | "closed"
+      listing_category:
+        | "free_fire"
+        | "instagram"
+        | "tiktok"
+        | "facebook"
+        | "youtube"
+        | "valorant"
+        | "fortnite"
+        | "roblox"
+        | "clash_royale"
+        | "other"
+      listing_status: "draft" | "active" | "sold" | "removed"
+      transaction_status:
+        | "pending_payment"
+        | "paid"
+        | "transfer_in_progress"
+        | "completed"
+        | "disputed"
+        | "cancelled"
+        | "refunded"
+      withdrawal_status: "pending" | "processing" | "processed" | "rejected"
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
+}
+
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
+
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
+
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
+
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
+
+export const Constants = {
+  public: {
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+      dispute_status: ["open", "under_review", "resolved", "closed"],
+      listing_category: [
+        "free_fire",
+        "instagram",
+        "tiktok",
+        "facebook",
+        "youtube",
+        "valorant",
+        "fortnite",
+        "roblox",
+        "clash_royale",
+        "other",
+      ],
+      listing_status: ["draft", "active", "sold", "removed"],
+      transaction_status: [
+        "pending_payment",
+        "paid",
+        "transfer_in_progress",
+        "completed",
+        "disputed",
+        "cancelled",
+        "refunded",
+      ],
+      withdrawal_status: ["pending", "processing", "processed", "rejected"],
+    },
+  },
+} as const
