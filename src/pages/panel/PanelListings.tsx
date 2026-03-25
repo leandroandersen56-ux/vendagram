@@ -53,7 +53,10 @@ export default function PanelListings() {
 
   const fetchListings = async () => {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+    if (!user) {
+      setLoading(false);
+      return;
+    }
     const { data, error } = await supabase
       .from("listings")
       .select("id, title, price, category, status, created_at")
