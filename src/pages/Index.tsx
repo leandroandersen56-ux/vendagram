@@ -20,6 +20,17 @@ const fadeUp = {
 };
 
 export default function Index() {
+  const { isAuthenticated, openAuth } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSell = () => {
+    if (isAuthenticated) {
+      navigate("/painel/anuncios/novo");
+    } else {
+      openAuth("/painel/anuncios/novo");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
