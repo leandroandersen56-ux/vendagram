@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Shield, Lock, CheckCircle2, ArrowRight, Star, ChevronDown } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -19,6 +20,17 @@ const fadeUp = {
 };
 
 export default function Index() {
+  const { isAuthenticated, openAuth } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSell = () => {
+    if (isAuthenticated) {
+      navigate("/painel/anuncios/novo");
+    } else {
+      openAuth("/painel/anuncios/novo");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -56,11 +68,9 @@ export default function Index() {
                   <ArrowRight className="h-5 w-5 ml-1" />
                 </Button>
               </Link>
-              <Link to="/create-listing">
-                <Button variant="glass" size="lg" className="text-base px-8 py-6">
+              <Button variant="glass" size="lg" className="text-base px-8 py-6" onClick={handleSell}>
                   Vender Minha Conta
                 </Button>
-              </Link>
             </motion.div>
 
             {/* Trust stats */}
@@ -86,7 +96,7 @@ export default function Index() {
       </section>
 
       {/* How it works */}
-      <section className="py-24 bg-card/30">
+      <section id="how-it-works" className="py-24 bg-card/30">
         <div className="container mx-auto px-4">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center mb-16">
             <motion.h2 custom={0} variants={fadeUp} className="text-3xl font-display font-bold text-foreground mb-4">
@@ -181,7 +191,7 @@ export default function Index() {
       </section>
 
       {/* FAQ */}
-      <section className="py-24 bg-card/30">
+      <section id="faq" className="py-24 bg-card/30">
         <div className="container mx-auto px-4 max-w-2xl">
           <h2 className="text-2xl font-display font-bold text-foreground text-center mb-10">Perguntas Frequentes</h2>
           <Accordion type="single" collapsible className="space-y-3">

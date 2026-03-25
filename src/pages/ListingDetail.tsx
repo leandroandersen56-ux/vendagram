@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, Star, Shield, Share2, ShoppingCart, CheckCircle2, Clock, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -6,9 +6,12 @@ import { Badge } from "@/components/ui/badge";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { MOCK_LISTINGS, formatBRL, getPlatform } from "@/lib/mock-data";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function ListingDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const { isAuthenticated, openAuth } = useAuth();
   const listing = MOCK_LISTINGS.find((l) => l.id === id);
 
   if (!listing) {
@@ -90,12 +93,21 @@ export default function ListingDetail() {
                   <p className="text-xs text-muted-foreground">+ 10% taxa de segurança (paga pelo vendedor)</p>
                 </div>
 
-                <Link to={`/transaction/${listing.id}`}>
-                  <Button variant="hero" className="w-full py-6 text-base" size="lg">
-                    <ShoppingCart className="h-5 w-5 mr-2" />
-                    Comprar com Segurança
-                  </Button>
-                </Link>
+                <Button
+                  variant="hero"
+                  className="w-full py-6 text-base"
+                  size="lg"
+                  onClick={() => {
+                    if (isAuthenticated) {
+                      navigate(`/transaction/${listing.id}`);
+                    } else {
+                      openAuth(`/transaction/${listing.id}`);
+                    }
+                  }}
+                >
+                  <ShoppingCart className="h-5 w-5 mr-2" />
+                  Comprar com Segurança
+                </Button>
 
                 <Button variant="glass" className="w-full" onClick={handleWhatsAppShare}>
                   <MessageCircle className="h-4 w-4 mr-2" />
