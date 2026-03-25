@@ -188,6 +188,8 @@ export default function CreateListing() {
     setSelectedFeatures([]);
     setNicho("");
     setRegion("");
+    setAlcance("");
+    setGenero("");
     setLoginType("");
     setItems([]);
     setNewItem("");
