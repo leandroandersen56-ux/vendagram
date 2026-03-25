@@ -110,7 +110,7 @@ export default function EditListingPanel() {
             </SelectTrigger>
             <SelectContent>
               {PLATFORMS.map((p) => (
-                <SelectItem key={p.id} value={p.id === "freefire" ? "free_fire" : p.id}>
+                <SelectItem key={p.id} value={p.id}>
                   {p.icon} {p.name}
                 </SelectItem>
               ))}

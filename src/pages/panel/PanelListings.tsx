@@ -40,7 +40,6 @@ function getCategoryInfo(category: string) {
   const map: Record<string, { icon: string; name: string; color: string }> = {};
   PLATFORMS.forEach((p) => {
     map[p.id] = p;
-    if (p.id === "freefire") map["free_fire"] = p;
   });
   return map[category] || { icon: "🌐", name: category, color: "#7C3AED" };
 }

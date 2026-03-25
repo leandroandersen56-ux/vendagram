@@ -36,12 +36,15 @@ export interface TransactionStep {
 }
 
 export const PLATFORMS = [
-  { id: 'freefire', name: 'Free Fire', icon: '🎮', color: '#FF6B35' },
+  { id: 'free_fire', name: 'Free Fire', icon: '🎮', color: '#FF6B35' },
   { id: 'instagram', name: 'Instagram', icon: '📸', color: '#E1306C' },
   { id: 'tiktok', name: 'TikTok', icon: '🎵', color: '#00F2EA' },
   { id: 'facebook', name: 'Facebook', icon: '👤', color: '#1877F2' },
   { id: 'youtube', name: 'YouTube', icon: '▶️', color: '#FF0000' },
   { id: 'valorant', name: 'Valorant', icon: '🎯', color: '#FF4655' },
+  { id: 'fortnite', name: 'Fortnite', icon: '🏗️', color: '#9D4DBB' },
+  { id: 'roblox', name: 'Roblox', icon: '🧱', color: '#E2231A' },
+  { id: 'clash_royale', name: 'Clash Royale', icon: '👑', color: '#F5C518' },
   { id: 'other', name: 'Outros', icon: '🌐', color: '#7C3AED' },
 ];
 
@@ -52,7 +55,7 @@ export const MOCK_LISTINGS: Listing[] = [
     sellerName: 'GameMaster99',
     sellerRating: 4.8,
     sellerSales: 23,
-    platform: 'freefire',
+    platform: 'free_fire',
     title: 'Conta Free Fire Nível 75 - Full Skin',
     description: 'Conta com todas as skins raras, incluindo Angelical e Lendárias. Level 75, mais de 200 diamantes. Rank Heroico.',
     price: 350,
@@ -164,7 +167,7 @@ export const GAME_STEPS = [
 ];
 
 export function getPlatformSteps(platform: string): string[] {
-  const gameCategories = ['freefire', 'valorant'];
+  const gameCategories = ['free_fire', 'valorant'];
   return gameCategories.includes(platform) ? GAME_STEPS : SOCIAL_MEDIA_STEPS;
 }
 
