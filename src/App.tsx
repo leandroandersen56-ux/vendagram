@@ -18,6 +18,7 @@ import PanelWallet from "./pages/panel/PanelWallet.tsx";
 import PanelNotifications from "./pages/panel/PanelNotifications.tsx";
 import PanelProfile from "./pages/panel/PanelProfile.tsx";
 import CreateListingPanel from "./pages/panel/CreateListingPanel.tsx";
+import EditListingPanel from "./pages/panel/EditListingPanel.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -51,6 +52,7 @@ function AppRoutes() {
           <Route index element={<PanelOverview />} />
           <Route path="anuncios" element={<PanelListings />} />
           <Route path="anuncios/novo" element={<CreateListingPanel />} />
+          <Route path="anuncios/editar/:id" element={<EditListingPanel />} />
           <Route path="transacoes" element={<PanelTransactions />} />
           <Route path="carteira" element={<PanelWallet />} />
           <Route path="notificacoes" element={<PanelNotifications />} />
