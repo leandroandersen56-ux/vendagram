@@ -149,6 +149,7 @@ export default function CreateListing() {
     setAlcance("");
     setGenero("");
     setLoginType("");
+    setRank("");
   };
 
   const handlePublish = async () => {
