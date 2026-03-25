@@ -1,0 +1,155 @@
+import { useParams, Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { ArrowLeft, Star, Shield, Share2, ShoppingCart, CheckCircle2, Clock, MessageCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import { MOCK_LISTINGS, formatBRL, getPlatform } from "@/lib/mock-data";
+
+export default function ListingDetail() {
+  const { id } = useParams();
+  const listing = MOCK_LISTINGS.find((l) => l.id === id);
+
+  if (!listing) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Navbar />
+        <div className="text-center">
+          <p className="text-4xl mb-4">😕</p>
+          <p className="text-foreground font-medium mb-4">Anúncio não encontrado</p>
+          <Link to="/marketplace"><Button variant="hero">Voltar ao Marketplace</Button></Link>
+        </div>
+      </div>
+    );
+  }
+
+  const platform = getPlatform(listing.platform);
+
+  const handleWhatsAppShare = () => {
+    const message = `🎮 Vendo conta ${platform.name} - ${listing.title} por ${formatBRL(listing.price)} 🔒 Compra 100% segura com escrow automático: ${window.location.origin}/listing/${listing.id}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
+  };
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Navbar />
+      <div className="container mx-auto px-4 pt-24 pb-16">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+          {/* Back button */}
+          <Link to="/marketplace" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6">
+            <ArrowLeft className="h-4 w-4" />
+            Voltar ao Marketplace
+          </Link>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Main content */}
+            <div className="lg:col-span-2 space-y-6">
+              {/* Gallery placeholder */}
+              <div className="aspect-video rounded-lg flex items-center justify-center border border-border" style={{ background: `linear-gradient(135deg, ${platform.color}15, ${platform.color}05)` }}>
+                <div className="text-center">
+                  <span className="text-7xl block mb-4">{platform.icon}</span>
+                  <p className="text-sm text-muted-foreground">Screenshots do vendedor aparecerão aqui</p>
+                </div>
+              </div>
+
+              {/* Details */}
+              <div className="bg-card border border-border rounded-lg p-6 space-y-6">
+                <div>
+                  <div className="flex items-center gap-2 mb-3">
+                    <Badge className="bg-muted text-foreground border-0">{platform.icon} {platform.name}</Badge>
+                    <Badge className="bg-success/10 text-success border-0">Disponível</Badge>
+                  </div>
+                  <h1 className="text-2xl font-bold text-foreground mb-3">{listing.title}</h1>
+                  <p className="text-muted-foreground text-sm leading-relaxed">{listing.description}</p>
+                </div>
+
+                {/* Account details */}
+                <div>
+                  <h3 className="font-semibold text-foreground mb-4">Detalhes da Conta</h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    {Object.entries(listing.fields).map(([key, value]) => (
+                      <div key={key} className="bg-muted rounded-lg p-3">
+                        <p className="text-xs text-muted-foreground mb-1">{key}</p>
+                        <p className="text-sm font-medium text-foreground">
+                          {typeof value === "boolean" ? (value ? "✅ Sim" : "❌ Não") : String(value)}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Sidebar */}
+            <div className="space-y-6">
+              {/* Purchase card */}
+              <div className="bg-card border border-border rounded-lg p-6 space-y-4 sticky top-24">
+                <div className="text-center">
+                  <p className="text-3xl font-display font-bold text-primary mb-1">{formatBRL(listing.price)}</p>
+                  <p className="text-xs text-muted-foreground">+ 10% taxa de segurança (paga pelo vendedor)</p>
+                </div>
+
+                <Link to={`/transaction/${listing.id}`}>
+                  <Button variant="hero" className="w-full py-6 text-base" size="lg">
+                    <ShoppingCart className="h-5 w-5 mr-2" />
+                    Comprar com Segurança
+                  </Button>
+                </Link>
+
+                <Button variant="glass" className="w-full" onClick={handleWhatsAppShare}>
+                  <MessageCircle className="h-4 w-4 mr-2" />
+                  Compartilhar no WhatsApp
+                </Button>
+
+                <Button variant="outline" className="w-full" onClick={() => {
+                  navigator.clipboard.writeText(`${window.location.origin}/listing/${listing.id}`);
+                }}>
+                  <Share2 className="h-4 w-4 mr-2" />
+                  Copiar Link
+                </Button>
+
+                {/* Trust badges */}
+                <div className="space-y-3 pt-4 border-t border-border">
+                  {[
+                    { icon: <Shield className="h-4 w-4" />, text: "Escrow automático" },
+                    { icon: <CheckCircle2 className="h-4 w-4" />, text: "Checklist de verificação" },
+                    { icon: <Clock className="h-4 w-4" />, text: "24h para verificar" },
+                  ].map((item) => (
+                    <div key={item.text} className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <span className="text-primary">{item.icon}</span>
+                      {item.text}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Seller card */}
+              <div className="bg-card border border-border rounded-lg p-6">
+                <h3 className="font-semibold text-foreground mb-4">Vendedor</h3>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
+                    {listing.sellerName[0]}
+                  </div>
+                  <div>
+                    <p className="font-medium text-foreground">{listing.sellerName}</p>
+                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                      <Star className="h-3 w-3 text-warning fill-warning" />
+                      {listing.sellerRating} · {listing.sellerSales} vendas
+                    </div>
+                  </div>
+                </div>
+                {listing.sellerSales >= 5 && (
+                  <Badge className="bg-primary/10 text-primary border-0 text-xs">
+                    <CheckCircle2 className="h-3 w-3 mr-1" /> Vendedor Verificado
+                  </Badge>
+                )}
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+      <Footer />
+    </div>
+  );
+}
