@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Search, Menu, X, User, LogOut, LayoutDashboard, ShoppingCart } from "lucide-react";
+import { Search, Menu, X, User, LogOut, LayoutDashboard, ShoppingCart, Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
@@ -13,7 +13,16 @@ import {
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const { user, isAuthenticated, openAuth, logout } = useAuth();
+
+  const handleSell = () => {
+    if (isAuthenticated) {
+      navigate("/painel/anuncios/novo");
+    } else {
+      openAuth("/painel/anuncios/novo");
+    }
+  };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0D0D0D] border-b border-border">
@@ -101,10 +110,19 @@ export default function Navbar() {
           )}
         </div>
 
-        {/* Mobile toggle */}
-        <Button variant="ghost" size="icon" className="md:hidden text-foreground" onClick={() => setMobileOpen(!mobileOpen)}>
-          {mobileOpen ? <X /> : <Menu />}
-        </Button>
+        {/* Mobile: Anunciar + toggle */}
+        <div className="flex items-center gap-2 md:hidden">
+          <button
+            onClick={handleSell}
+            className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-primary text-primary-foreground font-bold text-[11px] tracking-wide hover:bg-primary/90 transition-all shadow-[0_0_10px_hsl(60_100%_50%/0.25)]"
+          >
+            <Plus className="h-3 w-3" />
+            Anunciar
+          </button>
+          <Button variant="ghost" size="icon" className="text-foreground" onClick={() => setMobileOpen(!mobileOpen)}>
+            {mobileOpen ? <X /> : <Menu />}
+          </Button>
+        </div>
       </div>
 
       {/* Mobile menu */}
