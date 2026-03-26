@@ -13,6 +13,8 @@ import PlatformIcon from "@/components/PlatformIcon";
 import { PLATFORMS, MOCK_LISTINGS, type Listing } from "@/lib/mock-data";
 import { supabase } from "@/integrations/supabase/client";
 import bannerImg from "@/assets/banner-home.jpg";
+import bannerPromo1 from "@/assets/banner-promo-1.webp";
+import bannerPromo2 from "@/assets/banner-promo-2.webp";
 
 export default function Index() {
   const { isAuthenticated, openAuth } = useAuth();
@@ -302,6 +304,16 @@ export default function Index() {
                         </motion.div>
                       </div>
                     )}
+
+                    {/* Promo Banners */}
+                    <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-1">
+                      {[bannerPromo1, bannerPromo2].map((src, i) => (
+                        <div key={i} className="shrink-0 w-[85%] sm:w-[49%] rounded-xl overflow-hidden">
+                          <img src={src} alt={`Promoção ${i + 1}`} className="w-full h-[100px] sm:h-[140px] object-cover" loading="lazy" />
+                        </div>
+                      ))}
+                    </div>
+
                     {games.length > 0 && (
                       <div>
                         <div className="flex items-center justify-between mb-3">
