@@ -89,7 +89,7 @@ export default function Index() {
     <div className="min-h-screen bg-background flex flex-col">
       <Navbar />
       {/* Hero Banner */}
-      <section className="pt-20 px-4">
+      <section className="pt-20 px-4 order-1 sm:order-1">
         <div className="container mx-auto">
           <div className="relative overflow-hidden rounded-2xl">
             <img
