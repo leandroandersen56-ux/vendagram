@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Search, Menu, X, User, LogOut, LayoutDashboard, ShoppingCart, Plus } from "lucide-react";
 import { Search, Menu, X, User, LogOut, LayoutDashboard, ShoppingCart } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
