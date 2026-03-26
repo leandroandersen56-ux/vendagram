@@ -134,7 +134,7 @@ export const MOCK_LISTINGS: Listing[] = [
     description: 'Conta Imortal 3 com mais de 50 skins de armas, incluindo Knife Reaver e Vandal Prime.',
     price: 800,
     status: 'active',
-    screenshots: [],
+    screenshots: [ssValorant],
     fields: { 'Rank': 'Imortal 3', 'Skins': 50, 'Agentes Desbloqueados': 'Todos' },
     createdAt: '2024-03-17',
   },
