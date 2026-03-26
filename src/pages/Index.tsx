@@ -56,7 +56,10 @@ export default function Index() {
             : {},
           createdAt: row.created_at,
         }));
-        setListings(mapped);
+        // Merge DB listings with mock data, avoiding duplicate platforms when possible
+        const dbPlatforms = new Set(mapped.map(l => l.platform));
+        const extraMocks = MOCK_LISTINGS.filter(m => !dbPlatforms.has(m.platform));
+        setListings([...mapped, ...extraMocks]);
       } else {
         setListings(MOCK_LISTINGS);
       }
