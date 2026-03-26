@@ -10,7 +10,7 @@ const C = "#FFFF00";
 
 const icons: Record<string, (s: number) => React.ReactNode> = {
   free_fire: (s) => (
-    <img src={freefireLogo} width={s} height={s} alt="Free Fire" style={{ objectFit: "contain", filter: "brightness(0) saturate(100%) invert(95%) sepia(97%) saturate(1000%) hue-rotate(0deg) brightness(105%)" }} />
+    <img src={freefireLogo} width={s * 1.4} height={s * 1.4} alt="Free Fire" style={{ objectFit: "contain", filter: "brightness(0) saturate(100%) invert(95%) sepia(97%) saturate(1000%) hue-rotate(0deg) brightness(105%)" }} />
   ),
 
   instagram: (s) => (
