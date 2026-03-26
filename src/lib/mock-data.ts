@@ -1,12 +1,3 @@
-import coverFreefire from "@/assets/covers/cover-freefire.jpg";
-import coverInstagram from "@/assets/covers/cover-instagram.jpg";
-import coverTiktok from "@/assets/covers/cover-tiktok.jpg";
-import coverValorant from "@/assets/covers/cover-valorant.jpg";
-import coverYoutube from "@/assets/covers/cover-youtube.jpg";
-import coverFacebook from "@/assets/covers/cover-facebook.jpg";
-import coverRoblox from "@/assets/covers/cover-roblox.jpg";
-import coverFortnite from "@/assets/covers/cover-fortnite.jpg";
-
 import ssFreefire from "@/assets/screenshots/screenshot-freefire.jpg";
 import ssInstagram from "@/assets/screenshots/screenshot-instagram.jpg";
 import ssTiktok from "@/assets/screenshots/screenshot-tiktok.jpg";
@@ -21,14 +12,15 @@ import ssTiktok2 from "@/assets/screenshots/screenshot-tiktok2.jpg";
 import ssYoutube2 from "@/assets/screenshots/screenshot-youtube2.jpg";
 
 export const PLATFORM_COVERS: Record<string, string> = {
-  free_fire: coverFreefire,
-  instagram: coverInstagram,
-  tiktok: coverTiktok,
-  valorant: coverValorant,
-  youtube: coverYoutube,
-  facebook: coverFacebook,
-  roblox: coverRoblox,
-  fortnite: coverFortnite,
+  free_fire: ssFreefire,
+  instagram: ssInstagram,
+  tiktok: ssTiktok,
+  valorant: ssValorant,
+  youtube: ssYoutube,
+  facebook: ssFacebook,
+  roblox: ssRoblox,
+  fortnite: ssFortnite,
+  clash_royale: ssClashRoyale,
 };
 
 export interface Listing {
