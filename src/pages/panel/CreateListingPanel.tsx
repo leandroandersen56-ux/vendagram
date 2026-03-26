@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Eye, Plus, X, Upload, ChevronRight } from "lucide-react";
+import { Eye, Plus, X, Upload, ChevronRight, Gamepad2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
