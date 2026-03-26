@@ -21,7 +21,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
 
   return (
     <Link to={`/listing/${listing.id}`}>
-      <div className="bg-card rounded-xl overflow-hidden group relative hover:-translate-y-0.5 transition-all duration-200 border border-border hover:border-primary/30">
+      <div className="rounded-xl overflow-hidden group relative hover:-translate-y-0.5 transition-all duration-200">
         {/* Cover image */}
         <div className="aspect-square relative overflow-hidden bg-muted">
           {coverImage ? (
@@ -57,24 +57,24 @@ export default function ListingCard({ listing }: ListingCardProps) {
           </Button>
         </div>
 
-        {/* Info below image */}
-        <div className="p-2 space-y-1.5">
-          <h3 className="font-semibold text-[11px] sm:text-xs text-foreground line-clamp-2 leading-snug min-h-[2rem]">
+        {/* White bottom strip */}
+        <div className="bg-white p-2.5 space-y-1.5">
+          <h3 className="font-bold text-[11px] sm:text-xs text-neutral-900 line-clamp-2 leading-snug min-h-[2rem]">
             {listing.title}
           </h3>
 
           <div className="flex flex-wrap gap-1">
             {Object.entries(listing.fields).slice(0, 2).map(([key, value]) => (
-              <span key={key} className="text-[9px] bg-muted text-muted-foreground px-1.5 py-0.5 rounded">
+              <span key={key} className="text-[9px] bg-neutral-100 text-neutral-500 px-1.5 py-0.5 rounded">
                 {key}: {typeof value === 'boolean' ? (value ? '✓' : '✗') : value}
               </span>
             ))}
           </div>
 
-          <div className="flex items-center justify-between pt-1 border-t border-border">
-            <p className="text-sm font-extrabold text-primary">{formatBRL(listing.price)}</p>
+          <div className="flex items-center justify-between pt-1.5 border-t border-neutral-200">
+            <p className="text-sm font-extrabold text-neutral-900">{formatBRL(listing.price)}</p>
             <div className="flex items-center gap-0.5">
-              <span className="text-xs font-bold text-foreground">{listing.sellerRating}</span>
+              <span className="text-xs font-bold text-neutral-700">{listing.sellerRating}</span>
               <Star className="h-3 w-3 text-primary fill-primary" />
             </div>
           </div>
