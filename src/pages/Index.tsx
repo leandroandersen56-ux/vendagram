@@ -118,7 +118,7 @@ export default function Index() {
                   <p className="text-xs sm:text-sm text-muted-foreground mb-4 hidden sm:block">
                     Marketplace com escrow automático. Sem riscos.
                   </p>
-                  <div className="flex gap-2 sm:gap-3">
+                  <div className="flex flex-col sm:flex-row gap-1.5 sm:gap-3">
                     <Button variant="hero" size="sm" className="text-[10px] sm:text-xs h-7 sm:h-9 px-3 sm:px-5" onClick={handleSell}>
                       Vender Conta <ArrowRight className="h-3 w-3 sm:h-3.5 sm:w-3.5 ml-1" />
                     </Button>
