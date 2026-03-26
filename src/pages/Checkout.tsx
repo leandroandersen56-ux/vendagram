@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   ArrowLeft, Shield, Lock, CreditCard, QrCode,
-  CheckCircle2, Loader2, ShoppingCart, Receipt
+  CheckCircle2, Loader2, ShoppingCart, Receipt, AlertCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
