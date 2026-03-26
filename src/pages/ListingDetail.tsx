@@ -124,12 +124,17 @@ export default function ListingDetail() {
               {/* Title */}
               <h1 className="text-2xl font-bold text-foreground leading-snug mb-2">{listing.title}</h1>
 
-              {/* Badges row */}
-              <div className="flex items-center gap-3 mb-5">
-                <span className="text-xs text-muted-foreground flex items-center gap-1.5">
-                  {platform.icon} {platform.name}
+              {/* Trust badges row (like Bonoxs) */}
+              <div className="flex items-center gap-4 mb-5">
+                <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <Store className="h-3.5 w-3.5" /> Vendedor verificado
                 </span>
-                <span className="text-xs text-success flex items-center gap-1">● Disponível</span>
+                <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <Lock className="h-3.5 w-3.5" /> Pagamento seguro
+                </span>
+                <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <Eye className="h-3.5 w-3.5" /> {listing.views_count || 0} visualizações
+                </span>
               </div>
 
               {/* Separator */}
