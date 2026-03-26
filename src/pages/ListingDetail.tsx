@@ -14,7 +14,7 @@ import { useAuth } from "@/contexts/AuthContext";
 export default function ListingDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { isAuthenticated, openAuth } = useAuth();
+  const { user, isAuthenticated, openAuth } = useAuth();
   const [listing, setListing] = useState<any>(null);
   const [seller, setSeller] = useState<any>(null);
   const [loading, setLoading] = useState(true);
