@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 export default function AuthModal() {
   const { showAuthModal, closeAuth, login, authRedirect } = useAuth();
@@ -16,25 +18,43 @@ export default function AuthModal() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    login({
-      id: "u-demo",
-      name: name || email.split("@")[0],
-      email,
-    });
-    if (authRedirect) navigate(authRedirect);
-    resetForm();
+    setLoading(true);
+    try {
+      if (mode === "register") {
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: { name: name || email.split("@")[0] },
+            emailRedirectTo: window.location.origin,
+          },
+        });
+        if (error) throw error;
+        toast.success("Conta criada! Verifique seu e-mail para confirmar.");
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        if (authRedirect) navigate(authRedirect);
+      }
+      closeAuth();
+      resetForm();
+    } catch (err: any) {
+      toast.error(err.message || "Erro ao autenticar");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleGoogle = () => {
-    login({
-      id: "u-google",
-      name: "Usuário Google",
-      email: "user@gmail.com",
+  const handleGoogle = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: window.location.origin },
     });
-    if (authRedirect) navigate(authRedirect);
-    resetForm();
+    if (error) toast.error(error.message);
   };
 
   const resetForm = () => {
@@ -162,8 +182,8 @@ export default function AuthModal() {
                   </button>
                 )}
 
-                <Button variant="hero" type="submit" className="w-full h-11">
-                  {mode === "login" ? "Entrar" : "Criar Conta"}
+                <Button variant="hero" type="submit" className="w-full h-11" disabled={loading}>
+                  {loading ? "Aguarde..." : mode === "login" ? "Entrar" : "Criar Conta"}
                 </Button>
               </form>
             </div>
