@@ -209,7 +209,7 @@ export default function CreateListing() {
               onClick={() => selectPlatform(p.id)}
               className="flex items-center gap-3 p-4 rounded-xl border border-border bg-card hover:border-primary/50 hover:bg-primary/5 transition-all text-left group"
             >
-              <span className="text-2xl">{p.icon}</span>
+              <PlatformIcon platformId={p.id} size={28} />
               <div>
                 <p className="font-medium text-foreground text-sm group-hover:text-primary transition-colors">{p.name}</p>
               </div>
