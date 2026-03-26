@@ -82,11 +82,17 @@ export default function Index() {
     fetchListings();
   }, []);
 
-  const filtered = listings.filter((l) => {
-    if (platform !== "all" && l.platform !== platform) return false;
-    if (search && !l.title.toLowerCase().includes(search.toLowerCase())) return false;
-    return true;
-  });
+  const filtered = listings
+    .filter((l) => {
+      if (platform !== "all" && l.platform !== platform) return false;
+      if (search && !l.title.toLowerCase().includes(search.toLowerCase())) return false;
+      return true;
+    })
+    .sort((a, b) => {
+      if (sortBy === "price-asc") return a.price - b.price;
+      if (sortBy === "price-desc") return b.price - a.price;
+      return 0;
+    });
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
