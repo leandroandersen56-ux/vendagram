@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Star, Shield, ShoppingCart, CheckCircle2, Clock, MessageCircle, Loader2, Copy, Check, BadgeCheck, Lock, Store, Eye } from "lucide-react";
+import { ArrowLeft, Star, Shield, ShoppingCart, CheckCircle2, Clock, MessageCircle, Loader2, Copy, Check, BadgeCheck, Lock, Store, Eye, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Navbar from "@/components/Navbar";
