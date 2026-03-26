@@ -129,7 +129,7 @@ export default function Index() {
       <section className="pt-3 pb-1 px-4 order-2 sm:order-2">
         <div className="container mx-auto">
           <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
-            <Link to="/marketplace">
+            <Link to="/marketplace" className="hidden sm:block">
               <div className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-card border border-border hover:border-primary/40 transition-all whitespace-nowrap cursor-pointer group">
                 <span className="text-xs font-medium text-muted-foreground group-hover:text-primary transition-colors">Todas</span>
               </div>
