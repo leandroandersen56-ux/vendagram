@@ -174,7 +174,7 @@ export default function Index() {
       </section>
 
       {/* Listings Section */}
-      <section className="py-8 px-3 sm:px-4 order-2">
+      <section className="py-8 px-4 order-2">
         <div className="container mx-auto">
           {/* Header + Search (mobile: stacked, desktop: inline with badges) */}
           {/* Search - full width, mobile */}
