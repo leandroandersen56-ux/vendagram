@@ -31,6 +31,8 @@ type ListingRow = {
   created_at: string;
 };
 
+const isUUID = (s: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s);
+
 const statusMap: Record<string, { label: string; className: string }> = {
   active: { label: "Ativo", className: "bg-success/10 text-success" },
   sold: { label: "Vendido", className: "bg-primary/10 text-primary" },
