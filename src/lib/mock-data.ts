@@ -148,7 +148,7 @@ export const MOCK_LISTINGS: Listing[] = [
     id: '6',
     sellerId: 'u5',
     sellerName: 'FBTrader',
-    sellerRating: 3.8,
+    sellerRating: 4.1,
     sellerSales: 3,
     platform: 'facebook',
     title: 'Facebook com Marketplace Ativo - 2000 Amigos',

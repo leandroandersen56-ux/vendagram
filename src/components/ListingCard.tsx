@@ -64,7 +64,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
         </div>
 
         <div className="p-2.5 space-y-2">
-          <h3 className="font-semibold text-[11px] text-foreground line-clamp-2 min-h-[2rem] leading-snug">
+          <h3 className="font-semibold text-xs text-foreground line-clamp-2 min-h-[2.2rem] leading-snug">
             {listing.title}
           </h3>
 
