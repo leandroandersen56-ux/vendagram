@@ -153,15 +153,23 @@ export default function PanelLayout() {
             SAFETRADE<span className="text-secondary">.GG</span>
           </span>
         </div>
-        <button
-          onClick={() => {
-            const el = document.getElementById('wallet-section');
-            if (el) el.scrollIntoView({ behavior: 'smooth' });
-            else navigate('/painel');
-          }}
-        >
-          <Wallet className="h-5 w-5 text-muted-foreground" />
-        </button>
+        <Popover>
+          <PopoverTrigger asChild>
+            <button><Wallet className="h-5 w-5 text-muted-foreground" /></button>
+          </PopoverTrigger>
+          <PopoverContent className="w-56 p-2 bg-card border-border" align="end">
+            <div className="space-y-1">
+              {walletActions.map((a) => (
+                <button key={a.label} onClick={a.onClick} className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm hover:bg-muted/50 transition-all">
+                  <div className={`h-8 w-8 rounded-full ${a.bg} flex items-center justify-center`}>
+                    <a.icon className={`h-4 w-4 ${a.color}`} />
+                  </div>
+                  <span className="text-foreground">{a.label}</span>
+                </button>
+              ))}
+            </div>
+          </PopoverContent>
+        </Popover>
       </div>
 
       {/* Mobile sidebar overlay */}
