@@ -30,6 +30,15 @@ export default function EditListingPanel() {
   useEffect(() => {
     async function fetchListing() {
       if (!id) return;
+
+      // Validate UUID format before querying
+      const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+      if (!isUUID) {
+        toast({ title: "Anúncio de demonstração", description: "Crie um anúncio real para editá-lo.", variant: "destructive" });
+        navigate("/painel/anuncios");
+        return;
+      }
+
       const { data, error } = await supabase
         .from("listings")
         .select("*")
