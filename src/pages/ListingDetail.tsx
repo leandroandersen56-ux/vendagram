@@ -253,7 +253,7 @@ export default function ListingDetail() {
 
                 {/* Seller */}
                 <div className="flex items-center gap-2">
-                  <div className="h-8 w-8 rounded-full bg-primary/15 flex items-center justify-center text-primary font-bold text-xs">
+                  <div className="h-8 w-8 rounded-full bg-[#FFD700]/15 flex items-center justify-center text-[#FFD700] font-bold text-xs">
                     {sellerName[0]}
                   </div>
                   <div>
