@@ -139,29 +139,34 @@ export default function Index() {
 
 
       {/* How it works */}
-      <section className="py-6 sm:py-12 px-4 border-b border-border order-4">
+      <section className="py-6 sm:py-14 px-4 order-4">
         <div className="container mx-auto">
-          <h2 className="text-sm sm:text-lg font-bold text-foreground mb-4 sm:mb-8 uppercase tracking-wide text-center">Como Funciona</h2>
-          <div className="grid grid-cols-4 gap-2 sm:gap-6">
+          <h2 className="text-sm sm:text-lg font-bold text-foreground mb-4 sm:mb-8 uppercase tracking-widest text-center">
+            Como Funciona
+          </h2>
+          <div className="grid grid-cols-4 gap-2 sm:gap-5">
             {[
-              { icon: <Search className="h-4 w-4 sm:h-7 sm:w-7" />, title: "Encontre", desc: "Busque por plataforma e preço" },
-              { icon: <Shield className="h-4 w-4 sm:h-7 sm:w-7" />, title: "Compre", desc: "Pix retido em escrow" },
-              { icon: <CheckCircle2 className="h-4 w-4 sm:h-7 sm:w-7" />, title: "Verifique", desc: "Valide a conta recebida" },
-              { icon: <Zap className="h-4 w-4 sm:h-7 sm:w-7" />, title: "Pronto!", desc: "Pagamento liberado" },
+              { icon: <Search className="h-4 w-4 sm:h-6 sm:w-6" />, title: "Encontre", desc: "Busque por plataforma e preço", num: "1" },
+              { icon: <Shield className="h-4 w-4 sm:h-6 sm:w-6" />, title: "Compre", desc: "Pix retido em escrow", num: "2" },
+              { icon: <CheckCircle2 className="h-4 w-4 sm:h-6 sm:w-6" />, title: "Verifique", desc: "Valide a conta recebida", num: "3" },
+              { icon: <Zap className="h-4 w-4 sm:h-6 sm:w-6" />, title: "Pronto!", desc: "Pagamento liberado", num: "4" },
             ].map((step, i) => (
               <motion.div
                 key={step.title}
-                initial={{ opacity: 0, y: 12 }}
+                initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.08 }}
+                transition={{ delay: i * 0.1, duration: 0.4 }}
                 viewport={{ once: true }}
-                className="bg-card border border-border rounded-lg sm:rounded-xl p-2 sm:p-6 text-center"
+                className="card-surface rounded-xl sm:rounded-2xl p-2.5 sm:p-6 text-center relative overflow-hidden group"
               >
-                <div className="h-8 w-8 sm:h-14 sm:w-14 rounded-lg sm:rounded-xl bg-primary/10 flex items-center justify-center text-primary mx-auto mb-1.5 sm:mb-3">
+                <div className="absolute top-1.5 right-2 sm:top-3 sm:right-3 text-[9px] sm:text-xs font-display font-bold text-primary/30">
+                  {step.num}
+                </div>
+                <div className="h-9 w-9 sm:h-14 sm:w-14 rounded-xl bg-primary/10 flex items-center justify-center text-primary mx-auto mb-2 sm:mb-3 group-hover:glow-primary-sm transition-all">
                   {step.icon}
                 </div>
                 <h3 className="text-[10px] sm:text-sm font-bold text-foreground mb-0.5 sm:mb-1">{step.title}</h3>
-                <p className="text-[9px] sm:text-xs text-muted-foreground leading-tight">{step.desc}</p>
+                <p className="text-[8px] sm:text-xs text-muted-foreground leading-tight">{step.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -179,9 +184,11 @@ export default function Index() {
                 placeholder="Qual conta você está procurando?"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-4 pr-10 bg-card border-border h-11 rounded-full text-xs placeholder:text-muted-foreground focus:border-primary/50 focus:ring-primary/20"
+                className="pl-4 pr-10 bg-card border-border h-11 rounded-full text-xs placeholder:text-muted-foreground/70 focus:border-primary/40 focus:ring-primary/10 transition-all"
               />
-              <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <div className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                <Search className="h-3.5 w-3.5 text-primary" />
+              </div>
             </div>
           </div>
 
@@ -360,20 +367,24 @@ export default function Index() {
       </section>
 
       {/* Trust Section */}
-      <section className="py-8 px-4 border-t border-border order-5">
+      <section className="py-10 px-4 order-5">
         <div className="container mx-auto">
-          <div className="grid grid-cols-3 gap-3 sm:gap-6 text-center">
-            {[
-              { icon: <Shield className="h-5 w-5 sm:h-8 sm:w-8" />, value: "100%", label: "Escrow Seguro" },
-              { icon: <Clock className="h-5 w-5 sm:h-8 sm:w-8" />, value: "24h", label: "Garantia de Compra" },
-              { icon: <CheckCircle2 className="h-5 w-5 sm:h-8 sm:w-8" />, value: "10%", label: "Taxa Transparente" },
-            ].map((stat) => (
-              <div key={stat.label} className="flex flex-col items-center gap-1 sm:gap-2">
-                <div className="text-primary">{stat.icon}</div>
-                <p className="text-lg sm:text-2xl font-display font-bold text-foreground">{stat.value}</p>
-                <p className="text-[10px] sm:text-xs text-muted-foreground">{stat.label}</p>
-              </div>
-            ))}
+          <div className="card-surface rounded-2xl p-5 sm:p-8">
+            <div className="grid grid-cols-3 gap-4 sm:gap-8 text-center">
+              {[
+                { icon: <Shield className="h-5 w-5 sm:h-7 sm:w-7" />, value: "100%", label: "Escrow Seguro" },
+                { icon: <Clock className="h-5 w-5 sm:h-7 sm:w-7" />, value: "24h", label: "Garantia" },
+                { icon: <CheckCircle2 className="h-5 w-5 sm:h-7 sm:w-7" />, value: "10%", label: "Taxa Fixa" },
+              ].map((stat) => (
+                <div key={stat.label} className="flex flex-col items-center gap-1.5 sm:gap-2">
+                  <div className="h-10 w-10 sm:h-14 sm:w-14 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                    {stat.icon}
+                  </div>
+                  <p className="text-lg sm:text-2xl font-display font-bold text-foreground">{stat.value}</p>
+                  <p className="text-[10px] sm:text-xs text-muted-foreground font-medium">{stat.label}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
