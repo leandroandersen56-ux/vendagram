@@ -145,9 +145,9 @@ export default function ListingDetail() {
                     {featureFlags.map(([key]) => (
                       <div
                         key={key}
-                        className="border border-[#FFD700]/40 bg-[#FFD700]/5 rounded px-3 py-2 flex items-center gap-2"
+                        className="border border-[#FFFF00]/40 bg-[#FFFF00]/5 rounded px-3 py-2 flex items-center gap-2"
                       >
-                        <CheckCircle2 className="h-3.5 w-3.5 text-[#FFD700] flex-shrink-0" />
+                        <CheckCircle2 className="h-3.5 w-3.5 text-[#FFFF00] flex-shrink-0" />
                         <span className="text-xs font-medium text-foreground">{key}</span>
                       </div>
                     ))}
@@ -200,7 +200,7 @@ export default function ListingDetail() {
                 {originalPrice && (
                   <p className="text-sm text-muted-foreground line-through">R$ {originalPrice}</p>
                 )}
-                <p className="text-3xl font-display font-bold text-[#FFD700]">{formatBRL(listing.price)}</p>
+                <p className="text-3xl font-display font-bold text-[#FFFF00]">{formatBRL(listing.price)}</p>
               </div>
 
               {/* Buy button — yellow/primary like Bonoxs */}
@@ -245,7 +245,7 @@ export default function ListingDetail() {
                     { icon: <Clock className="h-3 w-3" />, text: "24h garantia" },
                   ].map((item) => (
                     <span key={item.text} className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-                      <span className="text-[#FFD700]">{item.icon}</span>
+                      <span className="text-[#FFFF00]">{item.icon}</span>
                       {item.text}
                     </span>
                   ))}
@@ -253,15 +253,15 @@ export default function ListingDetail() {
 
                 {/* Seller */}
                 <div className="flex items-center gap-2">
-                  <div className="h-8 w-8 rounded-full bg-[#FFD700]/15 flex items-center justify-center text-[#FFD700] font-bold text-xs">
+                  <div className="h-8 w-8 rounded-full bg-[#FFFF00]/15 flex items-center justify-center text-[#FFFF00] font-bold text-xs">
                     {sellerName[0]}
                   </div>
                   <div>
                     <p className="text-sm font-medium text-foreground leading-none">{sellerName}</p>
                     <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
-                      <Star className="h-2.5 w-2.5 text-[#FFD700] fill-[#FFD700]" />
+                      <Star className="h-2.5 w-2.5 text-[#FFFF00] fill-[#FFFF00]" />
                       {sellerRating} · {sellerSales} vendas
-                      {sellerSales >= 5 && <CheckCircle2 className="h-2.5 w-2.5 text-[#FFD700] ml-1" />}
+                      {sellerSales >= 5 && <CheckCircle2 className="h-2.5 w-2.5 text-[#FFFF00] ml-1" />}
                     </div>
                   </div>
                 </div>

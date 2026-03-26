@@ -20,7 +20,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
 
   return (
     <Link to={`/listing/${listing.id}`}>
-      <div className="bg-neutral-900 border border-neutral-800 rounded-lg overflow-hidden group relative hover:border-[#FFD700]/30 hover:-translate-y-0.5 transition-all duration-200">
+      <div className="bg-neutral-900 border border-neutral-800 rounded-lg overflow-hidden group relative hover:border-[#FFFF00]/30 hover:-translate-y-0.5 transition-all duration-200">
         {/* Platform banner */}
         <div
           className="h-28 sm:h-32 flex items-center justify-center relative"
@@ -33,7 +33,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
           <Button
             variant="ghost"
             size="icon"
-            className="absolute top-1.5 right-1.5 h-6 w-6 text-neutral-500 hover:text-[#FFD700] opacity-0 group-hover:opacity-100 transition-opacity"
+            className="absolute top-1.5 right-1.5 h-6 w-6 text-neutral-500 hover:text-[#FFFF00] opacity-0 group-hover:opacity-100 transition-opacity"
             onClick={handleShare}
           >
             <Share2 className="h-3 w-3" />
@@ -55,9 +55,9 @@ export default function ListingCard({ listing }: ListingCardProps) {
           </div>
 
           <div className="flex items-center justify-between pt-1.5 border-t border-neutral-800">
-            <p className="text-xs font-bold text-[#FFD700]">{formatBRL(listing.price)}</p>
+            <p className="text-xs font-bold text-[#FFFF00]">{formatBRL(listing.price)}</p>
             <div className="flex items-center gap-0.5 text-[9px] text-neutral-500">
-              <Star className="h-2.5 w-2.5 text-[#FFD700] fill-[#FFD700]" />
+              <Star className="h-2.5 w-2.5 text-[#FFFF00] fill-[#FFFF00]" />
               {listing.sellerRating}
             </div>
           </div>
