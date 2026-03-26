@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowRight, Search, Loader2, Shield, CheckCircle2, Clock, Zap, Gamepad2, Smartphone, AlertCircle } from "lucide-react";
+import { ArrowRight, Search, Loader2, Shield, CheckCircle2, Clock, Zap, Gamepad2, Smartphone, AlertCircle, Plus } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ListingCard from "@/components/ListingCard";
@@ -142,6 +142,14 @@ export default function Index() {
                 </div>
               </Link>
             ))}
+            {/* Anunciar button */}
+            <button
+              onClick={handleSell}
+              className="shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary text-primary-foreground font-semibold text-xs whitespace-nowrap hover:bg-primary/90 transition-all shadow-[0_0_12px_hsl(60_100%_50%/0.3)]"
+            >
+              <Plus className="h-3.5 w-3.5" />
+              Anunciar
+            </button>
           </div>
         </div>
       </section>
