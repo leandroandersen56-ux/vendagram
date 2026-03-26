@@ -43,7 +43,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
           
           {/* Small discrete platform icon */}
-          <div className="absolute top-2 left-2">
+          <div className="absolute bottom-2 right-2">
             <PlatformIcon platformId={listing.platform} size={18} />
           </div>
 
