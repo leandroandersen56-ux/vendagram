@@ -56,11 +56,11 @@ export interface TransactionStep {
 }
 
 export const PLATFORMS = [
-  { id: 'free_fire', name: 'Free Fire', color: '#FF6B35' },
   { id: 'instagram', name: 'Instagram', color: '#E1306C' },
   { id: 'tiktok', name: 'TikTok', color: '#00F2EA' },
-  { id: 'facebook', name: 'Facebook', color: '#1877F2' },
   { id: 'youtube', name: 'YouTube', color: '#FF0000' },
+  { id: 'facebook', name: 'Facebook', color: '#1877F2' },
+  { id: 'free_fire', name: 'Free Fire', color: '#FF6B35' },
   { id: 'valorant', name: 'Valorant', color: '#FF4655' },
   { id: 'fortnite', name: 'Fortnite', color: '#9D4DBB' },
   { id: 'roblox', name: 'Roblox', color: '#E2231A' },
