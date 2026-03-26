@@ -46,6 +46,36 @@ export type Database = {
           },
         ]
       }
+      deposit_requests: {
+        Row: {
+          amount: number
+          created_at: string
+          expires_at: string
+          id: string
+          pix_key: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          expires_at?: string
+          id?: string
+          pix_key?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          expires_at?: string
+          id?: string
+          pix_key?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       disputes: {
         Row: {
           created_at: string
@@ -89,6 +119,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      internal_transfers: {
+        Row: {
+          amount: number
+          created_at: string
+          description: string | null
+          from_user_id: string
+          id: string
+          to_user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          description?: string | null
+          from_user_id: string
+          id?: string
+          to_user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          description?: string | null
+          from_user_id?: string
+          id?: string
+          to_user_id?: string
+        }
+        Relationships: []
       }
       listings: {
         Row: {
@@ -200,8 +257,10 @@ export type Database = {
       }
       profiles: {
         Row: {
+          allow_transfers_from_strangers: boolean | null
           avatar_url: string | null
           avg_rating: number
+          bio: string | null
           cpf: string | null
           created_at: string
           email: string | null
@@ -215,10 +274,14 @@ export type Database = {
           total_sales: number
           updated_at: string
           user_id: string
+          username: string | null
+          whatsapp: string | null
         }
         Insert: {
+          allow_transfers_from_strangers?: boolean | null
           avatar_url?: string | null
           avg_rating?: number
+          bio?: string | null
           cpf?: string | null
           created_at?: string
           email?: string | null
@@ -232,10 +295,14 @@ export type Database = {
           total_sales?: number
           updated_at?: string
           user_id: string
+          username?: string | null
+          whatsapp?: string | null
         }
         Update: {
+          allow_transfers_from_strangers?: boolean | null
           avatar_url?: string | null
           avg_rating?: number
+          bio?: string | null
           cpf?: string | null
           created_at?: string
           email?: string | null
@@ -249,6 +316,8 @@ export type Database = {
           total_sales?: number
           updated_at?: string
           user_id?: string
+          username?: string | null
+          whatsapp?: string | null
         }
         Relationships: []
       }
@@ -283,6 +352,38 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "reviews_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      transaction_messages: {
+        Row: {
+          created_at: string
+          id: string
+          message: string
+          sender_id: string
+          transaction_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message: string
+          sender_id: string
+          transaction_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string
+          sender_id?: string
+          transaction_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transaction_messages_transaction_id_fkey"
             columns: ["transaction_id"]
             isOneToOne: false
             referencedRelation: "transactions"
