@@ -185,7 +185,19 @@ export default function ListingDetail() {
             {/* Right: All info */}
             <div>
               {/* Title */}
-              <h1 className="text-2xl font-bold text-foreground leading-snug mb-2">{listing.title}</h1>
+              <div className="flex items-start justify-between gap-3 mb-2">
+                <h1 className="text-2xl font-bold text-foreground leading-snug">{listing.title}</h1>
+                {user && user.id === listing.seller_id && (
+                  <Button
+                    variant="glass"
+                    size="sm"
+                    className="shrink-0"
+                    onClick={() => navigate(`/painel/anuncios/editar/${listing.id}`)}
+                  >
+                    <Edit className="h-3.5 w-3.5 mr-1.5" /> Editar
+                  </Button>
+                )}
+              </div>
 
               {/* Trust badges row (Bonoxs style) */}
               <div className="flex items-center gap-4 mb-5">
