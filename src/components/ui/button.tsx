@@ -15,7 +15,7 @@ const buttonVariants = cva(
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        hero: "bg-gradient-primary text-primary-foreground hover:opacity-90 glow-purple font-semibold",
+        hero: "bg-[#FFD700] text-[#0a0a0a] hover:bg-[#e6c200] font-bold shadow-[0_0_20px_rgba(255,215,0,0.3)]",
         accent: "bg-gradient-accent text-secondary-foreground hover:opacity-90 glow-cyan font-semibold",
         glass: "glass text-foreground hover:bg-muted/40",
       },

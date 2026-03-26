@@ -199,7 +199,7 @@ export default function ListingDetail() {
                 {originalPrice && (
                   <p className="text-sm text-muted-foreground line-through">R$ {originalPrice}</p>
                 )}
-                <p className="text-3xl font-display font-bold text-primary">{formatBRL(listing.price)}</p>
+                <p className="text-3xl font-display font-bold text-[#FFD700]">{formatBRL(listing.price)}</p>
               </div>
 
               {/* Buy button — yellow/primary like Bonoxs */}
