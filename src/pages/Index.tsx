@@ -169,11 +169,39 @@ export default function Index() {
       {/* Listings Section */}
       <section className="py-8 px-4 order-2">
         <div className="container mx-auto">
-          {/* Header + Search + Filters */}
-          <div className="flex items-center justify-between gap-3 mb-3">
-            <h2 className="text-base font-bold text-foreground uppercase tracking-wide whitespace-nowrap">Anúncios Recentes</h2>
+          {/* Header */}
+          <h2 className="text-base font-bold text-foreground uppercase tracking-wide mb-3">Anúncios Recentes</h2>
+
+          {/* Filter pills + Search on same line */}
+          <div className="flex items-center gap-2 mb-4">
+            <div className="flex gap-1.5 overflow-x-auto scrollbar-hide pb-1 flex-1">
+              <button
+                onClick={() => setPlatform("all")}
+                className={`shrink-0 px-3 py-1.5 rounded-full text-[11px] font-medium transition-all ${
+                  platform === "all"
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80"
+                }`}
+              >
+                Todas
+              </button>
+              {PLATFORMS.map((p) => (
+                <button
+                  key={p.id}
+                  onClick={() => setPlatform(p.id)}
+                  className={`shrink-0 inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-[11px] font-medium transition-all ${
+                    platform === p.id
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80"
+                  }`}
+                >
+                  <PlatformIcon platformId={p.id} size={12} />
+                  {p.name}
+                </button>
+              ))}
+            </div>
             <div className="flex items-center gap-2 shrink-0">
-              <div className="relative w-[140px] sm:w-[220px]">
+              <div className="relative w-[140px] sm:w-[200px]">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
                 <Input
                   placeholder="Buscar..."
@@ -233,34 +261,6 @@ export default function Index() {
               )}
             </motion.div>
           )}
-
-          {/* Filter pills — horizontal scroll on mobile */}
-          <div className="flex gap-1.5 mb-4 overflow-x-auto scrollbar-hide pb-1">
-            <button
-              onClick={() => setPlatform("all")}
-              className={`shrink-0 px-3 py-1.5 rounded-full text-[11px] font-medium transition-all ${
-                platform === "all"
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80"
-              }`}
-            >
-              Todas
-            </button>
-            {PLATFORMS.map((p) => (
-              <button
-                key={p.id}
-                onClick={() => setPlatform(p.id)}
-                className={`shrink-0 inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-[11px] font-medium transition-all ${
-                  platform === p.id
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80"
-                }`}
-              >
-                <PlatformIcon platformId={p.id} size={12} />
-                {p.name}
-              </button>
-            ))}
-          </div>
 
           {/* Grid */}
           {loading ? (
