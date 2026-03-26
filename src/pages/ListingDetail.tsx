@@ -19,6 +19,7 @@ export default function ListingDetail() {
   const [seller, setSeller] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(0);
 
   useEffect(() => {
     async function fetchListing() {
