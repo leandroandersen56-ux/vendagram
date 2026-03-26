@@ -1,5 +1,5 @@
 import React from "react";
-
+import freefireLogo from "@/assets/freefire-logo.png";
 interface PlatformIconProps {
   platformId: string;
   size?: number;
