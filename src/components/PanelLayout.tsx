@@ -111,17 +111,26 @@ export default function PanelLayout() {
 
       {/* Desktop top bar */}
       <div className="hidden lg:flex fixed top-0 left-64 right-0 h-14 bg-card/80 backdrop-blur-sm border-b border-border z-30 items-center justify-end px-6 gap-3">
-        <button
-          onClick={() => {
-            const el = document.getElementById('wallet-section');
-            if (el) el.scrollIntoView({ behavior: 'smooth' });
-            else navigate('/painel');
-          }}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all"
-        >
-          <Wallet className="h-4 w-4" />
-          <span className="text-sm font-medium">R$ 890,00</span>
-        </button>
+        <Popover>
+          <PopoverTrigger asChild>
+            <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all">
+              <Wallet className="h-4 w-4" />
+              <span className="text-sm font-medium">R$ 890,00</span>
+            </button>
+          </PopoverTrigger>
+          <PopoverContent className="w-56 p-2 bg-card border-border" align="end">
+            <div className="space-y-1">
+              {walletActions.map((a) => (
+                <button key={a.label} onClick={a.onClick} className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm hover:bg-muted/50 transition-all">
+                  <div className={`h-8 w-8 rounded-full ${a.bg} flex items-center justify-center`}>
+                    <a.icon className={`h-4 w-4 ${a.color}`} />
+                  </div>
+                  <span className="text-foreground">{a.label}</span>
+                </button>
+              ))}
+            </div>
+          </PopoverContent>
+        </Popover>
         <Link to="/painel/notificacoes">
           <Button variant="ghost" size="icon" className="relative">
             <Bell className="h-4 w-4" />
