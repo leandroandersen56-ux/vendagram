@@ -210,9 +210,9 @@ export default function ListingDetail() {
                 size="lg"
                 onClick={() => {
                   if (isAuthenticated) {
-                    navigate(`/transaction/${listing.id}`);
+                    navigate(`/checkout/${listing.id}`);
                   } else {
-                    openAuth(`/transaction/${listing.id}`);
+                    openAuth(`/checkout/${listing.id}`);
                   }
                 }}
               >
