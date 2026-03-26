@@ -34,7 +34,7 @@ export default function EditListingPanel() {
         .from("listings")
         .select("*")
         .eq("id", id)
-        .single();
+        .maybeSingle();
 
       if (error || !data) {
         toast({ title: "Anúncio não encontrado", variant: "destructive" });
