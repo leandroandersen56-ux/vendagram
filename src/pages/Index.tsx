@@ -180,7 +180,7 @@ export default function Index() {
             </motion.div>
           ) : (
             <div className="text-center py-16">
-              <p className="text-4xl mb-4">🔍</p>
+              <Search className="h-10 w-10 text-muted-foreground mb-4 mx-auto" />
               <p className="text-lg font-medium text-foreground mb-2">Nenhum anúncio encontrado</p>
               <p className="text-muted-foreground text-sm mb-6">Seja o primeiro a anunciar!</p>
               <Button variant="hero" onClick={handleSell}>Criar Anúncio</Button>
