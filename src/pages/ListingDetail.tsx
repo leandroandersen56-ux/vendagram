@@ -30,7 +30,7 @@ export default function ListingDetail() {
         .from("listings")
         .select("*")
         .eq("id", id)
-        .single();
+        .maybeSingle();
 
       if (!error && data) {
         setListing(data);
@@ -38,7 +38,7 @@ export default function ListingDetail() {
           .from("profiles")
           .select("*")
           .eq("user_id", data.seller_id)
-          .single();
+          .maybeSingle();
         if (profile) setSeller(profile);
       } else {
         // Fallback to mock data
