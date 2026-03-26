@@ -61,11 +61,27 @@ export default function PanelListings() {
       return;
     }
 
-    const { data, error } = await supabase
+    // Check if user is admin
+    const { data: roleData } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", user.id)
+      .eq("role", "admin")
+      .maybeSingle();
+
+    const isAdmin = !!roleData;
+
+    let query = supabase
       .from("listings")
       .select("id, title, price, category, status, created_at")
-      .eq("seller_id", user.id)
       .order("created_at", { ascending: false });
+
+    // Admins see all listings, regular users see only their own
+    if (!isAdmin) {
+      query = query.eq("seller_id", user.id);
+    }
+
+    const { data, error } = await query;
 
     if (!error && data && data.length > 0) {
       setListings(data);
