@@ -272,7 +272,14 @@ export default function Index() {
               {(() => {
                 const GAME_PLATFORMS = ['free_fire', 'valorant', 'fortnite', 'roblox', 'clash_royale'];
                 const games = filtered.filter(l => GAME_PLATFORMS.includes(l.platform));
-                const social = filtered.filter(l => !GAME_PLATFORMS.includes(l.platform));
+                const SOCIAL_ORDER = ['instagram', 'tiktok', 'youtube', 'facebook', 'other'];
+                const social = filtered
+                  .filter(l => !GAME_PLATFORMS.includes(l.platform))
+                  .sort((a, b) => {
+                    const ai = SOCIAL_ORDER.indexOf(a.platform);
+                    const bi = SOCIAL_ORDER.indexOf(b.platform);
+                    return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+                  });
 
                 return (
                   <>
