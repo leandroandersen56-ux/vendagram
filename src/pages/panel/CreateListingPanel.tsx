@@ -235,7 +235,7 @@ export default function CreateListing() {
           onClick={() => setPlatform("")}
           className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium hover:bg-primary/20 transition-colors"
         >
-          {platformData.icon} {platformData.name} ✕
+          <PlatformIcon platformId={platformData.id} size={18} className="mr-1" /> {platformData.name} ✕
         </button>
         <span className="text-muted-foreground text-sm">Criar anúncio</span>
       </div>

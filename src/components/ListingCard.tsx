@@ -24,7 +24,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
       <div className="bg-card border border-border rounded-lg overflow-hidden card-hover group">
         {/* Platform banner */}
         <div className="h-32 flex items-center justify-center relative" style={{ background: `linear-gradient(135deg, ${platform.color}22, ${platform.color}11)` }}>
-          <span className="text-5xl">{platform.icon}</span>
+          <PlatformIcon platformId={listing.platform} size={40} />
           <Badge className="absolute top-3 left-3 bg-muted/80 text-foreground border-0 text-xs">
             {platform.name}
           </Badge>

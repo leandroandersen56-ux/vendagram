@@ -114,8 +114,8 @@ export default function ListingDetail() {
                 style={{ background: `linear-gradient(145deg, ${platform.color}12, hsl(var(--card)))` }}
               >
                 <div className="text-center">
-                  <span className="text-[100px] block mb-2">{platform.icon}</span>
-                  <p className="text-xs text-muted-foreground">Screenshots do vendedor</p>
+                  <PlatformIcon platformId={listing.category} size={100} />
+                  <p className="text-xs text-muted-foreground mt-3">Screenshots do vendedor</p>
                 </div>
               </div>
             </div>

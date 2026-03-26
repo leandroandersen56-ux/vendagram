@@ -158,7 +158,7 @@ export default function Index() {
                 className={`cursor-pointer transition-colors ${platform === p.id ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/80"}`}
                 onClick={() => setPlatform(p.id)}
               >
-                {p.icon} {p.name}
+                <PlatformIcon platformId={p.id} size={16} className="mr-1" /> {p.name}
               </Badge>
             ))}
           </div>
