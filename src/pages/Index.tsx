@@ -142,6 +142,14 @@ export default function Index() {
                 </div>
               </Link>
             ))}
+            {/* Anunciar button */}
+            <button
+              onClick={handleSell}
+              className="shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary text-primary-foreground font-semibold text-xs whitespace-nowrap hover:bg-primary/90 transition-all shadow-[0_0_12px_hsl(60_100%_50%/0.3)]"
+            >
+              <Plus className="h-3.5 w-3.5" />
+              Anunciar
+            </button>
           </div>
         </div>
       </section>
