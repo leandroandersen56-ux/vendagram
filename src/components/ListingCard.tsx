@@ -57,7 +57,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
         </div>
 
         {/* Light gray bottom panel */}
-        <div style={{ backgroundColor: '#1a1a1a' }} className="px-2.5 py-2.5">
+        <div style={{ backgroundColor: '#252525' }} className="px-2.5 py-2.5">
           <h3 className="font-bold text-xs text-neutral-200 line-clamp-1 mb-1">
             {listing.title}
           </h3>
