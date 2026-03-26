@@ -14,7 +14,16 @@ import {
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const { user, isAuthenticated, openAuth, logout } = useAuth();
+
+  const handleSell = () => {
+    if (isAuthenticated) {
+      navigate("/painel/anuncios/novo");
+    } else {
+      openAuth("/painel/anuncios/novo");
+    }
+  };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0D0D0D] border-b border-border">
