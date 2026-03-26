@@ -76,33 +76,35 @@ export default function Index() {
       <Navbar />
 
       {/* Hero Banner */}
-      <section className="pt-16">
-        <div className="relative overflow-hidden">
-          <img
-            src={bannerImg}
-            alt="SafeTrade.GG"
-            className="w-full h-[220px] sm:h-[340px] object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/70 to-transparent">
-            <div className="container mx-auto h-full flex items-center px-4">
-              <div className="max-w-lg">
-                <h1 className="text-xl sm:text-3xl lg:text-4xl font-display font-black text-foreground mb-2 leading-tight tracking-tight">
-                  COMPRE E VENDA<br />
-                  <span className="text-primary">CONTAS DIGITAIS</span><br />
-                  COM SEGURANÇA
-                </h1>
-                <p className="text-xs sm:text-sm text-muted-foreground mb-4 hidden sm:block">
-                  Marketplace com escrow automático. Sem riscos.
-                </p>
-                <div className="flex gap-3">
-                  <Button variant="hero" size="sm" className="text-xs h-9 px-5" onClick={handleSell}>
-                    Vender Conta <ArrowRight className="h-3.5 w-3.5 ml-1.5" />
-                  </Button>
-                  <Link to="/marketplace">
-                    <Button variant="glass" size="sm" className="text-xs h-9 px-5">
-                      Ver Marketplace
+      <section className="pt-20 px-4">
+        <div className="container mx-auto">
+          <div className="relative overflow-hidden rounded-2xl">
+            <img
+              src={bannerImg}
+              alt="SafeTrade.GG"
+              className="w-full h-[220px] sm:h-[340px] object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-background via-background/70 to-transparent">
+              <div className="h-full flex items-center px-6 sm:px-10">
+                <div className="max-w-lg">
+                  <h1 className="text-xl sm:text-3xl lg:text-4xl font-display font-black text-foreground mb-2 leading-tight tracking-tight">
+                    COMPRE E VENDA<br />
+                    <span className="text-primary">CONTAS DIGITAIS</span><br />
+                    COM SEGURANÇA
+                  </h1>
+                  <p className="text-xs sm:text-sm text-muted-foreground mb-4 hidden sm:block">
+                    Marketplace com escrow automático. Sem riscos.
+                  </p>
+                  <div className="flex gap-3">
+                    <Button variant="hero" size="sm" className="text-xs h-9 px-5" onClick={handleSell}>
+                      Vender Conta <ArrowRight className="h-3.5 w-3.5 ml-1.5" />
                     </Button>
-                  </Link>
+                    <Link to="/marketplace">
+                      <Button variant="glass" size="sm" className="text-xs h-9 px-5">
+                        Ver Marketplace
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
