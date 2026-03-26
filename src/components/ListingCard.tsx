@@ -64,14 +64,14 @@ export default function ListingCard({ listing }: ListingCardProps) {
         </div>
 
         <div className="p-2.5 space-y-2">
-          <h3 className="font-semibold text-[11px] text-foreground line-clamp-2 min-h-[2rem] leading-snug">
+          <h3 className="font-semibold text-xs text-foreground line-clamp-2 min-h-[2.2rem] leading-snug">
             {listing.title}
           </h3>
 
           {/* Key stats */}
           <div className="flex flex-wrap gap-1">
             {Object.entries(listing.fields).slice(0, 2).map(([key, value]) => (
-              <span key={key} className="text-[9px] bg-muted text-muted-foreground px-1.5 py-0.5 rounded">
+              <span key={key} className="text-[10px] bg-muted text-muted-foreground px-1.5 py-0.5 rounded">
                 {key}: {typeof value === 'boolean' ? (value ? '✓' : '✗') : value}
               </span>
             ))}
