@@ -133,7 +133,7 @@ export const MOCK_LISTINGS: Listing[] = [
     id: '5',
     sellerId: 'u1',
     sellerName: 'GameMaster99',
-    sellerRating: 4.8,
+    sellerRating: 4.6,
     sellerSales: 23,
     platform: 'youtube',
     title: 'Canal YouTube 10K Inscritos - Monetizado',
