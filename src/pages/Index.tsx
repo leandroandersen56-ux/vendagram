@@ -56,8 +56,7 @@ export default function Index() {
             : {},
           createdAt: row.created_at,
         }));
-        // Keep all DB listings and append all demo listings to fill the homepage
-        setListings([...mapped, ...MOCK_LISTINGS]);
+        setListings(mapped);
       } else {
         setListings(MOCK_LISTINGS);
       }
