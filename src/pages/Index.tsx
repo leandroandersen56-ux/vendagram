@@ -174,8 +174,8 @@ export default function Index() {
       </section>
 
       {/* Listings Section */}
-      <section className="py-8 px-1 sm:px-4 order-2">
-        <div className="container mx-auto max-w-[100%] sm:max-w-none">
+      <section className="py-8 px-3 sm:px-4 order-2">
+        <div className="container mx-auto">
           {/* Header + Search (mobile: stacked, desktop: inline with badges) */}
           {/* Search - full width, mobile */}
           <div className="flex items-center gap-2 mb-3 sm:hidden">
