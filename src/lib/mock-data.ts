@@ -56,16 +56,16 @@ export interface TransactionStep {
 }
 
 export const PLATFORMS = [
-  { id: 'free_fire', name: 'Free Fire', icon: '🎮', color: '#FF6B35' },
-  { id: 'instagram', name: 'Instagram', icon: '📸', color: '#E1306C' },
-  { id: 'tiktok', name: 'TikTok', icon: '🎵', color: '#00F2EA' },
-  { id: 'facebook', name: 'Facebook', icon: '👤', color: '#1877F2' },
-  { id: 'youtube', name: 'YouTube', icon: '▶️', color: '#FF0000' },
-  { id: 'valorant', name: 'Valorant', icon: '🎯', color: '#FF4655' },
-  { id: 'fortnite', name: 'Fortnite', icon: '🏗️', color: '#9D4DBB' },
-  { id: 'roblox', name: 'Roblox', icon: '🧱', color: '#E2231A' },
-  { id: 'clash_royale', name: 'Clash Royale', icon: '👑', color: '#F5C518' },
-  { id: 'other', name: 'Outros', icon: '🌐', color: '#7C3AED' },
+  { id: 'free_fire', name: 'Free Fire', color: '#FF6B35' },
+  { id: 'instagram', name: 'Instagram', color: '#E1306C' },
+  { id: 'tiktok', name: 'TikTok', color: '#00F2EA' },
+  { id: 'facebook', name: 'Facebook', color: '#1877F2' },
+  { id: 'youtube', name: 'YouTube', color: '#FF0000' },
+  { id: 'valorant', name: 'Valorant', color: '#FF4655' },
+  { id: 'fortnite', name: 'Fortnite', color: '#9D4DBB' },
+  { id: 'roblox', name: 'Roblox', color: '#E2231A' },
+  { id: 'clash_royale', name: 'Clash Royale', color: '#F5C518' },
+  { id: 'other', name: 'Outros', color: '#7C3AED' },
 ];
 
 export const MOCK_LISTINGS: Listing[] = [
