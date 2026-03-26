@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   ArrowLeft, CheckCircle2, Circle, AlertTriangle, Clock,
-  Shield, Upload, Send, Lock, XCircle
+  Shield, Upload, Send, Lock, XCircle, AlertCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
