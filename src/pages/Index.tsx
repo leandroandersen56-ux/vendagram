@@ -56,7 +56,21 @@ export default function Index() {
             : {},
           createdAt: row.created_at,
         }));
-        setListings(mapped);
+
+        const GAME_PLATFORMS = ["free_fire", "valorant", "fortnite", "roblox", "clash_royale"];
+        const isGamePlatform = (platformId: string) => GAME_PLATFORMS.includes(platformId);
+
+        const dbGames = mapped.filter((l) => isGamePlatform(l.platform));
+        const dbSocial = mapped.filter((l) => !isGamePlatform(l.platform));
+
+        const neededGames = Math.max(0, 5 - dbGames.length);
+        const neededSocial = Math.max(0, 5 - dbSocial.length);
+
+        const existingIds = new Set(mapped.map((l) => String(l.id)));
+        const gameFillers = MOCK_LISTINGS.filter((m) => isGamePlatform(m.platform) && !existingIds.has(String(m.id))).slice(0, neededGames);
+        const socialFillers = MOCK_LISTINGS.filter((m) => !isGamePlatform(m.platform) && !existingIds.has(String(m.id))).slice(0, neededSocial);
+
+        setListings([...mapped, ...gameFillers, ...socialFillers]);
       } else {
         setListings(MOCK_LISTINGS);
       }
