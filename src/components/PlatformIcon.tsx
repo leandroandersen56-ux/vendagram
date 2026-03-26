@@ -1,5 +1,5 @@
 import React from "react";
-
+import freefireLogo from "@/assets/freefire-logo.png";
 interface PlatformIconProps {
   platformId: string;
   size?: number;
@@ -10,10 +10,7 @@ const C = "#FFFF00";
 
 const icons: Record<string, (s: number) => React.ReactNode> = {
   free_fire: (s) => (
-    <svg width={s} height={s} viewBox="0 0 24 24" fill="none">
-      <path d="M17.5 2.5c-1.2 1.5-2.8 3.2-3.8 4.3-.6.7-1.5 1.8-2.1 2.7-.3.5-.7 1.1-.9 1.7-.2.6-.3 1.2-.3 1.8 0 .8.2 1.5.5 2.1.3.6.8 1.1 1.4 1.5.6.4 1.2.6 1.9.6h.1c-.5.9-1.2 1.7-2.1 2.3-.9.6-1.9 1-3 1.2l-.2.6c1.5 0 3-.4 4.2-1.2 1.2-.8 2.2-1.9 2.8-3.2.4-.8.6-1.7.6-2.6 0-.7-.1-1.4-.4-2.1-.2-.7-.6-1.3-1-1.9-.8-1.2-1.9-2.4-3-3.5L17.5 2.5z" fill={C}/>
-      <path d="M10.5 5c-1.5 1.8-3.5 4.2-4.5 6-.5.9-.8 1.8-1 2.7-.1.9 0 1.8.4 2.7.3.9.9 1.7 1.6 2.3.7.7 1.6 1.2 2.5 1.5.9.3 1.9.4 2.9.3 1-.1 1.9-.4 2.7-.9.8-.5 1.5-1.2 2-2 .5-.8.8-1.7.9-2.6.1-.9 0-1.9-.4-2.7-.4-.9-.9-1.7-1.6-2.3C14.8 8.7 12.5 6.5 10.5 5z" fill={C} opacity="0.6"/>
-    </svg>
+    <img src={freefireLogo} width={s} height={s} alt="Free Fire" style={{ objectFit: "contain" }} />
   ),
 
   instagram: (s) => (
