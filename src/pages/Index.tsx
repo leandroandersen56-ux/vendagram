@@ -169,19 +169,70 @@ export default function Index() {
       {/* Listings Section */}
       <section className="py-8 px-4 order-2">
         <div className="container mx-auto">
-          {/* Header + Search */}
-          <div className="flex items-center justify-between gap-3 mb-3">
+          {/* Header + Search + Filters */}
+          <div className="flex items-center justify-between gap-2 mb-3">
             <h2 className="text-base font-bold text-foreground uppercase tracking-wide whitespace-nowrap">Anúncios Recentes</h2>
-            <div className="relative w-full max-w-[200px] sm:max-w-[260px]">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
-              <Input
-                placeholder="Buscar..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-9 bg-card border-border h-8 text-xs placeholder:text-muted-foreground focus:border-primary/50 focus:ring-primary/20"
-              />
+            <div className="flex items-center gap-2">
+              <div className="relative w-full max-w-[160px] sm:max-w-[260px]">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+                <Input
+                  placeholder="Buscar..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="pl-9 bg-card border-border h-8 text-xs placeholder:text-muted-foreground focus:border-primary/50 focus:ring-primary/20"
+                />
+              </div>
+              <button
+                onClick={() => setShowFilters(!showFilters)}
+                className={`shrink-0 h-8 w-8 rounded-lg border flex items-center justify-center transition-all ${showFilters ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border text-muted-foreground hover:text-foreground"}`}
+              >
+                <SlidersHorizontal className="h-3.5 w-3.5" />
+              </button>
             </div>
           </div>
+
+          {/* Expanded filters */}
+          {showFilters && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              className="flex flex-wrap items-center gap-2 mb-4 p-3 bg-card border border-border rounded-lg"
+            >
+              <Select value={platform} onValueChange={setPlatform}>
+                <SelectTrigger className="w-36 sm:w-44 bg-muted border-border h-8 text-xs">
+                  <SelectValue placeholder="Plataforma" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todas</SelectItem>
+                  {PLATFORMS.map((p) => (
+                    <SelectItem key={p.id} value={p.id}>
+                      <span className="inline-flex items-center gap-1.5">
+                        <PlatformIcon platformId={p.id} size={14} />
+                        {p.name}
+                      </span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger className="w-36 sm:w-44 bg-muted border-border h-8 text-xs">
+                  <SelectValue placeholder="Ordenar" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="recent">Mais recentes</SelectItem>
+                  <SelectItem value="price-asc">Menor preço</SelectItem>
+                  <SelectItem value="price-desc">Maior preço</SelectItem>
+                </SelectContent>
+              </Select>
+
+              {platform !== "all" && (
+                <button onClick={() => setPlatform("all")} className="text-[10px] text-muted-foreground hover:text-foreground flex items-center gap-1">
+                  <AlertCircle className="h-3 w-3" /> Limpar
+                </button>
+              )}
+            </motion.div>
+          )}
 
           {/* Filter pills — horizontal scroll on mobile */}
           <div className="flex gap-1.5 mb-4 overflow-x-auto scrollbar-hide pb-1">
