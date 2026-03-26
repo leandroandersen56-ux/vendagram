@@ -158,7 +158,7 @@ export default function Index() {
       </section>
 
       {/* Listings Section */}
-      <section className="py-8 px-4 order-2 sm:order-4">
+      <section className="py-8 px-4 order-2">
         <div className="container mx-auto">
           {/* Header + Search */}
           <div className="flex items-center justify-between gap-3 mb-3">
