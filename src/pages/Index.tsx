@@ -1,10 +1,10 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowRight, Search, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, Search, Loader2, Shield, CheckCircle2, Clock, Zap } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ListingCard from "@/components/ListingCard";
@@ -13,55 +13,13 @@ import { PLATFORMS, MOCK_LISTINGS, type Listing } from "@/lib/mock-data";
 import { supabase } from "@/integrations/supabase/client";
 import bannerImg from "@/assets/banner-home.jpg";
 
-// Horizontal carousel component
-function Carousel({ title, children, linkTo }: { title: string; children: React.ReactNode; linkTo?: string }) {
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  const scroll = (direction: "left" | "right") => {
-    if (!scrollRef.current) return;
-    const amount = 300;
-    scrollRef.current.scrollBy({ left: direction === "left" ? -amount : amount, behavior: "smooth" });
-  };
-
-  return (
-    <div className="relative group/carousel">
-      <div className="flex items-center justify-between mb-3 px-1">
-        <h2 className="text-sm font-bold text-white tracking-wide uppercase">{title}</h2>
-        {linkTo && (
-          <Link to={linkTo} className="text-[11px] text-primary hover:underline font-medium">
-            Ver todos <ArrowRight className="inline h-3 w-3 ml-0.5" />
-          </Link>
-        )}
-      </div>
-      <div className="relative">
-        {/* Left arrow */}
-        <button
-          onClick={() => scroll("left")}
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 h-full w-8 bg-gradient-to-r from-[#0A0A0A] to-transparent opacity-0 group-hover/carousel:opacity-100 transition-opacity flex items-center justify-start"
-        >
-          <ChevronLeft className="h-5 w-5 text-white" />
-        </button>
-        {/* Right arrow */}
-        <button
-          onClick={() => scroll("right")}
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 h-full w-8 bg-gradient-to-l from-[#0A0A0A] to-transparent opacity-0 group-hover/carousel:opacity-100 transition-opacity flex items-center justify-end"
-        >
-          <ChevronRight className="h-5 w-5 text-white" />
-        </button>
-        <div ref={scrollRef} className="flex gap-2.5 overflow-x-auto scrollbar-hide pb-1">
-          {children}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export default function Index() {
   const { isAuthenticated, openAuth } = useAuth();
   const navigate = useNavigate();
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [platform, setPlatform] = useState("all");
 
   const handleSell = () => {
     if (isAuthenticated) {
@@ -100,7 +58,6 @@ export default function Index() {
         }));
         setListings(mapped);
       } else {
-        // Fallback to mock data
         setListings(MOCK_LISTINGS);
       }
       setLoading(false);
@@ -108,20 +65,14 @@ export default function Index() {
     fetchListings();
   }, []);
 
-  // Group listings by platform
-  const grouped = PLATFORMS.reduce<Record<string, Listing[]>>((acc, p) => {
-    const items = listings.filter((l) => l.platform === p.id);
-    if (items.length > 0) acc[p.id] = items;
-    return acc;
-  }, {});
-
-  // Filtered for search
-  const searchResults = search
-    ? listings.filter((l) => l.title.toLowerCase().includes(search.toLowerCase()))
-    : null;
+  const filtered = listings.filter((l) => {
+    if (platform !== "all" && l.platform !== platform) return false;
+    if (search && !l.title.toLowerCase().includes(search.toLowerCase())) return false;
+    return true;
+  });
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A]">
+    <div className="min-h-screen bg-background">
       <Navbar />
 
       {/* Hero Banner */}
@@ -130,124 +81,176 @@ export default function Index() {
           <img
             src={bannerImg}
             alt="SafeTrade.GG"
-            className="w-full h-[200px] sm:h-[320px] object-cover"
+            className="w-full h-[220px] sm:h-[340px] object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0A] via-[#0A0A0A]/70 to-transparent flex items-center">
-            <div className="px-6 sm:px-10 lg:px-16 max-w-md">
-              <h1 className="text-xl sm:text-3xl lg:text-4xl font-display font-black text-white mb-2 leading-tight tracking-tight">
+          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/70 to-transparent flex items-center">
+            <div className="px-6 sm:px-10 lg:px-16 max-w-lg">
+              <h1 className="text-xl sm:text-3xl lg:text-4xl font-display font-black text-foreground mb-2 leading-tight tracking-tight">
                 COMPRE E VENDA<br />
                 <span className="text-primary">CONTAS DIGITAIS</span><br />
                 COM SEGURANÇA
               </h1>
-              <p className="text-xs sm:text-sm text-neutral-400 mb-4 hidden sm:block">
+              <p className="text-xs sm:text-sm text-muted-foreground mb-4 hidden sm:block">
                 Marketplace com escrow automático. Sem riscos.
               </p>
-              <Button variant="hero" size="sm" className="text-xs h-9 px-5" onClick={handleSell}>
-                Vender Conta <ArrowRight className="h-3.5 w-3.5 ml-1.5" />
-              </Button>
+              <div className="flex gap-3">
+                <Button variant="hero" size="sm" className="text-xs h-9 px-5" onClick={handleSell}>
+                  Vender Conta <ArrowRight className="h-3.5 w-3.5 ml-1.5" />
+                </Button>
+                <Link to="/marketplace">
+                  <Button variant="glass" size="sm" className="text-xs h-9 px-5">
+                    Ver Marketplace
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Search bar */}
-      <section className="py-4 px-4 border-b border-neutral-800/50">
+      {/* Platform Grid — full width cards */}
+      <section className="py-8 px-4 border-b border-border">
         <div className="container mx-auto">
-          <div className="relative max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-500" />
-            <Input
-              placeholder="Buscar conta..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="pl-10 bg-neutral-900 border-neutral-800 h-10 text-sm placeholder:text-neutral-500 focus:border-primary/50 focus:ring-primary/20"
-            />
+          <h2 className="text-base font-bold text-foreground mb-5 uppercase tracking-wide">Categorias</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+            {PLATFORMS.map((p) => (
+              <Link to={`/marketplace?platform=${p.id}`} key={p.id}>
+                <motion.div
+                  whileHover={{ scale: 1.03 }}
+                  className="rounded-xl border border-border bg-card hover:border-primary/40 transition-all p-5 flex items-center gap-3 group cursor-pointer"
+                  style={{ background: `linear-gradient(135deg, ${p.color}08 0%, hsl(var(--card)) 100%)` }}
+                >
+                  <PlatformIcon platformId={p.id} size={32} />
+                  <div>
+                    <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">{p.name}</p>
+                    <p className="text-[10px] text-muted-foreground">Ver contas</p>
+                  </div>
+                </motion.div>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
 
-      {loading ? (
-        <div className="flex items-center justify-center py-20">
-          <Loader2 className="h-5 w-5 animate-spin text-primary" />
-        </div>
-      ) : searchResults ? (
-        /* Search results */
-        <section className="py-6 px-4">
-          <div className="container mx-auto">
-            <h2 className="text-sm font-bold text-white mb-4">
-              Resultados para "{search}" ({searchResults.length})
-            </h2>
-            {searchResults.length > 0 ? (
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-2.5">
-                {searchResults.map((listing) => (
-                  <ListingCard key={listing.id} listing={listing} />
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-16">
-                <Search className="h-8 w-8 text-neutral-600 mb-3 mx-auto" />
-                <p className="text-sm text-white mb-1">Nenhum resultado</p>
-                <p className="text-neutral-500 text-xs">Tente outro termo de busca</p>
-              </div>
-            )}
-          </div>
-        </section>
-      ) : (
-        /* Categorized carousels */
-        <div className="space-y-8 py-6">
-          {/* Platform categories — horizontal scroll */}
-          <section className="px-4">
-            <div className="container mx-auto">
-              <Carousel title="Mais Populares">
-                {PLATFORMS.map((p) => (
-                  <Link to={`/marketplace?platform=${p.id}`} key={p.id} className="shrink-0">
-                    <div
-                      className="w-[120px] h-[140px] rounded-lg overflow-hidden relative group cursor-pointer border border-neutral-800 hover:border-primary/40 transition-all flex flex-col items-center justify-center gap-2.5"
-                      style={{ background: `linear-gradient(180deg, ${p.color}18 0%, #0A0A0A 100%)` }}
-                    >
-                      <PlatformIcon platformId={p.id} size={40} />
-                      <span className="text-[11px] font-semibold text-neutral-300 group-hover:text-white transition-colors">{p.name}</span>
-                    </div>
-                  </Link>
-                ))}
-              </Carousel>
-            </div>
-          </section>
-
-          {/* Listings grouped by platform — carousel per category */}
-          {Object.entries(grouped).map(([platformId, items]) => {
-            const platform = PLATFORMS.find((p) => p.id === platformId);
-            if (!platform) return null;
-            return (
-              <section key={platformId} className="px-4">
-                <div className="container mx-auto">
-                  <Carousel
-                    title={platform.name}
-                    linkTo={`/marketplace?platform=${platformId}`}
-                  >
-                    {items.map((listing) => (
-                      <div key={listing.id} className="shrink-0 w-[180px] sm:w-[200px]">
-                        <ListingCard listing={listing} />
-                      </div>
-                    ))}
-                  </Carousel>
+      {/* How it works */}
+      <section className="py-10 px-4 border-b border-border">
+        <div className="container mx-auto">
+          <h2 className="text-base font-bold text-foreground mb-6 uppercase tracking-wide text-center">Como Funciona</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[
+              { icon: <Search className="h-6 w-6" />, title: "Encontre", desc: "Busque contas por plataforma, preço e categoria" },
+              { icon: <Shield className="h-6 w-6" />, title: "Compre Seguro", desc: "Pagamento via Pix retido em escrow automático" },
+              { icon: <CheckCircle2 className="h-6 w-6" />, title: "Verifique", desc: "Checklist passo a passo para validar a conta" },
+              { icon: <Zap className="h-6 w-6" />, title: "Pronto!", desc: "Conta transferida e pagamento liberado ao vendedor" },
+            ].map((step, i) => (
+              <motion.div
+                key={step.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+                viewport={{ once: true }}
+                className="bg-card border border-border rounded-xl p-5 text-center"
+              >
+                <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mx-auto mb-3">
+                  {step.icon}
                 </div>
-              </section>
-            );
-          })}
+                <h3 className="text-sm font-bold text-foreground mb-1">{step.title}</h3>
+                <p className="text-xs text-muted-foreground leading-relaxed">{step.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-          {/* If no grouped listings, show all */}
-          {Object.keys(grouped).length === 0 && (
-            <section className="px-4">
-              <div className="container mx-auto text-center py-16">
-                <Search className="h-8 w-8 text-neutral-600 mb-3 mx-auto" />
-                <p className="text-sm font-medium text-white mb-1">Nenhum anúncio ainda</p>
-                <p className="text-neutral-500 text-xs mb-5">Seja o primeiro a anunciar!</p>
-                <Button variant="hero" size="sm" onClick={handleSell}>Criar Anúncio</Button>
-              </div>
-            </section>
+      {/* Listings Section */}
+      <section className="py-8 px-4">
+        <div className="container mx-auto">
+          {/* Header + Search + Filters */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
+            <h2 className="text-base font-bold text-foreground uppercase tracking-wide">Anúncios Recentes</h2>
+            <div className="relative w-full sm:w-64">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+              <Input
+                placeholder="Buscar..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="pl-9 bg-card border-border h-9 text-xs placeholder:text-muted-foreground focus:border-primary/50 focus:ring-primary/20"
+              />
+            </div>
+          </div>
+
+          {/* Filter pills */}
+          <div className="flex flex-wrap gap-1.5 mb-5">
+            <button
+              onClick={() => setPlatform("all")}
+              className={`px-3 py-1.5 rounded-full text-[11px] font-medium transition-all ${
+                platform === "all"
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80"
+              }`}
+            >
+              Todas
+            </button>
+            {PLATFORMS.map((p) => (
+              <button
+                key={p.id}
+                onClick={() => setPlatform(p.id)}
+                className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-[11px] font-medium transition-all ${
+                  platform === p.id
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80"
+                }`}
+              >
+                <PlatformIcon platformId={p.id} size={12} />
+                {p.name}
+              </button>
+            ))}
+          </div>
+
+          {/* Grid */}
+          {loading ? (
+            <div className="flex items-center justify-center py-20">
+              <Loader2 className="h-5 w-5 animate-spin text-primary" />
+            </div>
+          ) : filtered.length > 0 ? (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3"
+            >
+              {filtered.map((listing) => (
+                <ListingCard key={listing.id} listing={listing} />
+              ))}
+            </motion.div>
+          ) : (
+            <div className="text-center py-16">
+              <Search className="h-8 w-8 text-muted-foreground mb-3 mx-auto" />
+              <p className="text-sm font-medium text-foreground mb-1">Nenhum anúncio encontrado</p>
+              <p className="text-muted-foreground text-xs mb-5">Seja o primeiro a anunciar!</p>
+              <Button variant="hero" size="sm" onClick={handleSell}>Criar Anúncio</Button>
+            </div>
           )}
         </div>
-      )}
+      </section>
+
+      {/* Trust Section */}
+      <section className="py-10 px-4 border-t border-border">
+        <div className="container mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
+            {[
+              { icon: <Shield className="h-8 w-8" />, value: "100%", label: "Escrow Seguro" },
+              { icon: <Clock className="h-8 w-8" />, value: "24h", label: "Garantia de Compra" },
+              { icon: <CheckCircle2 className="h-8 w-8" />, value: "10%", label: "Taxa Transparente" },
+            ].map((stat) => (
+              <div key={stat.label} className="flex flex-col items-center gap-2">
+                <div className="text-primary">{stat.icon}</div>
+                <p className="text-2xl font-display font-bold text-foreground">{stat.value}</p>
+                <p className="text-xs text-muted-foreground">{stat.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <Footer />
     </div>
