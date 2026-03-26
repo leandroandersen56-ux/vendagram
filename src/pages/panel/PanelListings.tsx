@@ -140,6 +140,8 @@ export default function PanelListings() {
           {visibleListings.map((listing) => {
             const cat = getCategoryInfo(listing.category);
             const st = statusMap[listing.status] || statusMap.draft;
+            const isReal = isUUID(listing.id);
+            const demoClick = () => toast({ title: "Anúncio de demonstração", description: "Crie um anúncio real para usar esta ação." });
             return (
               <Card key={listing.id} className="bg-card border-border p-4">
                 <div className="flex items-center gap-4">
@@ -155,24 +157,24 @@ export default function PanelListings() {
                   </div>
                   <p className="text-lg font-bold text-primary shrink-0">{formatBRL(listing.price)}</p>
                   <div className="flex gap-1 shrink-0">
-                    <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => navigate(`/listing/${listing.id}`)} title="Ver anúncio">
+                    <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => isReal ? navigate(`/listing/${listing.id}`) : demoClick()} title="Ver anúncio">
                       <Eye className="h-3 w-3" />
                     </Button>
-                    <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => navigate(`/painel/anuncios/editar/${listing.id}`)} title="Editar">
+                    <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => isReal ? navigate(`/painel/anuncios/editar/${listing.id}`) : demoClick()} title="Editar">
                       <Edit className="h-3 w-3" />
                     </Button>
                     <Button
                       variant="ghost"
                       size="icon"
                       className="h-8 w-8"
-                      onClick={() => toggleStatus(listing)}
+                      onClick={() => isReal ? toggleStatus(listing) : demoClick()}
                       title={listing.status === "active" ? "Pausar" : "Ativar"}
                     >
                       {listing.status === "active" ? <Pause className="h-3 w-3" /> : <Play className="h-3 w-3" />}
                     </Button>
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" title="Remover">
+                        <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" title="Remover" onClick={(e) => { if (!isReal) { e.preventDefault(); demoClick(); } }}>
                           <Trash2 className="h-3 w-3" />
                         </Button>
                       </AlertDialogTrigger>
