@@ -128,7 +128,7 @@ export default function Index() {
 
 
       {/* How it works */}
-      <section className="py-6 px-4 border-b border-border order-4 sm:order-3">
+      <section className="py-6 px-4 border-b border-border order-4">
         <div className="container mx-auto">
           <h2 className="text-sm font-bold text-foreground mb-4 uppercase tracking-wide text-center">Como Funciona</h2>
           <div className="grid grid-cols-4 gap-2 sm:gap-3 max-w-2xl mx-auto">
@@ -158,7 +158,7 @@ export default function Index() {
       </section>
 
       {/* Listings Section */}
-      <section className="py-8 px-4 order-2 sm:order-4">
+      <section className="py-8 px-4 order-2">
         <div className="container mx-auto">
           {/* Header + Search */}
           <div className="flex items-center justify-between gap-3 mb-3">
