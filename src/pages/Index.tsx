@@ -179,25 +179,25 @@ export default function Index() {
       {/* Listings Section */}
       <section className="py-8 px-4 order-2 sm:order-4">
         <div className="container mx-auto">
-          {/* Header + Search + Filters */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
-            <h2 className="text-base font-bold text-foreground uppercase tracking-wide">Anúncios Recentes</h2>
-            <div className="relative w-full sm:w-64">
+          {/* Header + Search */}
+          <div className="flex items-center justify-between gap-3 mb-3">
+            <h2 className="text-base font-bold text-foreground uppercase tracking-wide whitespace-nowrap">Anúncios Recentes</h2>
+            <div className="relative w-full max-w-[200px] sm:max-w-[260px]">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
               <Input
                 placeholder="Buscar..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-9 bg-card border-border h-9 text-xs placeholder:text-muted-foreground focus:border-primary/50 focus:ring-primary/20"
+                className="pl-9 bg-card border-border h-8 text-xs placeholder:text-muted-foreground focus:border-primary/50 focus:ring-primary/20"
               />
             </div>
           </div>
 
-          {/* Filter pills */}
-          <div className="flex flex-wrap gap-1.5 mb-5">
+          {/* Filter pills — horizontal scroll on mobile */}
+          <div className="flex gap-1.5 mb-4 overflow-x-auto scrollbar-hide pb-1">
             <button
               onClick={() => setPlatform("all")}
-              className={`px-3 py-1.5 rounded-full text-[11px] font-medium transition-all ${
+              className={`shrink-0 px-3 py-1.5 rounded-full text-[11px] font-medium transition-all ${
                 platform === "all"
                   ? "bg-primary text-primary-foreground"
                   : "bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80"
@@ -209,7 +209,7 @@ export default function Index() {
               <button
                 key={p.id}
                 onClick={() => setPlatform(p.id)}
-                className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-[11px] font-medium transition-all ${
+                className={`shrink-0 inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-[11px] font-medium transition-all ${
                   platform === p.id
                     ? "bg-primary text-primary-foreground"
                     : "bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80"
