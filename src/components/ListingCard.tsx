@@ -23,12 +23,12 @@ export default function ListingCard({ listing }: ListingCardProps) {
     <Link to={`/listing/${listing.id}`}>
       <div className="rounded-2xl overflow-hidden group relative transition-all duration-300 card-surface">
         {/* Image area */}
-        <div className="relative overflow-hidden bg-black/40">
+        <div className="relative overflow-hidden bg-black/40 aspect-square">
           {coverImage ? (
             <img
               src={coverImage}
               alt={listing.title}
-              className="w-full h-auto block group-hover:scale-105 transition-transform duration-500 ease-out"
+              className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500 ease-out"
               loading="lazy"
             />
           ) : (
