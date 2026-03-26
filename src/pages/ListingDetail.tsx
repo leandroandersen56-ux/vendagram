@@ -345,6 +345,31 @@ export default function ListingDetail() {
         </motion.div>
       </div>
       <Footer />
+
+      {/* Fixed bottom buy button on mobile */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 p-3 bg-background/95 backdrop-blur border-t border-border sm:hidden">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <p className="text-[10px] text-muted-foreground">Preço</p>
+            <p className="text-lg font-display font-bold text-primary">{listing ? formatBRL(listing.price) : ''}</p>
+          </div>
+          <Button
+            variant="hero"
+            className="flex-1 max-w-[200px] py-5 text-sm font-bold rounded-lg"
+            onClick={() => {
+              if (!listing) return;
+              if (isAuthenticated) {
+                navigate(`/checkout/${listing.id}`);
+              } else {
+                openAuth(`/checkout/${listing.id}`);
+              }
+            }}
+          >
+            <ShoppingCart className="h-4 w-4 mr-1.5" />
+            Comprar Agora
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
