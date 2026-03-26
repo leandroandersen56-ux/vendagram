@@ -325,11 +325,34 @@ export default function Index() {
 
                     {/* Promo Banners */}
                     <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-1">
-                      {[bannerPromo1, bannerPromo2].map((src, i) => (
-                        <div key={i} className="shrink-0 w-[85%] sm:w-[49%] rounded-xl overflow-hidden">
-                          <img src={src} alt={`Promoção ${i + 1}`} className="w-full h-[100px] sm:h-[140px] object-cover" loading="lazy" />
+                      {/* Banner 1 - Tesouro */}
+                      <div className="shrink-0 w-[85%] sm:w-[49%] rounded-xl overflow-hidden relative group cursor-pointer">
+                        <img src={bannerPromo1} alt="Promoção contas de jogos" className="w-full h-[120px] sm:h-[160px] object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent flex items-center px-4 sm:px-8">
+                          <div>
+                            <p className="text-[9px] sm:text-xs font-bold text-primary uppercase tracking-widest mb-0.5 sm:mb-1">🎮 Oferta Especial</p>
+                            <h3 className="text-sm sm:text-xl lg:text-2xl font-display font-black text-foreground leading-tight">
+                              CONTAS PREMIUM<br />
+                              <span className="text-primary">COM ATÉ 40% OFF</span>
+                            </h3>
+                            <p className="text-[8px] sm:text-xs text-muted-foreground mt-1 hidden sm:block">Contas raras com itens exclusivos</p>
+                          </div>
                         </div>
-                      ))}
+                      </div>
+                      {/* Banner 2 - Guerreiro */}
+                      <div className="shrink-0 w-[85%] sm:w-[49%] rounded-xl overflow-hidden relative group cursor-pointer">
+                        <img src={bannerPromo2} alt="Promoção contas épicas" className="w-full h-[120px] sm:h-[160px] object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                        <div className="absolute inset-0 bg-gradient-to-l from-black/80 via-black/50 to-transparent flex items-center justify-end px-4 sm:px-8">
+                          <div className="text-right">
+                            <p className="text-[9px] sm:text-xs font-bold text-purple-400 uppercase tracking-widest mb-0.5 sm:mb-1">⚔️ Contas Lendárias</p>
+                            <h3 className="text-sm sm:text-xl lg:text-2xl font-display font-black text-foreground leading-tight">
+                              SKINS EXCLUSIVAS<br />
+                              <span className="text-purple-400">EDIÇÃO LIMITADA</span>
+                            </h3>
+                            <p className="text-[8px] sm:text-xs text-muted-foreground mt-1 hidden sm:block">Valorant, Free Fire, Fortnite e mais</p>
+                          </div>
+                        </div>
+                      </div>
                     </div>
 
                     {games.length > 0 && (
