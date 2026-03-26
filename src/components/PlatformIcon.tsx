@@ -71,11 +71,10 @@ const icons: Record<string, (s: number) => React.ReactNode> = {
     </svg>
   ),
 
-  // Roblox — tilted square with square hole
+  // Roblox — official logo (Simple Icons)
   roblox: (s) => (
     <svg width={s} height={s} viewBox="0 0 24 24" fill="none">
-      <path d="M5.5 1L1 18.5 18.5 23 23 5.5 5.5 1z" fill="none" stroke="#E2231A" strokeWidth="2"/>
-      <rect x="9.5" y="9.5" width="5" height="5" rx="0.5" fill="#E2231A"/>
+      <path d="M18.926 23.998 0 18.892 5.075.002 24 5.108ZM15.348 10.09l-5.282-1.453-1.414 5.273 5.282 1.453z" fill="#E2231A"/>
     </svg>
   ),
 
