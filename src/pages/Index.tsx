@@ -194,12 +194,11 @@ export default function Index() {
             </div>
           </div>
 
-          {/* Filter pills + Search (desktop: same line) */}
-          <div className="flex items-center gap-2 mb-4">
-            <div className="flex gap-1.5 overflow-x-auto scrollbar-hide pb-1 flex-1">
+          {/* Filter pills */}
+          <div className="flex gap-1.5 sm:gap-2 overflow-x-auto scrollbar-hide pb-1 mb-3">
               <button
                 onClick={() => setPlatform("all")}
-                className={`shrink-0 px-3 py-1.5 rounded-full text-[11px] font-medium transition-all ${
+                className={`shrink-0 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[11px] sm:text-sm font-medium transition-all ${
                   platform === "all"
                     ? "bg-primary text-primary-foreground"
                     : "bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80"
@@ -211,35 +210,35 @@ export default function Index() {
                 <button
                   key={p.id}
                   onClick={() => setPlatform(p.id)}
-                  className={`shrink-0 inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-[11px] font-medium transition-all ${
+                  className={`shrink-0 inline-flex items-center gap-1 sm:gap-1.5 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[11px] sm:text-sm font-medium transition-all ${
                     platform === p.id
                       ? "bg-primary text-primary-foreground"
                       : "bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80"
                   }`}
                 >
-                  <PlatformIcon platformId={p.id} size={12} />
+                  <PlatformIcon platformId={p.id} size={14} />
                   {p.name}
                 </button>
               ))}
+          </div>
+
+          {/* Search desktop only - full width below badges */}
+          <div className="hidden sm:flex items-center gap-2 mb-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+              <Input
+                placeholder="Buscar anúncios..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="pl-9 bg-card border-border h-9 text-sm placeholder:text-muted-foreground focus:border-primary/50 focus:ring-primary/20"
+              />
             </div>
-            {/* Search desktop only - inline with badges */}
-            <div className="hidden sm:flex items-center gap-2 shrink-0">
-              <div className="relative w-[200px]">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
-                <Input
-                  placeholder="Buscar..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="pl-9 bg-card border-border h-8 text-xs placeholder:text-muted-foreground focus:border-primary/50 focus:ring-primary/20"
-                />
-              </div>
-              <button
-                onClick={() => setShowFilters(!showFilters)}
-                className={`shrink-0 h-8 w-8 rounded-lg border flex items-center justify-center transition-all ${showFilters ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border text-muted-foreground hover:text-foreground"}`}
-              >
-                <SlidersHorizontal className="h-3.5 w-3.5" />
-              </button>
-            </div>
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className={`shrink-0 h-9 w-9 rounded-lg border flex items-center justify-center transition-all ${showFilters ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border text-muted-foreground hover:text-foreground"}`}
+            >
+              <SlidersHorizontal className="h-4 w-4" />
+            </button>
           </div>
 
           {/* Expanded filters */}
