@@ -15,6 +15,10 @@ import ssYoutube from "@/assets/screenshots/screenshot-youtube.jpg";
 import ssFacebook from "@/assets/screenshots/screenshot-facebook.jpg";
 import ssRoblox from "@/assets/screenshots/screenshot-roblox.jpg";
 import ssFortnite from "@/assets/screenshots/screenshot-fortnite.jpg";
+import ssClashRoyale from "@/assets/screenshots/screenshot-clashroyale.jpg";
+import ssInstagram2 from "@/assets/screenshots/screenshot-instagram2.jpg";
+import ssTiktok2 from "@/assets/screenshots/screenshot-tiktok2.jpg";
+import ssYoutube2 from "@/assets/screenshots/screenshot-youtube2.jpg";
 
 export const PLATFORM_COVERS: Record<string, string> = {
   free_fire: coverFreefire,
