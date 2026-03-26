@@ -228,7 +228,7 @@ export const MOCK_LISTINGS: Listing[] = [
     description: 'Conta consolidada com 120K seguidores, engajamento alto. Nicho moda feminina com parcerias ativas.',
     price: 3200,
     status: 'active',
-    screenshots: [ssTiktok],
+    screenshots: [ssInstagram2],
     fields: { 'Seguidores': '120K', 'Engajamento': '4.2%', 'Nicho': 'Moda' },
     createdAt: '2024-03-11',
   },
