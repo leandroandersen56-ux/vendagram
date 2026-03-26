@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { formatBRL, getPlatform, PLATFORM_COVERS } from "@/lib/mock-data";
+import { formatBRL, getPlatform, PLATFORM_COVERS, MOCK_LISTINGS } from "@/lib/mock-data";
 import PlatformIcon from "@/components/PlatformIcon";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -24,22 +24,44 @@ export default function ListingDetail() {
   useEffect(() => {
     async function fetchListing() {
       if (!id) return;
+
+      // Try DB first
       const { data, error } = await supabase
         .from("listings")
         .select("*")
         .eq("id", id)
         .single();
 
-      if (error || !data) { setLoading(false); return; }
-      setListing(data);
-
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("user_id", data.seller_id)
-        .single();
-
-      if (profile) setSeller(profile);
+      if (!error && data) {
+        setListing(data);
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("user_id", data.seller_id)
+          .single();
+        if (profile) setSeller(profile);
+      } else {
+        // Fallback to mock data
+        const mock = MOCK_LISTINGS.find((m) => m.id === id);
+        if (mock) {
+          setListing({
+            id: mock.id,
+            seller_id: mock.sellerId,
+            category: mock.platform,
+            title: mock.title,
+            description: mock.description,
+            price: mock.price,
+            status: mock.status,
+            screenshots: mock.screenshots,
+            highlights: mock.fields,
+          });
+          setSeller({
+            name: mock.sellerName,
+            avg_rating: mock.sellerRating,
+            total_sales: mock.sellerSales,
+          });
+        }
+      }
       setLoading(false);
     }
     fetchListing();
