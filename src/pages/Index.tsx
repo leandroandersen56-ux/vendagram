@@ -171,10 +171,30 @@ export default function Index() {
       {/* Listings Section */}
       <section className="py-8 px-4 order-2">
         <div className="container mx-auto">
-          {/* Header */}
-          <h2 className="text-base font-bold text-foreground uppercase tracking-wide mb-3">Anúncios Recentes</h2>
+          {/* Header + Search (mobile: stacked, desktop: inline with badges) */}
+          <div className="flex items-center justify-between gap-2 mb-2 sm:mb-0">
+            <h2 className="text-base font-bold text-foreground uppercase tracking-wide">Anúncios Recentes</h2>
+            {/* Search mobile only - above badges */}
+            <div className="flex items-center gap-2 sm:hidden">
+              <div className="relative w-[140px]">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+                <Input
+                  placeholder="Buscar..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="pl-9 bg-card border-border h-8 text-xs placeholder:text-muted-foreground focus:border-primary/50 focus:ring-primary/20"
+                />
+              </div>
+              <button
+                onClick={() => setShowFilters(!showFilters)}
+                className={`shrink-0 h-8 w-8 rounded-lg border flex items-center justify-center transition-all ${showFilters ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border text-muted-foreground hover:text-foreground"}`}
+              >
+                <SlidersHorizontal className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          </div>
 
-          {/* Filter pills + Search on same line */}
+          {/* Filter pills + Search (desktop: same line) */}
           <div className="flex items-center gap-2 mb-4">
             <div className="flex gap-1.5 overflow-x-auto scrollbar-hide pb-1 flex-1">
               <button
@@ -202,8 +222,9 @@ export default function Index() {
                 </button>
               ))}
             </div>
-            <div className="flex items-center gap-2 shrink-0">
-              <div className="relative w-[140px] sm:w-[200px]">
+            {/* Search desktop only - inline with badges */}
+            <div className="hidden sm:flex items-center gap-2 shrink-0">
+              <div className="relative w-[200px]">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
                 <Input
                   placeholder="Buscar..."
