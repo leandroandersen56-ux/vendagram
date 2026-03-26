@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate, Outlet } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   LayoutDashboard, ShoppingBag, Tag, Wallet, User, Bell,
-  Settings, LogOut, Shield, ChevronLeft, Menu, X
+  Settings, LogOut, Shield, ChevronLeft, Menu, X, PlusCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
