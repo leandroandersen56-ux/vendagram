@@ -1,3 +1,19 @@
+import coverFreefire from "@/assets/covers/cover-freefire.jpg";
+import coverInstagram from "@/assets/covers/cover-instagram.jpg";
+import coverTiktok from "@/assets/covers/cover-tiktok.jpg";
+import coverValorant from "@/assets/covers/cover-valorant.jpg";
+import coverYoutube from "@/assets/covers/cover-youtube.jpg";
+import coverFacebook from "@/assets/covers/cover-facebook.jpg";
+
+export const PLATFORM_COVERS: Record<string, string> = {
+  free_fire: coverFreefire,
+  instagram: coverInstagram,
+  tiktok: coverTiktok,
+  valorant: coverValorant,
+  youtube: coverYoutube,
+  facebook: coverFacebook,
+};
+
 export interface Listing {
   id: string;
   sellerId: string;
