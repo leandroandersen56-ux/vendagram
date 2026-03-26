@@ -89,31 +89,30 @@ export default function Index() {
     <div className="min-h-screen bg-background flex flex-col">
       <Navbar />
       {/* Hero Banner */}
-      <section className="pt-20 px-4 order-1 sm:order-1">
+      {/* Hero Banner */}
+      <section className="pt-16 sm:pt-20 px-3 sm:px-4 order-1">
         <div className="container mx-auto">
-          <div className="relative overflow-hidden rounded-2xl">
+          <div className="relative overflow-hidden rounded-xl sm:rounded-2xl">
             <img
               src={bannerImg}
               alt="SafeTrade.GG"
-              className="w-full h-[140px] sm:h-[340px] object-cover"
+              className="w-full h-[120px] sm:h-[340px] object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-background via-background/70 to-transparent">
-              <div className="h-full flex items-center px-6 sm:px-10">
+            <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/75 to-transparent sm:from-background sm:via-background/70">
+              <div className="h-full flex items-center px-4 sm:px-10">
                 <div className="max-w-lg">
-                  <h1 className="text-xl sm:text-3xl lg:text-4xl font-display font-black text-foreground mb-2 leading-tight tracking-tight">
-                    COMPRE E VENDA<br />
-                    <span className="text-primary">CONTAS DIGITAIS</span><br />
-                    COM SEGURANÇA
+                  <h1 className="text-[15px] sm:text-3xl lg:text-4xl font-display font-black text-foreground mb-1 sm:mb-2 leading-[1.2] tracking-tight">
+                    COMPRE E VENDA <span className="text-primary">CONTAS DIGITAIS</span> COM SEGURANÇA
                   </h1>
                   <p className="text-xs sm:text-sm text-muted-foreground mb-4 hidden sm:block">
                     Marketplace com escrow automático. Sem riscos.
                   </p>
-                  <div className="flex gap-3">
-                    <Button variant="hero" size="sm" className="text-xs h-9 px-5" onClick={handleSell}>
-                      Vender Conta <ArrowRight className="h-3.5 w-3.5 ml-1.5" />
+                  <div className="flex gap-2 sm:gap-3">
+                    <Button variant="hero" size="sm" className="text-[10px] sm:text-xs h-7 sm:h-9 px-3 sm:px-5" onClick={handleSell}>
+                      Vender Conta <ArrowRight className="h-3 w-3 sm:h-3.5 sm:w-3.5 ml-1" />
                     </Button>
                     <Link to="/marketplace">
-                      <Button variant="glass" size="sm" className="text-xs h-9 px-5">
+                      <Button variant="glass" size="sm" className="text-[10px] sm:text-xs h-7 sm:h-9 px-3 sm:px-5">
                         Ver Marketplace
                       </Button>
                     </Link>
