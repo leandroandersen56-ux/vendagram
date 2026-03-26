@@ -29,6 +29,17 @@ export default function PanelLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showDeposit, setShowDeposit] = useState(false);
+  const [showTransfer, setShowTransfer] = useState(false);
+  const [showWithdraw, setShowWithdraw] = useState(false);
+  const [showQR, setShowQR] = useState(false);
+
+  const walletActions = [
+    { label: "Depositar", icon: ArrowDown, color: "text-success", bg: "bg-success/10", onClick: () => setShowDeposit(true) },
+    { label: "Transferir", icon: ArrowRight, color: "text-info", bg: "bg-info/10", onClick: () => setShowTransfer(true) },
+    { label: "Sacar", icon: ArrowUp, color: "text-primary", bg: "bg-primary/10", onClick: () => setShowWithdraw(true) },
+    { label: "Pagar com QR", icon: ScanLine, color: "text-warning", bg: "bg-warning/10", onClick: () => setShowQR(true) },
+  ];
 
   const isActive = (item: typeof PANEL_NAV[0]) =>
     item.exact ? location.pathname === item.to : location.pathname.startsWith(item.to);
