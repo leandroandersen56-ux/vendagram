@@ -9,6 +9,7 @@ import Index from "./pages/Index.tsx";
 import Marketplace from "./pages/Marketplace.tsx";
 import ListingDetail from "./pages/ListingDetail.tsx";
 import TransactionFlow from "./pages/TransactionFlow.tsx";
+import Checkout from "./pages/Checkout.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import PanelLayout from "./components/PanelLayout.tsx";
 import PanelOverview from "./pages/panel/PanelOverview.tsx";
