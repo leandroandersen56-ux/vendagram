@@ -37,12 +37,14 @@ export default function Navbar() {
         {/* Desktop nav links */}
         <div className="hidden md:flex items-center gap-1">
           <Link to="/">
-            <Button variant="ghost" size="sm" className={location.pathname === "/" ? "text-[#FFFF00]" : "text-muted-foreground hover:text-foreground"}>
+            <Button variant="ghost" size="sm" className={`gap-1.5 ${location.pathname === "/" ? "text-[#FFFF00]" : "text-muted-foreground hover:text-foreground"}`}>
+              <Store className="h-4 w-4" />
               Loja
             </Button>
           </Link>
           <Link to="/marketplace">
-            <Button variant="ghost" size="sm" className={location.pathname === "/marketplace" ? "text-[#FFFF00]" : "text-muted-foreground hover:text-foreground"}>
+            <Button variant="ghost" size="sm" className={`gap-1.5 ${location.pathname === "/marketplace" ? "text-[#FFFF00]" : "text-muted-foreground hover:text-foreground"}`}>
+              <ShoppingBag className="h-4 w-4" />
               Marketplace
             </Button>
           </Link>
