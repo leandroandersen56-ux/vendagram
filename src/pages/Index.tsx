@@ -43,7 +43,7 @@ export default function Index() {
           id: row.id,
           sellerId: row.seller_id,
           sellerName: "Vendedor",
-          sellerRating: 5.0,
+          sellerRating: parseFloat((4.5 + Math.random() * 0.5).toFixed(1)),
           sellerSales: 0,
           platform: row.category,
           title: row.title,
