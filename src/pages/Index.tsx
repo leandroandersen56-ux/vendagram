@@ -126,7 +126,7 @@ export default function Index() {
       </section>
 
       {/* Platform Grid — full width cards */}
-      <section className="py-8 px-4 border-b border-border">
+      <section className="py-8 px-4 border-b border-border order-3 sm:order-2">
         <div className="container mx-auto">
           <h2 className="text-base font-bold text-foreground mb-5 uppercase tracking-wide">Categorias</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
