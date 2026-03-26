@@ -14,7 +14,6 @@ const PANEL_NAV = [
   { to: "/painel/anuncios/novo", label: "Criar Anúncio", icon: PlusCircle, exact: true },
   { to: "/painel/anuncios", label: "Meus Anúncios", icon: Tag, exact: true },
   { to: "/painel/transacoes", label: "Transações", icon: ShoppingBag },
-  { to: "/painel/carteira", label: "Carteira", icon: Wallet },
   { to: "/painel/notificacoes", label: "Notificações", icon: Bell, badge: 3 },
   { to: "/painel/perfil", label: "Meu Perfil", icon: User },
 ];
@@ -93,6 +92,30 @@ export default function PanelLayout() {
         </div>
       </aside>
 
+      {/* Desktop top bar */}
+      <div className="hidden lg:flex fixed top-0 left-64 right-0 h-14 bg-card/80 backdrop-blur-sm border-b border-border z-30 items-center justify-end px-6 gap-3">
+        <button
+          onClick={() => {
+            const el = document.getElementById('wallet-section');
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+            else navigate('/painel');
+          }}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all"
+        >
+          <Wallet className="h-4 w-4" />
+          <span className="text-sm font-medium">R$ 890,00</span>
+        </button>
+        <Link to="/painel/notificacoes">
+          <Button variant="ghost" size="icon" className="relative">
+            <Bell className="h-4 w-4" />
+            <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-destructive text-destructive-foreground text-[9px] flex items-center justify-center">3</span>
+          </Button>
+        </Link>
+        <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xs">
+          {user?.name?.[0]?.toUpperCase()}
+        </div>
+      </div>
+
       {/* Mobile header */}
       <div className="lg:hidden fixed top-0 left-0 right-0 h-14 glass z-40 flex items-center justify-between px-4">
         <div className="flex items-center gap-3">
@@ -104,11 +127,15 @@ export default function PanelLayout() {
             SAFETRADE<span className="text-secondary">.GG</span>
           </span>
         </div>
-        <Link to="/painel/carteira">
-          <Button variant="ghost" size="icon" className="relative">
-            <Wallet className="h-5 w-5" />
-          </Button>
-        </Link>
+        <button
+          onClick={() => {
+            const el = document.getElementById('wallet-section');
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+            else navigate('/painel');
+          }}
+        >
+          <Wallet className="h-5 w-5 text-muted-foreground" />
+        </button>
       </div>
 
       {/* Mobile sidebar overlay */}
@@ -152,7 +179,7 @@ export default function PanelLayout() {
       )}
 
       {/* Main content */}
-      <main className="flex-1 lg:ml-64 pt-14 lg:pt-0">
+      <main className="flex-1 lg:ml-64 pt-14">
         <div className="p-4 sm:p-6 lg:p-8">
           <Outlet />
         </div>
