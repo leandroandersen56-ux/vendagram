@@ -268,18 +268,18 @@ export default function Index() {
       </section>
 
       {/* Trust Section */}
-      <section className="py-10 px-4 border-t border-border order-5">
+      <section className="py-8 px-4 border-t border-border order-5">
         <div className="container mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
+          <div className="grid grid-cols-3 gap-3 sm:gap-6 text-center">
             {[
-              { icon: <Shield className="h-8 w-8" />, value: "100%", label: "Escrow Seguro" },
-              { icon: <Clock className="h-8 w-8" />, value: "24h", label: "Garantia de Compra" },
-              { icon: <CheckCircle2 className="h-8 w-8" />, value: "10%", label: "Taxa Transparente" },
+              { icon: <Shield className="h-5 w-5 sm:h-8 sm:w-8" />, value: "100%", label: "Escrow Seguro" },
+              { icon: <Clock className="h-5 w-5 sm:h-8 sm:w-8" />, value: "24h", label: "Garantia de Compra" },
+              { icon: <CheckCircle2 className="h-5 w-5 sm:h-8 sm:w-8" />, value: "10%", label: "Taxa Transparente" },
             ].map((stat) => (
-              <div key={stat.label} className="flex flex-col items-center gap-2">
+              <div key={stat.label} className="flex flex-col items-center gap-1 sm:gap-2">
                 <div className="text-primary">{stat.icon}</div>
-                <p className="text-2xl font-display font-bold text-foreground">{stat.value}</p>
-                <p className="text-xs text-muted-foreground">{stat.label}</p>
+                <p className="text-lg sm:text-2xl font-display font-bold text-foreground">{stat.value}</p>
+                <p className="text-[10px] sm:text-xs text-muted-foreground">{stat.label}</p>
               </div>
             ))}
           </div>
