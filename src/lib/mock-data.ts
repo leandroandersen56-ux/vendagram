@@ -149,7 +149,7 @@ export const MOCK_LISTINGS: Listing[] = [
     description: 'Canal monetizado com 10K inscritos e mais de 500K views totais. Nicho de tecnologia.',
     price: 3000,
     status: 'active',
-    screenshots: [],
+    screenshots: [ssYoutube],
     fields: { 'Inscritos': '10K', 'Views Totais': '500K', 'Monetizado': true, 'Nicho': 'Tecnologia' },
     createdAt: '2024-03-16',
   },
