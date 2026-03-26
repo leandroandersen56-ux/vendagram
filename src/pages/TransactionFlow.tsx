@@ -103,7 +103,7 @@ export default function TransactionFlow() {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Navbar />
         <div className="text-center">
-          <p className="text-4xl mb-4">😕</p>
+          <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
           <p className="text-foreground font-medium mb-4">Transação não encontrada</p>
           <Link to="/marketplace"><Button variant="hero">Voltar ao Marketplace</Button></Link>
         </div>

@@ -423,7 +423,7 @@ export default function CreateListing() {
         {/* ── Itens da conta (games) ── */}
         {isGame && (
           <div className="space-y-2">
-            <Label className="text-foreground text-xs uppercase tracking-wide">Itens da conta 🎮</Label>
+            <Label className="text-foreground text-xs uppercase tracking-wide flex items-center gap-1.5"><Gamepad2 className="h-3.5 w-3.5 text-primary" /> Itens da conta</Label>
 
             {/* Sugestões rápidas */}
             <div className="flex flex-wrap gap-1.5">
