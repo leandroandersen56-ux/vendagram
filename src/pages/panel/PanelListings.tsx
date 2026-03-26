@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { Plus, Eye, Pause, Play, Trash2, Edit, Loader2 } from "lucide-react";
+import { MOCK_LISTINGS } from "@/lib/mock-data";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -58,20 +59,25 @@ export default function PanelListings() {
       return;
     }
 
-    // Claim demo listings on first access
-    const DEMO_SELLER = "00000000-0000-0000-0000-000000000001";
-    await supabase
-      .from("listings")
-      .update({ seller_id: user.id } as any)
-      .eq("seller_id", DEMO_SELLER);
-
     const { data, error } = await supabase
       .from("listings")
       .select("id, title, price, category, status, created_at")
       .eq("seller_id", user.id)
       .order("created_at", { ascending: false });
 
-    if (!error && data) setListings(data);
+    if (!error && data && data.length > 0) {
+      setListings(data);
+    } else {
+      // Show demo data when user has no listings
+      setListings(MOCK_LISTINGS.map((m) => ({
+        id: m.id,
+        title: m.title,
+        price: m.price,
+        category: m.platform,
+        status: m.status === "paused" ? "draft" : m.status,
+        created_at: m.createdAt,
+      })));
+    }
     setLoading(false);
   };
 
