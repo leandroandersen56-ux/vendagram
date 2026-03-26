@@ -164,7 +164,7 @@ export const MOCK_LISTINGS: Listing[] = [
     description: 'Conta Facebook com marketplace ativo, 2000 amigos reais, sem restrições.',
     price: 150,
     status: 'active',
-    screenshots: [],
+    screenshots: [ssFacebook],
     fields: { 'Amigos': 2000, 'Marketplace Ativo': true, 'Restrições': false },
     createdAt: '2024-03-15',
   },
