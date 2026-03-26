@@ -86,7 +86,7 @@ export default function Index() {
             <div className="px-6 sm:px-10 lg:px-16 max-w-md">
               <h1 className="text-xl sm:text-3xl lg:text-4xl font-display font-black text-white mb-2 leading-tight tracking-tight">
                 COMPRE E VENDA<br />
-                <span className="text-[#FFD700]">CONTAS DIGITAIS</span><br />
+                <span className="text-[#FFFF00]">CONTAS DIGITAIS</span><br />
                 COM SEGURANÇA
               </h1>
               <p className="text-xs sm:text-sm text-neutral-400 mb-4 hidden sm:block">
@@ -108,7 +108,7 @@ export default function Index() {
             {PLATFORMS.map((p) => (
               <Link to={`/marketplace?platform=${p.id}`} key={p.id} className="shrink-0">
                 <div
-                  className="w-[100px] h-[110px] rounded-lg overflow-hidden relative group cursor-pointer border border-neutral-800 hover:border-[#FFD700]/40 transition-all flex flex-col items-center justify-center gap-2"
+                  className="w-[100px] h-[110px] rounded-lg overflow-hidden relative group cursor-pointer border border-neutral-800 hover:border-[#FFFF00]/40 transition-all flex flex-col items-center justify-center gap-2"
                   style={{ background: `linear-gradient(180deg, ${p.color}12 0%, #0A0A0A 100%)` }}
                 >
                   <PlatformIcon platformId={p.id} size={36} />
@@ -132,7 +132,7 @@ export default function Index() {
                 placeholder="Buscar..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-9 bg-neutral-900 border-neutral-800 h-8 text-xs placeholder:text-neutral-500 focus:border-[#FFD700]/50 focus:ring-[#FFD700]/20"
+                className="pl-9 bg-neutral-900 border-neutral-800 h-8 text-xs placeholder:text-neutral-500 focus:border-[#FFFF00]/50 focus:ring-[#FFFF00]/20"
               />
             </div>
           </div>
@@ -143,7 +143,7 @@ export default function Index() {
               onClick={() => setPlatform("all")}
               className={`px-3 py-1 rounded-full text-[11px] font-medium transition-all ${
                 platform === "all"
-                  ? "bg-[#FFD700] text-[#0A0A0A]"
+                  ? "bg-[#FFFF00] text-[#0A0A0A]"
                   : "bg-neutral-800/80 text-neutral-400 hover:text-white hover:bg-neutral-700"
               }`}
             >
@@ -155,7 +155,7 @@ export default function Index() {
                 onClick={() => setPlatform(p.id)}
                 className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-[11px] font-medium transition-all ${
                   platform === p.id
-                    ? "bg-[#FFD700] text-[#0A0A0A]"
+                    ? "bg-[#FFFF00] text-[#0A0A0A]"
                     : "bg-neutral-800/80 text-neutral-400 hover:text-white hover:bg-neutral-700"
                 }`}
               >
@@ -168,7 +168,7 @@ export default function Index() {
           {/* Grid */}
           {loading ? (
             <div className="flex items-center justify-center py-20">
-              <Loader2 className="h-5 w-5 animate-spin text-[#FFD700]" />
+              <Loader2 className="h-5 w-5 animate-spin text-[#FFFF00]" />
             </div>
           ) : filtered.length > 0 ? (
             <motion.div

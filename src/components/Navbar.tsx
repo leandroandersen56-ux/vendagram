@@ -20,7 +20,7 @@ export default function Navbar() {
       <div className="container mx-auto flex items-center justify-between h-16 px-4 gap-4">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 shrink-0">
-          <span className="font-display text-lg font-bold tracking-wider text-[#FFD700]">
+          <span className="font-display text-lg font-bold tracking-wider text-[#FFFF00]">
             SAFETRADE<span className="text-muted-foreground">.GG</span>
           </span>
         </Link>
@@ -28,12 +28,12 @@ export default function Navbar() {
         {/* Desktop nav links */}
         <div className="hidden md:flex items-center gap-1">
           <Link to="/">
-            <Button variant="ghost" size="sm" className={location.pathname === "/" ? "text-[#FFD700]" : "text-muted-foreground hover:text-foreground"}>
+            <Button variant="ghost" size="sm" className={location.pathname === "/" ? "text-[#FFFF00]" : "text-muted-foreground hover:text-foreground"}>
               Loja
             </Button>
           </Link>
           <Link to="/marketplace">
-            <Button variant="ghost" size="sm" className={location.pathname === "/marketplace" ? "text-[#FFD700]" : "text-muted-foreground hover:text-foreground"}>
+            <Button variant="ghost" size="sm" className={location.pathname === "/marketplace" ? "text-[#FFFF00]" : "text-muted-foreground hover:text-foreground"}>
               Marketplace
             </Button>
           </Link>
@@ -56,7 +56,7 @@ export default function Navbar() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className="gap-2 text-foreground">
-                  <div className="h-7 w-7 rounded-full bg-[#FFD700]/20 flex items-center justify-center text-[#FFD700] text-xs font-bold">
+                  <div className="h-7 w-7 rounded-full bg-[#FFFF00]/20 flex items-center justify-center text-[#FFFF00] text-xs font-bold">
                     {user?.name?.[0]?.toUpperCase()}
                   </div>
                   {user?.name}
