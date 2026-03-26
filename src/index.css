@@ -77,8 +77,8 @@
   }
   .card-hover:hover {
     transform: translateY(-2px);
-    border-color: hsl(48 100% 50% / 0.3);
-    box-shadow: 0 0 16px hsl(48 100% 50% / 0.1);
+    border-color: hsl(60 100% 50% / 0.3);
+    box-shadow: 0 0 16px hsl(60 100% 50% / 0.1);
   }
 
   .text-gradient-primary {
