@@ -40,9 +40,9 @@ export default function ListingCard({ listing }: ListingCardProps) {
             </div>
           )}
 
-          {/* Platform icon badge - top left like Bonoxs */}
-          <div className="absolute top-2 left-2 h-7 w-7 rounded-lg bg-white/90 flex items-center justify-center shadow-sm">
-            <PlatformIcon platformId={listing.platform} size={16} />
+          {/* Platform badge - dark bg with neon yellow icon */}
+          <div className="absolute top-2 left-2 h-7 w-7 rounded-lg bg-black/60 backdrop-blur-sm flex items-center justify-center">
+            <PlatformIcon platformId={listing.platform} size={16} className="brightness-150 drop-shadow-[0_0_4px_hsl(60,100%,50%)]" />
           </div>
 
           {/* Share button - top right */}
