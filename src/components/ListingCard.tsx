@@ -21,65 +21,66 @@ export default function ListingCard({ listing }: ListingCardProps) {
 
   return (
     <Link to={`/listing/${listing.id}`}>
-      <div className="bg-card border border-border rounded-xl overflow-hidden group relative hover:border-primary/40 hover:-translate-y-1 transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,255,0,0.08)]">
-        {/* Cover image - larger, more prominent */}
-        <div className="aspect-[4/3] relative overflow-hidden">
+      <div className="bg-card rounded-xl overflow-hidden group relative hover:-translate-y-0.5 transition-all duration-200 border border-border hover:border-primary/30">
+        {/* Cover image */}
+        <div className="aspect-square relative overflow-hidden bg-muted">
           {coverImage ? (
             <img
               src={coverImage}
               alt={listing.title}
-              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               loading="lazy"
             />
           ) : (
             <div
               className="w-full h-full flex items-center justify-center"
-              style={{ background: `linear-gradient(160deg, ${platform.color}25, hsl(var(--background)))` }}
+              style={{ background: `linear-gradient(160deg, ${platform.color}15, hsl(var(--background)))` }}
             >
-              <PlatformIcon platformId={listing.platform} size={56} />
+              <PlatformIcon platformId={listing.platform} size={44} />
             </div>
           )}
-          {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+          {/* Subtle bottom gradient for readability */}
+          <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/70 to-transparent" />
 
-          {/* Platform badge - top left */}
-          <div className="absolute top-2 left-2 flex items-center gap-1.5 bg-black/60 backdrop-blur-sm rounded-full px-2 py-1">
-            <PlatformIcon platformId={listing.platform} size={14} />
-            <span className="text-[10px] sm:text-xs font-semibold text-white">{platform.name}</span>
+          {/* Platform pill - top left */}
+          <div className="absolute top-1.5 left-1.5 flex items-center gap-1 bg-black/50 backdrop-blur-sm rounded-md px-1.5 py-0.5">
+            <PlatformIcon platformId={listing.platform} size={12} />
+            <span className="text-[9px] font-medium text-white/90">{platform.name}</span>
           </div>
 
-          {/* Share button - top right */}
+          {/* Share button */}
           <Button
             variant="ghost"
             size="icon"
-            className="absolute top-2 right-2 h-7 w-7 bg-black/40 backdrop-blur-sm rounded-full text-white/70 hover:text-primary hover:bg-black/60 opacity-0 group-hover:opacity-100 transition-all"
+            className="absolute top-1.5 right-1.5 h-6 w-6 text-white/50 hover:text-primary opacity-0 group-hover:opacity-100 transition-opacity bg-black/30 rounded-md"
             onClick={handleShare}
           >
             <Share2 className="h-3 w-3" />
           </Button>
 
-          {/* Price overlay - bottom of image */}
-          <div className="absolute bottom-2 left-2 right-2 flex items-end justify-between">
-            <p className="text-lg sm:text-xl font-extrabold text-primary drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+          {/* Price tag - bottom left on image */}
+          <div className="absolute bottom-1.5 left-1.5">
+            <span className="text-sm font-extrabold text-primary drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]">
               {formatBRL(listing.price)}
-            </p>
-            <div className="flex items-center gap-0.5 bg-black/50 backdrop-blur-sm rounded-full px-1.5 py-0.5">
-              <Star className="h-3 w-3 text-primary fill-primary" />
-              <span className="text-[10px] sm:text-xs font-bold text-white">{listing.sellerRating}</span>
-            </div>
+            </span>
+          </div>
+
+          {/* Rating - bottom right on image */}
+          <div className="absolute bottom-1.5 right-1.5 flex items-center gap-0.5">
+            <Star className="h-3 w-3 text-primary fill-primary" />
+            <span className="text-[10px] font-bold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">{listing.sellerRating}</span>
           </div>
         </div>
 
-        {/* Info section - compact */}
-        <div className="p-2.5 sm:p-3">
-          <h3 className="font-bold text-xs sm:text-sm text-foreground line-clamp-2 min-h-[2rem] sm:min-h-[2.4rem] leading-tight mb-1.5">
+        {/* Title + tags below image */}
+        <div className="p-2 space-y-1.5">
+          <h3 className="font-semibold text-[11px] sm:text-xs text-foreground line-clamp-2 leading-snug min-h-[2rem]">
             {listing.title}
           </h3>
 
-          {/* Key stats as small tags */}
           <div className="flex flex-wrap gap-1">
             {Object.entries(listing.fields).slice(0, 2).map(([key, value]) => (
-              <span key={key} className="text-[9px] sm:text-[10px] bg-muted/60 text-muted-foreground px-1.5 py-0.5 rounded-full">
+              <span key={key} className="text-[9px] bg-muted text-muted-foreground px-1.5 py-0.5 rounded">
                 {key}: {typeof value === 'boolean' ? (value ? '✓' : '✗') : value}
               </span>
             ))}
