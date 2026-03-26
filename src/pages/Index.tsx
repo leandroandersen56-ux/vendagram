@@ -217,15 +217,42 @@ export default function Index() {
               <Loader2 className="h-5 w-5 animate-spin text-primary" />
             </div>
           ) : filtered.length > 0 ? (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3"
-            >
-              {filtered.map((listing) => (
-                <ListingCard key={listing.id} listing={listing} />
-              ))}
-            </motion.div>
+            <div className="space-y-8">
+              {(() => {
+                const GAME_PLATFORMS = ['free_fire', 'valorant', 'fortnite', 'roblox', 'clash_royale'];
+                const games = filtered.filter(l => GAME_PLATFORMS.includes(l.platform));
+                const social = filtered.filter(l => !GAME_PLATFORMS.includes(l.platform));
+
+                return (
+                  <>
+                    {games.length > 0 && (
+                      <div>
+                        <h3 className="text-sm font-bold text-foreground uppercase tracking-wide mb-3 flex items-center gap-2">
+                          🎮 Contas de Jogos
+                        </h3>
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+                          {games.map((listing) => (
+                            <ListingCard key={listing.id} listing={listing} />
+                          ))}
+                        </motion.div>
+                      </div>
+                    )}
+                    {social.length > 0 && (
+                      <div>
+                        <h3 className="text-sm font-bold text-foreground uppercase tracking-wide mb-3 flex items-center gap-2">
+                          📱 Redes Sociais
+                        </h3>
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+                          {social.map((listing) => (
+                            <ListingCard key={listing.id} listing={listing} />
+                          ))}
+                        </motion.div>
+                      </div>
+                    )}
+                  </>
+                );
+              })()}
+            </div>
           ) : (
             <div className="text-center py-16">
               <Search className="h-8 w-8 text-muted-foreground mb-3 mx-auto" />
