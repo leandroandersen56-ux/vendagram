@@ -218,6 +218,11 @@ export default function PanelLayout() {
           <Outlet />
         </div>
       </main>
+
+      <DepositModal open={showDeposit} onClose={() => setShowDeposit(false)} />
+      <TransferModal open={showTransfer} onClose={() => setShowTransfer(false)} balance={890} />
+      <WithdrawModal open={showWithdraw} onClose={() => setShowWithdraw(false)} balance={890} pixKey="***.***.***-00" />
+      <QRScannerModal open={showQR} onClose={() => setShowQR(false)} balance={890} />
     </div>
   );
 }
