@@ -175,20 +175,14 @@ export default function Index() {
           {/* Search - full width, mobile */}
           <div className="flex items-center gap-2 mb-3 sm:hidden">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
               <Input
                 placeholder="Qual conta você está procurando?"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-9 bg-card border-border h-9 text-xs placeholder:text-muted-foreground focus:border-primary/50 focus:ring-primary/20"
+                className="pl-4 pr-10 bg-card border-border h-11 rounded-full text-xs placeholder:text-muted-foreground focus:border-primary/50 focus:ring-primary/20"
               />
+              <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             </div>
-            <button
-              onClick={() => setShowFilters(!showFilters)}
-              className={`shrink-0 h-9 w-9 rounded-lg border flex items-center justify-center transition-all ${showFilters ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border text-muted-foreground hover:text-foreground"}`}
-            >
-              <SlidersHorizontal className="h-3.5 w-3.5" />
-            </button>
           </div>
 
           {/* Filter pills */}
