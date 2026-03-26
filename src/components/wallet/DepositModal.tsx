@@ -1,0 +1,188 @@
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { X, Copy, Check, Clock, ArrowDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { QRCodeSVG } from "qrcode.react";
+import { formatBRL } from "@/lib/mock-data";
+import { useToast } from "@/hooks/use-toast";
+
+const QUICK_AMOUNTS = [20, 50, 100, 200, 500];
+
+function generatePixKey(amount: number): string {
+  const uuid = crypto.randomUUID();
+  return `00020126580014br.gov.bcb.pix0136${uuid}5204000053039865802BR5925SAFETRADE GG PAGAMENTOS6009SAO PAULO62070503***6304A1B2`;
+}
+
+interface DepositModalProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+export default function DepositModal({ open, onClose }: DepositModalProps) {
+  const { toast } = useToast();
+  const [step, setStep] = useState<"amount" | "qr">("amount");
+  const [amount, setAmount] = useState<number>(0);
+  const [customAmount, setCustomAmount] = useState("");
+  const [copied, setCopied] = useState(false);
+  const [secondsLeft, setSecondsLeft] = useState(1800);
+
+  const pixKey = generatePixKey(amount);
+
+  useEffect(() => {
+    if (step !== "qr") return;
+    setSecondsLeft(1800);
+    const interval = setInterval(() => {
+      setSecondsLeft((s) => {
+        if (s <= 1) { clearInterval(interval); return 0; }
+        return s - 1;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [step]);
+
+  const formatTime = (s: number) => {
+    const m = Math.floor(s / 60);
+    const sec = s % 60;
+    return `${m.toString().padStart(2, "0")}:${sec.toString().padStart(2, "0")}`;
+  };
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(pixKey);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleConfirm = () => {
+    const finalAmount = amount || Number(customAmount);
+    if (!finalAmount || finalAmount < 5) {
+      toast({ title: "Valor mínimo: R$ 5,00", variant: "destructive" });
+      return;
+    }
+    setAmount(finalAmount);
+    setStep("qr");
+  };
+
+  const handlePaid = () => {
+    toast({ title: "Depósito em análise", description: "Seu saldo será atualizado assim que confirmarmos o pagamento." });
+    resetAndClose();
+  };
+
+  const resetAndClose = () => {
+    setStep("amount");
+    setAmount(0);
+    setCustomAmount("");
+    setCopied(false);
+    onClose();
+  };
+
+  if (!open) return null;
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+      >
+        <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" onClick={resetAndClose} />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.95, y: 20 }}
+          className="relative w-full max-w-md bg-card border border-border rounded-xl p-6 shadow-2xl z-10"
+        >
+          <Button variant="ghost" size="icon" className="absolute top-3 right-3 text-muted-foreground" onClick={resetAndClose}>
+            <X className="h-4 w-4" />
+          </Button>
+
+          <div className="flex items-center gap-2 mb-6">
+            <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+              <ArrowDown className="h-4 w-4 text-primary" />
+            </div>
+            <h2 className="text-lg font-bold text-foreground">Depositar via Pix</h2>
+          </div>
+
+          {step === "amount" && (
+            <div className="space-y-5">
+              <div>
+                <p className="text-sm text-muted-foreground mb-3">Selecione um valor</p>
+                <div className="flex flex-wrap gap-2">
+                  {QUICK_AMOUNTS.map((v) => (
+                    <button
+                      key={v}
+                      onClick={() => { setAmount(v); setCustomAmount(""); }}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                        amount === v
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-muted/30 text-foreground hover:bg-muted/50 border border-border"
+                      }`}
+                    >
+                      {formatBRL(v)}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <p className="text-sm text-muted-foreground mb-2">Ou digite um valor</p>
+                <Input
+                  type="number"
+                  min={5}
+                  placeholder="R$ 0,00"
+                  value={customAmount}
+                  onChange={(e) => { setCustomAmount(e.target.value); setAmount(0); }}
+                  className="bg-muted/30 border-border h-11"
+                />
+              </div>
+
+              <Button variant="hero" className="w-full h-11" onClick={handleConfirm}>
+                Gerar QR Code — {formatBRL(amount || Number(customAmount) || 0)}
+              </Button>
+            </div>
+          )}
+
+          {step === "qr" && (
+            <div className="space-y-5">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-primary mb-4">{formatBRL(amount)}</p>
+                <div className="bg-white p-4 rounded-xl inline-block">
+                  <QRCodeSVG value={pixKey} size={180} level="M" />
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 justify-center text-sm">
+                <Clock className="h-4 w-4 text-warning" />
+                <span className="text-muted-foreground">Válido por</span>
+                <span className={`font-mono font-bold ${secondsLeft < 300 ? "text-destructive" : "text-warning"}`}>
+                  {formatTime(secondsLeft)}
+                </span>
+              </div>
+
+              <div>
+                <p className="text-xs text-muted-foreground mb-2">Pix Copia e Cola</p>
+                <div className="flex items-center gap-2">
+                  <div className="flex-1 bg-muted/20 border border-border rounded-lg p-3 overflow-hidden">
+                    <p className="text-xs text-foreground font-mono truncate">{pixKey}</p>
+                  </div>
+                  <Button variant="outline" size="icon" className="shrink-0 border-border" onClick={handleCopy}>
+                    {copied ? <Check className="h-4 w-4 text-success" /> : <Copy className="h-4 w-4" />}
+                  </Button>
+                </div>
+              </div>
+
+              <p className="text-xs text-muted-foreground text-center">
+                Após o pagamento, seu saldo será atualizado automaticamente
+              </p>
+
+              <Button variant="hero" className="w-full h-11" onClick={handlePaid}>
+                Já paguei
+              </Button>
+            </div>
+          )}
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
