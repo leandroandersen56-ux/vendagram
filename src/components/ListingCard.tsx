@@ -21,9 +21,9 @@ export default function ListingCard({ listing }: ListingCardProps) {
 
   return (
     <Link to={`/listing/${listing.id}`}>
-      <div className="rounded-xl overflow-hidden group relative hover:-translate-y-0.5 transition-all duration-200">
-        {/* Cover image */}
-        <div className="aspect-square relative overflow-hidden bg-muted">
+      <div className="rounded-2xl overflow-hidden group relative hover:-translate-y-0.5 transition-all duration-200 shadow-md">
+        {/* Image area - tall, prominent like Bonoxs */}
+        <div className="aspect-[3/4] relative overflow-hidden bg-neutral-800">
           {coverImage ? (
             <img
               src={coverImage}
@@ -34,48 +34,39 @@ export default function ListingCard({ listing }: ListingCardProps) {
           ) : (
             <div
               className="w-full h-full flex items-center justify-center"
-              style={{ background: `linear-gradient(160deg, ${platform.color}15, hsl(var(--background)))` }}
+              style={{ background: `linear-gradient(160deg, ${platform.color}25, #1a1a1a)` }}
             >
-              <PlatformIcon platformId={listing.platform} size={44} />
+              <PlatformIcon platformId={listing.platform} size={56} />
             </div>
           )}
 
-          {/* Platform pill - top left */}
-          <div className="absolute top-1.5 left-1.5 flex items-center gap-1 bg-black/50 backdrop-blur-sm rounded-md px-1.5 py-0.5">
-            <PlatformIcon platformId={listing.platform} size={12} />
-            <span className="text-[9px] font-medium text-white/90">{platform.name}</span>
+          {/* Platform icon badge - top left like Bonoxs */}
+          <div className="absolute top-2 left-2 h-7 w-7 rounded-lg bg-white/90 flex items-center justify-center shadow-sm">
+            <PlatformIcon platformId={listing.platform} size={16} />
           </div>
 
-          {/* Share button */}
+          {/* Share button - top right */}
           <Button
             variant="ghost"
             size="icon"
-            className="absolute top-1.5 right-1.5 h-6 w-6 text-white/50 hover:text-primary opacity-0 group-hover:opacity-100 transition-opacity bg-black/30 rounded-md"
+            className="absolute top-2 right-2 h-7 w-7 bg-black/40 backdrop-blur-sm rounded-lg text-white/70 hover:text-primary hover:bg-black/60 opacity-0 group-hover:opacity-100 transition-all"
             onClick={handleShare}
           >
-            <Share2 className="h-3 w-3" />
+            <Share2 className="h-3.5 w-3.5" />
           </Button>
         </div>
 
-        {/* White bottom strip */}
-        <div className="bg-white p-2.5 space-y-1.5">
-          <h3 className="font-bold text-[11px] sm:text-xs text-neutral-900 line-clamp-2 leading-snug min-h-[2rem]">
+        {/* White bottom panel - Bonoxs style */}
+        <div className="bg-white rounded-b-2xl px-2.5 py-2.5">
+          <h3 className="font-bold text-xs text-neutral-900 line-clamp-1 mb-1">
             {listing.title}
           </h3>
 
-          <div className="flex flex-wrap gap-1">
-            {Object.entries(listing.fields).slice(0, 2).map(([key, value]) => (
-              <span key={key} className="text-[9px] bg-neutral-100 text-neutral-500 px-1.5 py-0.5 rounded">
-                {key}: {typeof value === 'boolean' ? (value ? '✓' : '✗') : value}
-              </span>
-            ))}
-          </div>
-
-          <div className="flex items-center justify-between pt-1.5 border-t border-neutral-200">
+          <div className="flex items-center justify-between">
             <p className="text-sm font-extrabold text-neutral-900">{formatBRL(listing.price)}</p>
             <div className="flex items-center gap-0.5">
-              <span className="text-xs font-bold text-neutral-700">{listing.sellerRating}</span>
-              <Star className="h-3 w-3 text-primary fill-primary" />
+              <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
+              <span className="text-[10px] font-bold text-neutral-600">{listing.sellerRating}</span>
             </div>
           </div>
         </div>
