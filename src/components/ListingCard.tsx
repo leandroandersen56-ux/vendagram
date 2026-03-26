@@ -71,7 +71,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
           {/* Key stats */}
           <div className="flex flex-wrap gap-1">
             {Object.entries(listing.fields).slice(0, 2).map(([key, value]) => (
-              <span key={key} className="text-[9px] bg-muted text-muted-foreground px-1.5 py-0.5 rounded">
+              <span key={key} className="text-[10px] bg-muted text-muted-foreground px-1.5 py-0.5 rounded">
                 {key}: {typeof value === 'boolean' ? (value ? '✓' : '✗') : value}
               </span>
             ))}
