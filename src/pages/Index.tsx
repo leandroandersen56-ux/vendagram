@@ -96,13 +96,15 @@ export default function Index() {
             <img
               src={bannerImg}
               alt="SafeTrade.GG"
-              className="w-full h-[120px] sm:h-[340px] object-cover"
+              className="w-full h-[160px] sm:h-[340px] object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/75 to-transparent sm:from-background sm:via-background/70">
               <div className="h-full flex items-center px-4 sm:px-10">
                 <div className="max-w-lg">
                   <h1 className="text-[15px] sm:text-3xl lg:text-4xl font-display font-black text-foreground mb-1 sm:mb-2 leading-[1.2] tracking-tight">
-                    COMPRE E VENDA <span className="text-primary">CONTAS DIGITAIS</span> COM SEGURANÇA
+                    COMPRE E VENDA<br />
+                    <span className="text-primary">CONTAS DIGITAIS</span><br />
+                    COM SEGURANÇA
                   </h1>
                   <p className="text-xs sm:text-sm text-muted-foreground mb-4 hidden sm:block">
                     Marketplace com escrow automático. Sem riscos.
