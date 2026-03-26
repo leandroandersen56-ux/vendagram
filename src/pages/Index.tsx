@@ -227,11 +227,18 @@ export default function Index() {
                   <>
                     {games.length > 0 && (
                       <div>
-                        <h3 className="text-sm font-bold text-foreground uppercase tracking-wide mb-3 flex items-center gap-2">
-                          <Gamepad2 className="h-4 w-4 text-primary" /> Contas de Jogos
-                        </h3>
+                        <div className="flex items-center justify-between mb-3">
+                          <h3 className="text-sm font-bold text-foreground uppercase tracking-wide flex items-center gap-2">
+                            <Gamepad2 className="h-4 w-4 text-primary" /> Contas de Jogos
+                          </h3>
+                          {games.length > 5 && (
+                            <Link to="/marketplace?type=games" className="text-xs text-primary hover:underline flex items-center gap-1">
+                              Ver todos <ArrowRight className="h-3 w-3" />
+                            </Link>
+                          )}
+                        </div>
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-                          {games.map((listing) => (
+                          {games.slice(0, 5).map((listing) => (
                             <ListingCard key={listing.id} listing={listing} />
                           ))}
                         </motion.div>
@@ -239,11 +246,18 @@ export default function Index() {
                     )}
                     {social.length > 0 && (
                       <div>
-                        <h3 className="text-sm font-bold text-foreground uppercase tracking-wide mb-3 flex items-center gap-2">
-                          <Smartphone className="h-4 w-4 text-primary" /> Redes Sociais
-                        </h3>
+                        <div className="flex items-center justify-between mb-3">
+                          <h3 className="text-sm font-bold text-foreground uppercase tracking-wide flex items-center gap-2">
+                            <Smartphone className="h-4 w-4 text-primary" /> Redes Sociais
+                          </h3>
+                          {social.length > 5 && (
+                            <Link to="/marketplace?type=social" className="text-xs text-primary hover:underline flex items-center gap-1">
+                              Ver todos <ArrowRight className="h-3 w-3" />
+                            </Link>
+                          )}
+                        </div>
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-                          {social.map((listing) => (
+                          {social.slice(0, 5).map((listing) => (
                             <ListingCard key={listing.id} listing={listing} />
                           ))}
                         </motion.div>
