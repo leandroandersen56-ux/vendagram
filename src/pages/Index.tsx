@@ -118,7 +118,7 @@ export default function Index() {
             {PLATFORMS.map((p) => (
               <Link to={`/marketplace?platform=${p.id}`} key={p.id}>
                 <div className="flex flex-col items-center gap-2 min-w-[80px] px-3 py-3 rounded-xl bg-card border border-border hover:border-primary/30 transition-all cursor-pointer group">
-                  <span className="text-2xl">{p.icon}</span>
+                  <PlatformIcon platformId={p.id} size={28} />
                   <span className="text-[11px] font-medium text-muted-foreground group-hover:text-foreground transition-colors whitespace-nowrap">{p.name}</span>
                 </div>
               </Link>
