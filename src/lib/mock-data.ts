@@ -15,6 +15,10 @@ import ssYoutube from "@/assets/screenshots/screenshot-youtube.jpg";
 import ssFacebook from "@/assets/screenshots/screenshot-facebook.jpg";
 import ssRoblox from "@/assets/screenshots/screenshot-roblox.jpg";
 import ssFortnite from "@/assets/screenshots/screenshot-fortnite.jpg";
+import ssClashRoyale from "@/assets/screenshots/screenshot-clashroyale.jpg";
+import ssInstagram2 from "@/assets/screenshots/screenshot-instagram2.jpg";
+import ssTiktok2 from "@/assets/screenshots/screenshot-tiktok2.jpg";
+import ssYoutube2 from "@/assets/screenshots/screenshot-youtube2.jpg";
 
 export const PLATFORM_COVERS: Record<string, string> = {
   free_fire: coverFreefire,
@@ -209,7 +213,7 @@ export const MOCK_LISTINGS: Listing[] = [
     description: 'Conta nível máximo com todas as cartas, troféus acima de 7000.',
     price: 550,
     status: 'active',
-    screenshots: [ssInstagram],
+    screenshots: [ssClashRoyale],
     fields: { 'Troféus': 7200, 'Nível': 14, 'Cartas Max': true },
     createdAt: '2024-03-12',
   },
@@ -224,7 +228,7 @@ export const MOCK_LISTINGS: Listing[] = [
     description: 'Conta consolidada com 120K seguidores, engajamento alto. Nicho moda feminina com parcerias ativas.',
     price: 3200,
     status: 'active',
-    screenshots: [ssTiktok],
+    screenshots: [ssInstagram2],
     fields: { 'Seguidores': '120K', 'Engajamento': '4.2%', 'Nicho': 'Moda' },
     createdAt: '2024-03-11',
   },
@@ -239,7 +243,7 @@ export const MOCK_LISTINGS: Listing[] = [
     description: 'Conta viral com 250K seguidores, vários vídeos acima de 1M de views. Monetização ativa.',
     price: 4500,
     status: 'active',
-    screenshots: [ssYoutube],
+    screenshots: [ssTiktok2],
     fields: { 'Seguidores': '250K', 'Likes': '8M', 'Monetizada': true },
     createdAt: '2024-03-10',
   },
@@ -254,7 +258,7 @@ export const MOCK_LISTINGS: Listing[] = [
     description: 'Canal de gaming monetizado com 50K inscritos, receita média de R$800/mês.',
     price: 8500,
     status: 'active',
-    screenshots: [],
+    screenshots: [ssYoutube2],
     fields: { 'Inscritos': '50K', 'Views': '2M', 'Monetizado': true },
     createdAt: '2024-03-09',
   },
