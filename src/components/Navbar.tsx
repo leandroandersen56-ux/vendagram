@@ -83,11 +83,21 @@ export default function Navbar() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground" onClick={() => openAuth()}>
-                Cadastre-se / Login
-              </Button>
-            </div>
+            <button
+              onClick={() => openAuth()}
+              className="flex items-center gap-3 hover:opacity-80 transition-opacity cursor-pointer"
+            >
+              <div className="h-9 w-9 rounded-full bg-muted/50 border border-border flex items-center justify-center">
+                <User className="h-5 w-5 text-muted-foreground" />
+              </div>
+              <div className="flex flex-col items-start leading-tight">
+                <span className="text-sm font-semibold text-foreground">Cadastre-se</span>
+                <span className="text-xs text-muted-foreground">Login</span>
+              </div>
+              <svg className="h-4 w-4 text-muted-foreground ml-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </button>
           )}
         </div>
 
