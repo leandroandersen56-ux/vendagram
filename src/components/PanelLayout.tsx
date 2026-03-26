@@ -14,7 +14,6 @@ const PANEL_NAV = [
   { to: "/painel/anuncios/novo", label: "Criar Anúncio", icon: PlusCircle, exact: true },
   { to: "/painel/anuncios", label: "Meus Anúncios", icon: Tag, exact: true },
   { to: "/painel/transacoes", label: "Transações", icon: ShoppingBag },
-  { to: "/painel/carteira", label: "Carteira", icon: Wallet },
   { to: "/painel/notificacoes", label: "Notificações", icon: Bell, badge: 3 },
   { to: "/painel/perfil", label: "Meu Perfil", icon: User },
 ];
