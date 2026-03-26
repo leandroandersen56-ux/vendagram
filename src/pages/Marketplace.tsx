@@ -109,7 +109,7 @@ export default function Marketplace() {
                   <SelectItem value="all">Todas</SelectItem>
                   {PLATFORMS.map((p) => (
                     <SelectItem key={p.id} value={p.id}>
-                      {p.icon} {p.name}
+                      <PlatformIcon platformId={p.id} size={16} className="mr-1" /> {p.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
