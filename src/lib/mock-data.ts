@@ -258,7 +258,7 @@ export const MOCK_LISTINGS: Listing[] = [
     description: 'Canal de gaming monetizado com 50K inscritos, receita média de R$800/mês.',
     price: 8500,
     status: 'active',
-    screenshots: [],
+    screenshots: [ssYoutube2],
     fields: { 'Inscritos': '50K', 'Views': '2M', 'Monetizado': true },
     createdAt: '2024-03-09',
   },
