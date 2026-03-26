@@ -179,7 +179,7 @@ export const MOCK_LISTINGS: Listing[] = [
     description: 'Conta com Roblox Premium ativo, mais de 5000 Robux e diversos limiteds raros.',
     price: 420,
     status: 'active',
-    screenshots: [],
+    screenshots: [ssRoblox],
     fields: { 'Robux': 5000, 'Limiteds': 12, 'Premium': true },
     createdAt: '2024-03-14',
   },
