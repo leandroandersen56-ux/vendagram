@@ -184,9 +184,11 @@ export default function Index() {
                 placeholder="Qual conta você está procurando?"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-4 pr-10 bg-card border-border h-11 rounded-full text-xs placeholder:text-muted-foreground focus:border-primary/50 focus:ring-primary/20"
+                className="pl-4 pr-10 bg-card border-border h-11 rounded-full text-xs placeholder:text-muted-foreground/70 focus:border-primary/40 focus:ring-primary/10 transition-all"
               />
-              <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <div className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                <Search className="h-3.5 w-3.5 text-primary" />
+              </div>
             </div>
           </div>
 
