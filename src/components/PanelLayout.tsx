@@ -11,6 +11,7 @@ import { useAuth } from "@/contexts/AuthContext";
 
 const PANEL_NAV = [
   { to: "/painel", label: "Visão Geral", icon: LayoutDashboard, exact: true },
+  { to: "/painel/anuncios/novo", label: "Criar Anúncio", icon: PlusCircle },
   { to: "/painel/anuncios", label: "Meus Anúncios", icon: Tag },
   { to: "/painel/transacoes", label: "Transações", icon: ShoppingBag },
   { to: "/painel/carteira", label: "Carteira", icon: Wallet },
