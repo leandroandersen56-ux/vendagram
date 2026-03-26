@@ -119,7 +119,7 @@ export const MOCK_LISTINGS: Listing[] = [
     description: 'Conta de humor com 100K seguidores, vários vídeos virais com milhões de views.',
     price: 2500,
     status: 'active',
-    screenshots: [],
+    screenshots: [ssTiktok],
     fields: { 'Seguidores': '100K', 'Likes Totais': '2.5M', 'Nicho': 'Humor', 'Verificada': true },
     createdAt: '2024-03-18',
   },
