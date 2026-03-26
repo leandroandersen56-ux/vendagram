@@ -57,16 +57,16 @@ export default function ListingCard({ listing }: ListingCardProps) {
         </div>
 
         {/* Light gray bottom panel */}
-        <div style={{ backgroundColor: '#e5e5e5' }} className="px-2.5 py-2.5">
-          <h3 className="font-bold text-xs text-neutral-900 line-clamp-1 mb-1">
+        <div style={{ backgroundColor: '#1a1a1a' }} className="px-2.5 py-2.5">
+          <h3 className="font-bold text-xs text-neutral-200 line-clamp-1 mb-1">
             {listing.title}
           </h3>
 
           <div className="flex items-center justify-between">
-            <p className="text-sm font-extrabold text-neutral-900">{formatBRL(listing.price)}</p>
+            <p className="text-sm font-extrabold text-neutral-100">{formatBRL(listing.price)}</p>
             <div className="flex items-center gap-0.5">
               <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-              <span className="text-[10px] font-bold text-neutral-600">{listing.sellerRating}</span>
+              <span className="text-[10px] font-bold text-neutral-400">{listing.sellerRating}</span>
             </div>
           </div>
         </div>
