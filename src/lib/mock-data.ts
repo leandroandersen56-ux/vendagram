@@ -243,7 +243,7 @@ export const MOCK_LISTINGS: Listing[] = [
     description: 'Conta viral com 250K seguidores, vários vídeos acima de 1M de views. Monetização ativa.',
     price: 4500,
     status: 'active',
-    screenshots: [ssYoutube],
+    screenshots: [ssTiktok2],
     fields: { 'Seguidores': '250K', 'Likes': '8M', 'Monetizada': true },
     createdAt: '2024-03-10',
   },
