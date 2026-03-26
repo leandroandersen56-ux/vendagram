@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import {
   ShoppingBag, Tag, Wallet, TrendingUp, ArrowUpRight, Plus, Star,
   Clock, ArrowDown, ArrowRight, ArrowUp, ScanLine,
-  ArrowDownRight, RefreshCcw, Send, Repeat
+  ArrowDownRight, RefreshCcw, Send, Repeat, Activity
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -80,9 +80,9 @@ export default function PanelOverview() {
   const totalEarned = 4560;
 
   const stats = [
-    { label: "Compras", value: "2", icon: ShoppingBag, change: "+1 este mês" },
-    { label: "Anúncios Ativos", value: "3", icon: Tag, change: "1 vendido" },
-    { label: "Avaliação", value: "4.8", icon: Star, change: "12 avaliações" },
+    { label: "Compras", value: "2", icon: ShoppingBag, change: "+1 este mês", accent: "text-primary" },
+    { label: "Anúncios Ativos", value: "3", icon: Tag, change: "1 vendido", accent: "text-primary" },
+    { label: "Avaliação", value: "4.8", icon: Star, change: "12 avaliações", accent: "text-primary" },
   ];
 
   const filteredHistory = HISTORY.filter((h) => {
@@ -94,167 +94,185 @@ export default function PanelOverview() {
 
   return (
     <>
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
+        {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Olá, {user?.name}</h1>
-            <p className="text-muted-foreground text-sm">Aqui está um resumo da sua conta</p>
+            <h1 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">
+              Olá, {user?.name} 👋
+            </h1>
+            <p className="text-muted-foreground text-sm mt-0.5">Aqui está um resumo da sua conta</p>
           </div>
           <Link to="/painel/anuncios/novo">
-            <Button variant="hero" size="sm">
-              <Plus className="h-4 w-4 mr-1" /> Novo Anúncio
+            <Button variant="hero" size="sm" className="gap-1.5">
+              <Plus className="h-4 w-4" /> Novo Anúncio
             </Button>
           </Link>
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-          {stats.map((stat) => (
-            <Card key={stat.label} className="bg-card border-border p-5">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="text-xs text-muted-foreground mb-1">{stat.label}</p>
-                  <p className="text-2xl font-bold text-foreground">{stat.value}</p>
-                  <p className="text-xs text-muted-foreground mt-1">{stat.change}</p>
-                </div>
-                <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                  <stat.icon className="h-5 w-5" />
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">
+          {stats.map((stat, i) => (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.05 }}
+            >
+              <div className="bg-[#161616] border border-border/40 rounded-2xl p-5 hover:border-primary/20 transition-all duration-300">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{stat.label}</p>
+                    <p className="text-2xl font-bold text-foreground mt-1.5">{stat.value}</p>
+                    <p className="text-xs text-muted-foreground/70 mt-1">{stat.change}</p>
+                  </div>
+                  <div className="h-10 w-10 rounded-xl bg-primary/8 flex items-center justify-center">
+                    <stat.icon className="h-5 w-5 text-primary" />
+                  </div>
                 </div>
               </div>
-            </Card>
+            </motion.div>
           ))}
         </div>
 
         {/* Wallet Section */}
         <div id="wallet-section" className="scroll-mt-20">
-          <h2 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
-            <Wallet className="h-5 w-5 text-primary" />
+          <h2 className="text-base font-bold text-foreground mb-4 flex items-center gap-2">
+            <Wallet className="h-4.5 w-4.5 text-primary" />
             Carteira
           </h2>
 
           {/* Balance Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-            <Card className="bg-card border-border p-5">
-              <div className="flex items-center gap-2 mb-2">
-                <Wallet className="h-4 w-4 text-success" />
-                <p className="text-xs text-muted-foreground">Disponível</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
+            <div className="bg-[#161616] border border-border/40 rounded-2xl p-5">
+              <div className="flex items-center gap-2 mb-2.5">
+                <div className="h-6 w-6 rounded-lg bg-success/10 flex items-center justify-center">
+                  <Wallet className="h-3.5 w-3.5 text-success" />
+                </div>
+                <p className="text-xs font-medium text-muted-foreground">Disponível</p>
               </div>
               <p className="text-2xl font-bold text-success">{formatBRL(balance)}</p>
-            </Card>
-            <Card className="bg-card border-border p-5">
-              <div className="flex items-center gap-2 mb-2">
-                <Clock className="h-4 w-4 text-warning" />
-                <p className="text-xs text-muted-foreground">Pendente (escrow)</p>
+            </div>
+            <div className="bg-[#161616] border border-border/40 rounded-2xl p-5">
+              <div className="flex items-center gap-2 mb-2.5">
+                <div className="h-6 w-6 rounded-lg bg-warning/10 flex items-center justify-center">
+                  <Clock className="h-3.5 w-3.5 text-warning" />
+                </div>
+                <p className="text-xs font-medium text-muted-foreground">Pendente (escrow)</p>
               </div>
               <p className="text-2xl font-bold text-warning">{formatBRL(pending)}</p>
-            </Card>
-            <Card className="bg-card border-border p-5">
-              <div className="flex items-center gap-2 mb-2">
-                <TrendingUp className="h-4 w-4 text-primary" />
-                <p className="text-xs text-muted-foreground">Total Ganho</p>
+            </div>
+            <div className="bg-[#161616] border border-border/40 rounded-2xl p-5">
+              <div className="flex items-center gap-2 mb-2.5">
+                <div className="h-6 w-6 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <TrendingUp className="h-3.5 w-3.5 text-primary" />
+                </div>
+                <p className="text-xs font-medium text-muted-foreground">Total Ganho</p>
               </div>
               <p className="text-2xl font-bold text-foreground">{formatBRL(totalEarned)}</p>
-            </Card>
+            </div>
           </div>
 
           {/* Quick Actions */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-            <button onClick={() => setShowDeposit(true)} className="group flex flex-col items-center gap-2.5 p-4 bg-card border border-border rounded-xl hover:border-success/40 hover:bg-success/5 transition-all">
-              <div className="h-11 w-11 rounded-full bg-success/10 flex items-center justify-center group-hover:bg-success/20 transition-colors">
-                <ArrowDown className="h-5 w-5 text-success" />
-              </div>
-              <span className="text-sm font-medium text-foreground">Depositar</span>
-            </button>
-            <button onClick={() => setShowTransfer(true)} className="group flex flex-col items-center gap-2.5 p-4 bg-card border border-border rounded-xl hover:border-info/40 hover:bg-info/5 transition-all">
-              <div className="h-11 w-11 rounded-full bg-info/10 flex items-center justify-center group-hover:bg-info/20 transition-colors">
-                <ArrowRight className="h-5 w-5 text-info" />
-              </div>
-              <span className="text-sm font-medium text-foreground">Transferir</span>
-            </button>
-            <button onClick={() => setShowWithdraw(true)} className="group flex flex-col items-center gap-2.5 p-4 bg-card border border-border rounded-xl hover:border-primary/40 hover:bg-primary/5 transition-all">
-              <div className="h-11 w-11 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                <ArrowUp className="h-5 w-5 text-primary" />
-              </div>
-              <span className="text-sm font-medium text-foreground">Sacar</span>
-            </button>
-            <button onClick={() => setShowQR(true)} className="group flex flex-col items-center gap-2.5 p-4 bg-card border border-border rounded-xl hover:border-warning/40 hover:bg-warning/5 transition-all">
-              <div className="h-11 w-11 rounded-full bg-warning/10 flex items-center justify-center group-hover:bg-warning/20 transition-colors">
-                <ScanLine className="h-5 w-5 text-warning" />
-              </div>
-              <span className="text-sm font-medium text-foreground">Pagar com QR</span>
-            </button>
+            {[
+              { label: "Depositar", icon: ArrowDown, color: "text-success", bg: "bg-success/10", hoverBorder: "hover:border-success/30", onClick: () => setShowDeposit(true) },
+              { label: "Transferir", icon: ArrowRight, color: "text-info", bg: "bg-info/10", hoverBorder: "hover:border-info/30", onClick: () => setShowTransfer(true) },
+              { label: "Sacar", icon: ArrowUp, color: "text-primary", bg: "bg-primary/10", hoverBorder: "hover:border-primary/30", onClick: () => setShowWithdraw(true) },
+              { label: "Pagar com QR", icon: ScanLine, color: "text-warning", bg: "bg-warning/10", hoverBorder: "hover:border-warning/30", onClick: () => setShowQR(true) },
+            ].map((action) => (
+              <button
+                key={action.label}
+                onClick={action.onClick}
+                className={`group flex flex-col items-center gap-2.5 p-5 bg-[#161616] border border-border/40 rounded-2xl ${action.hoverBorder} transition-all duration-200`}
+              >
+                <div className={`h-11 w-11 rounded-xl ${action.bg} flex items-center justify-center transition-transform group-hover:scale-110`}>
+                  <action.icon className={`h-5 w-5 ${action.color}`} />
+                </div>
+                <span className="text-[13px] font-medium text-foreground">{action.label}</span>
+              </button>
+            ))}
           </div>
 
           {/* Balance Chart */}
-          <Card className="bg-card border-border p-5 mb-6">
-            <h3 className="font-semibold text-foreground text-sm mb-3">Movimentação (últimos 7 dias)</h3>
+          <div className="bg-[#161616] border border-border/40 rounded-2xl p-5 mb-6">
+            <h3 className="font-semibold text-foreground text-sm mb-4 flex items-center gap-2">
+              <Activity className="h-4 w-4 text-primary" />
+              Movimentação (últimos 7 dias)
+            </h3>
             <BalanceChart />
-          </Card>
+          </div>
 
           {/* Transaction History */}
-          <Card className="bg-card border-border p-6">
+          <div className="bg-[#161616] border border-border/40 rounded-2xl p-5 sm:p-6">
             <h3 className="font-semibold text-foreground mb-4">Histórico</h3>
             <div className="flex flex-wrap gap-1.5 mb-5">
               {FILTER_TABS.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveFilter(tab.id)}
-                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 ${
                     activeFilter === tab.id
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted/20 text-muted-foreground hover:bg-muted/40"
+                      ? "bg-primary text-primary-foreground shadow-[0_0_12px_hsl(var(--primary)/0.3)]"
+                      : "bg-[#252525] text-muted-foreground hover:bg-[#2a2a2a] hover:text-foreground"
                   }`}
                 >
                   {tab.label}
                 </button>
               ))}
             </div>
-            <div className="space-y-3">
+            <div className="space-y-2">
               {filteredHistory.length === 0 ? (
-                <p className="text-sm text-muted-foreground text-center py-6">Nenhuma transação encontrada</p>
+                <p className="text-sm text-muted-foreground text-center py-8">Nenhuma transação encontrada</p>
               ) : (
                 filteredHistory.map((h, i) => (
-                  <div key={i} className="flex items-center gap-3 p-3 bg-muted/10 rounded-lg">
-                    <div className={`h-8 w-8 rounded-full flex items-center justify-center shrink-0 ${getIconBg(h.type)}`}>
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: i * 0.03 }}
+                    className="flex items-center gap-3 p-3.5 bg-[#1A1A1A] hover:bg-[#1E1E1E] rounded-xl transition-colors"
+                  >
+                    <div className={`h-9 w-9 rounded-xl flex items-center justify-center shrink-0 ${getIconBg(h.type)}`}>
                       {getIcon(h.type)}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm text-foreground">{h.desc}</p>
-                      <div className="flex items-center gap-2">
-                        <p className="text-xs text-muted-foreground">{h.date}</p>
-                        {h.counterpart && <span className="text-xs text-muted-foreground">· {h.counterpart}</span>}
+                      <p className="text-[13px] font-medium text-foreground">{h.desc}</p>
+                      <div className="flex items-center gap-1.5 mt-0.5">
+                        <p className="text-[11px] text-muted-foreground">{h.date}</p>
+                        {h.counterpart && <span className="text-[11px] text-muted-foreground/70">· {h.counterpart}</span>}
                       </div>
                     </div>
                     <div className="text-right shrink-0">
                       <p className={`text-sm font-bold ${h.amount > 0 ? "text-success" : "text-destructive"}`}>
                         {h.amount > 0 ? "+" : ""}{formatBRL(Math.abs(h.amount))}
                       </p>
-                      <Badge className={`border-0 text-[10px] ${getStatusColor(h.status)}`}>{h.status}</Badge>
+                      <Badge className={`border-0 text-[10px] mt-0.5 ${getStatusColor(h.status)}`}>{h.status}</Badge>
                     </div>
-                  </div>
+                  </motion.div>
                 ))
               )}
             </div>
-          </Card>
+          </div>
         </div>
 
         {/* Recent Activity */}
-        <Card className="bg-card border-border p-6 mt-8">
+        <div className="bg-[#161616] border border-border/40 rounded-2xl p-5 sm:p-6 mt-6">
           <h3 className="font-semibold text-foreground mb-4">Atividade Recente</h3>
-          <div className="space-y-4">
+          <div className="space-y-2">
             {[
               { text: "Conta Free Fire vendida por R$ 350", time: "2h atrás", color: "bg-success" },
               { text: "Compra de conta Instagram em andamento", time: "5h atrás", color: "bg-warning" },
               { text: "Novo anúncio publicado: TikTok 50K", time: "1d atrás", color: "bg-info" },
             ].map((a, i) => (
-              <div key={i} className="flex items-center gap-3 p-3 bg-muted/20 rounded-lg">
-                <div className={`h-2 w-2 rounded-full ${a.color}`} />
-                <p className="text-sm text-foreground flex-1">{a.text}</p>
-                <span className="text-xs text-muted-foreground">{a.time}</span>
+              <div key={i} className="flex items-center gap-3 p-3.5 bg-[#1A1A1A] rounded-xl hover:bg-[#1E1E1E] transition-colors">
+                <div className={`h-2.5 w-2.5 rounded-full ${a.color} shrink-0`} />
+                <p className="text-[13px] text-foreground flex-1">{a.text}</p>
+                <span className="text-[11px] text-muted-foreground shrink-0">{a.time}</span>
               </div>
             ))}
           </div>
-        </Card>
+        </div>
       </motion.div>
 
       <DepositModal open={showDeposit} onClose={() => setShowDeposit(false)} />
