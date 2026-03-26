@@ -65,10 +65,10 @@ const icons: Record<string, (s: number) => React.ReactNode> = {
     </svg>
   ),
 
-  // Fortnite — F letter mark
+  // Fortnite — official F logo (Simple Icons)
   fortnite: (s) => (
     <svg width={s} height={s} viewBox="0 0 24 24" fill="none">
-      <path d="M7 2h10l-1.5 4H11v4h4.5l-1 3.5H11V22H7V2z" fill="#00D4FF"/>
+      <path d="m15.767 14.171.097-5.05H12.4V5.197h3.99L16.872 0H7.128v24l5.271-.985V14.17z" fill="#00D4FF"/>
     </svg>
   ),
 
