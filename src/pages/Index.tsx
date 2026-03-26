@@ -125,34 +125,6 @@ export default function Index() {
         </div>
       </section>
 
-      {/* Categories — horizontal scroll bar */}
-      <section className="pt-3 pb-1 px-4 order-2 sm:order-2">
-        <div className="container mx-auto">
-          <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
-            <Link to="/marketplace" className="hidden sm:block">
-              <div className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-card border border-border hover:border-primary/40 transition-all whitespace-nowrap cursor-pointer group">
-                <span className="text-xs font-medium text-muted-foreground group-hover:text-primary transition-colors">Todas</span>
-              </div>
-            </Link>
-            {PLATFORMS.map((p) => (
-              <Link to={`/marketplace?platform=${p.id}`} key={p.id}>
-                <div className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-card border border-border hover:border-primary/40 transition-all whitespace-nowrap cursor-pointer group">
-                  <PlatformIcon platformId={p.id} size={14} />
-                  <span className="text-xs font-medium text-muted-foreground group-hover:text-primary transition-colors">{p.name}</span>
-                </div>
-              </Link>
-            ))}
-            {/* Anunciar button */}
-            <button
-              onClick={handleSell}
-              className="shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary text-primary-foreground font-semibold text-xs whitespace-nowrap hover:bg-primary/90 transition-all shadow-[0_0_12px_hsl(60_100%_50%/0.3)]"
-            >
-              <Plus className="h-3.5 w-3.5" />
-              Anunciar
-            </button>
-          </div>
-        </div>
-      </section>
 
       {/* How it works */}
       <section className="py-10 px-4 border-b border-border order-4 sm:order-3">
