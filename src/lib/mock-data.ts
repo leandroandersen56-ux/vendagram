@@ -89,7 +89,7 @@ export const MOCK_LISTINGS: Listing[] = [
     description: 'Conta com todas as skins raras, incluindo Angelical e Lendárias. Level 75, mais de 200 diamantes. Rank Heroico.',
     price: 350,
     status: 'active',
-    screenshots: [],
+    screenshots: [ssFreefire],
     fields: { 'Nível': 75, 'Diamantes': 200, 'Skins': 45, 'Rank': 'Heroico', 'Facebook Vinculado': true },
     createdAt: '2024-03-20',
   },
