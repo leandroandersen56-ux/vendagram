@@ -11,6 +11,7 @@ import Footer from "@/components/Footer";
 import ListingCard from "@/components/ListingCard";
 import { PLATFORMS, type Listing } from "@/lib/mock-data";
 import { supabase } from "@/integrations/supabase/client";
+import bannerImg from "@/assets/banner-home.jpg";
 
 export default function Index() {
   const { isAuthenticated, openAuth } = useAuth();
@@ -62,66 +63,88 @@ export default function Index() {
     fetchListings();
   }, []);
 
-  const filtered = listings
-    .filter((l) => {
-      if (platform !== "all" && l.platform !== platform) return false;
-      if (search && !l.title.toLowerCase().includes(search.toLowerCase())) return false;
-      return true;
-    });
+  const filtered = listings.filter((l) => {
+    if (platform !== "all" && l.platform !== platform) return false;
+    if (search && !l.title.toLowerCase().includes(search.toLowerCase())) return false;
+    return true;
+  });
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      {/* Banner compacto */}
-      <section className="relative pt-24 pb-12 bg-gradient-hero overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.03]" style={{
-          backgroundImage: 'linear-gradient(hsl(263 70% 50%) 1px, transparent 1px), linear-gradient(90deg, hsl(263 70% 50%) 1px, transparent 1px)',
-          backgroundSize: '60px 60px'
-        }} />
-
-        <div className="container mx-auto px-4 relative z-10">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-3xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/10 mb-5">
-              <Shield className="h-4 w-4 text-primary" />
-              <span className="text-sm text-primary font-medium">Escrow Automático · 100% Seguro</span>
+      {/* Banner visual estilo Bonoxs */}
+      <section className="pt-20 px-4">
+        <div className="container mx-auto">
+          <div className="relative rounded-2xl overflow-hidden">
+            <img
+              src={bannerImg}
+              alt="SafeTrade.GG - Marketplace seguro de contas digitais"
+              className="w-full h-[280px] sm:h-[340px] object-cover"
+              width={1920}
+              height={512}
+            />
+            {/* Overlay com texto */}
+            <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/60 to-transparent flex items-center">
+              <div className="px-8 sm:px-12 max-w-lg">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/40 bg-primary/20 mb-4">
+                  <Shield className="h-3.5 w-3.5 text-primary" />
+                  <span className="text-xs text-primary font-medium">Escrow Automático</span>
+                </div>
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-display font-bold text-foreground mb-3 leading-tight">
+                  COMPRE E VENDA<br />
+                  <span className="text-gradient-primary">CONTAS DIGITAIS</span><br />
+                  COM SEGURANÇA
+                </h1>
+                <p className="text-sm text-muted-foreground mb-5 hidden sm:block">
+                  Marketplace com escrow automático. Sem riscos.
+                </p>
+                <div className="flex gap-3">
+                  <Button variant="hero" size="sm" onClick={handleSell}>
+                    Vender Conta <ArrowRight className="h-4 w-4 ml-1" />
+                  </Button>
+                </div>
+              </div>
             </div>
-
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold tracking-tight mb-4 text-foreground">
-              Compre e venda contas{" "}
-              <span className="text-gradient-primary">com segurança</span>
-            </h1>
-
-            <p className="text-muted-foreground max-w-xl mx-auto mb-6">
-              Marketplace com escrow automático. Sem intermediários, sem riscos.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Button variant="hero" size="lg" className="px-8" onClick={handleSell}>
-                Vender Minha Conta
-                <ArrowRight className="h-4 w-4 ml-1" />
-              </Button>
-            </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* Marketplace integrado */}
-      <section className="py-8">
-        <div className="container mx-auto px-4">
-          {/* Search */}
-          <div className="relative max-w-xl mx-auto mb-6">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Buscar contas..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="pl-10 bg-card border-border h-11"
-            />
+      {/* Categorias rápidas (carrossel horizontal) */}
+      <section className="pt-6 pb-2 px-4">
+        <div className="container mx-auto">
+          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+            {PLATFORMS.map((p) => (
+              <Link to={`/marketplace?platform=${p.id}`} key={p.id}>
+                <div className="flex flex-col items-center gap-2 min-w-[80px] px-3 py-3 rounded-xl bg-card border border-border hover:border-primary/30 transition-all cursor-pointer group">
+                  <span className="text-2xl">{p.icon}</span>
+                  <span className="text-[11px] font-medium text-muted-foreground group-hover:text-foreground transition-colors whitespace-nowrap">{p.name}</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Marketplace */}
+      <section className="py-6 px-4">
+        <div className="container mx-auto">
+          {/* Header + Search */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-5">
+            <h2 className="text-xl font-display font-bold text-foreground">Anúncios Recentes</h2>
+            <div className="relative w-full sm:w-72">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Buscar..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="pl-10 bg-card border-border h-10"
+              />
+            </div>
           </div>
 
-          {/* Platform filters */}
-          <div className="flex flex-wrap justify-center gap-2 mb-8">
+          {/* Platform filter pills */}
+          <div className="flex flex-wrap gap-2 mb-6">
             <Badge
               className={`cursor-pointer transition-colors ${platform === "all" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/80"}`}
               onClick={() => setPlatform("all")}
@@ -139,25 +162,27 @@ export default function Index() {
             ))}
           </div>
 
-          {/* Listings grid */}
+          {/* Grid */}
           {loading ? (
             <div className="flex items-center justify-center py-20">
               <Loader2 className="h-6 w-6 animate-spin text-primary" />
             </div>
           ) : filtered.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
+            >
               {filtered.map((listing) => (
                 <ListingCard key={listing.id} listing={listing} />
               ))}
-            </div>
+            </motion.div>
           ) : (
             <div className="text-center py-16">
               <p className="text-4xl mb-4">🔍</p>
               <p className="text-lg font-medium text-foreground mb-2">Nenhum anúncio encontrado</p>
               <p className="text-muted-foreground text-sm mb-6">Seja o primeiro a anunciar!</p>
-              <Button variant="hero" onClick={handleSell}>
-                Criar Anúncio
-              </Button>
+              <Button variant="hero" onClick={handleSell}>Criar Anúncio</Button>
             </div>
           )}
         </div>
