@@ -135,10 +135,10 @@ export default function Index() {
               <Link to={`/marketplace?platform=${p.id}`} key={p.id}>
                 <motion.div
                   whileHover={{ scale: 1.03 }}
-                  className="rounded-xl border border-border bg-card hover:border-primary/40 transition-all p-5 flex items-center gap-3 group cursor-pointer"
+                  className="rounded-xl border border-border bg-card hover:border-primary/40 transition-all p-3 sm:p-5 flex items-center gap-2.5 sm:gap-3 group cursor-pointer"
                   style={{ background: `linear-gradient(135deg, ${p.color}08 0%, hsl(var(--card)) 100%)` }}
                 >
-                  <PlatformIcon platformId={p.id} size={32} />
+                  <PlatformIcon platformId={p.id} size={24} className="sm:w-8 sm:h-8" />
                   <div>
                     <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">{p.name}</p>
                     <p className="text-[10px] text-muted-foreground">Ver contas</p>
