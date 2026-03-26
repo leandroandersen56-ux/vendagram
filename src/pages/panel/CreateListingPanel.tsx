@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { PLATFORMS } from "@/lib/mock-data";
+import PlatformIcon from "@/components/PlatformIcon";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -208,7 +209,7 @@ export default function CreateListing() {
               onClick={() => selectPlatform(p.id)}
               className="flex items-center gap-3 p-4 rounded-xl border border-border bg-card hover:border-primary/50 hover:bg-primary/5 transition-all text-left group"
             >
-              <span className="text-2xl">{p.icon}</span>
+              <PlatformIcon platformId={p.id} size={28} />
               <div>
                 <p className="font-medium text-foreground text-sm group-hover:text-primary transition-colors">{p.name}</p>
               </div>
@@ -234,7 +235,7 @@ export default function CreateListing() {
           onClick={() => setPlatform("")}
           className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium hover:bg-primary/20 transition-colors"
         >
-          {platformData.icon} {platformData.name} ✕
+          <PlatformIcon platformId={platformData.id} size={18} className="mr-1" /> {platformData.name} ✕
         </button>
         <span className="text-muted-foreground text-sm">Criar anúncio</span>
       </div>

@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { formatBRL, PLATFORMS } from "@/lib/mock-data";
+import PlatformIcon from "@/components/PlatformIcon";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -134,8 +135,8 @@ export default function PanelListings() {
             return (
               <Card key={listing.id} className="bg-card border-border p-4">
                 <div className="flex items-center gap-4">
-                  <div className="h-14 w-14 rounded-lg flex items-center justify-center text-2xl shrink-0" style={{ background: `${cat.color}15` }}>
-                    {cat.icon}
+                  <div className="h-14 w-14 rounded-lg flex items-center justify-center shrink-0" style={{ background: `${cat.color}15` }}>
+                    <PlatformIcon platformId={listing.category} size={32} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-foreground text-sm truncate">{listing.title}</p>

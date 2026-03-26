@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Shield, ArrowRight, Search, Loader2 } from "lucide-react";
+import PlatformIcon from "@/components/PlatformIcon";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ListingCard from "@/components/ListingCard";
@@ -117,7 +118,7 @@ export default function Index() {
             {PLATFORMS.map((p) => (
               <Link to={`/marketplace?platform=${p.id}`} key={p.id}>
                 <div className="flex flex-col items-center gap-2 min-w-[80px] px-3 py-3 rounded-xl bg-card border border-border hover:border-primary/30 transition-all cursor-pointer group">
-                  <span className="text-2xl">{p.icon}</span>
+                  <PlatformIcon platformId={p.id} size={28} />
                   <span className="text-[11px] font-medium text-muted-foreground group-hover:text-foreground transition-colors whitespace-nowrap">{p.name}</span>
                 </div>
               </Link>
@@ -157,7 +158,7 @@ export default function Index() {
                 className={`cursor-pointer transition-colors ${platform === p.id ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/80"}`}
                 onClick={() => setPlatform(p.id)}
               >
-                {p.icon} {p.name}
+                <PlatformIcon platformId={p.id} size={16} className="mr-1" /> {p.name}
               </Badge>
             ))}
           </div>
@@ -179,7 +180,7 @@ export default function Index() {
             </motion.div>
           ) : (
             <div className="text-center py-16">
-              <p className="text-4xl mb-4">🔍</p>
+              <Search className="h-10 w-10 text-muted-foreground mb-4 mx-auto" />
               <p className="text-lg font-medium text-foreground mb-2">Nenhum anúncio encontrado</p>
               <p className="text-muted-foreground text-sm mb-6">Seja o primeiro a anunciar!</p>
               <Button variant="hero" onClick={handleSell}>Criar Anúncio</Button>

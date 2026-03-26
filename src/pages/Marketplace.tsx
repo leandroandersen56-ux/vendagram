@@ -10,6 +10,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ListingCard from "@/components/ListingCard";
 import { PLATFORMS, type Listing } from "@/lib/mock-data";
+import PlatformIcon from "@/components/PlatformIcon";
 import { supabase } from "@/integrations/supabase/client";
 
 export default function Marketplace() {
@@ -108,7 +109,7 @@ export default function Marketplace() {
                   <SelectItem value="all">Todas</SelectItem>
                   {PLATFORMS.map((p) => (
                     <SelectItem key={p.id} value={p.id}>
-                      {p.icon} {p.name}
+                      <PlatformIcon platformId={p.id} size={16} className="mr-1" /> {p.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -147,7 +148,7 @@ export default function Marketplace() {
                 className={`cursor-pointer transition-colors ${platform === p.id ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/80"}`}
                 onClick={() => setPlatform(p.id)}
               >
-                {p.icon} {p.name}
+                <PlatformIcon platformId={p.id} size={16} className="mr-1" /> {p.name}
               </Badge>
             ))}
           </div>
