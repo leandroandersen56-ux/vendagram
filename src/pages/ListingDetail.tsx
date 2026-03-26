@@ -144,9 +144,9 @@ export default function ListingDetail() {
                     {featureFlags.map(([key]) => (
                       <div
                         key={key}
-                        className="border border-primary/40 bg-primary/5 rounded-md px-3 py-2 flex items-center gap-2"
+                        className="border border-[#FFD700]/40 bg-[#FFD700]/5 rounded px-3 py-2 flex items-center gap-2"
                       >
-                        <CheckCircle2 className="h-3.5 w-3.5 text-primary flex-shrink-0" />
+                        <CheckCircle2 className="h-3.5 w-3.5 text-[#FFD700] flex-shrink-0" />
                         <span className="text-xs font-medium text-foreground">{key}</span>
                       </div>
                     ))}
