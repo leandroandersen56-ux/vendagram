@@ -88,7 +88,7 @@ export const MOCK_LISTINGS: Listing[] = [
     id: '2',
     sellerId: 'u2',
     sellerName: 'SocialSeller',
-    sellerRating: 4.5,
+    sellerRating: 4.7,
     sellerSales: 12,
     platform: 'instagram',
     title: 'Conta Instagram 50K Seguidores - Nicho Fitness',
