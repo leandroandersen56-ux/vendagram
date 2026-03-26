@@ -111,25 +111,6 @@ export default function PanelLayout() {
         </Link>
       </div>
 
-      {/* Desktop top bar */}
-      <div className="hidden lg:flex fixed top-0 left-64 right-0 h-14 bg-card/80 backdrop-blur-sm border-b border-border z-30 items-center justify-end px-6 gap-3">
-        <Link to="/painel/carteira">
-          <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
-            <Wallet className="h-4 w-4" />
-            <span className="text-sm font-medium">R$ 890,00</span>
-          </Button>
-        </Link>
-        <Link to="/painel/notificacoes">
-          <Button variant="ghost" size="icon" className="relative">
-            <Bell className="h-4 w-4" />
-            <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-destructive text-destructive-foreground text-[9px] flex items-center justify-center">3</span>
-          </Button>
-        </Link>
-        <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xs">
-          {user?.name?.[0]?.toUpperCase()}
-        </div>
-      </div>
-
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <motion.div
