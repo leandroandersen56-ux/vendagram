@@ -86,17 +86,16 @@ export default function Index() {
   });
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <Navbar />
-
       {/* Hero Banner */}
-      <section className="pt-20 px-4">
+      <section className="pt-20 px-4 order-1 sm:order-1">
         <div className="container mx-auto">
           <div className="relative overflow-hidden rounded-2xl">
             <img
               src={bannerImg}
               alt="SafeTrade.GG"
-              className="w-full h-[220px] sm:h-[340px] object-cover"
+              className="w-full h-[140px] sm:h-[340px] object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-background via-background/70 to-transparent">
               <div className="h-full flex items-center px-6 sm:px-10">
@@ -127,7 +126,7 @@ export default function Index() {
       </section>
 
       {/* Platform Grid — full width cards */}
-      <section className="py-8 px-4 border-b border-border">
+      <section className="py-8 px-4 border-b border-border order-3 sm:order-2">
         <div className="container mx-auto">
           <h2 className="text-base font-bold text-foreground mb-5 uppercase tracking-wide">Categorias</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
@@ -151,7 +150,7 @@ export default function Index() {
       </section>
 
       {/* How it works */}
-      <section className="py-10 px-4 border-b border-border">
+      <section className="py-10 px-4 border-b border-border order-4 sm:order-3">
         <div className="container mx-auto">
           <h2 className="text-base font-bold text-foreground mb-6 uppercase tracking-wide text-center">Como Funciona</h2>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
@@ -181,7 +180,7 @@ export default function Index() {
       </section>
 
       {/* Listings Section */}
-      <section className="py-8 px-4">
+      <section className="py-8 px-4 order-2 sm:order-4">
         <div className="container mx-auto">
           {/* Header + Search + Filters */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
@@ -293,7 +292,7 @@ export default function Index() {
       </section>
 
       {/* Trust Section */}
-      <section className="py-10 px-4 border-t border-border">
+      <section className="py-10 px-4 border-t border-border order-5">
         <div className="container mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
             {[
@@ -311,7 +310,7 @@ export default function Index() {
         </div>
       </section>
 
-      <Footer />
+      <div className="order-6 w-full"><Footer /></div>
     </div>
   );
 }
