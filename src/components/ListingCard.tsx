@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { Star, Share2 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { Listing } from "@/lib/mock-data";
 import { formatBRL, getPlatform } from "@/lib/mock-data";
@@ -15,48 +14,51 @@ export default function ListingCard({ listing }: ListingCardProps) {
 
   const handleShare = (e: React.MouseEvent) => {
     e.preventDefault();
-    const message = `🎮 Vendo conta ${platform.name} - ${listing.title} por ${formatBRL(listing.price)} 🔒 Compra 100% segura: ${window.location.origin}/listing/${listing.id}`;
+    const message = `🎮 ${listing.title} por ${formatBRL(listing.price)} 🔒 Compra segura: ${window.location.origin}/listing/${listing.id}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
   };
 
   return (
     <Link to={`/listing/${listing.id}`}>
-      <div className="bg-card border border-border rounded-lg overflow-hidden card-hover group relative">
+      <div className="bg-neutral-900 border border-neutral-800 rounded-lg overflow-hidden group relative hover:border-[#FFD700]/30 hover:-translate-y-0.5 transition-all duration-200">
         {/* Platform banner */}
-        <div className="h-36 flex items-center justify-center relative" style={{ background: `linear-gradient(145deg, ${platform.color}18, ${platform.color}08)` }}>
-          <PlatformIcon platformId={listing.platform} size={48} />
-          <Badge className="absolute top-3 left-3 bg-[#0D0D0D]/80 text-foreground border-0 text-[10px] px-2">
+        <div
+          className="h-28 sm:h-32 flex items-center justify-center relative"
+          style={{ background: `linear-gradient(160deg, ${platform.color}15, #0A0A0A)` }}
+        >
+          <PlatformIcon platformId={listing.platform} size={44} />
+          <span className="absolute top-2 left-2 bg-black/70 text-[9px] text-neutral-300 font-medium px-2 py-0.5 rounded">
             {platform.name}
-          </Badge>
+          </span>
           <Button
             variant="ghost"
             size="icon"
-            className="absolute top-2 right-2 h-7 w-7 text-muted-foreground hover:text-[#FFD700] opacity-0 group-hover:opacity-100 transition-opacity"
+            className="absolute top-1.5 right-1.5 h-6 w-6 text-neutral-500 hover:text-[#FFD700] opacity-0 group-hover:opacity-100 transition-opacity"
             onClick={handleShare}
           >
-            <Share2 className="h-3.5 w-3.5" />
+            <Share2 className="h-3 w-3" />
           </Button>
         </div>
 
-        <div className="p-3 space-y-2.5">
-          <h3 className="font-semibold text-xs text-foreground line-clamp-2 min-h-[2rem] leading-snug">
+        <div className="p-2.5 space-y-2">
+          <h3 className="font-semibold text-[11px] text-white line-clamp-2 min-h-[2rem] leading-snug">
             {listing.title}
           </h3>
 
           {/* Key stats */}
           <div className="flex flex-wrap gap-1">
-            {Object.entries(listing.fields).slice(0, 3).map(([key, value]) => (
-              <Badge key={key} variant="secondary" className="text-[9px] bg-muted text-muted-foreground border-0 px-1.5 py-0.5">
+            {Object.entries(listing.fields).slice(0, 2).map(([key, value]) => (
+              <span key={key} className="text-[9px] bg-neutral-800 text-neutral-400 px-1.5 py-0.5 rounded">
                 {key}: {typeof value === 'boolean' ? (value ? '✓' : '✗') : value}
-              </Badge>
+              </span>
             ))}
           </div>
 
-          <div className="flex items-center justify-between pt-2 border-t border-border">
-            <p className="text-sm font-bold text-[#FFD700]">{formatBRL(listing.price)}</p>
-            <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
+          <div className="flex items-center justify-between pt-1.5 border-t border-neutral-800">
+            <p className="text-xs font-bold text-[#FFD700]">{formatBRL(listing.price)}</p>
+            <div className="flex items-center gap-0.5 text-[9px] text-neutral-500">
               <Star className="h-2.5 w-2.5 text-[#FFD700] fill-[#FFD700]" />
-              <span>{listing.sellerRating}</span>
+              {listing.sellerRating}
             </div>
           </div>
         </div>

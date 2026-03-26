@@ -5,7 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Shield, ArrowRight, Search, Loader2 } from "lucide-react";
+import { ArrowRight, Search, Loader2 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ListingCard from "@/components/ListingCard";
@@ -71,49 +71,48 @@ export default function Index() {
   });
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[#0A0A0A]">
       <Navbar />
 
-      {/* Banner */}
+      {/* Hero Banner */}
       <section className="pt-16">
         <div className="relative overflow-hidden">
           <img
             src={bannerImg}
-            alt="SafeTrade.GG - Marketplace seguro de contas digitais"
-            className="w-full h-[260px] sm:h-[360px] object-cover"
-            width={1920}
-            height={512}
+            alt="SafeTrade.GG"
+            className="w-full h-[220px] sm:h-[320px] object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0D0D0D]/95 via-[#0D0D0D]/60 to-transparent flex items-center">
-            <div className="px-6 sm:px-12 max-w-lg">
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-display font-bold text-foreground mb-3 leading-tight">
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0A] via-[#0A0A0A]/70 to-transparent flex items-center">
+            <div className="px-6 sm:px-10 lg:px-16 max-w-md">
+              <h1 className="text-xl sm:text-3xl lg:text-4xl font-display font-black text-white mb-2 leading-tight tracking-tight">
                 COMPRE E VENDA<br />
                 <span className="text-[#FFD700]">CONTAS DIGITAIS</span><br />
                 COM SEGURANÇA
               </h1>
-              <p className="text-sm text-muted-foreground mb-5 hidden sm:block">
+              <p className="text-xs sm:text-sm text-neutral-400 mb-4 hidden sm:block">
                 Marketplace com escrow automático. Sem riscos.
               </p>
-              <Button variant="hero" size="sm" onClick={handleSell}>
-                Vender Conta <ArrowRight className="h-4 w-4 ml-1" />
+              <Button variant="hero" size="sm" className="text-xs h-9 px-5" onClick={handleSell}>
+                Vender Conta <ArrowRight className="h-3.5 w-3.5 ml-1.5" />
               </Button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Categorias carousel — estilo Bonoxs "Mais Populares" */}
-      <section className="py-6 px-4">
+      {/* Categorias — horizontal scroll como Bonoxs */}
+      <section className="py-5 px-4 border-b border-neutral-800/50">
         <div className="container mx-auto">
-          <h2 className="text-base font-bold text-foreground mb-4">Mais Populares</h2>
-          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+          <h2 className="text-sm font-bold text-white mb-3 tracking-wide">Mais Populares</h2>
+          <div className="flex gap-2.5 overflow-x-auto pb-1 scrollbar-hide">
             {PLATFORMS.map((p) => (
-              <Link to={`/marketplace?platform=${p.id}`} key={p.id}>
-                <div className="min-w-[120px] h-[140px] rounded-lg overflow-hidden relative group cursor-pointer border border-border hover:border-[#FFD700]/30 transition-all" style={{ background: `linear-gradient(180deg, ${p.color}20, ${p.color}08)` }}>
-                  <div className="flex flex-col items-center justify-center h-full gap-2">
-                    <PlatformIcon platformId={p.id} size={40} />
-                    <span className="text-xs font-bold text-foreground">{p.name}</span>
-                  </div>
+              <Link to={`/marketplace?platform=${p.id}`} key={p.id} className="shrink-0">
+                <div
+                  className="w-[100px] h-[110px] rounded-lg overflow-hidden relative group cursor-pointer border border-neutral-800 hover:border-[#FFD700]/40 transition-all flex flex-col items-center justify-center gap-2"
+                  style={{ background: `linear-gradient(180deg, ${p.color}12 0%, #0A0A0A 100%)` }}
+                >
+                  <PlatformIcon platformId={p.id} size={36} />
+                  <span className="text-[10px] font-semibold text-neutral-300 group-hover:text-white transition-colors">{p.name}</span>
                 </div>
               </Link>
             ))}
@@ -122,50 +121,60 @@ export default function Index() {
       </section>
 
       {/* Marketplace */}
-      <section className="pb-10 px-4">
+      <section className="py-6 px-4">
         <div className="container mx-auto">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-5">
-            <h2 className="text-base font-bold text-foreground">Anúncios Recentes</h2>
-            <div className="relative w-full sm:w-72">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          {/* Header row */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
+            <h2 className="text-sm font-bold text-white tracking-wide">Anúncios Recentes</h2>
+            <div className="relative w-full sm:w-64">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-neutral-500" />
               <Input
                 placeholder="Buscar..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-10 bg-muted border-border h-9 text-sm"
+                className="pl-9 bg-neutral-900 border-neutral-800 h-8 text-xs placeholder:text-neutral-500 focus:border-[#FFD700]/50 focus:ring-[#FFD700]/20"
               />
             </div>
           </div>
 
-          {/* Platform filter pills */}
-          <div className="flex flex-wrap gap-2 mb-6">
-            <Badge
-              className={`cursor-pointer transition-colors text-xs ${platform === "all" ? "bg-[#FFD700] text-[#0D0D0D]" : "bg-muted text-muted-foreground hover:text-foreground"}`}
+          {/* Filter pills */}
+          <div className="flex flex-wrap gap-1.5 mb-5">
+            <button
               onClick={() => setPlatform("all")}
+              className={`px-3 py-1 rounded-full text-[11px] font-medium transition-all ${
+                platform === "all"
+                  ? "bg-[#FFD700] text-[#0A0A0A]"
+                  : "bg-neutral-800/80 text-neutral-400 hover:text-white hover:bg-neutral-700"
+              }`}
             >
               Todas
-            </Badge>
+            </button>
             {PLATFORMS.map((p) => (
-              <Badge
+              <button
                 key={p.id}
-                className={`cursor-pointer transition-colors text-xs inline-flex items-center gap-1 ${platform === p.id ? "bg-[#FFD700] text-[#0D0D0D]" : "bg-muted text-muted-foreground hover:text-foreground"}`}
                 onClick={() => setPlatform(p.id)}
+                className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-[11px] font-medium transition-all ${
+                  platform === p.id
+                    ? "bg-[#FFD700] text-[#0A0A0A]"
+                    : "bg-neutral-800/80 text-neutral-400 hover:text-white hover:bg-neutral-700"
+                }`}
               >
-                <PlatformIcon platformId={p.id} size={14} /> {p.name}
-              </Badge>
+                <PlatformIcon platformId={p.id} size={12} />
+                {p.name}
+              </button>
             ))}
           </div>
 
           {/* Grid */}
           {loading ? (
             <div className="flex items-center justify-center py-20">
-              <Loader2 className="h-6 w-6 animate-spin text-[#FFD700]" />
+              <Loader2 className="h-5 w-5 animate-spin text-[#FFD700]" />
             </div>
           ) : filtered.length > 0 ? (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3"
+              className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2.5"
             >
               {filtered.map((listing) => (
                 <ListingCard key={listing.id} listing={listing} />
@@ -173,10 +182,10 @@ export default function Index() {
             </motion.div>
           ) : (
             <div className="text-center py-16">
-              <Search className="h-10 w-10 text-muted-foreground mb-4 mx-auto" />
-              <p className="text-lg font-medium text-foreground mb-2">Nenhum anúncio encontrado</p>
-              <p className="text-muted-foreground text-sm mb-6">Seja o primeiro a anunciar!</p>
-              <Button variant="hero" onClick={handleSell}>Criar Anúncio</Button>
+              <Search className="h-8 w-8 text-neutral-600 mb-3 mx-auto" />
+              <p className="text-sm font-medium text-white mb-1">Nenhum anúncio encontrado</p>
+              <p className="text-neutral-500 text-xs mb-5">Seja o primeiro a anunciar!</p>
+              <Button variant="hero" size="sm" onClick={handleSell}>Criar Anúncio</Button>
             </div>
           )}
         </div>
