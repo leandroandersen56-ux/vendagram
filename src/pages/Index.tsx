@@ -86,10 +86,8 @@ export default function Index() {
   });
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <Navbar />
-
-      <div className="flex flex-col">
       {/* Hero Banner */}
       <section className="pt-20 px-4">
         <div className="container mx-auto">
