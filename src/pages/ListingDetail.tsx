@@ -245,7 +245,7 @@ export default function ListingDetail() {
                     { icon: <Clock className="h-3 w-3" />, text: "24h garantia" },
                   ].map((item) => (
                     <span key={item.text} className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-                      <span className="text-primary">{item.icon}</span>
+                      <span className="text-[#FFD700]">{item.icon}</span>
                       {item.text}
                     </span>
                   ))}
@@ -253,15 +253,15 @@ export default function ListingDetail() {
 
                 {/* Seller */}
                 <div className="flex items-center gap-2">
-                  <div className="h-8 w-8 rounded-full bg-primary/15 flex items-center justify-center text-primary font-bold text-xs">
+                  <div className="h-8 w-8 rounded-full bg-[#FFD700]/15 flex items-center justify-center text-[#FFD700] font-bold text-xs">
                     {sellerName[0]}
                   </div>
                   <div>
                     <p className="text-sm font-medium text-foreground leading-none">{sellerName}</p>
                     <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
-                      <Star className="h-2.5 w-2.5 text-warning fill-warning" />
+                      <Star className="h-2.5 w-2.5 text-[#FFD700] fill-[#FFD700]" />
                       {sellerRating} · {sellerSales} vendas
-                      {sellerSales >= 5 && <CheckCircle2 className="h-2.5 w-2.5 text-primary ml-1" />}
+                      {sellerSales >= 5 && <CheckCircle2 className="h-2.5 w-2.5 text-[#FFD700] ml-1" />}
                     </div>
                   </div>
                 </div>
