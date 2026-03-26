@@ -4,6 +4,8 @@ import coverTiktok from "@/assets/covers/cover-tiktok.jpg";
 import coverValorant from "@/assets/covers/cover-valorant.jpg";
 import coverYoutube from "@/assets/covers/cover-youtube.jpg";
 import coverFacebook from "@/assets/covers/cover-facebook.jpg";
+import coverRoblox from "@/assets/covers/cover-roblox.jpg";
+import coverFortnite from "@/assets/covers/cover-fortnite.jpg";
 
 export const PLATFORM_COVERS: Record<string, string> = {
   free_fire: coverFreefire,
@@ -12,6 +14,8 @@ export const PLATFORM_COVERS: Record<string, string> = {
   valorant: coverValorant,
   youtube: coverYoutube,
   facebook: coverFacebook,
+  roblox: coverRoblox,
+  fortnite: coverFortnite,
 };
 
 export interface Listing {
