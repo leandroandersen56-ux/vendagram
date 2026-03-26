@@ -118,7 +118,7 @@ export const MOCK_LISTINGS: Listing[] = [
     id: '4',
     sellerId: 'u4',
     sellerName: 'ValPlayer',
-    sellerRating: 4.2,
+    sellerRating: 4.3,
     sellerSales: 5,
     platform: 'valorant',
     title: 'Conta Valorant Imortal 3 - 50+ Skins',
