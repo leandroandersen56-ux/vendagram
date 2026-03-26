@@ -13,6 +13,8 @@ import PlatformIcon from "@/components/PlatformIcon";
 import { PLATFORMS, MOCK_LISTINGS, type Listing } from "@/lib/mock-data";
 import { supabase } from "@/integrations/supabase/client";
 import bannerImg from "@/assets/banner-home.jpg";
+import bannerPromo1 from "@/assets/banner-promo-1.webp";
+import bannerPromo2 from "@/assets/banner-promo-2.webp";
 
 export default function Index() {
   const { isAuthenticated, openAuth } = useAuth();
