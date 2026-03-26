@@ -59,10 +59,9 @@ const icons: Record<string, (s: number) => React.ReactNode> = {
   ),
 
   clash_royale: (s) => (
-    <svg width={s} height={s} viewBox="0 0 24 24" fill="none">
-      <path d="M12 2L3 7v6c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V7l-9-5z" fill="none" stroke={C} strokeWidth="2"/>
-      <path d="M8 10l4-3 4 3-4 3-4-3z" fill={C}/>
-      <path d="M12 14v4" stroke={C} strokeWidth="2" strokeLinecap="round"/>
+    <svg width={s} height={s} viewBox="0 0 192 192" fill="none">
+      <path d="m96 31.62 13.43 11.2a16 16 0 0 0 10.22 3.7h30.81l-3.06 92L96 162.74l-51.39-24.19-3.07-92h30.82a16 16 0 0 0 10.2-3.7L96 31.62M96 16 74.88 33.61a4 4 0 0 1-2.53.91H29.13l3.73 111.76L96 176l63.15-29.72 3.72-111.76h-43.22a4 4 0 0 1-2.53-.91L96 16Z" fill={C}/>
+      <path d="M88.29 69a3.85 3.85 0 0 0-3.75 2.92l-3.12 12.51h-5.78l-3-8.94A3.85 3.85 0 0 0 69 72.86h-7.71a3.85 3.85 0 0 0-3.86 3.85v.35l3.86 42.43a3.86 3.86 0 0 0 3.85 3.51h61.72a3.86 3.86 0 0 0 3.84-3.51l3.86-42.43a3.87 3.87 0 0 0-3.5-4.19H123a3.85 3.85 0 0 0-3.66 2.63l-3 8.94h-5.78l-3.12-12.51a3.85 3.85 0 0 0-3.73-2.93Z" fill="none" stroke={C} strokeWidth="8" strokeMiterlimit="10"/>
     </svg>
   ),
 
