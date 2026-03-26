@@ -111,10 +111,19 @@ export default function Navbar() {
           )}
         </div>
 
-        {/* Mobile toggle */}
-        <Button variant="ghost" size="icon" className="md:hidden text-foreground" onClick={() => setMobileOpen(!mobileOpen)}>
-          {mobileOpen ? <X /> : <Menu />}
-        </Button>
+        {/* Mobile: Anunciar + toggle */}
+        <div className="flex items-center gap-2 md:hidden">
+          <button
+            onClick={handleSell}
+            className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-primary text-primary-foreground font-bold text-[11px] tracking-wide hover:bg-primary/90 transition-all shadow-[0_0_10px_hsl(60_100%_50%/0.25)]"
+          >
+            <Plus className="h-3 w-3" />
+            Anunciar
+          </button>
+          <Button variant="ghost" size="icon" className="text-foreground" onClick={() => setMobileOpen(!mobileOpen)}>
+            {mobileOpen ? <X /> : <Menu />}
+          </Button>
+        </div>
       </div>
 
       {/* Mobile menu */}
