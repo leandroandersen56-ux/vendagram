@@ -56,8 +56,8 @@ export default function ListingCard({ listing }: ListingCardProps) {
           </Button>
         </div>
 
-        {/* White bottom panel - Bonoxs style */}
-        <div className="bg-neutral-200 px-2.5 py-2.5">
+        {/* Light gray bottom panel */}
+        <div style={{ backgroundColor: '#e5e5e5' }} className="px-2.5 py-2.5">
           <h3 className="font-bold text-xs text-neutral-900 line-clamp-1 mb-1">
             {listing.title}
           </h3>
