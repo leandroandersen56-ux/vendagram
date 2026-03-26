@@ -125,24 +125,21 @@ export default function Index() {
         </div>
       </section>
 
-      {/* Platform Grid — full width cards */}
-      <section className="py-8 px-4 border-b border-border order-3 sm:order-2">
+      {/* Categories — horizontal scroll bar */}
+      <section className="pt-3 pb-1 px-4 order-2 sm:order-2">
         <div className="container mx-auto">
-          <h2 className="text-base font-bold text-foreground mb-5 uppercase tracking-wide">Categorias</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+          <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
+            <Link to="/marketplace">
+              <div className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-card border border-border hover:border-primary/40 transition-all whitespace-nowrap cursor-pointer group">
+                <span className="text-xs font-medium text-muted-foreground group-hover:text-primary transition-colors">Todas</span>
+              </div>
+            </Link>
             {PLATFORMS.map((p) => (
               <Link to={`/marketplace?platform=${p.id}`} key={p.id}>
-                <motion.div
-                  whileHover={{ scale: 1.03 }}
-                  className="rounded-xl border border-border bg-card hover:border-primary/40 transition-all p-3 sm:p-5 flex items-center gap-2.5 sm:gap-3 group cursor-pointer"
-                  style={{ background: `linear-gradient(135deg, ${p.color}08 0%, hsl(var(--card)) 100%)` }}
-                >
-                  <PlatformIcon platformId={p.id} size={24} className="sm:w-8 sm:h-8" />
-                  <div>
-                    <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">{p.name}</p>
-                    <p className="text-[10px] text-muted-foreground">Ver contas</p>
-                  </div>
-                </motion.div>
+                <div className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-card border border-border hover:border-primary/40 transition-all whitespace-nowrap cursor-pointer group">
+                  <PlatformIcon platformId={p.id} size={14} />
+                  <span className="text-xs font-medium text-muted-foreground group-hover:text-primary transition-colors">{p.name}</span>
+                </div>
               </Link>
             ))}
           </div>
