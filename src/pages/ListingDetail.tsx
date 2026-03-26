@@ -108,17 +108,56 @@ export default function ListingDetail() {
           </Link>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-            {/* Left: Image */}
+            {/* Left: Images */}
             <div>
-              <div
-                className="aspect-square rounded-lg overflow-hidden flex items-center justify-center bg-card"
-                style={{ background: `linear-gradient(145deg, ${platform.color}12, hsl(var(--card)))` }}
-              >
-                <div className="text-center">
-                  <PlatformIcon platformId={listing.category} size={100} />
-                  <p className="text-xs text-muted-foreground mt-3">Screenshots do vendedor</p>
-                </div>
-              </div>
+              {(() => {
+                const coverImg = PLATFORM_COVERS[listing.category];
+                const screenshots = (listing.screenshots || []).filter((s: string) => s);
+                const allImages = coverImg ? [coverImg, ...screenshots] : screenshots;
+
+                if (allImages.length === 0) {
+                  return (
+                    <div
+                      className="aspect-square rounded-lg overflow-hidden flex items-center justify-center bg-card"
+                      style={{ background: `linear-gradient(145deg, ${platform.color}12, hsl(var(--card)))` }}
+                    >
+                      <div className="text-center">
+                        <PlatformIcon platformId={listing.category} size={100} />
+                        <p className="text-xs text-muted-foreground mt-3">Screenshots do vendedor</p>
+                      </div>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div className="space-y-3">
+                    {/* Main image */}
+                    <div className="aspect-video rounded-lg overflow-hidden bg-card">
+                      <img
+                        src={allImages[selectedImage] || allImages[0]}
+                        alt={listing.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    {/* Thumbnails */}
+                    {allImages.length > 1 && (
+                      <div className="flex gap-2 overflow-x-auto">
+                        {allImages.map((img: string, i: number) => (
+                          <button
+                            key={i}
+                            onClick={() => setSelectedImage(i)}
+                            className={`flex-shrink-0 w-16 h-16 rounded-md overflow-hidden border-2 transition-all ${
+                              selectedImage === i ? "border-primary" : "border-border hover:border-primary/40"
+                            }`}
+                          >
+                            <img src={img} alt={`Screenshot ${i + 1}`} className="w-full h-full object-cover" />
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
             </div>
 
             {/* Right: All info */}
