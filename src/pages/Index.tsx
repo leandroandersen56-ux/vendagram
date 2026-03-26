@@ -310,7 +310,7 @@ export default function Index() {
         </div>
       </section>
 
-      <Footer />
+      <div className="order-6 w-full"><Footer /></div>
     </div>
   );
 }
