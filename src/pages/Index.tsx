@@ -170,10 +170,10 @@ export default function Index() {
       <section className="py-8 px-4 order-2">
         <div className="container mx-auto">
           {/* Header + Search + Filters */}
-          <div className="flex items-center justify-between gap-2 mb-3">
+          <div className="flex items-center justify-between gap-3 mb-3">
             <h2 className="text-base font-bold text-foreground uppercase tracking-wide whitespace-nowrap">Anúncios Recentes</h2>
-            <div className="flex items-center gap-2">
-              <div className="relative w-full max-w-[160px] sm:max-w-[260px]">
+            <div className="flex items-center gap-2 shrink-0">
+              <div className="relative w-[140px] sm:w-[220px]">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
                 <Input
                   placeholder="Buscar..."
