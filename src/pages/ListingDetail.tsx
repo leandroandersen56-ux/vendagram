@@ -153,15 +153,15 @@ export default function ListingDetail() {
 
                 return (
                   <div className="space-y-3">
-                    {/* Main image */}
-                    <div className="aspect-video rounded-lg overflow-hidden bg-card">
+                    {/* Main image - full size, no crop */}
+                    <div className="rounded-lg overflow-hidden bg-card">
                       <img
                         src={allImages[selectedImage] || allImages[0]}
                         alt={listing.title}
-                        className="w-full h-full object-cover"
+                        className="w-full h-auto block"
                       />
                     </div>
-                    {/* Thumbnails */}
+                    {/* Thumbnails - square with top alignment */}
                     {allImages.length > 1 && (
                       <div className="flex gap-2 overflow-x-auto">
                         {allImages.map((img: string, i: number) => (
@@ -172,7 +172,7 @@ export default function ListingDetail() {
                               selectedImage === i ? "border-primary" : "border-border hover:border-primary/40"
                             }`}
                           >
-                            <img src={img} alt={`Screenshot ${i + 1}`} className="w-full h-full object-cover" />
+                            <img src={img} alt={`Screenshot ${i + 1}`} className="w-full h-full object-cover object-top" />
                           </button>
                         ))}
                       </div>
