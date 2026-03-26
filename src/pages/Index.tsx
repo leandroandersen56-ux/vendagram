@@ -56,10 +56,8 @@ export default function Index() {
             : {},
           createdAt: row.created_at,
         }));
-        // Merge DB listings with mock data, avoiding duplicate platforms when possible
-        const dbPlatforms = new Set(mapped.map(l => l.platform));
-        const extraMocks = MOCK_LISTINGS.filter(m => !dbPlatforms.has(m.platform));
-        setListings([...mapped, ...extraMocks]);
+        // Keep all DB listings and append all demo listings to fill the homepage
+        setListings([...mapped, ...MOCK_LISTINGS]);
       } else {
         setListings(MOCK_LISTINGS);
       }
