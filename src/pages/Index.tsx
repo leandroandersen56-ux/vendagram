@@ -95,7 +95,7 @@ export default function Index() {
             <img
               src={bannerImg}
               alt="SafeTrade.GG"
-              className="w-full h-[220px] sm:h-[340px] object-cover"
+              className="w-full h-[140px] sm:h-[340px] object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-background via-background/70 to-transparent">
               <div className="h-full flex items-center px-6 sm:px-10">
