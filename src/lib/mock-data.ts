@@ -73,7 +73,7 @@ export const MOCK_LISTINGS: Listing[] = [
     id: '1',
     sellerId: 'u1',
     sellerName: 'GameMaster99',
-    sellerRating: 4.8,
+    sellerRating: 4.9,
     sellerSales: 23,
     platform: 'free_fire',
     title: 'Conta Free Fire Nível 75 - Full Skin',
