@@ -101,7 +101,7 @@ export default function Index() {
       <Navbar />
       {/* Hero Banner */}
       {/* Hero Banner */}
-      <section className="pt-16 sm:pt-20 px-3 sm:px-4 order-1">
+      <section className="pt-16 sm:pt-20 px-4 order-1">
         <div className="container mx-auto">
           <div className="relative overflow-hidden rounded-xl sm:rounded-2xl">
             <img
