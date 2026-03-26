@@ -39,8 +39,6 @@ export default function ListingCard({ listing }: ListingCardProps) {
               <PlatformIcon platformId={listing.platform} size={44} />
             </div>
           )}
-          {/* Subtle bottom gradient for readability */}
-          <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/70 to-transparent" />
 
           {/* Platform pill - top left */}
           <div className="absolute top-1.5 left-1.5 flex items-center gap-1 bg-black/50 backdrop-blur-sm rounded-md px-1.5 py-0.5">
@@ -57,22 +55,9 @@ export default function ListingCard({ listing }: ListingCardProps) {
           >
             <Share2 className="h-3 w-3" />
           </Button>
-
-          {/* Price tag - bottom left on image */}
-          <div className="absolute bottom-1.5 left-1.5">
-            <span className="text-sm font-extrabold text-primary drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]">
-              {formatBRL(listing.price)}
-            </span>
-          </div>
-
-          {/* Rating - bottom right on image */}
-          <div className="absolute bottom-1.5 right-1.5 flex items-center gap-0.5">
-            <Star className="h-3 w-3 text-primary fill-primary" />
-            <span className="text-[10px] font-bold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">{listing.sellerRating}</span>
-          </div>
         </div>
 
-        {/* Title + tags below image */}
+        {/* Info below image */}
         <div className="p-2 space-y-1.5">
           <h3 className="font-semibold text-[11px] sm:text-xs text-foreground line-clamp-2 leading-snug min-h-[2rem]">
             {listing.title}
@@ -84,6 +69,14 @@ export default function ListingCard({ listing }: ListingCardProps) {
                 {key}: {typeof value === 'boolean' ? (value ? '✓' : '✗') : value}
               </span>
             ))}
+          </div>
+
+          <div className="flex items-center justify-between pt-1 border-t border-border">
+            <p className="text-sm font-extrabold text-primary">{formatBRL(listing.price)}</p>
+            <div className="flex items-center gap-0.5">
+              <span className="text-xs font-bold text-foreground">{listing.sellerRating}</span>
+              <Star className="h-3 w-3 text-primary fill-primary" />
+            </div>
           </div>
         </div>
       </div>
