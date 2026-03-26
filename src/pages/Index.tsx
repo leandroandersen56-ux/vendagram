@@ -137,15 +137,15 @@ export default function Index() {
 
 
       {/* How it works */}
-      <section className="py-6 px-4 border-b border-border order-4">
+      <section className="py-6 sm:py-12 px-4 border-b border-border order-4">
         <div className="container mx-auto">
-          <h2 className="text-sm font-bold text-foreground mb-4 uppercase tracking-wide text-center">Como Funciona</h2>
-          <div className="grid grid-cols-4 gap-2 sm:gap-3 max-w-2xl mx-auto">
+          <h2 className="text-sm sm:text-lg font-bold text-foreground mb-4 sm:mb-8 uppercase tracking-wide text-center">Como Funciona</h2>
+          <div className="grid grid-cols-4 gap-2 sm:gap-6 max-w-4xl mx-auto">
             {[
-              { icon: <Search className="h-4 w-4 sm:h-5 sm:w-5" />, title: "Encontre", desc: "Busque por plataforma e preço" },
-              { icon: <Shield className="h-4 w-4 sm:h-5 sm:w-5" />, title: "Compre", desc: "Pix retido em escrow" },
-              { icon: <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5" />, title: "Verifique", desc: "Valide a conta recebida" },
-              { icon: <Zap className="h-4 w-4 sm:h-5 sm:w-5" />, title: "Pronto!", desc: "Pagamento liberado" },
+              { icon: <Search className="h-4 w-4 sm:h-7 sm:w-7" />, title: "Encontre", desc: "Busque por plataforma e preço" },
+              { icon: <Shield className="h-4 w-4 sm:h-7 sm:w-7" />, title: "Compre", desc: "Pix retido em escrow" },
+              { icon: <CheckCircle2 className="h-4 w-4 sm:h-7 sm:w-7" />, title: "Verifique", desc: "Valide a conta recebida" },
+              { icon: <Zap className="h-4 w-4 sm:h-7 sm:w-7" />, title: "Pronto!", desc: "Pagamento liberado" },
             ].map((step, i) => (
               <motion.div
                 key={step.title}
@@ -153,13 +153,13 @@ export default function Index() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.08 }}
                 viewport={{ once: true }}
-                className="bg-card border border-border rounded-lg p-2 sm:p-3 text-center"
+                className="bg-card border border-border rounded-lg sm:rounded-xl p-2 sm:p-6 text-center"
               >
-                <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary mx-auto mb-1.5 sm:mb-2">
+                <div className="h-8 w-8 sm:h-14 sm:w-14 rounded-lg sm:rounded-xl bg-primary/10 flex items-center justify-center text-primary mx-auto mb-1.5 sm:mb-3">
                   {step.icon}
                 </div>
-                <h3 className="text-[10px] sm:text-xs font-bold text-foreground mb-0.5">{step.title}</h3>
-                <p className="text-[9px] sm:text-[10px] text-muted-foreground leading-tight">{step.desc}</p>
+                <h3 className="text-[10px] sm:text-sm font-bold text-foreground mb-0.5 sm:mb-1">{step.title}</h3>
+                <p className="text-[9px] sm:text-xs text-muted-foreground leading-tight">{step.desc}</p>
               </motion.div>
             ))}
           </div>
