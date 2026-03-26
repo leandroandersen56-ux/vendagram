@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Star, Shield, Share2, ShoppingCart, CheckCircle2, Clock, MessageCircle, Loader2, Copy, Check } from "lucide-react";
+import { ArrowLeft, Star, Shield, ShoppingCart, CheckCircle2, Clock, MessageCircle, Loader2, Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Navbar from "@/components/Navbar";
@@ -28,11 +28,7 @@ export default function ListingDetail() {
         .eq("id", id)
         .single();
 
-      if (error || !data) {
-        setLoading(false);
-        return;
-      }
-
+      if (error || !data) { setLoading(false); return; }
       setListing(data);
 
       const { data: profile } = await supabase
@@ -102,185 +98,169 @@ export default function ListingDetail() {
     <div className="min-h-screen bg-background">
       <Navbar />
       <div className="container mx-auto px-4 pt-24 pb-16">
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}>
           {/* Back */}
           <Link to="/marketplace" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6 text-sm">
             <ArrowLeft className="h-4 w-4" />
             Voltar
           </Link>
 
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-            {/* Left: Image area — 3 cols */}
-            <div className="lg:col-span-3 space-y-4">
-              {/* Main image / placeholder */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+            {/* Left: Image */}
+            <div>
               <div
-                className="aspect-[4/3] rounded-xl border border-border overflow-hidden flex items-center justify-center"
-                style={{ background: `linear-gradient(145deg, ${platform.color}18, ${platform.color}06)` }}
+                className="aspect-square rounded-lg overflow-hidden flex items-center justify-center bg-card"
+                style={{ background: `linear-gradient(145deg, ${platform.color}12, hsl(var(--card)))` }}
               >
                 <div className="text-center">
-                  <span className="text-8xl block mb-3">{platform.icon}</span>
+                  <span className="text-[100px] block mb-2">{platform.icon}</span>
                   <p className="text-xs text-muted-foreground">Screenshots do vendedor</p>
                 </div>
               </div>
-
-              {/* Details card — visible on desktop below image */}
-              <div className="hidden lg:block bg-card border border-border rounded-xl p-6 space-y-5">
-                <div>
-                  <h3 className="text-sm font-semibold text-foreground mb-3 uppercase tracking-wide">Descrição</h3>
-                  {listing.description ? (
-                    <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">{listing.description}</p>
-                  ) : (
-                    <p className="text-sm text-muted-foreground italic">Sem descrição</p>
-                  )}
-                </div>
-
-                {/* Items list */}
-                {itemsList && itemsList.length > 0 && (
-                  <div>
-                    <h3 className="text-sm font-semibold text-foreground mb-3 uppercase tracking-wide">Itens Inclusos</h3>
-                    <div className="grid grid-cols-2 gap-1.5">
-                      {itemsList.map((item, i) => (
-                        <p key={i} className="text-sm text-muted-foreground flex items-center gap-2">
-                          <span className="text-primary text-xs">▸</span> {item}
-                        </p>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
             </div>
 
-            {/* Right: Info + actions — 2 cols */}
-            <div className="lg:col-span-2 space-y-4">
-              {/* Title & badges */}
-              <div className="bg-card border border-border rounded-xl p-5">
-                <div className="flex items-center gap-2 mb-3">
-                  <Badge className="bg-muted text-foreground border-0 text-xs">{platform.icon} {platform.name}</Badge>
-                  <Badge className="bg-success/15 text-success border-0 text-xs">● Disponível</Badge>
-                </div>
-                <h1 className="text-xl font-bold text-foreground mb-1 leading-snug">{listing.title}</h1>
+            {/* Right: All info */}
+            <div>
+              {/* Title */}
+              <h1 className="text-2xl font-bold text-foreground leading-snug mb-2">{listing.title}</h1>
 
-                {/* Mobile description */}
-                <div className="lg:hidden mt-3">
-                  {listing.description && (
-                    <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">{listing.description}</p>
-                  )}
-                </div>
+              {/* Badges row */}
+              <div className="flex items-center gap-3 mb-5">
+                <span className="text-xs text-muted-foreground flex items-center gap-1.5">
+                  {platform.icon} {platform.name}
+                </span>
+                <span className="text-xs text-success flex items-center gap-1">● Disponível</span>
               </div>
 
-              {/* Info fields grid */}
-              {infoFields.filter(([k]) => k !== "Preço original" && k !== "Itens").length > 0 && (
-                <div className="bg-card border border-border rounded-xl p-5">
-                  <h3 className="text-xs font-semibold text-muted-foreground mb-3 uppercase tracking-wide">Detalhes</h3>
-                  <div className="grid grid-cols-2 gap-2">
-                    {infoFields.filter(([k]) => k !== "Preço original" && k !== "Itens").map(([key, value]) => (
-                      <div key={key} className="bg-muted/50 rounded-lg px-3 py-2.5">
-                        <p className="text-[10px] text-muted-foreground uppercase tracking-wider">{key}</p>
-                        <p className="text-sm font-semibold text-foreground mt-0.5">{String(value)}</p>
+              {/* Separator */}
+              <div className="border-t border-border mb-5" />
+
+              {/* Feature flags as selectable-looking chips (like Bonoxs lattice grid) */}
+              {featureFlags.length > 0 && (
+                <div className="mb-5">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                    {featureFlags.map(([key]) => (
+                      <div
+                        key={key}
+                        className="border border-primary/40 bg-primary/5 rounded-md px-3 py-2 flex items-center gap-2"
+                      >
+                        <CheckCircle2 className="h-3.5 w-3.5 text-primary flex-shrink-0" />
+                        <span className="text-xs font-medium text-foreground">{key}</span>
                       </div>
                     ))}
                   </div>
                 </div>
               )}
 
-              {/* Feature flags */}
-              {featureFlags.length > 0 && (
-                <div className="bg-card border border-border rounded-xl p-5">
-                  <h3 className="text-xs font-semibold text-muted-foreground mb-3 uppercase tracking-wide">Inclusos</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {featureFlags.map(([key]) => (
-                      <span key={key} className="inline-flex items-center gap-1.5 text-xs bg-primary/10 text-primary px-3 py-1.5 rounded-full font-medium">
-                        <CheckCircle2 className="h-3 w-3" /> {key}
-                      </span>
+              {/* Info fields */}
+              {infoFields.filter(([k]) => k !== "Preço original" && k !== "Itens").length > 0 && (
+                <div className="mb-5">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                    {infoFields.filter(([k]) => k !== "Preço original" && k !== "Itens").map(([key, value]) => (
+                      <div key={key} className="border border-border rounded-md px-3 py-2">
+                        <p className="text-[10px] text-muted-foreground uppercase tracking-wider">{key}</p>
+                        <p className="text-sm font-semibold text-foreground">{String(value)}</p>
+                      </div>
                     ))}
                   </div>
                 </div>
               )}
 
-              {/* Mobile items */}
+              {/* Items list */}
               {itemsList && itemsList.length > 0 && (
-                <div className="lg:hidden bg-card border border-border rounded-xl p-5">
-                  <h3 className="text-xs font-semibold text-muted-foreground mb-3 uppercase tracking-wide">Itens Inclusos</h3>
-                  <div className="space-y-1.5">
-                    {itemsList.map((item, i) => (
-                      <p key={i} className="text-sm text-muted-foreground flex items-center gap-2">
-                        <span className="text-primary text-xs">▸</span> {item}
-                      </p>
-                    ))}
+                <div className="mb-5">
+                  <div className="border-t border-border pt-4">
+                    <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">Itens Inclusos</p>
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-1">
+                      {itemsList.map((item, i) => (
+                        <p key={i} className="text-sm text-muted-foreground">▸ {item}</p>
+                      ))}
+                    </div>
                   </div>
                 </div>
               )}
 
-              {/* Price & Buy */}
-              <div className="bg-card border border-primary/20 rounded-xl p-5 space-y-4">
-                <div>
-                  <p className="text-xs text-muted-foreground mb-1">Preço</p>
-                  {originalPrice && (
-                    <p className="text-sm text-muted-foreground line-through">R$ {originalPrice}</p>
-                  )}
-                  <p className="text-3xl font-display font-bold text-primary">{formatBRL(listing.price)}</p>
+              {/* Description */}
+              {listing.description && (
+                <div className="mb-5 border-t border-border pt-4">
+                  <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">Descrição</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">{listing.description}</p>
                 </div>
+              )}
 
-                <Button
-                  variant="hero"
-                  className="w-full py-6 text-base font-bold"
-                  size="lg"
-                  onClick={() => {
-                    if (isAuthenticated) {
-                      navigate(`/transaction/${listing.id}`);
-                    } else {
-                      openAuth(`/transaction/${listing.id}`);
-                    }
-                  }}
-                >
-                  <ShoppingCart className="h-5 w-5 mr-2" />
-                  Comprar Agora
-                </Button>
+              {/* Separator */}
+              <div className="border-t border-border mb-5" />
 
-                <div className="grid grid-cols-2 gap-2">
-                  <Button variant="outline" size="sm" className="text-xs" onClick={handleWhatsAppShare}>
-                    <MessageCircle className="h-3.5 w-3.5 mr-1.5" />
-                    WhatsApp
-                  </Button>
-                  <Button variant="outline" size="sm" className="text-xs" onClick={handleCopyLink}>
-                    {copied ? <Check className="h-3.5 w-3.5 mr-1.5" /> : <Copy className="h-3.5 w-3.5 mr-1.5" />}
-                    {copied ? "Copiado!" : "Copiar Link"}
-                  </Button>
-                </div>
-
-                {/* Trust signals */}
-                <div className="border-t border-border pt-3 space-y-2">
-                  {[
-                    { icon: <Shield className="h-3.5 w-3.5" />, text: "Escrow automático" },
-                    { icon: <CheckCircle2 className="h-3.5 w-3.5" />, text: "Checklist de verificação" },
-                    { icon: <Clock className="h-3.5 w-3.5" />, text: "24h para verificar a conta" },
-                  ].map((item) => (
-                    <div key={item.text} className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <span className="text-primary">{item.icon}</span>
-                      {item.text}
-                    </div>
-                  ))}
-                </div>
+              {/* Price */}
+              <div className="mb-4">
+                <p className="text-xs text-muted-foreground mb-1">Preço</p>
+                {originalPrice && (
+                  <p className="text-sm text-muted-foreground line-through">R$ {originalPrice}</p>
+                )}
+                <p className="text-3xl font-display font-bold text-primary">{formatBRL(listing.price)}</p>
               </div>
 
-              {/* Seller */}
-              <div className="bg-card border border-border rounded-xl p-5">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-primary/15 flex items-center justify-center text-primary font-bold text-sm">
+              {/* Buy button — yellow/primary like Bonoxs */}
+              <Button
+                variant="hero"
+                className="w-full py-6 text-base font-bold rounded-md mb-3"
+                size="lg"
+                onClick={() => {
+                  if (isAuthenticated) {
+                    navigate(`/transaction/${listing.id}`);
+                  } else {
+                    openAuth(`/transaction/${listing.id}`);
+                  }
+                }}
+              >
+                <ShoppingCart className="h-5 w-5 mr-2" />
+                Comprar Agora
+              </Button>
+
+              {/* Share buttons */}
+              <div className="grid grid-cols-2 gap-2 mb-5">
+                <Button variant="outline" size="sm" className="text-xs border-border" onClick={handleWhatsAppShare}>
+                  <MessageCircle className="h-3.5 w-3.5 mr-1.5" />
+                  WhatsApp
+                </Button>
+                <Button variant="outline" size="sm" className="text-xs border-border" onClick={handleCopyLink}>
+                  {copied ? <Check className="h-3.5 w-3.5 mr-1.5" /> : <Copy className="h-3.5 w-3.5 mr-1.5" />}
+                  {copied ? "Copiado!" : "Copiar Link"}
+                </Button>
+              </div>
+
+              {/* Separator */}
+              <div className="border-t border-border mb-5" />
+
+              {/* Trust + Seller row */}
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                {/* Trust signals */}
+                <div className="flex flex-wrap gap-x-4 gap-y-1">
+                  {[
+                    { icon: <Shield className="h-3 w-3" />, text: "Escrow automático" },
+                    { icon: <CheckCircle2 className="h-3 w-3" />, text: "Verificação" },
+                    { icon: <Clock className="h-3 w-3" />, text: "24h garantia" },
+                  ].map((item) => (
+                    <span key={item.text} className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                      <span className="text-primary">{item.icon}</span>
+                      {item.text}
+                    </span>
+                  ))}
+                </div>
+
+                {/* Seller */}
+                <div className="flex items-center gap-2">
+                  <div className="h-8 w-8 rounded-full bg-primary/15 flex items-center justify-center text-primary font-bold text-xs">
                     {sellerName[0]}
                   </div>
-                  <div className="flex-1">
-                    <p className="font-medium text-foreground text-sm">{sellerName}</p>
-                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                      <Star className="h-3 w-3 text-warning fill-warning" />
+                  <div>
+                    <p className="text-sm font-medium text-foreground leading-none">{sellerName}</p>
+                    <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
+                      <Star className="h-2.5 w-2.5 text-warning fill-warning" />
                       {sellerRating} · {sellerSales} vendas
+                      {sellerSales >= 5 && <CheckCircle2 className="h-2.5 w-2.5 text-primary ml-1" />}
                     </div>
                   </div>
-                  {sellerSales >= 5 && (
-                    <Badge className="bg-primary/10 text-primary border-0 text-[10px]">
-                      <CheckCircle2 className="h-2.5 w-2.5 mr-1" /> Verificado
-                    </Badge>
-                  )}
                 </div>
               </div>
             </div>
