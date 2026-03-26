@@ -7,6 +7,15 @@ import coverFacebook from "@/assets/covers/cover-facebook.jpg";
 import coverRoblox from "@/assets/covers/cover-roblox.jpg";
 import coverFortnite from "@/assets/covers/cover-fortnite.jpg";
 
+import ssFreefire from "@/assets/screenshots/screenshot-freefire.jpg";
+import ssInstagram from "@/assets/screenshots/screenshot-instagram.jpg";
+import ssTiktok from "@/assets/screenshots/screenshot-tiktok.jpg";
+import ssValorant from "@/assets/screenshots/screenshot-valorant.jpg";
+import ssYoutube from "@/assets/screenshots/screenshot-youtube.jpg";
+import ssFacebook from "@/assets/screenshots/screenshot-facebook.jpg";
+import ssRoblox from "@/assets/screenshots/screenshot-roblox.jpg";
+import ssFortnite from "@/assets/screenshots/screenshot-fortnite.jpg";
+
 export const PLATFORM_COVERS: Record<string, string> = {
   free_fire: coverFreefire,
   instagram: coverInstagram,
@@ -80,7 +89,7 @@ export const MOCK_LISTINGS: Listing[] = [
     description: 'Conta com todas as skins raras, incluindo Angelical e Lendárias. Level 75, mais de 200 diamantes. Rank Heroico.',
     price: 350,
     status: 'active',
-    screenshots: [],
+    screenshots: [ssFreefire],
     fields: { 'Nível': 75, 'Diamantes': 200, 'Skins': 45, 'Rank': 'Heroico', 'Facebook Vinculado': true },
     createdAt: '2024-03-20',
   },
@@ -95,7 +104,7 @@ export const MOCK_LISTINGS: Listing[] = [
     description: 'Conta com 50 mil seguidores reais, engajamento de 3.5%. Nicho fitness com conteúdo de alta qualidade.',
     price: 1200,
     status: 'active',
-    screenshots: [],
+    screenshots: [ssInstagram],
     fields: { 'Seguidores': '50K', 'Engajamento': '3.5%', 'Nicho': 'Fitness', 'Verificada': false },
     createdAt: '2024-03-19',
   },
@@ -110,7 +119,7 @@ export const MOCK_LISTINGS: Listing[] = [
     description: 'Conta de humor com 100K seguidores, vários vídeos virais com milhões de views.',
     price: 2500,
     status: 'active',
-    screenshots: [],
+    screenshots: [ssTiktok],
     fields: { 'Seguidores': '100K', 'Likes Totais': '2.5M', 'Nicho': 'Humor', 'Verificada': true },
     createdAt: '2024-03-18',
   },
@@ -125,7 +134,7 @@ export const MOCK_LISTINGS: Listing[] = [
     description: 'Conta Imortal 3 com mais de 50 skins de armas, incluindo Knife Reaver e Vandal Prime.',
     price: 800,
     status: 'active',
-    screenshots: [],
+    screenshots: [ssValorant],
     fields: { 'Rank': 'Imortal 3', 'Skins': 50, 'Agentes Desbloqueados': 'Todos' },
     createdAt: '2024-03-17',
   },
@@ -140,7 +149,7 @@ export const MOCK_LISTINGS: Listing[] = [
     description: 'Canal monetizado com 10K inscritos e mais de 500K views totais. Nicho de tecnologia.',
     price: 3000,
     status: 'active',
-    screenshots: [],
+    screenshots: [ssYoutube],
     fields: { 'Inscritos': '10K', 'Views Totais': '500K', 'Monetizado': true, 'Nicho': 'Tecnologia' },
     createdAt: '2024-03-16',
   },
@@ -155,7 +164,7 @@ export const MOCK_LISTINGS: Listing[] = [
     description: 'Conta Facebook com marketplace ativo, 2000 amigos reais, sem restrições.',
     price: 150,
     status: 'active',
-    screenshots: [],
+    screenshots: [ssFacebook],
     fields: { 'Amigos': 2000, 'Marketplace Ativo': true, 'Restrições': false },
     createdAt: '2024-03-15',
   },
@@ -170,7 +179,7 @@ export const MOCK_LISTINGS: Listing[] = [
     description: 'Conta com Roblox Premium ativo, mais de 5000 Robux e diversos limiteds raros.',
     price: 420,
     status: 'active',
-    screenshots: [],
+    screenshots: [ssRoblox],
     fields: { 'Robux': 5000, 'Limiteds': 12, 'Premium': true },
     createdAt: '2024-03-14',
   },
@@ -185,7 +194,7 @@ export const MOCK_LISTINGS: Listing[] = [
     description: 'Conta OG Season 1, com Renegade Raider, Black Knight e mais de 200 skins.',
     price: 2800,
     status: 'active',
-    screenshots: [],
+    screenshots: [ssFortnite],
     fields: { 'Skins': 200, 'Season': 'OG S1', 'V-Bucks': 1500 },
     createdAt: '2024-03-13',
   },
@@ -200,7 +209,7 @@ export const MOCK_LISTINGS: Listing[] = [
     description: 'Conta nível máximo com todas as cartas, troféus acima de 7000.',
     price: 550,
     status: 'active',
-    screenshots: [],
+    screenshots: [ssInstagram],
     fields: { 'Troféus': 7200, 'Nível': 14, 'Cartas Max': true },
     createdAt: '2024-03-12',
   },
@@ -215,7 +224,7 @@ export const MOCK_LISTINGS: Listing[] = [
     description: 'Conta consolidada com 120K seguidores, engajamento alto. Nicho moda feminina com parcerias ativas.',
     price: 3200,
     status: 'active',
-    screenshots: [],
+    screenshots: [ssTiktok],
     fields: { 'Seguidores': '120K', 'Engajamento': '4.2%', 'Nicho': 'Moda' },
     createdAt: '2024-03-11',
   },
@@ -230,7 +239,7 @@ export const MOCK_LISTINGS: Listing[] = [
     description: 'Conta viral com 250K seguidores, vários vídeos acima de 1M de views. Monetização ativa.',
     price: 4500,
     status: 'active',
-    screenshots: [],
+    screenshots: [ssYoutube],
     fields: { 'Seguidores': '250K', 'Likes': '8M', 'Monetizada': true },
     createdAt: '2024-03-10',
   },
