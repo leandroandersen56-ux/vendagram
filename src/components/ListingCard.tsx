@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { Listing } from "@/lib/mock-data";
 import { formatBRL, getPlatform } from "@/lib/mock-data";
+import PlatformIcon from "@/components/PlatformIcon";
 
 interface ListingCardProps {
   listing: Listing;
