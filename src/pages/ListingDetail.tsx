@@ -61,8 +61,8 @@ export default function ListingDetail() {
       <div className="min-h-screen bg-background flex flex-col">
         <Navbar />
         <div className="flex-1 flex items-center justify-center">
-          <div className="text-center">
-            <p className="text-4xl mb-4">😕</p>
+           <div className="text-center">
+              <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
             <p className="text-foreground font-medium mb-4">Anúncio não encontrado</p>
             <Link to="/marketplace"><Button variant="hero">Voltar ao Marketplace</Button></Link>
           </div>

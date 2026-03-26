@@ -240,7 +240,7 @@ export default function Index() {
                     {social.length > 0 && (
                       <div>
                         <h3 className="text-sm font-bold text-foreground uppercase tracking-wide mb-3 flex items-center gap-2">
-                          📱 Redes Sociais
+                          <Smartphone className="h-4 w-4 text-primary" /> Redes Sociais
                         </h3>
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
                           {social.map((listing) => (
