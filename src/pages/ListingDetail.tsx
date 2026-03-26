@@ -245,7 +245,7 @@ export default function ListingDetail() {
                     { icon: <Clock className="h-3 w-3" />, text: "24h garantia" },
                   ].map((item) => (
                     <span key={item.text} className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-                      <span className="text-primary">{item.icon}</span>
+                      <span className="text-[#FFD700]">{item.icon}</span>
                       {item.text}
                     </span>
                   ))}
