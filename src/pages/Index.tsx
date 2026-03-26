@@ -140,7 +140,7 @@ export default function Index() {
       <section className="py-6 sm:py-12 px-4 border-b border-border order-4">
         <div className="container mx-auto">
           <h2 className="text-sm sm:text-lg font-bold text-foreground mb-4 sm:mb-8 uppercase tracking-wide text-center">Como Funciona</h2>
-          <div className="grid grid-cols-4 gap-2 sm:gap-6 max-w-4xl mx-auto">
+          <div className="grid grid-cols-4 gap-2 sm:gap-6">
             {[
               { icon: <Search className="h-4 w-4 sm:h-7 sm:w-7" />, title: "Encontre", desc: "Busque por plataforma e preço" },
               { icon: <Shield className="h-4 w-4 sm:h-7 sm:w-7" />, title: "Compre", desc: "Pix retido em escrow" },
