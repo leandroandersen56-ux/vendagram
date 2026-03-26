@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Star, Shield, ShoppingCart, CheckCircle2, Clock, MessageCircle, Loader2, Copy, Check, BadgeCheck, Lock, Store, Eye, AlertCircle } from "lucide-react";
+import { ArrowLeft, Star, Shield, ShoppingCart, CheckCircle2, Clock, MessageCircle, Loader2, Copy, Check, BadgeCheck, Lock, Store, Eye, AlertCircle, Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Navbar from "@/components/Navbar";
@@ -14,7 +14,7 @@ import { useAuth } from "@/contexts/AuthContext";
 export default function ListingDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { isAuthenticated, openAuth } = useAuth();
+  const { user, isAuthenticated, openAuth } = useAuth();
   const [listing, setListing] = useState<any>(null);
   const [seller, setSeller] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -30,7 +30,7 @@ export default function ListingDetail() {
         .from("listings")
         .select("*")
         .eq("id", id)
-        .single();
+        .maybeSingle();
 
       if (!error && data) {
         setListing(data);
@@ -38,7 +38,7 @@ export default function ListingDetail() {
           .from("profiles")
           .select("*")
           .eq("user_id", data.seller_id)
-          .single();
+          .maybeSingle();
         if (profile) setSeller(profile);
       } else {
         // Fallback to mock data
@@ -185,7 +185,19 @@ export default function ListingDetail() {
             {/* Right: All info */}
             <div>
               {/* Title */}
-              <h1 className="text-2xl font-bold text-foreground leading-snug mb-2">{listing.title}</h1>
+              <div className="flex items-start justify-between gap-3 mb-2">
+                <h1 className="text-2xl font-bold text-foreground leading-snug">{listing.title}</h1>
+                {user && user.id === listing.seller_id && (
+                  <Button
+                    variant="glass"
+                    size="sm"
+                    className="shrink-0"
+                    onClick={() => navigate(`/painel/anuncios/editar/${listing.id}`)}
+                  >
+                    <Edit className="h-3.5 w-3.5 mr-1.5" /> Editar
+                  </Button>
+                )}
+              </div>
 
               {/* Trust badges row (Bonoxs style) */}
               <div className="flex items-center gap-4 mb-5">
