@@ -3,11 +3,17 @@ import { Link, useLocation, useNavigate, Outlet } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   LayoutDashboard, ShoppingBag, Tag, Wallet, User, Bell,
-  Settings, LogOut, Shield, ChevronLeft, Menu, X, PlusCircle
+  Settings, LogOut, Shield, ChevronLeft, Menu, X, PlusCircle,
+  ArrowDown, ArrowRight, ArrowUp, ScanLine
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useAuth } from "@/contexts/AuthContext";
+import DepositModal from "@/components/wallet/DepositModal";
+import TransferModal from "@/components/wallet/TransferModal";
+import WithdrawModal from "@/components/wallet/WithdrawModal";
+import QRScannerModal from "@/components/wallet/QRScannerModal";
 
 const PANEL_NAV = [
   { to: "/painel", label: "Visão Geral", icon: LayoutDashboard, exact: true },
@@ -23,6 +29,17 @@ export default function PanelLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showDeposit, setShowDeposit] = useState(false);
+  const [showTransfer, setShowTransfer] = useState(false);
+  const [showWithdraw, setShowWithdraw] = useState(false);
+  const [showQR, setShowQR] = useState(false);
+
+  const walletActions = [
+    { label: "Depositar", icon: ArrowDown, color: "text-success", bg: "bg-success/10", onClick: () => setShowDeposit(true) },
+    { label: "Transferir", icon: ArrowRight, color: "text-info", bg: "bg-info/10", onClick: () => setShowTransfer(true) },
+    { label: "Sacar", icon: ArrowUp, color: "text-primary", bg: "bg-primary/10", onClick: () => setShowWithdraw(true) },
+    { label: "Pagar com QR", icon: ScanLine, color: "text-warning", bg: "bg-warning/10", onClick: () => setShowQR(true) },
+  ];
 
   const isActive = (item: typeof PANEL_NAV[0]) =>
     item.exact ? location.pathname === item.to : location.pathname.startsWith(item.to);
@@ -94,17 +111,26 @@ export default function PanelLayout() {
 
       {/* Desktop top bar */}
       <div className="hidden lg:flex fixed top-0 left-64 right-0 h-14 bg-card/80 backdrop-blur-sm border-b border-border z-30 items-center justify-end px-6 gap-3">
-        <button
-          onClick={() => {
-            const el = document.getElementById('wallet-section');
-            if (el) el.scrollIntoView({ behavior: 'smooth' });
-            else navigate('/painel');
-          }}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all"
-        >
-          <Wallet className="h-4 w-4" />
-          <span className="text-sm font-medium">R$ 890,00</span>
-        </button>
+        <Popover>
+          <PopoverTrigger asChild>
+            <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all">
+              <Wallet className="h-4 w-4" />
+              <span className="text-sm font-medium">R$ 890,00</span>
+            </button>
+          </PopoverTrigger>
+          <PopoverContent className="w-56 p-2 bg-card border-border" align="end">
+            <div className="space-y-1">
+              {walletActions.map((a) => (
+                <button key={a.label} onClick={a.onClick} className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm hover:bg-muted/50 transition-all">
+                  <div className={`h-8 w-8 rounded-full ${a.bg} flex items-center justify-center`}>
+                    <a.icon className={`h-4 w-4 ${a.color}`} />
+                  </div>
+                  <span className="text-foreground">{a.label}</span>
+                </button>
+              ))}
+            </div>
+          </PopoverContent>
+        </Popover>
         <Link to="/painel/notificacoes">
           <Button variant="ghost" size="icon" className="relative">
             <Bell className="h-4 w-4" />
@@ -127,15 +153,23 @@ export default function PanelLayout() {
             SAFETRADE<span className="text-secondary">.GG</span>
           </span>
         </div>
-        <button
-          onClick={() => {
-            const el = document.getElementById('wallet-section');
-            if (el) el.scrollIntoView({ behavior: 'smooth' });
-            else navigate('/painel');
-          }}
-        >
-          <Wallet className="h-5 w-5 text-muted-foreground" />
-        </button>
+        <Popover>
+          <PopoverTrigger asChild>
+            <button><Wallet className="h-5 w-5 text-muted-foreground" /></button>
+          </PopoverTrigger>
+          <PopoverContent className="w-56 p-2 bg-card border-border" align="end">
+            <div className="space-y-1">
+              {walletActions.map((a) => (
+                <button key={a.label} onClick={a.onClick} className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm hover:bg-muted/50 transition-all">
+                  <div className={`h-8 w-8 rounded-full ${a.bg} flex items-center justify-center`}>
+                    <a.icon className={`h-4 w-4 ${a.color}`} />
+                  </div>
+                  <span className="text-foreground">{a.label}</span>
+                </button>
+              ))}
+            </div>
+          </PopoverContent>
+        </Popover>
       </div>
 
       {/* Mobile sidebar overlay */}
@@ -184,6 +218,11 @@ export default function PanelLayout() {
           <Outlet />
         </div>
       </main>
+
+      <DepositModal open={showDeposit} onClose={() => setShowDeposit(false)} />
+      <TransferModal open={showTransfer} onClose={() => setShowTransfer(false)} balance={890} />
+      <WithdrawModal open={showWithdraw} onClose={() => setShowWithdraw(false)} balance={890} pixKey="***.***.***-00" />
+      <QRScannerModal open={showQR} onClose={() => setShowQR(false)} balance={890} />
     </div>
   );
 }
