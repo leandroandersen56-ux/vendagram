@@ -7,6 +7,15 @@ import coverFacebook from "@/assets/covers/cover-facebook.jpg";
 import coverRoblox from "@/assets/covers/cover-roblox.jpg";
 import coverFortnite from "@/assets/covers/cover-fortnite.jpg";
 
+import ssFreefire from "@/assets/screenshots/screenshot-freefire.jpg";
+import ssInstagram from "@/assets/screenshots/screenshot-instagram.jpg";
+import ssTiktok from "@/assets/screenshots/screenshot-tiktok.jpg";
+import ssValorant from "@/assets/screenshots/screenshot-valorant.jpg";
+import ssYoutube from "@/assets/screenshots/screenshot-youtube.jpg";
+import ssFacebook from "@/assets/screenshots/screenshot-facebook.jpg";
+import ssRoblox from "@/assets/screenshots/screenshot-roblox.jpg";
+import ssFortnite from "@/assets/screenshots/screenshot-fortnite.jpg";
+
 export const PLATFORM_COVERS: Record<string, string> = {
   free_fire: coverFreefire,
   instagram: coverInstagram,
