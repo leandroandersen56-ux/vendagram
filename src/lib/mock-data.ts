@@ -104,7 +104,7 @@ export const MOCK_LISTINGS: Listing[] = [
     description: 'Conta com 50 mil seguidores reais, engajamento de 3.5%. Nicho fitness com conteúdo de alta qualidade.',
     price: 1200,
     status: 'active',
-    screenshots: [],
+    screenshots: [ssInstagram],
     fields: { 'Seguidores': '50K', 'Engajamento': '3.5%', 'Nicho': 'Fitness', 'Verificada': false },
     createdAt: '2024-03-19',
   },
