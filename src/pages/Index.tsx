@@ -154,12 +154,12 @@ export default function Index() {
       <section className="py-10 px-4 border-b border-border">
         <div className="container mx-auto">
           <h2 className="text-base font-bold text-foreground mb-6 uppercase tracking-wide text-center">Como Funciona</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             {[
-              { icon: <Search className="h-6 w-6" />, title: "Encontre", desc: "Busque contas por plataforma, preço e categoria" },
-              { icon: <Shield className="h-6 w-6" />, title: "Compre Seguro", desc: "Pagamento via Pix retido em escrow automático" },
-              { icon: <CheckCircle2 className="h-6 w-6" />, title: "Verifique", desc: "Checklist passo a passo para validar a conta" },
-              { icon: <Zap className="h-6 w-6" />, title: "Pronto!", desc: "Conta transferida e pagamento liberado ao vendedor" },
+              { icon: <Search className="h-5 w-5 sm:h-6 sm:w-6" />, title: "Encontre", desc: "Busque contas por plataforma, preço e categoria" },
+              { icon: <Shield className="h-5 w-5 sm:h-6 sm:w-6" />, title: "Compre Seguro", desc: "Pagamento via Pix retido em escrow automático" },
+              { icon: <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6" />, title: "Verifique", desc: "Checklist passo a passo para validar a conta" },
+              { icon: <Zap className="h-5 w-5 sm:h-6 sm:w-6" />, title: "Pronto!", desc: "Conta transferida e pagamento liberado ao vendedor" },
             ].map((step, i) => (
               <motion.div
                 key={step.title}
@@ -167,7 +167,7 @@ export default function Index() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
                 viewport={{ once: true }}
-                className="bg-card border border-border rounded-xl p-5 text-center"
+                className="bg-card border border-border rounded-xl p-3 sm:p-5 text-center"
               >
                 <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary mx-auto mb-3">
                   {step.icon}
