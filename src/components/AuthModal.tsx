@@ -182,8 +182,8 @@ export default function AuthModal() {
                   </button>
                 )}
 
-                <Button variant="hero" type="submit" className="w-full h-11">
-                  {mode === "login" ? "Entrar" : "Criar Conta"}
+                <Button variant="hero" type="submit" className="w-full h-11" disabled={loading}>
+                  {loading ? "Aguarde..." : mode === "login" ? "Entrar" : "Criar Conta"}
                 </Button>
               </form>
             </div>
