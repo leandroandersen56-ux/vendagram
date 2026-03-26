@@ -124,16 +124,13 @@ export default function ListingDetail() {
               {/* Title */}
               <h1 className="text-2xl font-bold text-foreground leading-snug mb-2">{listing.title}</h1>
 
-              {/* Trust badges row (like Bonoxs) */}
+              {/* Trust badges row (Bonoxs style) */}
               <div className="flex items-center gap-4 mb-5">
-                <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                  <Store className="h-3.5 w-3.5" /> Vendedor verificado
+                <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground bg-muted/50 px-3 py-1.5 rounded">
+                  <Store className="h-3.5 w-3.5" /> Distribuidor oficial
                 </span>
-                <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground bg-muted/50 px-3 py-1.5 rounded">
                   <Lock className="h-3.5 w-3.5" /> Pagamento seguro
-                </span>
-                <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                  <Eye className="h-3.5 w-3.5" /> {listing.views_count || 0} visualizações
                 </span>
               </div>
 
@@ -147,9 +144,9 @@ export default function ListingDetail() {
                     {featureFlags.map(([key]) => (
                       <div
                         key={key}
-                        className="border border-primary/40 bg-primary/5 rounded-md px-3 py-2 flex items-center gap-2"
+                        className="border border-[#FFD700]/40 bg-[#FFD700]/5 rounded px-3 py-2 flex items-center gap-2"
                       >
-                        <CheckCircle2 className="h-3.5 w-3.5 text-primary flex-shrink-0" />
+                        <CheckCircle2 className="h-3.5 w-3.5 text-[#FFD700] flex-shrink-0" />
                         <span className="text-xs font-medium text-foreground">{key}</span>
                       </div>
                     ))}
@@ -202,7 +199,7 @@ export default function ListingDetail() {
                 {originalPrice && (
                   <p className="text-sm text-muted-foreground line-through">R$ {originalPrice}</p>
                 )}
-                <p className="text-3xl font-display font-bold text-primary">{formatBRL(listing.price)}</p>
+                <p className="text-3xl font-display font-bold text-[#FFD700]">{formatBRL(listing.price)}</p>
               </div>
 
               {/* Buy button — yellow/primary like Bonoxs */}
