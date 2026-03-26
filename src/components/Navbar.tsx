@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Search, Menu, X, User, LogOut, LayoutDashboard, ShoppingCart, Plus } from "lucide-react";
+import { Search, Menu, X, User, LogOut, LayoutDashboard, ShoppingCart, Plus, Store, ShoppingBag } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
@@ -37,12 +37,14 @@ export default function Navbar() {
         {/* Desktop nav links */}
         <div className="hidden md:flex items-center gap-1">
           <Link to="/">
-            <Button variant="ghost" size="sm" className={location.pathname === "/" ? "text-[#FFFF00]" : "text-muted-foreground hover:text-foreground"}>
+            <Button variant="ghost" size="sm" className={`gap-1.5 ${location.pathname === "/" ? "text-[#FFFF00]" : "text-muted-foreground hover:text-foreground"}`}>
+              <Store className="h-4 w-4" />
               Loja
             </Button>
           </Link>
           <Link to="/marketplace">
-            <Button variant="ghost" size="sm" className={location.pathname === "/marketplace" ? "text-[#FFFF00]" : "text-muted-foreground hover:text-foreground"}>
+            <Button variant="ghost" size="sm" className={`gap-1.5 ${location.pathname === "/marketplace" ? "text-[#FFFF00]" : "text-muted-foreground hover:text-foreground"}`}>
+              <ShoppingBag className="h-4 w-4" />
               Marketplace
             </Button>
           </Link>
@@ -136,15 +138,15 @@ export default function Navbar() {
           >
             <div className="flex flex-col p-4 gap-2">
               <Link to="/" onClick={() => setMobileOpen(false)}>
-                <Button variant="ghost" className="w-full justify-start">Loja</Button>
+                <Button variant="ghost" className="w-full justify-start gap-2"><Store className="h-4 w-4" /> Loja</Button>
               </Link>
               <Link to="/marketplace" onClick={() => setMobileOpen(false)}>
-                <Button variant="ghost" className="w-full justify-start">Marketplace</Button>
+                <Button variant="ghost" className="w-full justify-start gap-2"><ShoppingBag className="h-4 w-4" /> Marketplace</Button>
               </Link>
               {isAuthenticated ? (
                 <>
                   <Link to="/painel" onClick={() => setMobileOpen(false)}>
-                    <Button variant="ghost" className="w-full justify-start">Meu Painel</Button>
+                    <Button variant="ghost" className="w-full justify-start gap-2"><LayoutDashboard className="h-4 w-4" /> Meu Painel</Button>
                   </Link>
                   <Button variant="ghost" className="w-full justify-start text-destructive" onClick={() => { logout(); setMobileOpen(false); }}>
                     Sair
