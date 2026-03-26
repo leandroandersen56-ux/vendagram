@@ -43,6 +43,7 @@ function AppRoutes() {
         <Route path="/" element={<Index />} />
         <Route path="/marketplace" element={<Marketplace />} />
         <Route path="/listing/:id" element={<ListingDetail />} />
+        <Route path="/checkout/:listingId" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
         <Route path="/transaction/:listingId" element={<TransactionFlow />} />
 
         {/* Admin (will be protected later with role check) */}
