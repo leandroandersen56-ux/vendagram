@@ -3,11 +3,17 @@ import { Link, useLocation, useNavigate, Outlet } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   LayoutDashboard, ShoppingBag, Tag, Wallet, User, Bell,
-  Settings, LogOut, Shield, ChevronLeft, Menu, X, PlusCircle
+  Settings, LogOut, Shield, ChevronLeft, Menu, X, PlusCircle,
+  ArrowDown, ArrowRight, ArrowUp, ScanLine
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useAuth } from "@/contexts/AuthContext";
+import DepositModal from "@/components/wallet/DepositModal";
+import TransferModal from "@/components/wallet/TransferModal";
+import WithdrawModal from "@/components/wallet/WithdrawModal";
+import QRScannerModal from "@/components/wallet/QRScannerModal";
 
 const PANEL_NAV = [
   { to: "/painel", label: "Visão Geral", icon: LayoutDashboard, exact: true },
