@@ -37,6 +37,37 @@ export default function PanelOverview() {
         </Link>
       </div>
 
+      {/* Wallet Card */}
+      <Card className="bg-card border-border p-6 mb-8">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center">
+              <Wallet className="h-6 w-6 text-primary" />
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">Saldo Disponível</p>
+              <p className="text-2xl font-bold text-foreground">{formatBRL(890)}</p>
+            </div>
+          </div>
+          <div className="text-right">
+            <p className="text-xs text-muted-foreground">Pendente</p>
+            <p className="text-sm font-medium text-warning">{formatBRL(350)}</p>
+          </div>
+        </div>
+        <div className="flex gap-2">
+          <Link to="/painel/carteira" className="flex-1">
+            <Button variant="hero" size="sm" className="w-full gap-1.5">
+              <ArrowUpRight className="h-4 w-4" /> Depositar
+            </Button>
+          </Link>
+          <Link to="/painel/carteira" className="flex-1">
+            <Button variant="glass" size="sm" className="w-full gap-1.5">
+              <TrendingUp className="h-4 w-4" /> Ver Carteira
+            </Button>
+          </Link>
+        </div>
+      </Card>
+
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {stats.map((stat) => (
