@@ -117,39 +117,43 @@ export default function PanelWallet() {
         </div>
 
         {/* Quick Actions */}
-        <div className="flex flex-wrap gap-3 mb-8">
-          <Button
-            variant="outline"
-            className="border-border bg-muted/20 hover:bg-muted/40 gap-2 rounded-full px-5"
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+          <button
             onClick={() => setShowDeposit(true)}
+            className="group flex flex-col items-center gap-2.5 p-4 bg-card border border-border rounded-xl hover:border-success/40 hover:bg-success/5 transition-all"
           >
-            <ArrowDown className="h-4 w-4 text-success" />
-            <span className="text-sm">Depositar</span>
-          </Button>
-          <Button
-            variant="outline"
-            className="border-border bg-muted/20 hover:bg-muted/40 gap-2 rounded-full px-5"
+            <div className="h-11 w-11 rounded-full bg-success/10 flex items-center justify-center group-hover:bg-success/20 transition-colors">
+              <ArrowDown className="h-5 w-5 text-success" />
+            </div>
+            <span className="text-sm font-medium text-foreground">Depositar</span>
+          </button>
+          <button
             onClick={() => setShowTransfer(true)}
+            className="group flex flex-col items-center gap-2.5 p-4 bg-card border border-border rounded-xl hover:border-info/40 hover:bg-info/5 transition-all"
           >
-            <ArrowRight className="h-4 w-4 text-info" />
-            <span className="text-sm">Transferir</span>
-          </Button>
-          <Button
-            variant="outline"
-            className="border-border bg-muted/20 hover:bg-muted/40 gap-2 rounded-full px-5"
+            <div className="h-11 w-11 rounded-full bg-info/10 flex items-center justify-center group-hover:bg-info/20 transition-colors">
+              <ArrowRight className="h-5 w-5 text-info" />
+            </div>
+            <span className="text-sm font-medium text-foreground">Transferir</span>
+          </button>
+          <button
             onClick={() => setShowWithdraw(true)}
+            className="group flex flex-col items-center gap-2.5 p-4 bg-card border border-border rounded-xl hover:border-primary/40 hover:bg-primary/5 transition-all"
           >
-            <ArrowUp className="h-4 w-4 text-primary" />
-            <span className="text-sm">Sacar</span>
-          </Button>
-          <Button
-            variant="outline"
-            className="border-border bg-muted/20 hover:bg-muted/40 gap-2 rounded-full px-5"
+            <div className="h-11 w-11 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+              <ArrowUp className="h-5 w-5 text-primary" />
+            </div>
+            <span className="text-sm font-medium text-foreground">Sacar</span>
+          </button>
+          <button
             onClick={() => setShowQR(true)}
+            className="group flex flex-col items-center gap-2.5 p-4 bg-card border border-border rounded-xl hover:border-warning/40 hover:bg-warning/5 transition-all"
           >
-            <ScanLine className="h-4 w-4 text-warning" />
-            <span className="text-sm">Pagar com QR</span>
-          </Button>
+            <div className="h-11 w-11 rounded-full bg-warning/10 flex items-center justify-center group-hover:bg-warning/20 transition-colors">
+              <ScanLine className="h-5 w-5 text-warning" />
+            </div>
+            <span className="text-sm font-medium text-foreground">Pagar com QR</span>
+          </button>
         </div>
 
         {/* Balance Chart */}
