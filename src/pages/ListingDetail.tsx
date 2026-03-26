@@ -259,9 +259,9 @@ export default function ListingDetail() {
                   <div>
                     <p className="text-sm font-medium text-foreground leading-none">{sellerName}</p>
                     <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
-                      <Star className="h-2.5 w-2.5 text-warning fill-warning" />
+                      <Star className="h-2.5 w-2.5 text-[#FFD700] fill-[#FFD700]" />
                       {sellerRating} · {sellerSales} vendas
-                      {sellerSales >= 5 && <CheckCircle2 className="h-2.5 w-2.5 text-primary ml-1" />}
+                      {sellerSales >= 5 && <CheckCircle2 className="h-2.5 w-2.5 text-[#FFD700] ml-1" />}
                     </div>
                   </div>
                 </div>
