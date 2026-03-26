@@ -209,7 +209,7 @@ export const MOCK_LISTINGS: Listing[] = [
     description: 'Conta nível máximo com todas as cartas, troféus acima de 7000.',
     price: 550,
     status: 'active',
-    screenshots: [],
+    screenshots: [ssInstagram],
     fields: { 'Troféus': 7200, 'Nível': 14, 'Cartas Max': true },
     createdAt: '2024-03-12',
   },
