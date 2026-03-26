@@ -39,11 +39,11 @@ const statusMap: Record<string, { label: string; className: string }> = {
 };
 
 function getCategoryInfo(category: string) {
-  const map: Record<string, { icon: string; name: string; color: string }> = {};
+  const map: Record<string, { name: string; color: string }> = {};
   PLATFORMS.forEach((p) => {
     map[p.id] = p;
   });
-  return map[category] || { icon: "🌐", name: category, color: "#7C3AED" };
+  return map[category] || { name: category, color: "#7C3AED" };
 }
 
 export default function PanelListings() {

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Star, Shield, ShoppingCart, CheckCircle2, Clock, MessageCircle, Loader2, Copy, Check, BadgeCheck, Lock, Store, Eye } from "lucide-react";
+import { ArrowLeft, Star, Shield, ShoppingCart, CheckCircle2, Clock, MessageCircle, Loader2, Copy, Check, BadgeCheck, Lock, Store, Eye, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Navbar from "@/components/Navbar";
@@ -61,8 +61,8 @@ export default function ListingDetail() {
       <div className="min-h-screen bg-background flex flex-col">
         <Navbar />
         <div className="flex-1 flex items-center justify-center">
-          <div className="text-center">
-            <p className="text-4xl mb-4">😕</p>
+           <div className="text-center">
+              <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
             <p className="text-foreground font-medium mb-4">Anúncio não encontrado</p>
             <Link to="/marketplace"><Button variant="hero">Voltar ao Marketplace</Button></Link>
           </div>

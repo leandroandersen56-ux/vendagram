@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   ArrowLeft, Shield, Lock, CreditCard, QrCode,
-  CheckCircle2, Loader2, ShoppingCart, Receipt
+  CheckCircle2, Loader2, ShoppingCart, Receipt, AlertCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -120,7 +120,7 @@ export default function Checkout() {
         <Navbar />
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <p className="text-4xl mb-4">😕</p>
+            <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
             <p className="text-foreground font-medium mb-4">Anúncio não encontrado</p>
             <Link to="/marketplace"><Button variant="hero">Voltar ao Marketplace</Button></Link>
           </div>

@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowRight, Search, Loader2, Shield, CheckCircle2, Clock, Zap } from "lucide-react";
+import { ArrowRight, Search, Loader2, Shield, CheckCircle2, Clock, Zap, Gamepad2, Smartphone, AlertCircle } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ListingCard from "@/components/ListingCard";
@@ -228,7 +228,7 @@ export default function Index() {
                     {games.length > 0 && (
                       <div>
                         <h3 className="text-sm font-bold text-foreground uppercase tracking-wide mb-3 flex items-center gap-2">
-                          🎮 Contas de Jogos
+                          <Gamepad2 className="h-4 w-4 text-primary" /> Contas de Jogos
                         </h3>
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
                           {games.map((listing) => (
@@ -240,7 +240,7 @@ export default function Index() {
                     {social.length > 0 && (
                       <div>
                         <h3 className="text-sm font-bold text-foreground uppercase tracking-wide mb-3 flex items-center gap-2">
-                          📱 Redes Sociais
+                          <Smartphone className="h-4 w-4 text-primary" /> Redes Sociais
                         </h3>
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
                           {social.map((listing) => (

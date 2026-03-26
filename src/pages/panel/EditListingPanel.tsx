@@ -111,7 +111,7 @@ export default function EditListingPanel() {
             <SelectContent>
               {PLATFORMS.map((p) => (
                 <SelectItem key={p.id} value={p.id}>
-                  {p.icon} {p.name}
+                  {p.name}
                 </SelectItem>
               ))}
             </SelectContent>

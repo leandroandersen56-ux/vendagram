@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   ArrowLeft, CheckCircle2, Circle, AlertTriangle, Clock,
-  Shield, Upload, Send, Lock, XCircle
+  Shield, Upload, Send, Lock, XCircle, AlertCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -103,7 +103,7 @@ export default function TransactionFlow() {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Navbar />
         <div className="text-center">
-          <p className="text-4xl mb-4">😕</p>
+          <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
           <p className="text-foreground font-medium mb-4">Transação não encontrada</p>
           <Link to="/marketplace"><Button variant="hero">Voltar ao Marketplace</Button></Link>
         </div>

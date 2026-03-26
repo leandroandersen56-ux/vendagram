@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Eye, Plus, X, Upload, ChevronRight } from "lucide-react";
+import { Eye, Plus, X, Upload, ChevronRight, Gamepad2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -423,7 +423,7 @@ export default function CreateListing() {
         {/* ── Itens da conta (games) ── */}
         {isGame && (
           <div className="space-y-2">
-            <Label className="text-foreground text-xs uppercase tracking-wide">Itens da conta 🎮</Label>
+            <Label className="text-foreground text-xs uppercase tracking-wide flex items-center gap-1.5"><Gamepad2 className="h-3.5 w-3.5 text-primary" /> Itens da conta</Label>
 
             {/* Sugestões rápidas */}
             <div className="flex flex-wrap gap-1.5">
