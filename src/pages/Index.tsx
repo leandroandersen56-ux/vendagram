@@ -150,7 +150,7 @@ export default function Index() {
       </section>
 
       {/* How it works */}
-      <section className="py-10 px-4 border-b border-border">
+      <section className="py-10 px-4 border-b border-border order-4 sm:order-3">
         <div className="container mx-auto">
           <h2 className="text-base font-bold text-foreground mb-6 uppercase tracking-wide text-center">Como Funciona</h2>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
