@@ -194,7 +194,7 @@ export const MOCK_LISTINGS: Listing[] = [
     description: 'Conta OG Season 1, com Renegade Raider, Black Knight e mais de 200 skins.',
     price: 2800,
     status: 'active',
-    screenshots: [],
+    screenshots: [ssFortnite],
     fields: { 'Skins': 200, 'Season': 'OG S1', 'V-Bucks': 1500 },
     createdAt: '2024-03-13',
   },
