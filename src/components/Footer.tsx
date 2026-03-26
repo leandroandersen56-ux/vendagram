@@ -1,49 +1,104 @@
 import { Link } from "react-router-dom";
 import PlatformIcon from "@/components/PlatformIcon";
 
+const CATEGORY_LINKS = [
+  { id: "free_fire", label: "Free Fire" },
+  { id: "instagram", label: "Instagram" },
+  { id: "tiktok", label: "TikTok" },
+  { id: "valorant", label: "Valorant" },
+  { id: "fortnite", label: "Fortnite" },
+  { id: "roblox", label: "Roblox" },
+  { id: "youtube", label: "YouTube" },
+  { id: "facebook", label: "Facebook" },
+];
+
 export default function Footer() {
   return (
-    <footer className="border-t border-neutral-800 bg-[#0A0A0A]">
-      <div className="container mx-auto px-4 py-10">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div>
-            <span className="font-display text-sm font-bold tracking-wider text-[#FFFF00] block mb-3">
-              SAFETRADE<span className="text-neutral-500">.GG</span>
+    <footer className="border-t border-border bg-card">
+      <div className="container mx-auto px-4 py-12">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
+          {/* Brand */}
+          <div className="col-span-2 md:col-span-1">
+            <span className="font-display text-base font-bold tracking-wider text-primary block mb-3">
+              SAFETRADE<span className="text-muted-foreground">.GG</span>
             </span>
-            <p className="text-xs text-neutral-500 leading-relaxed">
+            <p className="text-xs text-muted-foreground leading-relaxed mb-5 max-w-[220px]">
               A plataforma mais segura para comprar e vender contas digitais com escrow automático.
             </p>
-          </div>
-          <div>
-            <h4 className="font-semibold text-xs text-white mb-3 uppercase tracking-wider">Plataforma</h4>
-            <div className="flex flex-col gap-2 text-xs text-neutral-500">
-              <Link to="/marketplace" className="hover:text-[#FFFF00] transition-colors">Marketplace</Link>
-              <Link to="/painel/anuncios/novo" className="hover:text-[#FFFF00] transition-colors">Vender Conta</Link>
-              <Link to="/" className="hover:text-[#FFFF00] transition-colors">Como Funciona</Link>
+            {/* Social icons */}
+            <div className="flex items-center gap-3">
+              <a href="#" className="text-muted-foreground hover:text-primary transition-colors" aria-label="Instagram">
+                <PlatformIcon platformId="instagram" size={16} />
+              </a>
+              <a href="#" className="text-muted-foreground hover:text-primary transition-colors" aria-label="TikTok">
+                <PlatformIcon platformId="tiktok" size={16} />
+              </a>
+              <a href="#" className="text-muted-foreground hover:text-primary transition-colors" aria-label="YouTube">
+                <PlatformIcon platformId="youtube" size={16} />
+              </a>
             </div>
           </div>
+
+          {/* Plataforma */}
           <div>
-            <h4 className="font-semibold text-xs text-white mb-3 uppercase tracking-wider">Suporte</h4>
-            <div className="flex flex-col gap-2 text-xs text-neutral-500">
-              <span className="hover:text-[#FFFF00] transition-colors cursor-pointer">Central de Ajuda</span>
-              <span className="hover:text-[#FFFF00] transition-colors cursor-pointer">Termos de Uso</span>
-              <span className="hover:text-[#FFFF00] transition-colors cursor-pointer">Política de Privacidade</span>
+            <h4 className="font-bold text-xs text-foreground mb-4 uppercase tracking-wider">Plataforma</h4>
+            <div className="flex flex-col gap-2.5 text-xs text-muted-foreground">
+              <Link to="/marketplace" className="hover:text-primary transition-colors">Marketplace</Link>
+              <Link to="/painel/anuncios/novo" className="hover:text-primary transition-colors">Vender Conta</Link>
+              <Link to="/" className="hover:text-primary transition-colors">Como Funciona</Link>
             </div>
           </div>
+
+          {/* Políticas */}
           <div>
-            <h4 className="font-semibold text-xs text-white mb-3 uppercase tracking-wider">Categorias</h4>
-            <div className="flex flex-col gap-2 text-xs text-neutral-500">
-              {["free_fire", "instagram", "tiktok", "valorant"].map((id) => (
-                <Link key={id} to={`/marketplace?platform=${id}`} className="inline-flex items-center gap-2 hover:text-white transition-colors">
-                  <PlatformIcon platformId={id} size={14} />
-                  {id === "free_fire" ? "Free Fire" : id === "instagram" ? "Instagram" : id === "tiktok" ? "TikTok" : "Valorant"}
+            <h4 className="font-bold text-xs text-foreground mb-4 uppercase tracking-wider">Políticas</h4>
+            <div className="flex flex-col gap-2.5 text-xs text-muted-foreground">
+              <span className="hover:text-primary transition-colors cursor-pointer">Termos e Condições</span>
+              <span className="hover:text-primary transition-colors cursor-pointer">Política de Privacidade</span>
+              <span className="hover:text-primary transition-colors cursor-pointer">Perguntas Frequentes</span>
+            </div>
+          </div>
+
+          {/* Suporte */}
+          <div>
+            <h4 className="font-bold text-xs text-foreground mb-4 uppercase tracking-wider">Suporte</h4>
+            <div className="flex flex-col gap-2.5 text-xs text-muted-foreground">
+              <span className="hover:text-primary transition-colors cursor-pointer">Central de Ajuda</span>
+              <a href="mailto:contato@safetrade.gg" className="hover:text-primary transition-colors">contato@safetrade.gg</a>
+            </div>
+          </div>
+
+          {/* Categorias */}
+          <div>
+            <h4 className="font-bold text-xs text-foreground mb-4 uppercase tracking-wider">Categorias</h4>
+            <div className="flex flex-col gap-2.5 text-xs text-muted-foreground">
+              {CATEGORY_LINKS.map((cat) => (
+                <Link
+                  key={cat.id}
+                  to={`/marketplace?platform=${cat.id}`}
+                  className="inline-flex items-center gap-2 hover:text-foreground transition-colors"
+                >
+                  <PlatformIcon platformId={cat.id} size={14} />
+                  {cat.label}
                 </Link>
               ))}
             </div>
           </div>
         </div>
-        <div className="border-t border-neutral-800 mt-8 pt-6 text-center text-[11px] text-neutral-600">
-          © 2024 SafeTrade GG. Todos os direitos reservados.
+
+        {/* Métodos de pagamento */}
+        <div className="border-t border-border mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-[11px] text-muted-foreground">
+            © {new Date().getFullYear()} SafeTrade GG. Todos os direitos reservados.
+          </p>
+          <div className="flex items-center gap-3">
+            <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Métodos de pagamento</span>
+            <div className="flex items-center gap-2">
+              <span className="bg-muted text-muted-foreground text-[10px] font-bold px-2.5 py-1 rounded">PIX</span>
+              <span className="bg-muted text-muted-foreground text-[10px] font-bold px-2.5 py-1 rounded">VISA</span>
+              <span className="bg-muted text-muted-foreground text-[10px] font-bold px-2.5 py-1 rounded">MASTER</span>
+            </div>
+          </div>
         </div>
       </div>
     </footer>
