@@ -84,8 +84,8 @@ export default function ListingCard({ listing }: ListingCardProps) {
             <p className="text-[13px] sm:text-sm font-bold text-primary">
               {formatBRL(listing.price)}
             </p>
-            <div className="flex items-center gap-1">
-              <Star className="h-3 w-3 text-amber-400 fill-amber-400" />
+          <div className="flex items-center gap-1">
+              <Star className="h-3 w-3 text-warning fill-warning" />
               <span className="text-[10px] font-bold text-muted-foreground">{listing.sellerRating}</span>
             </div>
           </div>
