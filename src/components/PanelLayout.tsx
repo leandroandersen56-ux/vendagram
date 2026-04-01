@@ -45,20 +45,18 @@ export default function PanelLayout() {
     item.exact ? location.pathname === item.to : location.pathname.startsWith(item.to);
 
   return (
-    <div className="min-h-screen bg-background flex">
+    <div className="min-h-screen bg-muted/30 flex">
       {/* Sidebar - Desktop */}
-      <aside className="hidden lg:flex flex-col w-[260px] border-r border-border/50 bg-[#0D0D0D] fixed top-0 left-0 h-full z-40">
-        {/* Logo */}
-        <div className="h-16 flex items-center px-5 border-b border-border/50">
-          <Link to="/" className="flex items-center gap-2.5">
-            <Shield className="h-5 w-5 text-primary" />
-            <span className="font-display text-sm font-bold tracking-widest text-foreground">
-              SAFETRADE<span className="text-primary/60">.GG</span>
+      <aside className="hidden lg:flex flex-col w-[260px] border-r border-border bg-background fixed top-0 left-0 h-full z-40">
+        <div className="h-16 flex items-center px-5 border-b border-border">
+          <Link to="/" className="flex items-center gap-1.5">
+            <span className="text-primary text-lg">⚡</span>
+            <span className="font-display text-sm font-bold tracking-tight text-foreground">
+              Froiv
             </span>
           </Link>
         </div>
 
-        {/* Navigation */}
         <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
           {PANEL_NAV.map((item) => {
             const active = isActive(item);
@@ -67,8 +65,8 @@ export default function PanelLayout() {
                 <div
                   className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium transition-all duration-200 ${
                     active
-                      ? "bg-primary/10 text-primary shadow-[inset_0_0_0_1px_hsl(var(--primary)/0.15)]"
-                      : "text-muted-foreground hover:bg-[#1A1A1A] hover:text-foreground"
+                      ? "bg-primary/10 text-primary"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
                   }`}
                 >
                   <item.icon className={`h-[18px] w-[18px] ${active ? "text-primary" : ""}`} />
@@ -84,16 +82,15 @@ export default function PanelLayout() {
           })}
         </nav>
 
-        {/* Bottom actions */}
-        <div className="px-3 py-3 border-t border-border/50 space-y-0.5">
+        <div className="px-3 py-3 border-t border-border space-y-0.5">
           <Link to="/">
-            <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium text-muted-foreground hover:bg-[#1A1A1A] hover:text-foreground transition-all">
+            <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-all">
               <ChevronLeft className="h-[18px] w-[18px]" />
               Voltar ao Site
             </div>
           </Link>
           <div
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium text-red-400 hover:bg-red-500/10 cursor-pointer transition-all"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium text-destructive hover:bg-destructive/10 cursor-pointer transition-all"
             onClick={() => { logout(); navigate("/"); }}
           >
             <LogOut className="h-[18px] w-[18px]" />
@@ -101,10 +98,9 @@ export default function PanelLayout() {
           </div>
         </div>
 
-        {/* User card */}
-        <div className="px-4 py-4 border-t border-border/50">
+        <div className="px-4 py-4 border-t border-border">
           <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-full bg-primary/15 flex items-center justify-center text-primary font-bold text-sm ring-2 ring-primary/20">
+            <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">
               {user?.name?.[0]?.toUpperCase()}
             </div>
             <div className="min-w-0 flex-1">
@@ -116,18 +112,18 @@ export default function PanelLayout() {
       </aside>
 
       {/* Desktop top bar */}
-      <div className="hidden lg:flex fixed top-0 left-[260px] right-0 h-16 bg-[#0D0D0D]/90 backdrop-blur-xl border-b border-border/50 z-30 items-center justify-end px-6 gap-2">
+      <div className="hidden lg:flex fixed top-0 left-[260px] right-0 h-16 bg-background/95 backdrop-blur border-b border-border z-30 items-center justify-end px-6 gap-2">
         <Popover>
           <PopoverTrigger asChild>
-            <button className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-[#1A1A1A] transition-all">
+            <button className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted transition-all">
               <Wallet className="h-4 w-4 text-primary" />
               <span className="text-sm font-semibold">R$ 890,00</span>
             </button>
           </PopoverTrigger>
-          <PopoverContent className="w-52 p-1.5 bg-[#1A1A1A] border-border/50" align="end">
+          <PopoverContent className="w-52 p-1.5 bg-background border-border" align="end">
             <div className="space-y-0.5">
               {walletActions.map((a) => (
-                <button key={a.label} onClick={a.onClick} className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-[13px] hover:bg-[#252525] transition-all">
+                <button key={a.label} onClick={a.onClick} className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-[13px] hover:bg-muted transition-all">
                   <div className={`h-7 w-7 rounded-full ${a.bg} flex items-center justify-center`}>
                     <a.icon className={`h-3.5 w-3.5 ${a.color}`} />
                   </div>
@@ -139,38 +135,36 @@ export default function PanelLayout() {
         </Popover>
 
         <Link to="/painel/notificacoes">
-          <Button variant="ghost" size="icon" className="relative h-9 w-9 rounded-xl hover:bg-[#1A1A1A]">
+          <Button variant="ghost" size="icon" className="relative h-9 w-9 rounded-xl hover:bg-muted">
             <Bell className="h-4 w-4" />
             <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-destructive text-destructive-foreground text-[9px] flex items-center justify-center font-bold">3</span>
           </Button>
         </Link>
 
-        <div className="h-8 w-8 rounded-full bg-primary/15 flex items-center justify-center text-primary font-bold text-xs ring-2 ring-primary/20">
+        <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
           {user?.name?.[0]?.toUpperCase()}
         </div>
       </div>
 
       {/* Mobile header */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-[#0D0D0D]/95 backdrop-blur-xl z-40 flex items-center justify-between px-4 border-b border-border/50">
+      <div className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-background/95 backdrop-blur z-40 flex items-center justify-between px-4 border-b border-border">
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="icon" className="h-9 w-9 rounded-xl" onClick={() => setSidebarOpen(true)}>
             <Menu className="h-5 w-5" />
           </Button>
-          <Shield className="h-5 w-5 text-primary" />
-          <span className="font-display text-sm font-bold tracking-wider text-foreground">
-            SAFETRADE<span className="text-primary/60">.GG</span>
-          </span>
+          <span className="text-primary text-lg">⚡</span>
+          <span className="font-display text-sm font-bold tracking-tight text-foreground">Froiv</span>
         </div>
         <Popover>
           <PopoverTrigger asChild>
-            <button className="h-9 w-9 rounded-xl flex items-center justify-center hover:bg-[#1A1A1A] transition-all">
+            <button className="h-9 w-9 rounded-xl flex items-center justify-center hover:bg-muted transition-all">
               <Wallet className="h-5 w-5 text-muted-foreground" />
             </button>
           </PopoverTrigger>
-          <PopoverContent className="w-52 p-1.5 bg-[#1A1A1A] border-border/50" align="end">
+          <PopoverContent className="w-52 p-1.5 bg-background border-border" align="end">
             <div className="space-y-0.5">
               {walletActions.map((a) => (
-                <button key={a.label} onClick={a.onClick} className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-[13px] hover:bg-[#252525] transition-all">
+                <button key={a.label} onClick={a.onClick} className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-[13px] hover:bg-muted transition-all">
                   <div className={`h-7 w-7 rounded-full ${a.bg} flex items-center justify-center`}>
                     <a.icon className={`h-3.5 w-3.5 ${a.color}`} />
                   </div>
@@ -191,18 +185,18 @@ export default function PanelLayout() {
             exit={{ opacity: 0 }}
             className="lg:hidden fixed inset-0 z-50"
           >
-            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setSidebarOpen(false)} />
+            <div className="absolute inset-0 bg-foreground/20 backdrop-blur-sm" onClick={() => setSidebarOpen(false)} />
             <motion.aside
               initial={{ x: -280 }}
               animate={{ x: 0 }}
               exit={{ x: -280 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="relative w-[260px] h-full bg-[#0D0D0D] border-r border-border/50 flex flex-col"
+              className="relative w-[260px] h-full bg-background border-r border-border flex flex-col"
             >
-              <div className="h-14 flex items-center justify-between px-4 border-b border-border/50">
-                <Link to="/" className="flex items-center gap-2">
-                  <Shield className="h-5 w-5 text-primary" />
-                  <span className="font-display text-sm font-bold text-foreground">SAFETRADE<span className="text-primary/60">.GG</span></span>
+              <div className="h-14 flex items-center justify-between px-4 border-b border-border">
+                <Link to="/" className="flex items-center gap-1.5">
+                  <span className="text-primary text-lg">⚡</span>
+                  <span className="font-display text-sm font-bold text-foreground">Froiv</span>
                 </Link>
                 <Button variant="ghost" size="icon" className="h-8 w-8 rounded-xl" onClick={() => setSidebarOpen(false)}>
                   <X className="h-4 w-4" />
@@ -214,7 +208,7 @@ export default function PanelLayout() {
                   return (
                     <Link key={item.to} to={item.to} onClick={() => setSidebarOpen(false)}>
                       <div className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium transition-all ${
-                        active ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-[#1A1A1A]"
+                        active ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-muted"
                       }`}>
                         <item.icon className="h-[18px] w-[18px]" />
                         {item.label}
@@ -224,8 +218,8 @@ export default function PanelLayout() {
                   );
                 })}
               </nav>
-              <div className="px-3 py-3 border-t border-border/50">
-                <div className="flex items-center gap-3 px-3 py-2.5 text-[13px] font-medium text-red-400 cursor-pointer hover:bg-red-500/10 rounded-xl transition-all" onClick={() => { logout(); navigate("/"); }}>
+              <div className="px-3 py-3 border-t border-border">
+                <div className="flex items-center gap-3 px-3 py-2.5 text-[13px] font-medium text-destructive cursor-pointer hover:bg-destructive/10 rounded-xl transition-all" onClick={() => { logout(); navigate("/"); }}>
                   <LogOut className="h-[18px] w-[18px]" /> Sair
                 </div>
               </div>

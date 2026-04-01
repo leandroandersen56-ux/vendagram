@@ -85,10 +85,10 @@ export default function Marketplace() {
                 placeholder="Buscar contas..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-10 bg-card border-border"
+                className="pl-10 bg-muted border-border rounded-full"
               />
             </div>
-            <Button variant="glass" onClick={() => setShowFilters(!showFilters)} className="sm:w-auto">
+            <Button variant="outline" onClick={() => setShowFilters(!showFilters)} className="sm:w-auto rounded-xl">
               <SlidersHorizontal className="h-4 w-4 mr-2" />
               Filtros
             </Button>
@@ -99,10 +99,10 @@ export default function Marketplace() {
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
-              className="flex flex-wrap gap-3 mb-6 p-4 bg-card border border-border rounded-lg"
+              className="flex flex-wrap gap-3 mb-6 p-4 bg-muted border border-border rounded-2xl"
             >
               <Select value={platform} onValueChange={setPlatform}>
-                <SelectTrigger className="w-44 bg-muted border-border">
+                <SelectTrigger className="w-44 bg-background border-border rounded-xl">
                   <SelectValue placeholder="Plataforma" />
                 </SelectTrigger>
                 <SelectContent>
@@ -116,7 +116,7 @@ export default function Marketplace() {
               </Select>
 
               <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-44 bg-muted border-border">
+                <SelectTrigger className="w-44 bg-background border-border rounded-xl">
                   <SelectValue placeholder="Ordenar" />
                 </SelectTrigger>
                 <SelectContent>
@@ -137,7 +137,7 @@ export default function Marketplace() {
           {/* Platform quick filters */}
           <div className="flex flex-wrap gap-2 mb-8">
             <Badge
-              className={`cursor-pointer transition-colors ${platform === "all" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/80"}`}
+              className={`cursor-pointer transition-all rounded-full px-3 py-1.5 ${platform === "all" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/80 border border-border"}`}
               onClick={() => setPlatform("all")}
             >
               Todas
@@ -145,7 +145,7 @@ export default function Marketplace() {
             {PLATFORMS.map((p) => (
               <Badge
                 key={p.id}
-                className={`cursor-pointer transition-colors ${platform === p.id ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/80"}`}
+                className={`cursor-pointer transition-all rounded-full px-3 py-1.5 ${platform === p.id ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/80 border border-border"}`}
                 onClick={() => setPlatform(p.id)}
               >
                 <PlatformIcon platformId={p.id} size={16} className="mr-1" /> {p.name}
@@ -159,7 +159,7 @@ export default function Marketplace() {
               <Loader2 className="h-6 w-6 animate-spin text-primary" />
             </div>
           ) : filtered.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
               {filtered.map((listing) => (
                 <ListingCard key={listing.id} listing={listing} />
               ))}
