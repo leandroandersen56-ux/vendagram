@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Search, Menu, X, User, LogOut, LayoutDashboard, ShoppingCart, Plus, Store, ShoppingBag } from "lucide-react";
+import { Search, Menu, X, User, LogOut, LayoutDashboard, Plus, Store, ShoppingBag } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
@@ -25,25 +25,26 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0D0D0D] border-b border-border">
-      <div className="container mx-auto flex items-center justify-between h-16 px-4 gap-4">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-background border-b border-border">
+      <div className="container mx-auto flex items-center justify-between h-14 md:h-16 px-4 gap-4">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 shrink-0">
-          <span className="font-display text-lg font-bold tracking-wider text-[#FFFF00]">
-            SAFETRADE<span className="text-muted-foreground">.GG</span>
+        <Link to="/" className="flex items-center gap-1.5 shrink-0">
+          <span className="text-primary text-xl">⚡</span>
+          <span className="font-display text-lg font-bold tracking-tight text-foreground">
+            Froiv
           </span>
         </Link>
 
         {/* Desktop nav links */}
         <div className="hidden md:flex items-center gap-1">
           <Link to="/">
-            <Button variant="ghost" size="sm" className={`gap-1.5 ${location.pathname === "/" ? "text-[#FFFF00]" : "text-muted-foreground hover:text-foreground"}`}>
+            <Button variant="ghost" size="sm" className={`gap-1.5 ${location.pathname === "/" ? "text-primary" : "text-muted-foreground hover:text-foreground"}`}>
               <Store className="h-4 w-4" />
               Loja
             </Button>
           </Link>
           <Link to="/marketplace">
-            <Button variant="ghost" size="sm" className={`gap-1.5 ${location.pathname === "/marketplace" ? "text-[#FFFF00]" : "text-muted-foreground hover:text-foreground"}`}>
+            <Button variant="ghost" size="sm" className={`gap-1.5 ${location.pathname === "/marketplace" ? "text-primary" : "text-muted-foreground hover:text-foreground"}`}>
               <ShoppingBag className="h-4 w-4" />
               Marketplace
             </Button>
@@ -54,8 +55,8 @@ export default function Navbar() {
         <div className="hidden md:flex flex-1 max-w-md">
           <div className="relative w-full">
             <Input
-              placeholder="Pesquisar"
-              className="w-full bg-muted border-border h-9 pr-10 text-sm placeholder:text-muted-foreground"
+              placeholder="Buscar contas..."
+              className="w-full bg-muted border-border h-10 pl-4 pr-10 text-sm placeholder:text-muted-foreground rounded-full"
             />
             <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           </div>
@@ -67,13 +68,13 @@ export default function Navbar() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className="gap-2 text-foreground">
-                  <div className="h-7 w-7 rounded-full bg-[#FFFF00]/20 flex items-center justify-center text-[#FFFF00] text-xs font-bold">
+                  <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs font-bold">
                     {user?.name?.[0]?.toUpperCase()}
                   </div>
                   {user?.name}
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48 bg-card border-border">
+              <DropdownMenuContent align="end" className="w-48 bg-background border-border">
                 <DropdownMenuItem asChild>
                   <Link to="/painel" className="cursor-pointer">
                     <LayoutDashboard className="h-4 w-4 mr-2" />
@@ -94,34 +95,23 @@ export default function Navbar() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <button
-              onClick={() => openAuth()}
-              className="flex items-center gap-3 hover:opacity-80 transition-opacity cursor-pointer"
-            >
-              <div className="h-9 w-9 rounded-full bg-muted/50 border border-border flex items-center justify-center">
-                <User className="h-5 w-5 text-muted-foreground" />
-              </div>
-              <div className="flex flex-col items-start leading-tight">
-                <span className="text-sm font-semibold text-foreground">Cadastre-se</span>
-                <span className="text-xs text-muted-foreground">Login</span>
-              </div>
-              <svg className="h-4 w-4 text-muted-foreground ml-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
-            </button>
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" size="sm" onClick={() => openAuth()} className="text-foreground font-semibold">
+                Entrar
+              </Button>
+              <Button variant="hero" size="sm" onClick={() => openAuth()} className="px-5">
+                Cadastrar
+              </Button>
+            </div>
           )}
         </div>
 
-        {/* Mobile: Anunciar + toggle */}
+        {/* Mobile: right icons */}
         <div className="flex items-center gap-2 md:hidden">
-          <button
-            onClick={handleSell}
-            className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-primary text-primary-foreground font-bold text-[11px] tracking-wide hover:bg-primary/90 transition-all shadow-[0_0_10px_hsl(60_100%_50%/0.25)]"
-          >
-            <Plus className="h-3 w-3" />
-            Anunciar
+          <button onClick={() => {}} className="h-9 w-9 flex items-center justify-center text-primary">
+            <Search className="h-5 w-5" />
           </button>
-          <Button variant="ghost" size="icon" className="text-foreground" onClick={() => setMobileOpen(!mobileOpen)}>
+          <Button variant="ghost" size="icon" className="text-primary" onClick={() => setMobileOpen(!mobileOpen)}>
             {mobileOpen ? <X /> : <Menu />}
           </Button>
         </div>
@@ -134,7 +124,7 @@ export default function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-[#0D0D0D] border-t border-border"
+            className="md:hidden bg-background border-t border-border"
           >
             <div className="flex flex-col p-4 gap-2">
               <Link to="/" onClick={() => setMobileOpen(false)}>

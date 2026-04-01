@@ -5,24 +5,24 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-semibold ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 active:scale-[0.98]",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        default: "bg-primary text-primary-foreground hover:bg-primary-dark shadow-md shadow-primary/20",
         destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-        outline: "border border-input bg-background hover:bg-accent/10 hover:text-accent-foreground",
+        outline: "border border-border bg-background hover:bg-muted hover:text-foreground",
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-muted hover:text-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        hero: "bg-[#FFFF00] text-[#0D0D0D] hover:bg-[#e6e600] font-bold shadow-[0_0_16px_rgba(255,255,0,0.25)]",
+        hero: "bg-primary text-primary-foreground hover:bg-primary-dark font-bold shadow-md shadow-primary/20 rounded-full",
         accent: "bg-muted text-foreground hover:bg-muted/80 font-semibold",
-        glass: "bg-muted/60 backdrop-blur text-foreground hover:bg-muted/80",
+        glass: "bg-muted/60 backdrop-blur text-foreground hover:bg-muted/80 border border-border",
       },
       size: {
         default: "h-10 px-4 py-2",
-        sm: "h-9 rounded-md px-3",
-        lg: "h-11 rounded-md px-8",
+        sm: "h-9 rounded-xl px-3",
+        lg: "h-11 rounded-xl px-8",
         icon: "h-10 w-10",
       },
     },

@@ -55,7 +55,7 @@ function getIconBg(type: string) {
     case "out": return "bg-destructive/10";
     case "escrow": return "bg-warning/10";
     case "transfer": return "bg-info/10";
-    default: return "bg-muted/10";
+    default: return "bg-muted";
   }
 }
 
@@ -98,7 +98,7 @@ export default function PanelOverview() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-display font-bold text-foreground tracking-tight">
               Olá, {user?.name} 👋
             </h1>
             <p className="text-muted-foreground text-sm mt-0.5">Aqui está um resumo da sua conta</p>
@@ -119,14 +119,14 @@ export default function PanelOverview() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
             >
-              <div className="bg-[#161616] border border-border/40 rounded-2xl p-5 hover:border-primary/20 transition-all duration-300">
+              <div className="bg-background border border-border rounded-2xl p-5 hover:border-primary/30 transition-all duration-200">
                 <div className="flex items-start justify-between">
                   <div>
                     <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{stat.label}</p>
-                    <p className="text-2xl font-bold text-foreground mt-1.5">{stat.value}</p>
-                    <p className="text-xs text-muted-foreground/70 mt-1">{stat.change}</p>
+                    <p className="text-2xl font-display font-bold text-foreground mt-1.5">{stat.value}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{stat.change}</p>
                   </div>
-                  <div className="h-10 w-10 rounded-xl bg-primary/8 flex items-center justify-center">
+                  <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
                     <stat.icon className="h-5 w-5 text-primary" />
                   </div>
                 </div>
@@ -137,14 +137,13 @@ export default function PanelOverview() {
 
         {/* Wallet Section */}
         <div id="wallet-section" className="scroll-mt-20">
-          <h2 className="text-base font-bold text-foreground mb-4 flex items-center gap-2">
+          <h2 className="text-base font-display font-bold text-foreground mb-4 flex items-center gap-2">
             <Wallet className="h-4.5 w-4.5 text-primary" />
             Carteira
           </h2>
 
-          {/* Balance Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
-            <div className="bg-[#161616] border border-border/40 rounded-2xl p-5">
+            <div className="bg-background border border-border rounded-2xl p-5">
               <div className="flex items-center gap-2 mb-2.5">
                 <div className="h-6 w-6 rounded-lg bg-success/10 flex items-center justify-center">
                   <Wallet className="h-3.5 w-3.5 text-success" />
@@ -153,7 +152,7 @@ export default function PanelOverview() {
               </div>
               <p className="text-2xl font-bold text-success">{formatBRL(balance)}</p>
             </div>
-            <div className="bg-[#161616] border border-border/40 rounded-2xl p-5">
+            <div className="bg-background border border-border rounded-2xl p-5">
               <div className="flex items-center gap-2 mb-2.5">
                 <div className="h-6 w-6 rounded-lg bg-warning/10 flex items-center justify-center">
                   <Clock className="h-3.5 w-3.5 text-warning" />
@@ -162,7 +161,7 @@ export default function PanelOverview() {
               </div>
               <p className="text-2xl font-bold text-warning">{formatBRL(pending)}</p>
             </div>
-            <div className="bg-[#161616] border border-border/40 rounded-2xl p-5">
+            <div className="bg-background border border-border rounded-2xl p-5">
               <div className="flex items-center gap-2 mb-2.5">
                 <div className="h-6 w-6 rounded-lg bg-primary/10 flex items-center justify-center">
                   <TrendingUp className="h-3.5 w-3.5 text-primary" />
@@ -184,7 +183,7 @@ export default function PanelOverview() {
               <button
                 key={action.label}
                 onClick={action.onClick}
-                className={`group flex flex-col items-center gap-2.5 p-5 bg-[#161616] border border-border/40 rounded-2xl ${action.hoverBorder} transition-all duration-200`}
+                className={`group flex flex-col items-center gap-2.5 p-5 bg-background border border-border rounded-2xl ${action.hoverBorder} transition-all duration-200 active:scale-[0.98]`}
               >
                 <div className={`h-11 w-11 rounded-xl ${action.bg} flex items-center justify-center transition-transform group-hover:scale-110`}>
                   <action.icon className={`h-5 w-5 ${action.color}`} />
@@ -195,7 +194,7 @@ export default function PanelOverview() {
           </div>
 
           {/* Balance Chart */}
-          <div className="bg-[#161616] border border-border/40 rounded-2xl p-5 mb-6">
+          <div className="bg-background border border-border rounded-2xl p-5 mb-6">
             <h3 className="font-semibold text-foreground text-sm mb-4 flex items-center gap-2">
               <Activity className="h-4 w-4 text-primary" />
               Movimentação (últimos 7 dias)
@@ -204,7 +203,7 @@ export default function PanelOverview() {
           </div>
 
           {/* Transaction History */}
-          <div className="bg-[#161616] border border-border/40 rounded-2xl p-5 sm:p-6">
+          <div className="bg-background border border-border rounded-2xl p-5 sm:p-6">
             <h3 className="font-semibold text-foreground mb-4">Histórico</h3>
             <div className="flex flex-wrap gap-1.5 mb-5">
               {FILTER_TABS.map((tab) => (
@@ -213,8 +212,8 @@ export default function PanelOverview() {
                   onClick={() => setActiveFilter(tab.id)}
                   className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 ${
                     activeFilter === tab.id
-                      ? "bg-primary text-primary-foreground shadow-[0_0_12px_hsl(var(--primary)/0.3)]"
-                      : "bg-[#252525] text-muted-foreground hover:bg-[#2a2a2a] hover:text-foreground"
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted text-muted-foreground hover:text-foreground border border-border"
                   }`}
                 >
                   {tab.label}
@@ -231,7 +230,7 @@ export default function PanelOverview() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: i * 0.03 }}
-                    className="flex items-center gap-3 p-3.5 bg-[#1A1A1A] hover:bg-[#1E1E1E] rounded-xl transition-colors"
+                    className="flex items-center gap-3 p-3.5 bg-muted/50 hover:bg-muted rounded-xl transition-colors"
                   >
                     <div className={`h-9 w-9 rounded-xl flex items-center justify-center shrink-0 ${getIconBg(h.type)}`}>
                       {getIcon(h.type)}
@@ -257,7 +256,7 @@ export default function PanelOverview() {
         </div>
 
         {/* Recent Activity */}
-        <div className="bg-[#161616] border border-border/40 rounded-2xl p-5 sm:p-6 mt-6">
+        <div className="bg-background border border-border rounded-2xl p-5 sm:p-6 mt-6">
           <h3 className="font-semibold text-foreground mb-4">Atividade Recente</h3>
           <div className="space-y-2">
             {[
@@ -265,7 +264,7 @@ export default function PanelOverview() {
               { text: "Compra de conta Instagram em andamento", time: "5h atrás", color: "bg-warning" },
               { text: "Novo anúncio publicado: TikTok 50K", time: "1d atrás", color: "bg-info" },
             ].map((a, i) => (
-              <div key={i} className="flex items-center gap-3 p-3.5 bg-[#1A1A1A] rounded-xl hover:bg-[#1E1E1E] transition-colors">
+              <div key={i} className="flex items-center gap-3 p-3.5 bg-muted/50 rounded-xl hover:bg-muted transition-colors">
                 <div className={`h-2.5 w-2.5 rounded-full ${a.color} shrink-0`} />
                 <p className="text-[13px] text-foreground flex-1">{a.text}</p>
                 <span className="text-[11px] text-muted-foreground shrink-0">{a.time}</span>

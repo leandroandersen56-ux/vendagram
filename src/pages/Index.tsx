@@ -12,9 +12,6 @@ import ListingCard from "@/components/ListingCard";
 import PlatformIcon from "@/components/PlatformIcon";
 import { PLATFORMS, MOCK_LISTINGS, type Listing } from "@/lib/mock-data";
 import { supabase } from "@/integrations/supabase/client";
-import bannerImg from "@/assets/banner-home.jpg";
-import bannerPromo1 from "@/assets/banner-promo-1.webp";
-import bannerPromo2 from "@/assets/banner-promo-2.webp";
 
 export default function Index() {
   const { isAuthenticated, openAuth } = useAuth();
@@ -99,49 +96,92 @@ export default function Index() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Navbar />
-      {/* Hero Banner */}
-      {/* Hero Banner */}
-      <section className="pt-16 sm:pt-20 px-4 order-1">
-        <div className="container mx-auto">
-          <div className="relative overflow-hidden rounded-xl sm:rounded-2xl">
-            <img
-              src={bannerImg}
-              alt="SafeTrade.GG"
-              className="w-full h-[160px] sm:h-[340px] object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/75 to-transparent sm:from-background sm:via-background/70">
-              <div className="h-full flex items-center px-4 sm:px-10">
-                <div className="max-w-lg">
-                  <h1 className="text-[15px] sm:text-3xl lg:text-4xl font-display font-black text-foreground mb-1 sm:mb-2 leading-[1.2] tracking-tight">
-                    COMPRE E VENDA<br />
-                    <span className="text-primary">CONTAS DIGITAIS</span><br />
-                    COM SEGURANÇA
-                  </h1>
-                  <p className="text-xs sm:text-sm text-muted-foreground mb-4 hidden sm:block">
-                    Marketplace com escrow automático. Sem riscos.
-                  </p>
-                  <div className="flex flex-col sm:flex-row gap-1.5 sm:gap-3">
-                    <Button variant="hero" size="sm" className="text-[10px] sm:text-xs h-7 sm:h-9 px-3 sm:px-5" onClick={handleSell}>
-                      Vender Conta <ArrowRight className="h-3 w-3 sm:h-3.5 sm:w-3.5 ml-1" />
-                    </Button>
-                    <Link to="/marketplace">
-                      <Button variant="glass" size="sm" className="text-[10px] sm:text-xs h-7 sm:h-9 px-3 sm:px-5">
-                        Ver Marketplace
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
+
+      {/* Hero Section */}
+      <section className="pt-20 sm:pt-24 pb-8 px-4 text-center order-1">
+        <div className="container mx-auto max-w-3xl">
+          {/* Tag pill */}
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+            <span className="inline-flex items-center gap-1 rounded-full bg-primary-light text-primary text-xs font-semibold px-3 py-1 mb-4">
+              ✦ Marketplace #1 de contas digitais
+            </span>
+          </motion.div>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="text-3xl sm:text-5xl font-display font-extrabold text-foreground leading-tight"
+          >
+            Compre e venda contas com{" "}
+            <span className="text-gradient-primary">total segurança</span>
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="text-muted-foreground text-base mt-3 max-w-xl mx-auto"
+          >
+            Instagram, TikTok, YouTube, Free Fire e muito mais. Pagamento seguro e entrega imediata.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="flex gap-3 justify-center flex-wrap mt-6"
+          >
+            <Link to="/marketplace">
+              <Button variant="hero" className="px-6 py-3 shadow-md shadow-primary/20">
+                Explorar contas <ArrowRight className="h-4 w-4 ml-1" />
+              </Button>
+            </Link>
+            <Button
+              variant="outline"
+              className="border-primary text-primary rounded-full px-6 py-3 font-semibold hover:bg-primary-light"
+              onClick={handleSell}
+            >
+              Vender agora
+            </Button>
+          </motion.div>
+
+          {/* Trust badges */}
+          <div className="flex gap-4 justify-center flex-wrap mt-5 text-xs text-muted-foreground">
+            <span className="flex items-center gap-1">✓ Pagamento seguro</span>
+            <span className="flex items-center gap-1">✓ Suporte 24h</span>
+            <span className="flex items-center gap-1">✓ Entrega imediata</span>
           </div>
         </div>
       </section>
 
+      {/* Categories */}
+      <section className="px-4 order-2">
+        <div className="container mx-auto">
+          <h2 className="font-display font-bold text-xl text-foreground mt-10 mb-4">Explorar por plataforma</h2>
+          <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 md:grid md:grid-cols-6">
+            {PLATFORMS.map((p) => (
+              <button
+                key={p.id}
+                onClick={() => { setPlatform(p.id); }}
+                className={`min-w-[80px] flex flex-col items-center gap-2 p-3 rounded-2xl border transition-all duration-200 cursor-pointer ${
+                  platform === p.id
+                    ? "bg-primary-light border-primary"
+                    : "bg-muted border-border hover:border-primary hover:bg-primary-light"
+                }`}
+              >
+                <PlatformIcon platformId={p.id} size={32} />
+                <span className="text-xs font-semibold text-foreground">{p.name}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* How it works */}
       <section className="py-6 sm:py-14 px-4 order-4">
         <div className="container mx-auto">
-          <h2 className="text-sm sm:text-lg font-bold text-foreground mb-4 sm:mb-8 uppercase tracking-widest text-center">
+          <h2 className="text-sm sm:text-lg font-bold text-foreground mb-4 sm:mb-8 uppercase tracking-widest text-center font-display">
             Como Funciona
           </h2>
           <div className="grid grid-cols-4 gap-2 sm:gap-5">
@@ -157,12 +197,12 @@ export default function Index() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1, duration: 0.4 }}
                 viewport={{ once: true }}
-                className="card-surface rounded-xl sm:rounded-2xl p-2.5 sm:p-6 text-center relative overflow-hidden group"
+                className="rounded-2xl border border-border bg-background p-2.5 sm:p-6 text-center relative overflow-hidden group hover:border-primary/30 transition-all"
               >
                 <div className="absolute top-1.5 right-2 sm:top-3 sm:right-3 text-[9px] sm:text-xs font-display font-bold text-primary/30">
                   {step.num}
                 </div>
-                <div className="h-9 w-9 sm:h-14 sm:w-14 rounded-xl bg-primary/10 flex items-center justify-center text-primary mx-auto mb-2 sm:mb-3 group-hover:glow-primary-sm transition-all">
+                <div className="h-9 w-9 sm:h-14 sm:w-14 rounded-xl bg-primary/10 flex items-center justify-center text-primary mx-auto mb-2 sm:mb-3">
                   {step.icon}
                 </div>
                 <h3 className="text-[10px] sm:text-sm font-bold text-foreground mb-0.5 sm:mb-1">{step.title}</h3>
@@ -174,17 +214,18 @@ export default function Index() {
       </section>
 
       {/* Listings Section */}
-      <section className="py-8 px-4 order-2">
+      <section className="py-8 px-4 order-3">
         <div className="container mx-auto">
-          {/* Header + Search (mobile: stacked, desktop: inline with badges) */}
-          {/* Search - full width, mobile */}
+          <h2 className="font-display font-bold text-xl text-foreground mb-4">Contas em destaque</h2>
+
+          {/* Search - mobile */}
           <div className="flex items-center gap-2 mb-3 sm:hidden">
             <div className="relative flex-1">
               <Input
                 placeholder="Qual conta você está procurando?"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-4 pr-10 bg-card border-border h-11 rounded-full text-xs placeholder:text-muted-foreground/70 focus:border-primary/40 focus:ring-primary/10 transition-all"
+                className="pl-4 pr-10 bg-muted border-border h-11 rounded-full text-xs placeholder:text-muted-foreground/70"
               />
               <div className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
                 <Search className="h-3.5 w-3.5 text-primary" />
@@ -199,7 +240,7 @@ export default function Index() {
                 className={`shrink-0 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[11px] sm:text-sm font-medium transition-all ${
                   platform === "all"
                     ? "bg-primary text-primary-foreground"
-                    : "bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80"
+                    : "bg-muted text-muted-foreground hover:text-foreground border border-border"
                 }`}
               >
                 Todas
@@ -211,7 +252,7 @@ export default function Index() {
                   className={`shrink-0 inline-flex items-center gap-1 sm:gap-1.5 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[11px] sm:text-sm font-medium transition-all ${
                     platform === p.id
                       ? "bg-primary text-primary-foreground"
-                      : "bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80"
+                      : "bg-muted text-muted-foreground hover:text-foreground border border-border"
                   }`}
                 >
                   <PlatformIcon platformId={p.id} size={14} />
@@ -220,7 +261,7 @@ export default function Index() {
               ))}
           </div>
 
-          {/* Search desktop only - full width below badges */}
+          {/* Search desktop */}
           <div className="hidden sm:flex items-center gap-2 mb-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
@@ -228,12 +269,12 @@ export default function Index() {
                 placeholder="Buscar anúncios..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-9 bg-card border-border h-9 text-sm placeholder:text-muted-foreground focus:border-primary/50 focus:ring-primary/20"
+                className="pl-9 bg-muted border-border h-9 text-sm placeholder:text-muted-foreground rounded-xl"
               />
             </div>
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className={`shrink-0 h-9 w-9 rounded-lg border flex items-center justify-center transition-all ${showFilters ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border text-muted-foreground hover:text-foreground"}`}
+              className={`shrink-0 h-9 w-9 rounded-xl border flex items-center justify-center transition-all ${showFilters ? "bg-primary text-primary-foreground border-primary" : "bg-background border-border text-muted-foreground hover:text-foreground"}`}
             >
               <SlidersHorizontal className="h-4 w-4" />
             </button>
@@ -244,10 +285,10 @@ export default function Index() {
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
-              className="flex flex-wrap items-center gap-2 mb-4 p-3 bg-card border border-border rounded-lg"
+              className="flex flex-wrap items-center gap-2 mb-4 p-3 bg-muted border border-border rounded-2xl"
             >
               <Select value={platform} onValueChange={setPlatform}>
-                <SelectTrigger className="w-36 sm:w-44 bg-muted border-border h-8 text-xs">
+                <SelectTrigger className="w-36 sm:w-44 bg-background border-border h-8 text-xs rounded-xl">
                   <SelectValue placeholder="Plataforma" />
                 </SelectTrigger>
                 <SelectContent>
@@ -264,7 +305,7 @@ export default function Index() {
               </Select>
 
               <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-36 sm:w-44 bg-muted border-border h-8 text-xs">
+                <SelectTrigger className="w-36 sm:w-44 bg-background border-border h-8 text-xs rounded-xl">
                   <SelectValue placeholder="Ordenar" />
                 </SelectTrigger>
                 <SelectContent>
@@ -323,38 +364,6 @@ export default function Index() {
                       </div>
                     )}
 
-                    {/* Promo Banners */}
-                    <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-1">
-                      {/* Banner 1 - Tesouro */}
-                      <div className="shrink-0 w-[85%] sm:w-[49%] rounded-xl overflow-hidden relative group cursor-pointer">
-                        <img src={bannerPromo1} alt="Promoção contas de jogos" className="w-full h-[120px] sm:h-[160px] object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
-                        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent flex items-center px-4 sm:px-8">
-                          <div>
-                            <p className="text-[9px] sm:text-xs font-bold text-primary uppercase tracking-widest mb-0.5 sm:mb-1">🎮 Oferta Especial</p>
-                            <h3 className="text-sm sm:text-xl lg:text-2xl font-display font-black text-foreground leading-tight">
-                              CONTAS PREMIUM<br />
-                              <span className="text-primary">COM ATÉ 40% OFF</span>
-                            </h3>
-                            <p className="text-[8px] sm:text-xs text-muted-foreground mt-1 hidden sm:block">Contas raras com itens exclusivos</p>
-                          </div>
-                        </div>
-                      </div>
-                      {/* Banner 2 - Guerreiro */}
-                      <div className="shrink-0 w-[85%] sm:w-[49%] rounded-xl overflow-hidden relative group cursor-pointer">
-                        <img src={bannerPromo2} alt="Promoção contas épicas" className="w-full h-[120px] sm:h-[160px] object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
-                        <div className="absolute inset-0 bg-gradient-to-l from-black/80 via-black/50 to-transparent flex items-center justify-end px-4 sm:px-8">
-                          <div className="text-right">
-                            <p className="text-[9px] sm:text-xs font-bold text-purple-400 uppercase tracking-widest mb-0.5 sm:mb-1">⚔️ Contas Lendárias</p>
-                            <h3 className="text-sm sm:text-xl lg:text-2xl font-display font-black text-foreground leading-tight">
-                              SKINS EXCLUSIVAS<br />
-                              <span className="text-purple-400">EDIÇÃO LIMITADA</span>
-                            </h3>
-                            <p className="text-[8px] sm:text-xs text-muted-foreground mt-1 hidden sm:block">Valorant, Free Fire, Fortnite e mais</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
                     {games.length > 0 && (
                       <div>
                         <div className="flex items-center justify-between mb-3">
@@ -392,7 +401,7 @@ export default function Index() {
       {/* Trust Section */}
       <section className="py-10 px-4 order-5">
         <div className="container mx-auto">
-          <div className="card-surface rounded-2xl p-5 sm:p-8">
+          <div className="rounded-2xl border border-border bg-muted p-5 sm:p-8">
             <div className="grid grid-cols-3 gap-4 sm:gap-8 text-center">
               {[
                 { icon: <Shield className="h-5 w-5 sm:h-7 sm:w-7" />, value: "100%", label: "Escrow Seguro" },
