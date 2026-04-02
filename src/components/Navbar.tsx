@@ -5,6 +5,7 @@ import { Search, Menu, X, User, LogOut, LayoutDashboard, Plus, Store, ShoppingBa
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
+import logoFroiv from "@/assets/logo-froiv.png";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem,
   DropdownMenuSeparator, DropdownMenuTrigger
@@ -28,11 +29,8 @@ export default function Navbar() {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background border-b border-border">
       <div className="container mx-auto flex items-center justify-between h-14 md:h-16 px-4 gap-4">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-1.5 shrink-0">
-          <span className="text-primary text-xl">⚡</span>
-          <span className="font-display text-lg font-bold tracking-tight text-foreground">
-            Froiv
-          </span>
+        <Link to="/" className="flex items-center shrink-0">
+          <img src={logoFroiv} alt="Froiv" className="h-8 md:h-9" />
         </Link>
 
         {/* Desktop nav links */}

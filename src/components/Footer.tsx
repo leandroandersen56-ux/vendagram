@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
 import PlatformIcon from "@/components/PlatformIcon";
+import logoFroiv from "@/assets/logo-froiv.png";
 
 interface CollapsibleSectionProps {
   title: string;
@@ -35,9 +36,8 @@ export default function Footer() {
 
         <div className="hidden sm:grid sm:grid-cols-4 gap-8">
           <div>
-            <div className="flex items-center gap-1.5 mb-3">
-              <span className="text-primary text-lg">⚡</span>
-              <span className="font-display text-base font-bold tracking-tight text-foreground">Froiv</span>
+            <div className="mb-3">
+              <img src={logoFroiv} alt="Froiv" className="h-7" />
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed mb-5 max-w-[220px]">
               A plataforma mais segura para comprar e vender contas digitais com escrow automático.
@@ -131,9 +131,8 @@ export default function Footer() {
             </div>
 
             <div className="text-center">
-              <div className="flex items-center gap-1.5 justify-center">
-                <span className="text-primary text-sm">⚡</span>
-                <span className="font-display text-sm font-bold tracking-tight text-foreground">Froiv</span>
+              <div className="flex items-center justify-center">
+                <img src={logoFroiv} alt="Froiv" className="h-5" />
               </div>
               <p className="text-[10px] text-muted-foreground mt-1">
                 © {new Date().getFullYear()} Froiv. Todos os direitos reservados.
