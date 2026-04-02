@@ -262,7 +262,7 @@ export default function ListingDetail() {
                   {originalPrice && (
                     <p className="text-sm text-muted-foreground line-through">R$ {originalPrice}</p>
                   )}
-                  <p className="text-3xl font-display font-extrabold text-foreground">{formatBRL(listing.price)}</p>
+                  <p className="text-3xl font-display font-semibold text-foreground">{formatBRL(listing.price)}</p>
                 </div>
 
                 <Button
