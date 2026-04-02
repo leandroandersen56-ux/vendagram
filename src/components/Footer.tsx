@@ -131,9 +131,8 @@ export default function Footer() {
             </div>
 
             <div className="text-center">
-              <div className="flex items-center gap-1.5 justify-center">
-                <span className="text-primary text-sm">⚡</span>
-                <span className="font-display text-sm font-bold tracking-tight text-foreground">Froiv</span>
+              <div className="flex items-center justify-center">
+                <img src={logoFroiv} alt="Froiv" className="h-5" />
               </div>
               <p className="text-[10px] text-muted-foreground mt-1">
                 © {new Date().getFullYear()} Froiv. Todos os direitos reservados.
