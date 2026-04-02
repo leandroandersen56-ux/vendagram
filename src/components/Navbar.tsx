@@ -5,6 +5,7 @@ import { Search, Menu, X, User, LogOut, LayoutDashboard, Plus, Store, ShoppingBa
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
+import logoFroiv from "@/assets/logo-froiv.png";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem,
   DropdownMenuSeparator, DropdownMenuTrigger
