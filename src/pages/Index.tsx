@@ -111,7 +111,7 @@ export default function Index() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.1 }}
-            className="text-3xl sm:text-5xl font-display font-extrabold text-foreground leading-tight"
+            className="text-3xl sm:text-5xl font-display font-semibold text-foreground leading-tight"
           >
             Compre e venda contas com{" "}
             <span className="text-gradient-primary">total segurança</span>
