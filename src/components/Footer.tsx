@@ -36,9 +36,8 @@ export default function Footer() {
 
         <div className="hidden sm:grid sm:grid-cols-4 gap-8">
           <div>
-            <div className="flex items-center gap-1.5 mb-3">
-              <span className="text-primary text-lg">⚡</span>
-              <span className="font-display text-base font-bold tracking-tight text-foreground">Froiv</span>
+            <div className="mb-3">
+              <img src={logoFroiv} alt="Froiv" className="h-7" />
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed mb-5 max-w-[220px]">
               A plataforma mais segura para comprar e vender contas digitais com escrow automático.
