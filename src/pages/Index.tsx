@@ -408,21 +408,24 @@ export default function Index() {
       </section>
 
       {/* Trust Section */}
-      <section className="py-10 px-4 order-5">
-        <div className="container mx-auto">
-          <div className="rounded-2xl border border-border bg-muted p-5 sm:p-8">
-            <div className="grid grid-cols-3 gap-4 sm:gap-8 text-center">
+      <section className="py-10 sm:py-14 px-4 order-5">
+        <div className="container mx-auto max-w-3xl">
+          <div className="rounded-3xl bg-gradient-to-br from-primary to-primary-dark p-6 sm:p-10 text-white">
+            <h2 className="text-center text-base sm:text-xl font-bold font-display mb-6 sm:mb-8">
+              Por que escolher a Froiv?
+            </h2>
+            <div className="grid grid-cols-3 gap-4 sm:gap-8">
               {[
-                { icon: <Shield className="h-5 w-5 sm:h-7 sm:w-7" />, value: "100%", label: "Escrow Seguro" },
-                { icon: <Clock className="h-5 w-5 sm:h-7 sm:w-7" />, value: "24h", label: "Garantia" },
-                { icon: <CheckCircle2 className="h-5 w-5 sm:h-7 sm:w-7" />, value: "10%", label: "Taxa Fixa" },
+                { icon: <Shield className="h-5 w-5 sm:h-6 sm:w-6" />, value: "100%", label: "Escrow Seguro" },
+                { icon: <Clock className="h-5 w-5 sm:h-6 sm:w-6" />, value: "24h", label: "Garantia" },
+                { icon: <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6" />, value: "10%", label: "Taxa Fixa" },
               ].map((stat) => (
-                <div key={stat.label} className="flex flex-col items-center gap-1.5 sm:gap-2">
-                  <div className="h-10 w-10 sm:h-14 sm:w-14 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                <div key={stat.label} className="flex flex-col items-center gap-2 sm:gap-3 text-center">
+                  <div className="h-11 w-11 sm:h-14 sm:w-14 rounded-2xl bg-white/15 flex items-center justify-center backdrop-blur-sm">
                     {stat.icon}
                   </div>
-                  <p className="text-lg sm:text-2xl font-display font-bold text-foreground">{stat.value}</p>
-                  <p className="text-[10px] sm:text-xs text-muted-foreground font-medium">{stat.label}</p>
+                  <p className="text-xl sm:text-3xl font-extrabold font-display">{stat.value}</p>
+                  <p className="text-[10px] sm:text-xs font-medium text-white/75">{stat.label}</p>
                 </div>
               ))}
             </div>
