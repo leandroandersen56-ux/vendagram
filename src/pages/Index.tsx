@@ -179,17 +179,26 @@ export default function Index() {
       </section>
 
       {/* How it works */}
-      <section className="py-6 sm:py-14 px-4 order-4">
-        <div className="container mx-auto">
-          <h2 className="text-sm sm:text-lg font-bold text-foreground mb-4 sm:mb-8 uppercase tracking-widest text-center font-display">
-            Como Funciona
-          </h2>
-          <div className="grid grid-cols-4 gap-2 sm:gap-5">
+      <section className="py-10 sm:py-16 px-4 order-4">
+        <div className="container mx-auto max-w-4xl">
+          <div className="text-center mb-8 sm:mb-12">
+            <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 text-primary text-[10px] sm:text-xs font-semibold px-3 py-1 mb-3">
+              Simples e seguro
+            </span>
+            <h2 className="text-xl sm:text-3xl font-bold text-foreground font-display">
+              Como funciona
+            </h2>
+            <p className="text-xs sm:text-sm text-muted-foreground mt-1.5 max-w-md mx-auto">
+              Em 4 passos simples você compra ou vende com total segurança
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6">
             {[
-              { icon: <Search className="h-4 w-4 sm:h-6 sm:w-6" />, title: "Encontre", desc: "Busque por plataforma e preço", num: "1" },
-              { icon: <Shield className="h-4 w-4 sm:h-6 sm:w-6" />, title: "Compre", desc: "Pix retido em escrow", num: "2" },
-              { icon: <CheckCircle2 className="h-4 w-4 sm:h-6 sm:w-6" />, title: "Verifique", desc: "Valide a conta recebida", num: "3" },
-              { icon: <Zap className="h-4 w-4 sm:h-6 sm:w-6" />, title: "Pronto!", desc: "Pagamento liberado", num: "4" },
+              { icon: <Search className="h-5 w-5 sm:h-6 sm:w-6" />, title: "Encontre", desc: "Busque por plataforma e preço", num: "01" },
+              { icon: <Shield className="h-5 w-5 sm:h-6 sm:w-6" />, title: "Compre", desc: "Pix retido em escrow", num: "02" },
+              { icon: <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6" />, title: "Verifique", desc: "Valide a conta recebida", num: "03" },
+              { icon: <Zap className="h-5 w-5 sm:h-6 sm:w-6" />, title: "Pronto!", desc: "Pagamento liberado", num: "04" },
             ].map((step, i) => (
               <motion.div
                 key={step.title}
@@ -197,16 +206,16 @@ export default function Index() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1, duration: 0.4 }}
                 viewport={{ once: true }}
-                className="rounded-2xl border border-border bg-background p-2.5 sm:p-6 text-center relative overflow-hidden group hover:border-primary/30 transition-all"
+                className="relative rounded-2xl bg-muted/60 border border-border p-4 sm:p-6 text-center group hover:border-primary/40 hover:bg-primary/5 transition-all duration-300"
               >
-                <div className="absolute top-1.5 right-2 sm:top-3 sm:right-3 text-[9px] sm:text-xs font-display font-bold text-primary/30">
+                <span className="absolute top-3 right-3 text-[10px] sm:text-xs font-bold text-primary/25 font-display">
                   {step.num}
-                </div>
-                <div className="h-9 w-9 sm:h-14 sm:w-14 rounded-xl bg-primary/10 flex items-center justify-center text-primary mx-auto mb-2 sm:mb-3">
+                </span>
+                <div className="h-11 w-11 sm:h-14 sm:w-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mx-auto mb-3 group-hover:bg-primary group-hover:text-white transition-all duration-300">
                   {step.icon}
                 </div>
-                <h3 className="text-[10px] sm:text-sm font-bold text-foreground mb-0.5 sm:mb-1">{step.title}</h3>
-                <p className="text-[8px] sm:text-xs text-muted-foreground leading-tight">{step.desc}</p>
+                <h3 className="text-xs sm:text-sm font-bold text-foreground mb-1">{step.title}</h3>
+                <p className="text-[10px] sm:text-xs text-muted-foreground leading-relaxed">{step.desc}</p>
               </motion.div>
             ))}
           </div>
