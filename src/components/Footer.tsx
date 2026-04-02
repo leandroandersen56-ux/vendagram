@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
 import PlatformIcon from "@/components/PlatformIcon";
+import logoFroiv from "@/assets/logo-froiv.png";
 
 interface CollapsibleSectionProps {
   title: string;
