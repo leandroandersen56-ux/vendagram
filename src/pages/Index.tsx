@@ -130,7 +130,7 @@ export default function Index() {
                 />
                 {/* Overlay with text */}
                 <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent flex items-end sm:items-center">
-                  <div className="p-4 sm:p-8 md:p-12 max-w-lg">
+                  <div className="px-12 sm:px-16 md:px-20 pb-6 sm:pb-0 sm:py-8 max-w-lg">
                     <h2 className="text-white text-lg sm:text-2xl md:text-3xl font-bold leading-tight drop-shadow-lg">
                       {b.title}
                     </h2>
