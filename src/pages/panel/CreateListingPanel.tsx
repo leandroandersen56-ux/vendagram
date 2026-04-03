@@ -493,11 +493,40 @@ export default function CreateListing() {
         )}
 
         {/* ── Screenshots ── */}
-        <div className="space-y-1.5">
-          <Label className="text-muted-foreground text-xs uppercase tracking-wide">Screenshots (opcional)</Label>
-          <div className="border-2 border-dashed border-border rounded-lg p-4 text-center cursor-pointer hover:border-primary/30 transition-colors">
-            <Upload className="h-5 w-5 text-muted-foreground mx-auto mb-1" />
-            <p className="text-xs text-muted-foreground">Arraste ou clique</p>
+        <div className="space-y-2">
+          <Label className="text-muted-foreground text-xs uppercase tracking-wide">Screenshots (até 6)</Label>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            multiple
+            className="hidden"
+            onChange={handleFileSelect}
+          />
+          
+          <div className="grid grid-cols-3 gap-2">
+            {screenshots.map((s, i) => (
+              <div key={i} className="relative aspect-square rounded-xl overflow-hidden border border-border bg-muted">
+                <img src={s.preview} alt="" className="w-full h-full object-cover" />
+                <button
+                  type="button"
+                  onClick={() => removeScreenshot(i)}
+                  className="absolute top-1 right-1 h-6 w-6 rounded-full bg-foreground/70 text-background flex items-center justify-center"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </div>
+            ))}
+            {screenshots.length < 6 && (
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="aspect-square rounded-xl border-2 border-dashed border-border flex flex-col items-center justify-center gap-1 hover:border-primary/40 transition-colors active:scale-95"
+              >
+                <Upload className="h-5 w-5 text-muted-foreground" />
+                <span className="text-[10px] text-muted-foreground">Adicionar</span>
+              </button>
+            )}
           </div>
         </div>
 
