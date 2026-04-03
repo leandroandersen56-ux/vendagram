@@ -104,7 +104,18 @@ export default function Index() {
     fetchListings();
   }, []);
 
-  const filtered = listings;
+  const filtered = listings.filter((l) => {
+    if (selectedPlatform && l.platform !== selectedPlatform) return false;
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      if (!l.title.toLowerCase().includes(q) && !l.description.toLowerCase().includes(q)) return false;
+    }
+    return true;
+  }).sort((a, b) => {
+    if (sortBy === "price_asc") return a.price - b.price;
+    if (sortBy === "price_desc") return b.price - a.price;
+    return 0;
+  });
 
   return (
     <div className="min-h-screen bg-[hsl(var(--secondary))] flex flex-col">
