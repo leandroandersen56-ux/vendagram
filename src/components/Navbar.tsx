@@ -338,7 +338,7 @@ function NotifDropdown({
       exit={{ opacity: 0, y: -8, scale: 0.95 }}
       transition={{ duration: 0.15 }}
       className={`absolute z-50 bg-white rounded-xl shadow-lg border border-[hsl(var(--border))] overflow-hidden ${
-        mobile ? "right-0 top-12 w-[calc(100vw-32px)] max-w-sm" : "right-0 top-12 w-80"
+        mobile ? "right-[-8px] top-11 w-[calc(100vw-32px)] max-w-sm" : "right-0 top-11 w-80"
       }`}
     >
       {/* Header */}
