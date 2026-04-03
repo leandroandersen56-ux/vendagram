@@ -138,16 +138,18 @@ export default function Index() {
                 />
                 {/* Overlay with text */}
                 <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent flex items-end sm:items-center">
-                  <div className="px-12 sm:px-16 md:px-20 pb-6 sm:pb-0 sm:py-8 max-w-lg">
-                    <h2 className="text-white text-lg sm:text-2xl md:text-3xl font-bold leading-tight drop-shadow-lg">
-                      {b.title}
-                    </h2>
-                    <p className="text-white/80 text-xs sm:text-sm mt-1 drop-shadow">{b.subtitle}</p>
-                    <Link to={b.link}>
-                      <Button size="sm" className="mt-3 bg-white text-foreground hover:bg-white/90 rounded-full text-xs font-semibold px-4 shadow-lg">
-                        {b.cta} <ArrowRight className="h-3 w-3 ml-1" />
-                      </Button>
-                    </Link>
+                  <div className="container mx-auto px-4 pb-6 sm:pb-0">
+                    <div className="max-w-md pl-6 sm:pl-10 md:pl-14">
+                      <h2 className="text-white text-lg sm:text-2xl md:text-3xl font-bold leading-tight drop-shadow-lg">
+                        {b.title}
+                      </h2>
+                      <p className="text-white/80 text-xs sm:text-sm mt-1 drop-shadow">{b.subtitle}</p>
+                      <Link to={b.link}>
+                        <Button size="sm" className="mt-3 bg-white text-foreground hover:bg-white/90 rounded-full text-xs font-semibold px-4 shadow-lg">
+                          {b.cta} <ArrowRight className="h-3 w-3 ml-1" />
+                        </Button>
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </div>
