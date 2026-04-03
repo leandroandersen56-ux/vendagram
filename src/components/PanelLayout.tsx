@@ -147,8 +147,12 @@ export default function PanelLayout() {
       {/* Mobile header */}
       <div className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-background/95 backdrop-blur z-40 flex items-center justify-between px-4 border-b border-border">
         <div className="flex items-center gap-3">
-          <Button variant="ghost" size="icon" className="h-9 w-9 rounded-xl" onClick={() => setSidebarOpen(true)}>
-            <Menu className="h-5 w-5" />
+          <Button variant="ghost" size="icon" className="h-10 w-10 rounded-xl" onClick={() => setSidebarOpen(true)}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="4" y1="6" x2="20" y2="6" />
+              <line x1="4" y1="12" x2="16" y2="12" />
+              <line x1="4" y1="18" x2="12" y2="18" />
+            </svg>
           </Button>
           <img src={logoFroiv} alt="Froiv" className="h-6" />
         </div>
