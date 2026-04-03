@@ -17,13 +17,14 @@ export default function AuthModal() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [selectedRole, setSelectedRole] = useState<"buyer" | "seller" | null>(null);
 
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (showAuthModal && authRole) {
-      setMode("register");
-    }
+    if (!showAuthModal) return;
+    setSelectedRole(authRole || null);
+    if (authRole) setMode("register");
   }, [showAuthModal, authRole]);
 
 
@@ -36,7 +37,7 @@ export default function AuthModal() {
           email,
           password,
           options: {
-            data: { name: name || email.split("@")[0] },
+            data: { name: name || email.split("@")[0], role: selectedRole || "buyer" },
             emailRedirectTo: window.location.origin,
           },
         });
@@ -68,6 +69,7 @@ export default function AuthModal() {
     setName("");
     setEmail("");
     setPassword("");
+    setSelectedRole(authRole || null);
   };
 
   if (!showAuthModal) return null;
@@ -97,22 +99,12 @@ export default function AuthModal() {
             <X className="h-5 w-5" />
           </Button>
 
-          {/* Header with role badge */}
+          {/* Header with role selector */}
           <div className="flex flex-col items-center gap-2 pt-6">
             <div className="flex items-center gap-1.5">
               <span className="text-primary text-xl">⚡</span>
               <span className="font-display text-lg font-bold text-foreground">Froiv</span>
             </div>
-            {authRole && mode === "register" && (
-              <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${
-                authRole === "buyer" 
-                  ? "bg-primary/10 text-primary" 
-                  : "bg-accent text-accent-foreground"
-              }`}>
-                {authRole === "buyer" ? <ShoppingCart className="h-3 w-3" /> : <Tag className="h-3 w-3" />}
-                {authRole === "buyer" ? "Cadastro de Comprador" : "Cadastro de Vendedor"}
-              </div>
-            )}
           </div>
 
           {/* Tabs as pills */}
@@ -146,8 +138,39 @@ export default function AuthModal() {
             <p className="text-sm text-muted-foreground mb-5 text-center">
               {mode === "login"
                 ? "Bem-vindo de volta! Insira seus dados"
-                : "Crie sua conta e comece a negociar"}
+                : "Escolha seu perfil e crie sua conta para começar"}
             </p>
+
+            {mode === "register" && (
+              <div className="grid grid-cols-2 gap-3 mb-5">
+                <button
+                  type="button"
+                  onClick={() => setSelectedRole("buyer")}
+                  className={`rounded-2xl border p-4 text-left transition-all ${
+                    selectedRole === "buyer"
+                      ? "border-primary bg-primary/10 shadow-sm"
+                      : "border-border bg-muted/40 hover:bg-muted"
+                  }`}
+                >
+                  <ShoppingCart className="h-5 w-5 text-primary mb-2" />
+                  <p className="text-sm font-semibold text-foreground">Comprador</p>
+                  <p className="text-xs text-muted-foreground">Comprar contas com segurança</p>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedRole("seller")}
+                  className={`rounded-2xl border p-4 text-left transition-all ${
+                    selectedRole === "seller"
+                      ? "border-primary bg-primary/10 shadow-sm"
+                      : "border-border bg-muted/40 hover:bg-muted"
+                  }`}
+                >
+                  <Tag className="h-5 w-5 text-primary mb-2" />
+                  <p className="text-sm font-semibold text-foreground">Vendedor</p>
+                  <p className="text-xs text-muted-foreground">Anunciar e vender suas contas</p>
+                </button>
+              </div>
+            )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
               {mode === "register" && (
@@ -201,8 +224,8 @@ export default function AuthModal() {
                 </button>
               )}
 
-              <Button variant="hero" type="submit" className="w-full h-11" disabled={loading}>
-                {loading ? "Aguarde..." : mode === "login" ? "Entrar" : "Criar Conta"}
+              <Button variant="hero" type="submit" className="w-full h-11" disabled={loading || (mode === "register" && !selectedRole)}>
+                {loading ? "Aguarde..." : mode === "login" ? "Entrar" : `Criar Conta${selectedRole === "seller" ? " como Vendedor" : selectedRole === "buyer" ? " como Comprador" : ""}`}
               </Button>
             </form>
 
