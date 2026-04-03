@@ -81,7 +81,6 @@ export default function Index() {
 
   const filtered = listings
     .filter((l) => {
-      if (platform !== "all" && l.platform !== platform) return false;
       if (search && !l.title.toLowerCase().includes(search.toLowerCase())) return false;
       return true;
     })
