@@ -207,21 +207,53 @@ export default function Index() {
         <section className="px-4 py-3 bg-background border-b border-border">
           <div className="container mx-auto">
             <div className="flex items-center gap-3 overflow-x-auto scrollbar-hide pb-1 md:justify-between">
-              <Link to="/marketplace?filter=true">
-                <div className="flex flex-col items-center gap-1 min-w-[56px] group">
-                  <div className="h-11 w-11 rounded-full bg-muted flex items-center justify-center text-foreground group-hover:bg-primary/10 transition-colors">
+              {/* Filter dropdown button */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowFilterMenu(!showFilterMenu)}
+                  className="flex flex-col items-center gap-1 min-w-[56px] group"
+                >
+                  <div className={`h-11 w-11 rounded-full flex items-center justify-center transition-colors ${showFilterMenu ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground group-hover:bg-primary/10'}`}>
                     <SlidersHorizontal className="h-5 w-5" />
                   </div>
                   <span className="text-[10px] font-medium text-foreground whitespace-nowrap">Filtro</span>
-                </div>
-              </Link>
+                </button>
+
+                {showFilterMenu && (
+                  <>
+                    <div className="fixed inset-0 z-30" onClick={() => setShowFilterMenu(false)} />
+                    <div className="absolute top-full left-0 mt-2 z-40 bg-background border border-border rounded-xl shadow-lg p-3 min-w-[180px]">
+                      <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold mb-2">Ordenar por</p>
+                      {([
+                        { key: "recent" as const, label: "Mais recentes" },
+                        { key: "price_asc" as const, label: "Menor preço" },
+                        { key: "price_desc" as const, label: "Maior preço" },
+                      ]).map((opt) => (
+                        <button
+                          key={opt.key}
+                          onClick={() => { setSortBy(opt.key); setShowFilterMenu(false); }}
+                          className={`w-full text-left px-3 py-2 rounded-lg text-xs transition-colors ${sortBy === opt.key ? 'bg-primary/10 text-primary font-semibold' : 'text-foreground hover:bg-muted'}`}
+                        >
+                          {opt.label}
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {/* Platform filters (local) */}
               {PLATFORMS.map((p) => (
-                <Link key={p.id} to={`/marketplace?platform=${p.id}`} className="flex flex-col items-center gap-1 min-w-[56px] group">
-                  <div className="h-11 w-11 rounded-full bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+                <button
+                  key={p.id}
+                  onClick={() => setSelectedPlatform(selectedPlatform === p.id ? null : p.id)}
+                  className="flex flex-col items-center gap-1 min-w-[56px] group"
+                >
+                  <div className={`h-11 w-11 rounded-full flex items-center justify-center transition-colors ${selectedPlatform === p.id ? 'bg-primary/15 ring-2 ring-primary' : 'bg-muted group-hover:bg-primary/10'}`}>
                     <PlatformIcon platformId={p.id} size={22} />
                   </div>
-                  <span className="text-[10px] font-medium text-foreground whitespace-nowrap">{p.name}</span>
-                </Link>
+                  <span className={`text-[10px] font-medium whitespace-nowrap ${selectedPlatform === p.id ? 'text-primary' : 'text-foreground'}`}>{p.name}</span>
+                </button>
               ))}
               <button
                 onClick={handleSell}
@@ -233,6 +265,16 @@ export default function Index() {
                 <span className="text-[10px] font-medium text-primary whitespace-nowrap">Vender</span>
               </button>
             </div>
+
+            {/* Active filter indicator */}
+            {selectedPlatform && (
+              <div className="flex items-center gap-2 mt-2">
+                <span className="text-[11px] bg-primary/10 text-primary px-3 py-1 rounded-full font-medium flex items-center gap-1">
+                  {PLATFORMS.find(p => p.id === selectedPlatform)?.name}
+                  <button onClick={() => setSelectedPlatform(null)} className="ml-1 hover:text-primary/70">✕</button>
+                </span>
+              </div>
+            )}
           </div>
         </section>
 
