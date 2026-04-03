@@ -425,6 +425,8 @@ function ProductDescription({
           </div>
         </div>
       )}
+
+      <Footer />
     </div>
   );
 }
