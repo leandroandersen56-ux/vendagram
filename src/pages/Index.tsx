@@ -5,7 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import {
   ArrowRight, Search, Loader2, Shield, CheckCircle2, Clock, Zap,
-  Gamepad2, Smartphone, ChevronLeft, ChevronRight, Plus
+  Gamepad2, Smartphone, ChevronLeft, ChevronRight, Plus, SlidersHorizontal
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -173,7 +173,15 @@ export default function Index() {
                   <div className="h-11 w-11 rounded-full bg-primary flex items-center justify-center text-primary-foreground group-hover:shadow-md transition-shadow">
                     <Search className="h-5 w-5" />
                   </div>
-                  <span className="text-[10px] font-semibold text-primary whitespace-nowrap">Todos</span>
+                  <span className="text-[10px] font-semibold text-primary whitespace-nowrap">Buscar</span>
+                </div>
+              </Link>
+              <Link to="/marketplace?filter=true">
+                <div className="flex flex-col items-center gap-1 min-w-[56px] group">
+                  <div className="h-11 w-11 rounded-full bg-muted flex items-center justify-center text-foreground group-hover:bg-primary/10 transition-colors">
+                    <SlidersHorizontal className="h-5 w-5" />
+                  </div>
+                  <span className="text-[10px] font-medium text-foreground whitespace-nowrap">Filtro</span>
                 </div>
               </Link>
               {PLATFORMS.map((p) => (

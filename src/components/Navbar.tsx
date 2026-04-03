@@ -49,16 +49,18 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Search bar (desktop) */}
-        <div className="hidden md:flex flex-1 max-w-md">
-          <div className="relative w-full">
-            <Input
-              placeholder="Buscar contas..."
-              className="w-full bg-muted border-border h-10 pl-4 pr-10 text-sm placeholder:text-muted-foreground rounded-full"
-            />
-            <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        {/* Search bar (desktop) - hidden on home */}
+        {location.pathname !== "/" && (
+          <div className="hidden md:flex flex-1 max-w-md">
+            <div className="relative w-full">
+              <Input
+                placeholder="Buscar contas..."
+                className="w-full bg-muted border-border h-10 pl-4 pr-10 text-sm placeholder:text-muted-foreground rounded-full"
+              />
+              <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Right side */}
         <div className="hidden md:flex items-center gap-3 shrink-0">
@@ -106,9 +108,11 @@ export default function Navbar() {
 
         {/* Mobile: right icons */}
         <div className="flex items-center gap-2 md:hidden">
-          <button onClick={() => {}} className="h-9 w-9 flex items-center justify-center text-primary">
-            <Search className="h-5 w-5" />
-          </button>
+          {location.pathname !== "/" && (
+            <button onClick={() => navigate("/marketplace")} className="h-9 w-9 flex items-center justify-center text-primary">
+              <Search className="h-5 w-5" />
+            </button>
+          )}
           <Button variant="ghost" size="icon" className="text-primary" onClick={() => setMobileOpen(!mobileOpen)}>
             {mobileOpen ? <X /> : <Menu />}
           </Button>
