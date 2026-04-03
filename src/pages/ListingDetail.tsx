@@ -425,7 +425,6 @@ function ProductDescription({
           </div>
         </div>
       )}
-    </div>
 
       <Footer />
     </div>
