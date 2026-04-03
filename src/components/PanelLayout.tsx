@@ -6,6 +6,7 @@ import {
   LogOut, Shield, ChevronLeft, Menu, X, PlusCircle,
   ArrowDown, ArrowRight, ArrowUp, ScanLine
 } from "lucide-react";
+import logoFroiv from "@/assets/logo-froiv.png";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
