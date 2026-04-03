@@ -112,6 +112,11 @@ export default function Index() {
       const q = searchQuery.toLowerCase();
       if (!l.title.toLowerCase().includes(q) && !l.description.toLowerCase().includes(q)) return false;
     }
+    if (l.price < priceRange[0] || l.price > priceRange[1]) return false;
+    if (minFollowers > 0) {
+      const followers = Number(l.fields?.followers || l.fields?.seguidores || l.fields?.followers_count || 0);
+      if (followers < minFollowers) return false;
+    }
     return true;
   }).sort((a, b) => {
     if (sortBy === "price_asc") return a.price - b.price;
