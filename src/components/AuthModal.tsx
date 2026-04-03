@@ -224,8 +224,8 @@ export default function AuthModal() {
                 </button>
               )}
 
-              <Button variant="hero" type="submit" className="w-full h-11" disabled={loading}>
-                {loading ? "Aguarde..." : mode === "login" ? "Entrar" : "Criar Conta"}
+              <Button variant="hero" type="submit" className="w-full h-11" disabled={loading || (mode === "register" && !selectedRole)}>
+                {loading ? "Aguarde..." : mode === "login" ? "Entrar" : `Criar Conta${selectedRole === "seller" ? " como Vendedor" : selectedRole === "buyer" ? " como Comprador" : ""}`}
               </Button>
             </form>
 
