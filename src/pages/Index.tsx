@@ -204,7 +204,7 @@ export default function Index() {
               {/* Filter dropdown button */}
               <div className="relative">
                 <button
-                  onClick={() => setShowFilterMenu(!showFilterMenu)}
+                  onClick={(e) => { e.stopPropagation(); setShowFilterMenu(!showFilterMenu); }}
                   className="flex flex-col items-center gap-1 min-w-[56px] group"
                 >
                   <div className={`h-11 w-11 rounded-full flex items-center justify-center transition-colors ${showFilterMenu ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground group-hover:bg-primary/10'}`}>
