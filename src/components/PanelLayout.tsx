@@ -225,7 +225,7 @@ export default function PanelLayout() {
       </AnimatePresence>
 
       {/* Main content */}
-      <main className="flex-1 lg:ml-[260px] pt-14 lg:pt-16">
+      <main className="flex-1 lg:ml-[260px] pt-14 lg:pt-16 pb-16 sm:pb-0">
         <div className="p-4 sm:p-6 lg:px-8 lg:py-8 max-w-6xl">
           <Outlet />
         </div>
