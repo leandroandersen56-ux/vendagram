@@ -32,6 +32,9 @@ export default function Index() {
   const [loading, setLoading] = useState(true);
   const [bannerIdx, setBannerIdx] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedPlatform, setSelectedPlatform] = useState<string | null>(null);
+  const [showFilterMenu, setShowFilterMenu] = useState(false);
+  const [sortBy, setSortBy] = useState<"recent" | "price_asc" | "price_desc">("recent");
 
   const handleSell = () => {
     if (isAuthenticated) {
