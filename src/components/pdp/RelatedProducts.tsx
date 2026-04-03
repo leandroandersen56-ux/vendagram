@@ -30,7 +30,7 @@ export default function RelatedProducts({ currentId, category }: RelatedProducts
       <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 -mx-1 px-1">
         {all.map((listing) => (
           <div key={listing.id} className="flex-shrink-0 w-[160px]">
-            <ListingCard listing={listing} compact />
+            <ListingCard listing={listing} />
           </div>
         ))}
       </div>
