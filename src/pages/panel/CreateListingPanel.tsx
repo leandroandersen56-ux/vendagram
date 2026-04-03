@@ -129,6 +129,25 @@ export default function CreateListing() {
   const [items, setItems] = useState<string[]>([]);
   const [newItem, setNewItem] = useState("");
   const [loading, setLoading] = useState(false);
+  const [screenshots, setScreenshots] = useState<{ file: File; preview: string }[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    const newScreenshots = files.slice(0, 6 - screenshots.length).map((file) => ({
+      file,
+      preview: URL.createObjectURL(file),
+    }));
+    setScreenshots((prev) => [...prev, ...newScreenshots].slice(0, 6));
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const removeScreenshot = (index: number) => {
+    setScreenshots((prev) => {
+      URL.revokeObjectURL(prev[index].preview);
+      return prev.filter((_, i) => i !== index);
+    });
+  };
 
   const isGame = IS_GAME.includes(platform);
   const isSocial = IS_SOCIAL.includes(platform);
