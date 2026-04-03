@@ -148,15 +148,15 @@ export default function Index() {
             {/* Nav arrows */}
             <button
               onClick={() => goToBanner(-1)}
-              className="absolute left-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-white/80 backdrop-blur flex items-center justify-center shadow hover:bg-white transition z-10"
+              className="absolute left-2 top-1/2 -translate-y-1/2 h-6 w-6 rounded-full bg-black/20 flex items-center justify-center hover:bg-black/40 transition z-10"
             >
-              <ChevronLeft className="h-4 w-4 text-foreground" />
+              <ChevronLeft className="h-3.5 w-3.5 text-white/70" />
             </button>
             <button
               onClick={() => goToBanner(1)}
-              className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-white/80 backdrop-blur flex items-center justify-center shadow hover:bg-white transition z-10"
+              className="absolute right-2 top-1/2 -translate-y-1/2 h-6 w-6 rounded-full bg-black/20 flex items-center justify-center hover:bg-black/40 transition z-10"
             >
-              <ChevronRight className="h-4 w-4 text-foreground" />
+              <ChevronRight className="h-3.5 w-3.5 text-white/70" />
             </button>
 
             {/* Dots */}
