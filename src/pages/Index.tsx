@@ -190,7 +190,7 @@ export default function Index() {
         {/* === QUICK CATEGORIES === */}
         <section className="py-4">
           <div className="container mx-auto">
-            <div className="flex items-center gap-4 overflow-x-auto scrollbar-hide fade-edges pb-1">
+            <div className="flex items-center gap-4 overflow-x-auto scrollbar-hide fade-edges py-1 px-1">
               {QUICK_CATEGORIES.map((cat) => {
                 const IconComp = cat.icon;
                 return (
