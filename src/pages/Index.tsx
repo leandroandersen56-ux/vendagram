@@ -2,11 +2,11 @@ import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   ArrowRight, Search, Loader2, Shield, CheckCircle2, Clock, Zap,
-  Gamepad2, Smartphone, ChevronLeft, ChevronRight, Plus, SlidersHorizontal
+  Gamepad2, Smartphone, ChevronLeft, ChevronRight, SlidersHorizontal,
+  Flame
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -20,10 +20,32 @@ import bannerHero2 from "@/assets/banners/banner-hero-2.jpg";
 import bannerHero3 from "@/assets/banners/banner-hero-3.jpg";
 
 const BANNERS = [
-  { img: bannerHero1, title: "Contas de Redes Sociais", subtitle: "Instagram, TikTok, YouTube e mais", cta: "Ver contas", link: "/marketplace?type=social" },
+  { img: bannerHero1, title: "Compra 100% Segura", subtitle: "Pagamento protegido com escrow automático", cta: "Saiba mais", link: "/marketplace" },
   { img: bannerHero2, title: "Contas de Jogos", subtitle: "Free Fire, Valorant, Fortnite e mais", cta: "Ver contas", link: "/marketplace?type=games" },
-  { img: bannerHero3, title: "Compra 100% Segura", subtitle: "Pagamento protegido com escrow", cta: "Saiba mais", link: "/marketplace" },
+  { img: bannerHero3, title: "Entrega Imediata", subtitle: "Receba sua conta em minutos", cta: "Explorar", link: "/marketplace?type=social" },
 ];
+
+const QUICK_CATEGORIES = [
+  { id: "free_fire", label: "Jogos", icon: Gamepad2, bg: "bg-primary-light", color: "text-primary" },
+  { id: "instagram", label: "Instagram", icon: () => <PlatformIcon platformId="instagram" size={22} />, bg: "bg-[#FFE4F0]", color: "text-[#E1306C]" },
+  { id: "tiktok", label: "TikTok", icon: () => <PlatformIcon platformId="tiktok" size={22} />, bg: "bg-[#F0F0F0]", color: "text-[#000]" },
+  { id: "youtube", label: "YouTube", icon: () => <PlatformIcon platformId="youtube" size={22} />, bg: "bg-[#FFE8E8]", color: "text-[#FF0000]" },
+  { id: "valorant", label: "Valorant", icon: () => <PlatformIcon platformId="valorant" size={22} />, bg: "bg-[#FFE8E8]", color: "text-[#FF4655]" },
+  { id: "fortnite", label: "Fortnite", icon: () => <PlatformIcon platformId="fortnite" size={22} />, bg: "bg-[#F0E8FF]", color: "text-[#9D4DBB]" },
+];
+
+function SkeletonCard() {
+  return (
+    <div className="bg-card rounded-lg border border-border overflow-hidden">
+      <div className="aspect-[4/3] skeleton-shimmer" />
+      <div className="p-3 space-y-2">
+        <div className="h-3 skeleton-shimmer rounded w-full" />
+        <div className="h-3 skeleton-shimmer rounded w-2/3" />
+        <div className="h-4 skeleton-shimmer rounded w-1/2 mt-3" />
+      </div>
+    </div>
+  );
+}
 
 export default function Index() {
   const { isAuthenticated, openAuth } = useAuth();
@@ -39,16 +61,12 @@ export default function Index() {
   const [minFollowers, setMinFollowers] = useState<number>(0);
 
   const handleSell = () => {
-    if (isAuthenticated) {
-      navigate("/painel/anuncios/novo");
-    } else {
-      openAuth("/painel/anuncios/novo");
-    }
+    if (isAuthenticated) navigate("/painel/anuncios/novo");
+    else openAuth("/painel/anuncios/novo");
   };
 
-  // Auto-rotate banners
   useEffect(() => {
-    const timer = setInterval(() => setBannerIdx((i) => (i + 1) % BANNERS.length), 5000);
+    const timer = setInterval(() => setBannerIdx((i) => (i + 1) % BANNERS.length), 4000);
     return () => clearInterval(timer);
   }, []);
 
@@ -67,36 +85,23 @@ export default function Index() {
 
       if (!error && data && data.length > 0) {
         const mapped: Listing[] = data.map((row) => ({
-          id: row.id,
-          sellerId: row.seller_id,
-          sellerName: "Vendedor",
+          id: row.id, sellerId: row.seller_id, sellerName: "Vendedor",
           sellerRating: parseFloat((4.5 + Math.random() * 0.5).toFixed(1)),
-          sellerSales: 0,
-          platform: row.category,
-          title: row.title,
-          description: row.description || "",
-          price: Number(row.price),
-          status: row.status as Listing["status"],
-          screenshots: row.screenshots || [],
+          sellerSales: 0, platform: row.category, title: row.title,
+          description: row.description || "", price: Number(row.price),
+          status: row.status as Listing["status"], screenshots: row.screenshots || [],
           fields: (row.highlights && typeof row.highlights === "object" && !Array.isArray(row.highlights))
-            ? (row.highlights as Record<string, string | number | boolean>)
-            : {},
+            ? (row.highlights as Record<string, string | number | boolean>) : {},
           createdAt: row.created_at,
         }));
 
         const GAME_PLATFORMS = ["free_fire", "valorant", "fortnite", "roblox", "clash_royale"];
-        const isGamePlatform = (platformId: string) => GAME_PLATFORMS.includes(platformId);
-
+        const isGamePlatform = (p: string) => GAME_PLATFORMS.includes(p);
         const dbGames = mapped.filter((l) => isGamePlatform(l.platform));
         const dbSocial = mapped.filter((l) => !isGamePlatform(l.platform));
-
-        const neededGames = Math.max(0, 5 - dbGames.length);
-        const neededSocial = Math.max(0, 5 - dbSocial.length);
-
         const existingIds = new Set(mapped.map((l) => String(l.id)));
-        const gameFillers = MOCK_LISTINGS.filter((m) => isGamePlatform(m.platform) && !existingIds.has(String(m.id))).slice(0, neededGames);
-        const socialFillers = MOCK_LISTINGS.filter((m) => !isGamePlatform(m.platform) && !existingIds.has(String(m.id))).slice(0, neededSocial);
-
+        const gameFillers = MOCK_LISTINGS.filter((m) => isGamePlatform(m.platform) && !existingIds.has(String(m.id))).slice(0, Math.max(0, 5 - dbGames.length));
+        const socialFillers = MOCK_LISTINGS.filter((m) => !isGamePlatform(m.platform) && !existingIds.has(String(m.id))).slice(0, Math.max(0, 5 - dbSocial.length));
         setListings([...mapped, ...gameFillers, ...socialFillers]);
       } else {
         setListings(MOCK_LISTINGS);
@@ -124,332 +129,303 @@ export default function Index() {
     return 0;
   });
 
+  const GAME_PLATFORMS = ['free_fire', 'valorant', 'fortnite', 'roblox', 'clash_royale'];
+  const games = filtered.filter(l => GAME_PLATFORMS.includes(l.platform));
+  const social = filtered.filter(l => !GAME_PLATFORMS.includes(l.platform));
+
   return (
-    <div className="min-h-screen bg-[hsl(var(--secondary))] flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
       <Navbar />
 
-      <div className="pt-14 md:pt-16">
+      <div className="pt-14 pb-16 sm:pb-0">
         {/* === BANNER CAROUSEL === */}
-        <section className="relative w-full">
-          <div className="relative overflow-hidden aspect-[2.2/1] sm:aspect-[3/1] md:aspect-[3.5/1]">
-            {BANNERS.map((b, i) => (
-              <div
-                key={i}
-                className={`absolute inset-0 transition-opacity duration-500 ${i === bannerIdx ? "opacity-100" : "opacity-0 pointer-events-none"}`}
-              >
-                <img
-                  src={b.img}
-                  alt={b.title}
-                  className="w-full h-full object-cover"
-                  {...(i === 0 ? {} : { loading: "lazy" as const })}
-                />
-                {/* Overlay with text */}
-                <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent flex items-end sm:items-center">
-                  <div className="container mx-auto px-4 pb-6 sm:pb-0">
-                    <div className="max-w-md pl-6 sm:pl-10 md:pl-14">
-                      <h2 className="text-white text-lg sm:text-2xl md:text-3xl font-bold leading-tight drop-shadow-lg">
-                        {b.title}
-                      </h2>
-                      <p className="text-white/80 text-xs sm:text-sm mt-1 drop-shadow">{b.subtitle}</p>
+        <section className="px-4 pt-3">
+          <div className="container mx-auto">
+            <div className="relative overflow-hidden rounded-xl aspect-[2.2/1] sm:aspect-[3/1] md:aspect-[3.5/1]">
+              {BANNERS.map((b, i) => (
+                <div key={i} className={`absolute inset-0 transition-opacity duration-500 ${i === bannerIdx ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
+                  <img src={b.img} alt={b.title} className="w-full h-full object-cover" {...(i === 0 ? {} : { loading: "lazy" as const })} />
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#0F1B3D]/80 via-[#0F1B3D]/40 to-transparent flex items-center">
+                    <div className="px-5 sm:px-8 max-w-sm">
+                      <h2 className="text-white text-base sm:text-xl md:text-2xl font-bold leading-tight">{b.title}</h2>
+                      <p className="text-white/70 text-[11px] sm:text-sm mt-1">{b.subtitle}</p>
                       <Link to={b.link}>
-                        <Button size="sm" className="mt-3 bg-white text-foreground hover:bg-white/90 rounded-full text-xs font-semibold px-4 shadow-lg">
-                          {b.cta} <ArrowRight className="h-3 w-3 ml-1" />
-                        </Button>
+                        <button className="mt-3 text-[11px] sm:text-xs font-semibold text-white border border-white/40 rounded-lg px-3 py-1.5 hover:bg-white/10 transition-colors">
+                          {b.cta} →
+                        </button>
                       </Link>
                     </div>
                   </div>
+                  {/* Progress bar */}
+                  {i === bannerIdx && (
+                    <div className="absolute top-0 left-0 right-0 h-0.5 bg-white/20">
+                      <motion.div
+                        className="h-full bg-white/60"
+                        initial={{ width: "0%" }}
+                        animate={{ width: "100%" }}
+                        transition={{ duration: 4, ease: "linear" }}
+                        key={bannerIdx}
+                      />
+                    </div>
+                  )}
                 </div>
-              </div>
-            ))}
-
-            {/* Nav arrows */}
-            <button
-              onClick={() => goToBanner(-1)}
-              className="absolute left-2 top-1/2 -translate-y-1/2 h-6 w-6 rounded-full bg-black/20 flex items-center justify-center hover:bg-black/40 transition z-10"
-            >
-              <ChevronLeft className="h-3.5 w-3.5 text-white/70" />
-            </button>
-            <button
-              onClick={() => goToBanner(1)}
-              className="absolute right-2 top-1/2 -translate-y-1/2 h-6 w-6 rounded-full bg-black/20 flex items-center justify-center hover:bg-black/40 transition z-10"
-            >
-              <ChevronRight className="h-3.5 w-3.5 text-white/70" />
-            </button>
-
-            {/* Dots */}
-            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
-              {BANNERS.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setBannerIdx(i)}
-                  className={`h-1.5 rounded-full transition-all duration-300 ${i === bannerIdx ? "w-5 bg-white" : "w-1.5 bg-white/50"}`}
-                />
               ))}
-            </div>
-          </div>
-        </section>
 
-        {/* === SEARCH BAR (Home) === */}
-        <section className="px-4 pt-3 pb-2 bg-background">
-          <div className="container mx-auto">
-            <div className="relative w-full">
-              <Input
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Buscar contas, jogos, redes sociais..."
-                className="w-full bg-muted border-border h-11 pl-4 pr-11 text-sm placeholder:text-muted-foreground rounded-full"
-              />
-              <div className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground">
-                <Search className="h-4 w-4" />
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* === PLATFORM NAV (horizontal scroll) === */}
-        <section className="px-4 py-3 bg-background border-b border-border">
-          <div className="container mx-auto">
-            <div className="flex items-center gap-3 overflow-x-auto scrollbar-hide pb-1 md:justify-between">
-              <button
-                type="button"
-                onClick={() => setShowFilterMenu((prev) => !prev)}
-                className="flex flex-col items-center gap-1 min-w-[56px] group"
-              >
-                <div className={`h-11 w-11 rounded-full flex items-center justify-center transition-colors ${showFilterMenu ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground group-hover:bg-primary/10'}`}>
-                  <SlidersHorizontal className="h-5 w-5" />
-                </div>
-                <span className={`text-[10px] font-medium whitespace-nowrap ${showFilterMenu ? 'text-primary' : 'text-foreground'}`}>Filtro</span>
+              <button onClick={() => goToBanner(-1)} className="absolute left-2 top-1/2 -translate-y-1/2 h-7 w-7 rounded-full bg-black/20 flex items-center justify-center hover:bg-black/40 transition z-10" aria-label="Banner anterior">
+                <ChevronLeft className="h-4 w-4 text-white/80" />
+              </button>
+              <button onClick={() => goToBanner(1)} className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7 rounded-full bg-black/20 flex items-center justify-center hover:bg-black/40 transition z-10" aria-label="Próximo banner">
+                <ChevronRight className="h-4 w-4 text-white/80" />
               </button>
 
+              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+                {BANNERS.map((_, i) => (
+                  <button key={i} onClick={() => setBannerIdx(i)} className={`h-1.5 rounded-full transition-all duration-300 ${i === bannerIdx ? "w-5 bg-white" : "w-1.5 bg-white/40"}`} aria-label={`Banner ${i + 1}`} />
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* === QUICK CATEGORIES === */}
+        <section className="px-4 py-4">
+          <div className="container mx-auto">
+            <div className="flex items-center gap-4 overflow-x-auto scrollbar-hide fade-edges pb-1">
+              {QUICK_CATEGORIES.map((cat) => {
+                const IconComp = cat.icon;
+                return (
+                  <button
+                    key={cat.id}
+                    onClick={() => setSelectedPlatform(selectedPlatform === cat.id ? null : cat.id)}
+                    className="flex flex-col items-center gap-1.5 min-w-[60px] group"
+                  >
+                    <div className={`h-[52px] w-[52px] rounded-full ${cat.bg} flex items-center justify-center transition-transform group-hover:scale-105 ${selectedPlatform === cat.id ? 'ring-2 ring-primary ring-offset-2' : ''}`}>
+                      {typeof IconComp === 'function' && IconComp.length === 0 ? <IconComp /> : <IconComp className={`h-5 w-5 ${cat.color}`} />}
+                    </div>
+                    <span className={`text-[11px] font-semibold ${selectedPlatform === cat.id ? 'text-primary' : 'text-txt-secondary'}`}>{cat.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* === CATEGORY TABS + FILTER === */}
+        <section className="bg-card border-y border-border sticky top-14 z-30">
+          <div className="container mx-auto px-4">
+            <div className="flex items-center gap-0 overflow-x-auto scrollbar-hide h-10">
+              <button
+                onClick={() => setSelectedPlatform(null)}
+                className={`shrink-0 px-3 h-full text-[13px] font-semibold border-b-2 transition-colors ${!selectedPlatform ? 'border-primary text-primary' : 'border-transparent text-txt-secondary hover:text-txt-primary'}`}
+              >
+                Tudo
+              </button>
               {PLATFORMS.map((p) => (
                 <button
                   key={p.id}
-                  type="button"
                   onClick={() => setSelectedPlatform(selectedPlatform === p.id ? null : p.id)}
-                  className="flex flex-col items-center gap-1 min-w-[56px] group"
+                  className={`shrink-0 px-3 h-full text-[13px] font-semibold border-b-2 transition-colors whitespace-nowrap ${selectedPlatform === p.id ? 'border-primary text-primary' : 'border-transparent text-txt-secondary hover:text-txt-primary'}`}
                 >
-                  <div className={`h-11 w-11 rounded-full flex items-center justify-center transition-colors ${selectedPlatform === p.id ? 'bg-primary/15 ring-2 ring-primary' : 'bg-muted group-hover:bg-primary/10'}`}>
-                    <PlatformIcon platformId={p.id} size={22} />
-                  </div>
-                  <span className={`text-[10px] font-medium whitespace-nowrap ${selectedPlatform === p.id ? 'text-primary' : 'text-foreground'}`}>{p.name}</span>
+                  {p.name}
                 </button>
               ))}
-              <button
-                type="button"
-                onClick={handleSell}
-                className="flex flex-col items-center gap-1 min-w-[56px] group"
-              >
-                <div className="h-11 w-11 rounded-full bg-muted flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors">
-                  <Plus className="h-5 w-5" />
-                </div>
-                <span className="text-[10px] font-medium text-primary whitespace-nowrap">Vender</span>
-              </button>
+              <div className="ml-auto shrink-0 pl-2">
+                <button
+                  onClick={() => setShowFilterMenu(!showFilterMenu)}
+                  className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-[12px] font-semibold transition-colors ${showFilterMenu ? 'bg-primary text-white' : 'bg-muted text-txt-secondary hover:bg-border'}`}
+                  aria-label="Filtros"
+                >
+                  <SlidersHorizontal className="h-3.5 w-3.5" /> Filtros
+                </button>
+              </div>
             </div>
-
-            {showFilterMenu && (
-              <div className="mt-3 rounded-2xl border border-border bg-background p-4 shadow-sm">
-                <div className="grid gap-4 md:grid-cols-3">
-                  <div>
-                    <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Ordenar por</p>
-                    <div className="flex flex-wrap gap-1.5">
-                      {([
-                        { key: "recent" as const, label: "Recentes" },
-                        { key: "price_asc" as const, label: "Menor preço" },
-                        { key: "price_desc" as const, label: "Maior preço" },
-                      ]).map((opt) => (
-                        <button
-                          key={opt.key}
-                          type="button"
-                          onClick={() => setSortBy(opt.key)}
-                          className={`rounded-full px-3 py-1.5 text-[11px] font-medium transition-colors ${sortBy === opt.key ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground hover:bg-muted/80'}`}
-                        >
-                          {opt.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Faixa de preço</p>
-                    <div className="flex items-center gap-2">
-                      <Input
-                        type="number"
-                        placeholder="Mín"
-                        value={priceRange[0] || ""}
-                        onChange={(e) => setPriceRange([Number(e.target.value) || 0, priceRange[1]])}
-                        className="h-9 w-full text-xs"
-                      />
-                      <span className="text-xs text-muted-foreground">—</span>
-                      <Input
-                        type="number"
-                        placeholder="Máx"
-                        value={priceRange[1] === 10000 ? "" : priceRange[1]}
-                        onChange={(e) => setPriceRange([priceRange[0], Number(e.target.value) || 10000])}
-                        className="h-9 w-full text-xs"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Seguidores mínimos</p>
-                    <div className="flex flex-wrap gap-1.5">
-                      {[
-                        { value: 0, label: "Todos" },
-                        { value: 1000, label: "1K+" },
-                        { value: 5000, label: "5K+" },
-                        { value: 10000, label: "10K+" },
-                        { value: 50000, label: "50K+" },
-                      ].map((opt) => (
-                        <button
-                          key={opt.value}
-                          type="button"
-                          onClick={() => setMinFollowers(opt.value)}
-                          className={`rounded-full px-3 py-1.5 text-[11px] font-medium transition-colors ${minFollowers === opt.value ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground hover:bg-muted/80'}`}
-                        >
-                          {opt.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-4 flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="h-9 flex-1 text-xs"
-                    onClick={() => { setSortBy("recent"); setPriceRange([0, 10000]); setMinFollowers(0); }}
-                  >
-                    Limpar
-                  </Button>
-                  <Button
-                    variant="hero"
-                    size="sm"
-                    className="h-9 flex-1 text-xs"
-                    onClick={() => setShowFilterMenu(false)}
-                  >
-                    Aplicar
-                  </Button>
-                </div>
-              </div>
-            )}
-
-            {/* Active filter indicators */}
-            {(selectedPlatform || sortBy !== "recent" || priceRange[0] > 0 || priceRange[1] < 10000 || minFollowers > 0) && (
-              <div className="flex items-center gap-1.5 mt-2 flex-wrap">
-                {selectedPlatform && (
-                  <span className="text-[11px] bg-primary/10 text-primary px-3 py-1 rounded-full font-medium flex items-center gap-1">
-                    {PLATFORMS.find(p => p.id === selectedPlatform)?.name}
-                    <button onClick={() => setSelectedPlatform(null)} className="ml-1 hover:text-primary/70">✕</button>
-                  </span>
-                )}
-                {sortBy !== "recent" && (
-                  <span className="text-[11px] bg-primary/10 text-primary px-3 py-1 rounded-full font-medium flex items-center gap-1">
-                    {sortBy === "price_asc" ? "Menor preço" : "Maior preço"}
-                    <button onClick={() => setSortBy("recent")} className="ml-1 hover:text-primary/70">✕</button>
-                  </span>
-                )}
-                {(priceRange[0] > 0 || priceRange[1] < 10000) && (
-                  <span className="text-[11px] bg-primary/10 text-primary px-3 py-1 rounded-full font-medium flex items-center gap-1">
-                    R$ {priceRange[0]}–{priceRange[1] >= 10000 ? "∞" : priceRange[1]}
-                    <button onClick={() => setPriceRange([0, 10000])} className="ml-1 hover:text-primary/70">✕</button>
-                  </span>
-                )}
-                {minFollowers > 0 && (
-                  <span className="text-[11px] bg-primary/10 text-primary px-3 py-1 rounded-full font-medium flex items-center gap-1">
-                    {minFollowers >= 1000 ? `${minFollowers / 1000}K+` : `${minFollowers}+`} seguidores
-                    <button onClick={() => setMinFollowers(0)} className="ml-1 hover:text-primary/70">✕</button>
-                  </span>
-                )}
-              </div>
-            )}
           </div>
         </section>
 
-        {/* === FEATURED LISTINGS === */}
-        <section className="px-4 py-4 bg-background">
+        {/* Filter panel */}
+        {showFilterMenu && (
+          <section className="bg-card border-b border-border">
+            <div className="container mx-auto px-4 py-4">
+              <div className="grid gap-4 md:grid-cols-3">
+                <div>
+                  <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-txt-hint">Ordenar por</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {([
+                      { key: "recent" as const, label: "Recentes" },
+                      { key: "price_asc" as const, label: "Menor preço" },
+                      { key: "price_desc" as const, label: "Maior preço" },
+                    ]).map((opt) => (
+                      <button
+                        key={opt.key}
+                        onClick={() => setSortBy(opt.key)}
+                        className={`rounded-full px-3 py-1.5 text-[12px] font-medium transition-colors ${sortBy === opt.key ? 'bg-primary text-white' : 'bg-muted text-txt-primary hover:bg-border'}`}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-txt-hint">Faixa de preço</p>
+                  <div className="flex items-center gap-2">
+                    <Input type="number" placeholder="Mín" value={priceRange[0] || ""} onChange={(e) => setPriceRange([Number(e.target.value) || 0, priceRange[1]])} className="h-9 w-full text-xs bg-muted border-border" />
+                    <span className="text-xs text-txt-hint">—</span>
+                    <Input type="number" placeholder="Máx" value={priceRange[1] === 10000 ? "" : priceRange[1]} onChange={(e) => setPriceRange([priceRange[0], Number(e.target.value) || 10000])} className="h-9 w-full text-xs bg-muted border-border" />
+                  </div>
+                </div>
+                <div>
+                  <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-txt-hint">Seguidores mínimos</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {[{ value: 0, label: "Todos" }, { value: 1000, label: "1K+" }, { value: 5000, label: "5K+" }, { value: 10000, label: "10K+" }, { value: 50000, label: "50K+" }].map((opt) => (
+                      <button
+                        key={opt.value}
+                        onClick={() => setMinFollowers(opt.value)}
+                        className={`rounded-full px-3 py-1.5 text-[12px] font-medium transition-colors ${minFollowers === opt.value ? 'bg-primary text-white' : 'bg-muted text-txt-primary hover:bg-border'}`}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div className="mt-4 flex gap-2">
+                <button
+                  className="h-9 flex-1 text-[12px] font-medium rounded-lg border border-border bg-card text-txt-primary hover:bg-muted transition-colors"
+                  onClick={() => { setSortBy("recent"); setPriceRange([0, 10000]); setMinFollowers(0); }}
+                >
+                  Limpar
+                </button>
+                <button
+                  className="h-9 flex-1 text-[12px] font-bold rounded-lg bg-primary text-white hover:bg-primary-dark transition-colors"
+                  onClick={() => setShowFilterMenu(false)}
+                >
+                  Aplicar
+                </button>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Active filter pills */}
+        {(selectedPlatform || sortBy !== "recent" || priceRange[0] > 0 || priceRange[1] < 10000 || minFollowers > 0) && (
+          <div className="container mx-auto px-4 py-2">
+            <div className="flex items-center gap-1.5 flex-wrap">
+              {selectedPlatform && (
+                <span className="text-[11px] bg-primary-light text-primary px-3 py-1 rounded-full font-semibold flex items-center gap-1">
+                  {PLATFORMS.find(p => p.id === selectedPlatform)?.name}
+                  <button onClick={() => setSelectedPlatform(null)} className="ml-0.5 hover:opacity-70">✕</button>
+                </span>
+              )}
+              {sortBy !== "recent" && (
+                <span className="text-[11px] bg-primary-light text-primary px-3 py-1 rounded-full font-semibold flex items-center gap-1">
+                  {sortBy === "price_asc" ? "Menor preço" : "Maior preço"}
+                  <button onClick={() => setSortBy("recent")} className="ml-0.5 hover:opacity-70">✕</button>
+                </span>
+              )}
+              {(priceRange[0] > 0 || priceRange[1] < 10000) && (
+                <span className="text-[11px] bg-primary-light text-primary px-3 py-1 rounded-full font-semibold flex items-center gap-1">
+                  R$ {priceRange[0]}–{priceRange[1] >= 10000 ? "∞" : priceRange[1]}
+                  <button onClick={() => setPriceRange([0, 10000])} className="ml-0.5 hover:opacity-70">✕</button>
+                </span>
+              )}
+              {minFollowers > 0 && (
+                <span className="text-[11px] bg-primary-light text-primary px-3 py-1 rounded-full font-semibold flex items-center gap-1">
+                  {minFollowers >= 1000 ? `${minFollowers / 1000}K+` : `${minFollowers}+`} seg.
+                  <button onClick={() => setMinFollowers(0)} className="ml-0.5 hover:opacity-70">✕</button>
+                </span>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* === DESTAQUES DO DIA === */}
+        <section className="px-4 py-4">
+          <div className="container mx-auto">
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-[15px] font-bold text-txt-primary flex items-center gap-1.5">
+                <Flame className="h-4 w-4 text-hot" /> Destaques do Dia
+              </h2>
+              <span className="text-[11px] font-bold bg-hot text-white px-2.5 py-1 rounded-full">
+                🔥 HOT
+              </span>
+            </div>
+            <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 fade-edges">
+              {(loading ? Array(5).fill(null) : filtered.slice(0, 8)).map((listing, i) =>
+                listing ? (
+                  <div key={listing.id} className="min-w-[160px] max-w-[160px]">
+                    <ListingCard listing={listing} />
+                  </div>
+                ) : (
+                  <div key={i} className="min-w-[160px] max-w-[160px]"><SkeletonCard /></div>
+                )
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* === LISTINGS BY CATEGORY === */}
+        <section className="px-4 py-2">
           <div className="container mx-auto">
             {loading ? (
-              <div className="flex items-center justify-center py-20">
-                <Loader2 className="h-5 w-5 animate-spin text-primary" />
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+                {Array(6).fill(null).map((_, i) => <SkeletonCard key={i} />)}
               </div>
             ) : filtered.length > 0 ? (
               <div className="space-y-6">
-                {(() => {
-                  const GAME_PLATFORMS = ['free_fire', 'valorant', 'fortnite', 'roblox', 'clash_royale'];
-                  const games = filtered.filter(l => GAME_PLATFORMS.includes(l.platform));
-                  const SOCIAL_ORDER = ['instagram', 'tiktok', 'youtube', 'facebook', 'other'];
-                  const social = filtered
-                    .filter(l => !GAME_PLATFORMS.includes(l.platform))
-                    .sort((a, b) => {
-                      const ai = SOCIAL_ORDER.indexOf(a.platform);
-                      const bi = SOCIAL_ORDER.indexOf(b.platform);
-                      return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
-                    });
+                {social.length > 0 && (
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="text-[15px] font-bold text-txt-primary flex items-center gap-2">
+                        <Smartphone className="h-4 w-4 text-primary" /> Redes Sociais
+                      </h3>
+                      <Link to="/marketplace?type=social" className="text-[12px] text-primary font-semibold hover:underline flex items-center gap-1">
+                        Ver todos <ArrowRight className="h-3 w-3" />
+                      </Link>
+                    </div>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+                      {social.slice(0, 5).map((listing) => <ListingCard key={listing.id} listing={listing} />)}
+                    </div>
+                  </div>
+                )}
 
-                  return (
-                    <>
-                      {social.length > 0 && (
-                        <div>
-                          <div className="flex items-center justify-between mb-3">
-                            <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                              <Smartphone className="h-4 w-4 text-primary" /> Redes Sociais
-                            </h3>
-                            <Link to="/marketplace?type=social" className="text-xs text-primary hover:underline flex items-center gap-1">
-                              Ver todos <ArrowRight className="h-3 w-3" />
-                            </Link>
-                          </div>
-                          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-3">
-                            {social.slice(0, 5).map((listing) => (
-                              <ListingCard key={listing.id} listing={listing} />
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {games.length > 0 && (
-                        <div>
-                          <div className="flex items-center justify-between mb-3">
-                            <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                              <Gamepad2 className="h-4 w-4 text-primary" /> Contas de Jogos
-                            </h3>
-                            <Link to="/marketplace?type=games" className="text-xs text-primary hover:underline flex items-center gap-1">
-                              Ver todos <ArrowRight className="h-3 w-3" />
-                            </Link>
-                          </div>
-                          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-3">
-                            {games.slice(0, 5).map((listing) => (
-                              <ListingCard key={listing.id} listing={listing} />
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </>
-                  );
-                })()}
+                {games.length > 0 && (
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="text-[15px] font-bold text-txt-primary flex items-center gap-2">
+                        <Gamepad2 className="h-4 w-4 text-primary" /> Contas de Jogos
+                      </h3>
+                      <Link to="/marketplace?type=games" className="text-[12px] text-primary font-semibold hover:underline flex items-center gap-1">
+                        Ver todos <ArrowRight className="h-3 w-3" />
+                      </Link>
+                    </div>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+                      {games.slice(0, 5).map((listing) => <ListingCard key={listing.id} listing={listing} />)}
+                    </div>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="text-center py-16">
-                <Search className="h-8 w-8 text-muted-foreground mb-3 mx-auto" />
-                <p className="text-sm font-medium text-foreground mb-1">Nenhum anúncio encontrado</p>
-                <p className="text-muted-foreground text-xs mb-5">Seja o primeiro a anunciar!</p>
-                <Button variant="hero" size="sm" onClick={handleSell}>Criar Anúncio</Button>
+                <Search className="h-8 w-8 text-txt-hint mb-3 mx-auto" />
+                <p className="text-sm font-semibold text-txt-primary mb-1">Nenhum anúncio encontrado</p>
+                <p className="text-txt-hint text-xs mb-5">Seja o primeiro a anunciar!</p>
+                <button onClick={handleSell} className="bg-primary text-white font-bold text-sm px-6 py-2.5 rounded-lg hover:bg-primary-dark transition-colors">
+                  Criar Anúncio
+                </button>
               </div>
             )}
           </div>
         </section>
 
         {/* === HOW IT WORKS === */}
-        <section className="py-6 px-4 bg-background border-t border-border">
+        <section className="py-8 px-4 bg-muted">
           <div className="container mx-auto max-w-4xl">
-            <h2 className="text-base sm:text-lg font-bold text-foreground text-center mb-4">
-              Como funciona
-            </h2>
-            <div className="grid grid-cols-4 gap-2 sm:gap-4">
+            <h2 className="text-[16px] font-bold text-txt-primary text-center mb-6">Como funciona</h2>
+            <div className="grid grid-cols-4 gap-3 sm:gap-6">
               {[
-                { icon: <Search className="h-5 w-5" />, title: "Encontre", desc: "Busque contas", num: "1" },
-                { icon: <Shield className="h-5 w-5" />, title: "Compre", desc: "Pix com escrow", num: "2" },
-                { icon: <CheckCircle2 className="h-5 w-5" />, title: "Verifique", desc: "Valide a conta", num: "3" },
+                { icon: <Search className="h-5 w-5" />, title: "Encontre", desc: "Busque a conta ideal", num: "1" },
+                { icon: <Shield className="h-5 w-5" />, title: "Compre", desc: "Pague com Escrow", num: "2" },
+                { icon: <CheckCircle2 className="h-5 w-5" />, title: "Verifique", desc: "Acesse antes de liberar", num: "3" },
                 { icon: <Zap className="h-5 w-5" />, title: "Pronto!", desc: "Pagamento liberado", num: "4" },
               ].map((step, i) => (
                 <motion.div
@@ -460,11 +436,11 @@ export default function Index() {
                   viewport={{ once: true }}
                   className="flex flex-col items-center text-center"
                 >
-                  <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-2">
+                  <div className="h-12 w-12 rounded-full bg-primary flex items-center justify-center text-white mb-2 shadow-sm">
                     {step.icon}
                   </div>
-                  <h3 className="text-[11px] sm:text-xs font-bold text-foreground">{step.title}</h3>
-                  <p className="text-[9px] sm:text-[10px] text-muted-foreground mt-0.5 leading-tight">{step.desc}</p>
+                  <h3 className="text-[12px] font-bold text-txt-primary">{step.title}</h3>
+                  <p className="text-[10px] text-txt-hint mt-0.5 leading-tight">{step.desc}</p>
                 </motion.div>
               ))}
             </div>
@@ -472,24 +448,20 @@ export default function Index() {
         </section>
 
         {/* === TRUST BANNER === */}
-        <section className="py-6 px-4 bg-background">
+        <section className="py-8 px-4">
           <div className="container mx-auto max-w-3xl">
-            <div className="rounded-2xl bg-gradient-to-br from-primary to-[hsl(var(--primary-dark))] p-5 sm:p-8 text-white">
-              <h2 className="text-center text-sm sm:text-lg font-bold mb-5">
-                Por que escolher a Froiv?
-              </h2>
-              <div className="grid grid-cols-3 gap-3 sm:gap-6">
+            <div className="rounded-xl bg-gradient-to-br from-primary to-primary-dark p-6 sm:p-8 text-white">
+              <h2 className="text-center text-[15px] sm:text-lg font-bold mb-6">Por que escolher a Froiv?</h2>
+              <div className="grid grid-cols-3 gap-4 sm:gap-6">
                 {[
                   { icon: <Shield className="h-5 w-5" />, value: "100%", label: "Escrow Seguro" },
                   { icon: <Clock className="h-5 w-5" />, value: "24h", label: "Garantia" },
                   { icon: <CheckCircle2 className="h-5 w-5" />, value: "10%", label: "Taxa Fixa" },
                 ].map((stat) => (
-                  <div key={stat.label} className="flex flex-col items-center gap-1.5 text-center">
-                    <div className="h-10 w-10 rounded-full bg-white/15 flex items-center justify-center">
-                      {stat.icon}
-                    </div>
-                    <p className="text-xl sm:text-2xl font-extrabold">{stat.value}</p>
-                    <p className="text-[10px] sm:text-xs text-white/75">{stat.label}</p>
+                  <div key={stat.label} className="flex flex-col items-center gap-2 text-center">
+                    <div className="h-10 w-10 rounded-full bg-white/15 backdrop-blur flex items-center justify-center">{stat.icon}</div>
+                    <p className="text-[28px] font-black leading-none">{stat.value}</p>
+                    <p className="text-[11px] text-white/70 font-medium">{stat.label}</p>
                   </div>
                 ))}
               </div>
