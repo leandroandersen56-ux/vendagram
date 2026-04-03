@@ -45,6 +45,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 function AppRoutes() {
   return (
     <>
+      <ScrollToTop />
       <AuthModal />
       <Routes>
         {/* Public routes */}
