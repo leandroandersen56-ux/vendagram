@@ -193,14 +193,6 @@ export default function Index() {
         <section className="px-4 py-3 bg-background border-b border-border">
           <div className="container mx-auto">
             <div className="flex items-center gap-3 overflow-x-auto scrollbar-hide pb-1 md:justify-between">
-              <Link to="/marketplace">
-                <div className="flex flex-col items-center gap-1 min-w-[56px] group">
-                  <div className="h-11 w-11 rounded-full bg-primary flex items-center justify-center text-primary-foreground group-hover:shadow-md transition-shadow">
-                    <Search className="h-5 w-5" />
-                  </div>
-                  <span className="text-[10px] font-semibold text-primary whitespace-nowrap">Buscar</span>
-                </div>
-              </Link>
               <Link to="/marketplace?filter=true">
                 <div className="flex flex-col items-center gap-1 min-w-[56px] group">
                   <div className="h-11 w-11 rounded-full bg-muted flex items-center justify-center text-foreground group-hover:bg-primary/10 transition-colors">
