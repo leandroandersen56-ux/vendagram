@@ -6,6 +6,7 @@ import {
   LogOut, Shield, ChevronLeft, Menu, X, PlusCircle,
   ArrowDown, ArrowRight, ArrowUp, ScanLine
 } from "lucide-react";
+import logoFroiv from "@/assets/logo-froiv.png";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -50,10 +51,7 @@ export default function PanelLayout() {
       <aside className="hidden lg:flex flex-col w-[260px] border-r border-border bg-background fixed top-0 left-0 h-full z-40">
         <div className="h-16 flex items-center px-5 border-b border-border">
           <Link to="/" className="flex items-center gap-1.5">
-            <span className="text-primary text-lg">⚡</span>
-            <span className="font-display text-sm font-bold tracking-tight text-foreground">
-              Froiv
-            </span>
+            <img src={logoFroiv} alt="Froiv" className="h-7" />
           </Link>
         </div>
 
@@ -153,7 +151,7 @@ export default function PanelLayout() {
             <Menu className="h-5 w-5" />
           </Button>
           <span className="text-primary text-lg">⚡</span>
-          <span className="font-display text-sm font-bold tracking-tight text-foreground">Froiv</span>
+            <img src={logoFroiv} alt="Froiv" className="h-6" />
         </div>
         <Popover>
           <PopoverTrigger asChild>
@@ -195,8 +193,7 @@ export default function PanelLayout() {
             >
               <div className="h-14 flex items-center justify-between px-4 border-b border-border">
                 <Link to="/" className="flex items-center gap-1.5">
-                  <span className="text-primary text-lg">⚡</span>
-                  <span className="font-display text-sm font-bold text-foreground">Froiv</span>
+                  <img src={logoFroiv} alt="Froiv" className="h-6" />
                 </Link>
                 <Button variant="ghost" size="icon" className="h-8 w-8 rounded-xl" onClick={() => setSidebarOpen(false)}>
                   <X className="h-4 w-4" />
