@@ -167,7 +167,7 @@ export default function Index() {
         {/* === PLATFORM NAV (horizontal scroll) === */}
         <section className="px-4 py-3 bg-background border-b border-border">
           <div className="container mx-auto">
-            <div className="flex items-center gap-3 overflow-x-auto scrollbar-hide pb-1">
+            <div className="flex items-center gap-3 overflow-x-auto scrollbar-hide pb-1 md:justify-between">
               <Link to="/marketplace">
                 <div className="flex flex-col items-center gap-1 min-w-[56px] group">
                   <div className="h-11 w-11 rounded-full bg-primary flex items-center justify-center text-primary-foreground group-hover:shadow-md transition-shadow">
