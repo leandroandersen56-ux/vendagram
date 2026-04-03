@@ -99,9 +99,30 @@ export default function Navbar() {
               <Button variant="ghost" size="sm" onClick={() => openAuth()} className="text-foreground font-semibold">
                 Entrar
               </Button>
-              <Button variant="hero" size="sm" onClick={() => openAuth()} className="px-5">
-                Cadastrar
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="hero" size="sm" className="px-5">
+                    Cadastrar
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-52 bg-background border-border">
+                  <DropdownMenuItem className="cursor-pointer py-3" onClick={() => openAuth(undefined, "buyer")}>
+                    <ShoppingCart className="h-4 w-4 mr-2 text-primary" />
+                    <div>
+                      <p className="font-semibold text-sm">Comprador</p>
+                      <p className="text-xs text-muted-foreground">Quero comprar contas</p>
+                    </div>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem className="cursor-pointer py-3" onClick={() => openAuth(undefined, "seller")}>
+                    <Tag className="h-4 w-4 mr-2 text-primary" />
+                    <div>
+                      <p className="font-semibold text-sm">Vendedor</p>
+                      <p className="text-xs text-muted-foreground">Quero vender minhas contas</p>
+                    </div>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           )}
         </div>
