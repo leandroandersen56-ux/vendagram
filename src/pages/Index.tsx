@@ -3,9 +3,7 @@ import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowRight, Search, Loader2, Shield, CheckCircle2, Clock, Zap, Gamepad2, Smartphone, AlertCircle, Plus, SlidersHorizontal } from "lucide-react";
+import { ArrowRight, Search, Loader2, Shield, CheckCircle2, Clock, Zap, Gamepad2, Smartphone } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ListingCard from "@/components/ListingCard";
@@ -18,10 +16,6 @@ export default function Index() {
   const navigate = useNavigate();
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
-  const [platform, setPlatform] = useState("all");
-  const [sortBy, setSortBy] = useState("recent");
-  const [showFilters, setShowFilters] = useState(false);
 
   const handleSell = () => {
     if (isAuthenticated) {
@@ -81,17 +75,7 @@ export default function Index() {
     fetchListings();
   }, []);
 
-  const filtered = listings
-    .filter((l) => {
-      if (platform !== "all" && l.platform !== platform) return false;
-      if (search && !l.title.toLowerCase().includes(search.toLowerCase())) return false;
-      return true;
-    })
-    .sort((a, b) => {
-      if (sortBy === "price-asc") return a.price - b.price;
-      if (sortBy === "price-desc") return b.price - a.price;
-      return 0;
-    });
+  const filtered = listings;
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -155,25 +139,27 @@ export default function Index() {
         </div>
       </section>
 
-      {/* Categories */}
+      {/* Categories — navigates to marketplace */}
       <section className="px-4 order-2">
         <div className="container mx-auto">
           <h2 className="font-display font-bold text-xl text-foreground mt-10 mb-4">Explorar por plataforma</h2>
-          <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 md:grid md:grid-cols-6">
-            {PLATFORMS.map((p) => (
-              <button
-                key={p.id}
-                onClick={() => { setPlatform(p.id); }}
-                className={`min-w-[80px] flex flex-col items-center gap-2 p-3 rounded-2xl border transition-all duration-200 cursor-pointer ${
-                  platform === p.id
-                    ? "bg-primary-light border-primary"
-                    : "bg-muted border-border hover:border-primary hover:bg-primary-light"
-                }`}
-              >
-                <PlatformIcon platformId={p.id} size={32} />
-                <span className="text-xs font-semibold text-foreground">{p.name}</span>
-              </button>
-            ))}
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 sm:gap-3">
+            {PLATFORMS.map((p) => {
+              const count = listings.filter((l) => l.platform === p.id).length;
+              return (
+                <Link
+                  key={p.id}
+                  to={`/marketplace?platform=${p.id}`}
+                  className="flex flex-col items-center gap-1.5 p-3 sm:p-4 rounded-2xl border border-border bg-card hover:border-primary hover:bg-primary/5 transition-all duration-200 group"
+                >
+                  <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+                    <PlatformIcon platformId={p.id} size={28} />
+                  </div>
+                  <span className="text-xs font-semibold text-foreground">{p.name}</span>
+                  <span className="text-[10px] text-muted-foreground">{count} {count === 1 ? "anúncio" : "anúncios"}</span>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -225,112 +211,12 @@ export default function Index() {
       {/* Listings Section */}
       <section className="py-8 px-4 order-3">
         <div className="container mx-auto">
-          <h2 className="font-display font-bold text-xl text-foreground mb-4">Contas em destaque</h2>
-
-          {/* Search - mobile */}
-          <div className="flex items-center gap-2 mb-3 sm:hidden">
-            <div className="relative flex-1">
-              <Input
-                placeholder="Qual conta você está procurando?"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-4 pr-10 bg-muted border-border h-11 rounded-full text-xs placeholder:text-muted-foreground/70"
-              />
-              <div className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                <Search className="h-3.5 w-3.5 text-primary" />
-              </div>
-            </div>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-display font-bold text-xl text-foreground">Contas em destaque</h2>
+            <Link to="/marketplace" className="text-xs text-primary hover:underline flex items-center gap-1">
+              Ver todas <ArrowRight className="h-3 w-3" />
+            </Link>
           </div>
-
-          {/* Filter pills */}
-          <div className="flex gap-1.5 sm:gap-2 overflow-x-auto scrollbar-hide pb-1 mb-3">
-              <button
-                onClick={() => setPlatform("all")}
-                className={`shrink-0 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[11px] sm:text-sm font-medium transition-all ${
-                  platform === "all"
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted text-muted-foreground hover:text-foreground border border-border"
-                }`}
-              >
-                Todas
-              </button>
-              {PLATFORMS.map((p) => (
-                <button
-                  key={p.id}
-                  onClick={() => setPlatform(p.id)}
-                  className={`shrink-0 inline-flex items-center gap-1 sm:gap-1.5 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[11px] sm:text-sm font-medium transition-all ${
-                    platform === p.id
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted text-muted-foreground hover:text-foreground border border-border"
-                  }`}
-                >
-                  <PlatformIcon platformId={p.id} size={14} />
-                  {p.name}
-                </button>
-              ))}
-          </div>
-
-          {/* Search desktop */}
-          <div className="hidden sm:flex items-center gap-2 mb-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
-              <Input
-                placeholder="Buscar anúncios..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-9 bg-muted border-border h-9 text-sm placeholder:text-muted-foreground rounded-xl"
-              />
-            </div>
-            <button
-              onClick={() => setShowFilters(!showFilters)}
-              className={`shrink-0 h-9 w-9 rounded-xl border flex items-center justify-center transition-all ${showFilters ? "bg-primary text-primary-foreground border-primary" : "bg-background border-border text-muted-foreground hover:text-foreground"}`}
-            >
-              <SlidersHorizontal className="h-4 w-4" />
-            </button>
-          </div>
-
-          {/* Expanded filters */}
-          {showFilters && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              className="flex flex-wrap items-center gap-2 mb-4 p-3 bg-muted border border-border rounded-2xl"
-            >
-              <Select value={platform} onValueChange={setPlatform}>
-                <SelectTrigger className="w-36 sm:w-44 bg-background border-border h-8 text-xs rounded-xl">
-                  <SelectValue placeholder="Plataforma" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todas</SelectItem>
-                  {PLATFORMS.map((p) => (
-                    <SelectItem key={p.id} value={p.id}>
-                      <span className="inline-flex items-center gap-1.5">
-                        <PlatformIcon platformId={p.id} size={14} />
-                        {p.name}
-                      </span>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-36 sm:w-44 bg-background border-border h-8 text-xs rounded-xl">
-                  <SelectValue placeholder="Ordenar" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="recent">Mais recentes</SelectItem>
-                  <SelectItem value="price-asc">Menor preço</SelectItem>
-                  <SelectItem value="price-desc">Maior preço</SelectItem>
-                </SelectContent>
-              </Select>
-
-              {platform !== "all" && (
-                <button onClick={() => setPlatform("all")} className="text-[10px] text-muted-foreground hover:text-foreground flex items-center gap-1">
-                  <AlertCircle className="h-3 w-3" /> Limpar
-                </button>
-              )}
-            </motion.div>
-          )}
 
           {/* Grid */}
           {loading ? (
