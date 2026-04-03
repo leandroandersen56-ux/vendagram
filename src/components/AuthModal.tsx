@@ -69,6 +69,7 @@ export default function AuthModal() {
     setName("");
     setEmail("");
     setPassword("");
+    setSelectedRole(authRole || null);
   };
 
   if (!showAuthModal) return null;
