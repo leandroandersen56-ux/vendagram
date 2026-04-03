@@ -176,14 +176,14 @@ export default function PanelListings() {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between gap-3 border-t border-border/60 pt-3 sm:ml-auto sm:border-t-0 sm:pt-0">
+                  <div className="flex items-center justify-between gap-2 border-t border-border/60 pt-3 sm:ml-auto sm:border-t-0 sm:pt-0">
                     <p className="shrink-0 text-base font-bold text-primary sm:text-lg">{formatBRL(listing.price)}</p>
-                    <div className="hidden shrink-0 items-center gap-1 sm:flex">
+                    <div className="flex shrink-0 items-center gap-0.5">
                       <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => isReal ? navigate(`/listing/${listing.id}`) : demoClick()} title="Ver anúncio">
-                        <Eye className="h-3 w-3" />
+                        <Eye className="h-3.5 w-3.5" />
                       </Button>
                       <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => isReal ? navigate(`/painel/anuncios/editar/${listing.id}`) : demoClick()} title="Editar">
-                        <Edit className="h-3 w-3" />
+                        <Edit className="h-3.5 w-3.5" />
                       </Button>
                       <Button
                         variant="ghost"
@@ -192,12 +192,12 @@ export default function PanelListings() {
                         onClick={() => isReal ? toggleStatus(listing) : demoClick()}
                         title={listing.status === "active" ? "Pausar" : "Ativar"}
                       >
-                        {listing.status === "active" ? <Pause className="h-3 w-3" /> : <Play className="h-3 w-3" />}
+                        {listing.status === "active" ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
                       </Button>
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
                           <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" title="Remover" onClick={(e) => { if (!isReal) { e.preventDefault(); demoClick(); } }}>
-                            <Trash2 className="h-3 w-3" />
+                            <Trash2 className="h-3.5 w-3.5" />
                           </Button>
                         </AlertDialogTrigger>
                         <AlertDialogContent>
