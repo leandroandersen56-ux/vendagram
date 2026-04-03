@@ -94,6 +94,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       isLoading,
       showAuthModal,
       authRedirect,
+      authRole,
       login,
       logout,
       openAuth,
