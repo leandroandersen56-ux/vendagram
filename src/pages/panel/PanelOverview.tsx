@@ -39,12 +39,12 @@ const HISTORY = [
 
 function getIcon(type: string) {
   switch (type) {
-    case "in": return <ArrowDownRight className="h-4 w-4 text-success" />;
-    case "out": return <ArrowUpRight className="h-4 w-4 text-destructive" />;
-    case "escrow": return <RefreshCcw className="h-4 w-4 text-warning" />;
-    case "transfer": return <Send className="h-4 w-4 text-info" />;
-    case "deposit": return <ArrowDown className="h-4 w-4 text-success" />;
-    default: return <Repeat className="h-4 w-4 text-muted-foreground" />;
+    case "in": return <ArrowDownRight className="h-3.5 w-3.5 text-success" />;
+    case "out": return <ArrowUpRight className="h-3.5 w-3.5 text-destructive" />;
+    case "escrow": return <RefreshCcw className="h-3.5 w-3.5 text-warning" />;
+    case "transfer": return <Send className="h-3.5 w-3.5 text-info" />;
+    case "deposit": return <ArrowDown className="h-3.5 w-3.5 text-success" />;
+    default: return <Repeat className="h-3.5 w-3.5 text-muted-foreground" />;
   }
 }
 
@@ -79,9 +79,9 @@ export default function PanelOverview() {
   const totalEarned = 4560;
 
   const stats = [
-    { label: "Compras", value: "2", icon: ShoppingBag, change: "+1 este mês", accent: "text-primary" },
-    { label: "Anúncios Ativos", value: "3", icon: Tag, change: "1 vendido", accent: "text-primary" },
-    { label: "Avaliação", value: "4.8", icon: Star, change: "12 avaliações", accent: "text-primary" },
+    { label: "COMPRAS", value: "2", icon: ShoppingBag, sub: "+1 este mês" },
+    { label: "ANÚNCIOS ATIVOS", value: "3", icon: Tag, sub: "1 vendido" },
+    { label: "AVALIAÇÃO", value: "4.8", icon: Star, sub: "12 reviews" },
   ];
 
   const filteredHistory = HISTORY.filter((h) => {
@@ -95,179 +95,172 @@ export default function PanelOverview() {
     { label: "Depositar", icon: ArrowDown, color: "text-success", bg: "bg-success/10", onClick: () => setShowDeposit(true) },
     { label: "Transferir", icon: ArrowRight, color: "text-info", bg: "bg-info/10", onClick: () => setShowTransfer(true) },
     { label: "Sacar", icon: ArrowUp, color: "text-primary", bg: "bg-primary/10", onClick: () => setShowWithdraw(true) },
-    { label: "QR Code", icon: ScanLine, color: "text-warning", bg: "bg-warning/10", onClick: () => setShowQR(true) },
   ];
 
   return (
     <>
-      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className="space-y-5 overflow-hidden">
-        {/* Header compacto */}
-        <div className="flex items-center justify-between gap-2">
-          <div className="min-w-0 flex-1">
-            <h1 className="text-lg sm:text-2xl font-display font-bold text-foreground tracking-tight truncate">
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.25 }}
+        className="space-y-4 w-full overflow-hidden"
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div className="min-w-0">
+            <h1 className="text-lg sm:text-xl font-semibold text-foreground tracking-tight truncate">
               Olá, {user?.name} 👋
             </h1>
-            <p className="text-muted-foreground text-xs sm:text-sm mt-0.5">Resumo da sua conta</p>
+            <p className="text-muted-foreground text-xs mt-0.5">Resumo da sua conta</p>
           </div>
           <Link to="/painel/anuncios/novo" className="shrink-0">
-            <Button variant="hero" size="sm" className="gap-1 text-xs h-8 px-3">
-              <Plus className="h-3.5 w-3.5" /> <span className="hidden xs:inline">Novo</span> Anúncio
+            <Button size="sm" className="gap-1.5 text-xs h-8 px-3 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90">
+              <Plus className="h-3.5 w-3.5" /> Anúncio
             </Button>
           </Link>
         </div>
 
-        {/* Stats grid - always visible, no scroll */}
-        <div className="grid grid-cols-3 gap-2 sm:gap-3">
+        {/* Stats */}
+        <div className="grid grid-cols-3 gap-2">
           {stats.map((stat, i) => (
             <motion.div
               key={stat.label}
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.05 }}
+              transition={{ delay: i * 0.04 }}
+              className="bg-background border border-border rounded-2xl p-3 flex flex-col items-center text-center"
             >
-              <div className="bg-background border border-border rounded-2xl p-3 sm:p-5 h-full">
-                <div className="flex flex-col items-center text-center sm:flex-row sm:text-left sm:items-start sm:justify-between gap-1.5 sm:gap-2">
-                  <div className="order-2 sm:order-1 min-w-0">
-                    <p className="text-[9px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wide leading-tight">{stat.label}</p>
-                    <p className="text-xl sm:text-2xl font-display font-bold text-foreground mt-0.5">{stat.value}</p>
-                    <p className="text-[9px] sm:text-xs text-muted-foreground mt-0.5 truncate">{stat.change}</p>
-                  </div>
-                  <div className="order-1 sm:order-2 h-8 w-8 sm:h-10 sm:w-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                    <stat.icon className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
-                  </div>
-                </div>
+              <div className="h-8 w-8 rounded-xl bg-primary/8 flex items-center justify-center mb-1.5">
+                <stat.icon className="h-4 w-4 text-primary" />
               </div>
+              <p className="text-[8px] font-semibold text-muted-foreground tracking-widest leading-none">{stat.label}</p>
+              <p className="text-xl font-bold text-foreground mt-1">{stat.value}</p>
+              <p className="text-[9px] text-muted-foreground mt-0.5">{stat.sub}</p>
             </motion.div>
           ))}
         </div>
 
-        {/* Carteira - saldo principal destacado */}
-        <div id="wallet-section" className="scroll-mt-20">
-          <h2 className="text-sm sm:text-base font-display font-bold text-foreground mb-3 flex items-center gap-2">
+        {/* Carteira */}
+        <div>
+          <h2 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-1.5">
             <Wallet className="h-4 w-4 text-primary" />
             Carteira
           </h2>
 
-          {/* Saldo principal + ações rápidas inline */}
-          <div className="bg-background border border-border rounded-2xl p-4 sm:p-5 mb-3">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <p className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wide">Disponível</p>
-                <p className="text-2xl sm:text-3xl font-bold text-success mt-0.5">{formatBRL(balance)}</p>
-              </div>
-            </div>
+          <div className="bg-background border border-border rounded-2xl p-4">
+            <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Disponível</p>
+            <p className="text-2xl font-bold text-success mt-0.5 tabular-nums">{formatBRL(balance)}</p>
 
-            {/* Ações rápidas inline */}
-            <div className="grid grid-cols-4 gap-2">
+            <div className="flex items-center justify-around mt-4 pt-3 border-t border-border">
               {walletActions.map((action) => (
                 <button
                   key={action.label}
                   onClick={action.onClick}
-                  className="flex flex-col items-center gap-1.5 py-2.5 rounded-xl hover:bg-muted transition-all active:scale-95"
+                  className="flex flex-col items-center gap-1 active:scale-95 transition-transform"
                 >
-                  <div className={`h-9 w-9 sm:h-10 sm:w-10 rounded-full ${action.bg} flex items-center justify-center`}>
+                  <div className={`h-10 w-10 rounded-full ${action.bg} flex items-center justify-center`}>
                     <action.icon className={`h-4 w-4 ${action.color}`} />
                   </div>
-                  <span className="text-[10px] sm:text-[11px] font-medium text-muted-foreground">{action.label}</span>
+                  <span className="text-[10px] font-medium text-muted-foreground">{action.label}</span>
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Pendente e Total lado a lado */}
-          <div className="grid grid-cols-2 gap-2 mb-5">
-            <div className="bg-background border border-border rounded-2xl p-3 sm:p-4 overflow-hidden">
-              <div className="flex items-center gap-1.5 mb-1">
+          {/* Pendente + Total */}
+          <div className="grid grid-cols-2 gap-2 mt-2">
+            <div className="bg-background border border-border rounded-2xl p-3">
+              <div className="flex items-center gap-1 mb-0.5">
                 <Clock className="h-3 w-3 text-warning shrink-0" />
-                <p className="text-[9px] sm:text-xs font-medium text-muted-foreground truncate">Pendente</p>
+                <span className="text-[9px] font-semibold text-muted-foreground uppercase tracking-wider">Pendente</span>
               </div>
-              <p className="text-base sm:text-xl font-bold text-warning truncate">{formatBRL(pending)}</p>
+              <p className="text-base font-bold text-warning tabular-nums truncate">{formatBRL(pending)}</p>
             </div>
-            <div className="bg-background border border-border rounded-2xl p-3 sm:p-4 overflow-hidden">
-              <div className="flex items-center gap-1.5 mb-1">
+            <div className="bg-background border border-border rounded-2xl p-3">
+              <div className="flex items-center gap-1 mb-0.5">
                 <TrendingUp className="h-3 w-3 text-primary shrink-0" />
-                <p className="text-[9px] sm:text-xs font-medium text-muted-foreground truncate">Total Ganho</p>
+                <span className="text-[9px] font-semibold text-muted-foreground uppercase tracking-wider">Total Ganho</span>
               </div>
-              <p className="text-base sm:text-xl font-bold text-foreground truncate">{formatBRL(totalEarned)}</p>
-            </div>
-          </div>
-
-          {/* Gráfico */}
-          <div className="bg-background border border-border rounded-2xl p-4 sm:p-5 mb-5">
-            <h3 className="font-semibold text-foreground text-xs sm:text-sm mb-3 flex items-center gap-2">
-              <Activity className="h-3.5 w-3.5 text-primary" />
-              Movimentação (7 dias)
-            </h3>
-            <BalanceChart />
-          </div>
-
-          {/* Histórico */}
-          <div className="bg-background border border-border rounded-2xl p-4 sm:p-5">
-            <h3 className="font-semibold text-foreground text-sm mb-3">Histórico</h3>
-            
-            {/* Filtros com scroll horizontal */}
-            <div className="flex gap-1.5 overflow-x-auto pb-2 mb-3 -mx-1 px-1">
-              {FILTER_TABS.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveFilter(tab.id)}
-                  className={`px-2.5 py-1 rounded-full text-[11px] sm:text-xs font-medium transition-all whitespace-nowrap shrink-0 ${
-                    activeFilter === tab.id
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted text-muted-foreground hover:text-foreground border border-border"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-
-            <div className="space-y-1.5">
-              {filteredHistory.length === 0 ? (
-                <p className="text-xs text-muted-foreground text-center py-6">Nenhuma transação encontrada</p>
-              ) : (
-                filteredHistory.map((h, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: i * 0.03 }}
-                    className="flex items-center gap-2.5 p-3 bg-muted/50 hover:bg-muted rounded-xl transition-colors"
-                  >
-                    <div className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 ${getIconBg(h.type)}`}>
-                      {getIcon(h.type)}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs sm:text-[13px] font-medium text-foreground truncate">{h.desc}</p>
-                      <p className="text-[10px] text-muted-foreground mt-0.5">
-                        {h.date}{h.counterpart ? ` · ${h.counterpart}` : ""}
-                      </p>
-                    </div>
-                    <div className="text-right shrink-0">
-                      <p className={`text-xs sm:text-sm font-bold ${h.amount > 0 ? "text-success" : "text-destructive"}`}>
-                        {h.amount > 0 ? "+" : ""}{formatBRL(Math.abs(h.amount))}
-                      </p>
-                      <Badge className={`border-0 text-[9px] sm:text-[10px] mt-0.5 ${getStatusColor(h.status)}`}>{h.status}</Badge>
-                    </div>
-                  </motion.div>
-                ))
-              )}
+              <p className="text-base font-bold text-foreground tabular-nums truncate">{formatBRL(totalEarned)}</p>
             </div>
           </div>
         </div>
 
+        {/* Gráfico */}
+        <div className="bg-background border border-border rounded-2xl p-4">
+          <h3 className="text-xs font-semibold text-foreground mb-3 flex items-center gap-1.5">
+            <Activity className="h-3.5 w-3.5 text-primary" />
+            Movimentação (7 dias)
+          </h3>
+          <BalanceChart />
+        </div>
+
+        {/* Histórico */}
+        <div className="bg-background border border-border rounded-2xl p-4">
+          <h3 className="text-xs font-semibold text-foreground mb-3">Histórico</h3>
+
+          {/* Filtros - wrap instead of scroll */}
+          <div className="flex flex-wrap gap-1.5 mb-3">
+            {FILTER_TABS.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveFilter(tab.id)}
+                className={`px-2.5 py-1 rounded-full text-[10px] font-medium transition-colors ${
+                  activeFilter === tab.id
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="space-y-1">
+            {filteredHistory.length === 0 ? (
+              <p className="text-xs text-muted-foreground text-center py-6">Nenhuma transação encontrada</p>
+            ) : (
+              filteredHistory.map((h, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: i * 0.03 }}
+                  className="flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-muted/60 transition-colors"
+                >
+                  <div className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 ${getIconBg(h.type)}`}>
+                    {getIcon(h.type)}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-medium text-foreground truncate">{h.desc}</p>
+                    <p className="text-[10px] text-muted-foreground mt-0.5 truncate">
+                      {h.date}{h.counterpart ? ` · ${h.counterpart}` : ""}
+                    </p>
+                  </div>
+                  <div className="text-right shrink-0 pl-1">
+                    <p className={`text-xs font-bold tabular-nums ${h.amount > 0 ? "text-success" : "text-destructive"}`}>
+                      {h.amount > 0 ? "+" : ""}{formatBRL(Math.abs(h.amount))}
+                    </p>
+                    <Badge className={`border-0 text-[9px] px-1.5 py-0 mt-0.5 ${getStatusColor(h.status)}`}>{h.status}</Badge>
+                  </div>
+                </motion.div>
+              ))
+            )}
+          </div>
+        </div>
+
         {/* Atividade Recente */}
-        <div className="bg-background border border-border rounded-2xl p-4 sm:p-5">
-          <h3 className="font-semibold text-foreground text-sm mb-3">Atividade Recente</h3>
-          <div className="space-y-1.5">
+        <div className="bg-background border border-border rounded-2xl p-4">
+          <h3 className="text-xs font-semibold text-foreground mb-3">Atividade Recente</h3>
+          <div className="space-y-1">
             {[
               { text: "Conta Free Fire vendida por R$ 350", time: "2h atrás", color: "bg-success" },
               { text: "Compra de conta Instagram em andamento", time: "5h atrás", color: "bg-warning" },
               { text: "Novo anúncio publicado: TikTok 50K", time: "1d atrás", color: "bg-info" },
             ].map((a, i) => (
-              <div key={i} className="flex items-center gap-2.5 p-3 bg-muted/50 rounded-xl hover:bg-muted transition-colors">
-                <div className={`h-2 w-2 rounded-full ${a.color} shrink-0`} />
-                <p className="text-xs sm:text-[13px] text-foreground flex-1 min-w-0">{a.text}</p>
+              <div key={i} className="flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-muted/60 transition-colors">
+                <div className={`h-1.5 w-1.5 rounded-full ${a.color} shrink-0`} />
+                <p className="text-xs text-foreground flex-1 min-w-0 truncate">{a.text}</p>
                 <span className="text-[10px] text-muted-foreground shrink-0">{a.time}</span>
               </div>
             ))}
