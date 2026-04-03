@@ -166,9 +166,17 @@ export default function Navbar() {
                   </Button>
                 </>
               ) : (
-                <Button variant="hero" className="w-full mt-2" onClick={() => { openAuth(); setMobileOpen(false); }}>
-                  Cadastre-se / Login
-                </Button>
+                <div className="flex flex-col gap-2 mt-2">
+                  <Button variant="hero" className="w-full" onClick={() => { openAuth(undefined, "buyer"); setMobileOpen(false); }}>
+                    <ShoppingCart className="h-4 w-4 mr-1" /> Cadastrar como Comprador
+                  </Button>
+                  <Button variant="outline" className="w-full" onClick={() => { openAuth(undefined, "seller"); setMobileOpen(false); }}>
+                    <Tag className="h-4 w-4 mr-1" /> Cadastrar como Vendedor
+                  </Button>
+                  <Button variant="ghost" className="w-full" onClick={() => { openAuth(); setMobileOpen(false); }}>
+                    Já tenho conta · Entrar
+                  </Button>
+                </div>
               )}
             </div>
           </motion.div>
