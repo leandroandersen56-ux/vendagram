@@ -16,7 +16,6 @@ export default function Index() {
   const navigate = useNavigate();
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("recent");
 
   const handleSell = () => {
