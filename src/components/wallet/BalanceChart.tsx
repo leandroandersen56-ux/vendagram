@@ -1,4 +1,4 @@
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, CartesianGrid } from "recharts";
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 
 const data = [
   { day: "Seg", value: 315 },
@@ -24,31 +24,21 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 export default function BalanceChart() {
-  const maxVal = Math.max(...data.map(d => Math.abs(d.value)));
-
   return (
     <div className="h-[140px] w-full">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} barSize={24} barGap={4} margin={{ top: 8, right: 4, bottom: 0, left: 4 }}>
+        <AreaChart data={data} margin={{ top: 8, right: 4, bottom: 0, left: 4 }}>
           <defs>
-            <linearGradient id="barPositive" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={1} />
-              <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0.5} />
-            </linearGradient>
-            <linearGradient id="barNegative" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="hsl(var(--destructive))" stopOpacity={0.5} />
-              <stop offset="100%" stopColor="hsl(var(--destructive))" stopOpacity={1} />
-            </linearGradient>
-            <linearGradient id="barZero" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="hsl(var(--muted-foreground))" stopOpacity={0.2} />
-              <stop offset="100%" stopColor="hsl(var(--muted-foreground))" stopOpacity={0.08} />
+            <linearGradient id="areaFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
+              <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0.02} />
             </linearGradient>
           </defs>
           <CartesianGrid
             strokeDasharray="3 3"
             vertical={false}
             stroke="hsl(var(--border))"
-            strokeOpacity={0.4}
+            strokeOpacity={0.3}
           />
           <XAxis
             dataKey="day"
@@ -57,23 +47,20 @@ export default function BalanceChart() {
             tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 10, fontWeight: 500 }}
             dy={6}
           />
-          <YAxis hide domain={[-maxVal * 1.1, maxVal * 1.1]} />
+          <YAxis hide />
           <Tooltip content={<CustomTooltip />} cursor={false} />
-          <Bar dataKey="value" radius={[6, 6, 2, 2]} animationDuration={800} animationEasing="ease-out">
-            {data.map((entry, i) => (
-              <Cell
-                key={i}
-                fill={
-                  entry.value > 0
-                    ? "url(#barPositive)"
-                    : entry.value < 0
-                    ? "url(#barNegative)"
-                    : "url(#barZero)"
-                }
-              />
-            ))}
-          </Bar>
-        </BarChart>
+          <Area
+            type="monotone"
+            dataKey="value"
+            stroke="hsl(var(--primary))"
+            strokeWidth={2.5}
+            fill="url(#areaFill)"
+            dot={{ r: 3, fill: "hsl(var(--primary))", strokeWidth: 0 }}
+            activeDot={{ r: 5, fill: "hsl(var(--primary))", stroke: "hsl(var(--background))", strokeWidth: 2 }}
+            animationDuration={800}
+            animationEasing="ease-out"
+          />
+        </AreaChart>
       </ResponsiveContainer>
     </div>
   );
