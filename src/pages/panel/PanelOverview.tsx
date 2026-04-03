@@ -175,20 +175,20 @@ export default function PanelOverview() {
           </div>
 
           {/* Pendente e Total lado a lado */}
-          <div className="grid grid-cols-2 gap-2.5 mb-5">
-            <div className="bg-background border border-border rounded-2xl p-4">
-              <div className="flex items-center gap-1.5 mb-1.5">
-                <Clock className="h-3.5 w-3.5 text-warning" />
-                <p className="text-[10px] sm:text-xs font-medium text-muted-foreground">Pendente</p>
+          <div className="grid grid-cols-2 gap-2 mb-5">
+            <div className="bg-background border border-border rounded-2xl p-3 sm:p-4 overflow-hidden">
+              <div className="flex items-center gap-1.5 mb-1">
+                <Clock className="h-3 w-3 text-warning shrink-0" />
+                <p className="text-[9px] sm:text-xs font-medium text-muted-foreground truncate">Pendente</p>
               </div>
-              <p className="text-lg sm:text-xl font-bold text-warning">{formatBRL(pending)}</p>
+              <p className="text-base sm:text-xl font-bold text-warning truncate">{formatBRL(pending)}</p>
             </div>
-            <div className="bg-background border border-border rounded-2xl p-4">
-              <div className="flex items-center gap-1.5 mb-1.5">
-                <TrendingUp className="h-3.5 w-3.5 text-primary" />
-                <p className="text-[10px] sm:text-xs font-medium text-muted-foreground">Total Ganho</p>
+            <div className="bg-background border border-border rounded-2xl p-3 sm:p-4 overflow-hidden">
+              <div className="flex items-center gap-1.5 mb-1">
+                <TrendingUp className="h-3 w-3 text-primary shrink-0" />
+                <p className="text-[9px] sm:text-xs font-medium text-muted-foreground truncate">Total Ganho</p>
               </div>
-              <p className="text-lg sm:text-xl font-bold text-foreground">{formatBRL(totalEarned)}</p>
+              <p className="text-base sm:text-xl font-bold text-foreground truncate">{formatBRL(totalEarned)}</p>
             </div>
           </div>
 
