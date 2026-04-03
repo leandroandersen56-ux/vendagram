@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import AuthModal from "@/components/AuthModal";
+import ScrollToTop from "@/components/ScrollToTop";
 import Index from "./pages/Index.tsx";
 import Marketplace from "./pages/Marketplace.tsx";
 import ListingDetail from "./pages/ListingDetail.tsx";
@@ -45,6 +46,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 function AppRoutes() {
   return (
     <>
+      <ScrollToTop />
       <AuthModal />
       <Routes>
         {/* Public routes */}
