@@ -128,13 +128,18 @@ export default function Navbar() {
         </div>
 
         {/* Mobile: right icons */}
-        <div className="flex items-center gap-2 md:hidden">
+        <div className="flex items-center gap-1 md:hidden">
+          {!isAuthenticated && (
+            <Button variant="hero" size="sm" className="px-3 py-1 text-xs h-8" onClick={() => openAuth(undefined, "buyer")}>
+              Cadastrar
+            </Button>
+          )}
           {location.pathname !== "/" && (
             <button onClick={() => navigate("/marketplace")} className="h-9 w-9 flex items-center justify-center text-primary">
               <Search className="h-5 w-5" />
             </button>
           )}
-          <Button variant="ghost" size="icon" className="text-primary" onClick={() => setMobileOpen(!mobileOpen)}>
+          <Button variant="ghost" size="icon" className="text-primary h-9 w-9" onClick={() => setMobileOpen(!mobileOpen)}>
             {mobileOpen ? <X /> : <Menu />}
           </Button>
         </div>
