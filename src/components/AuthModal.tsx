@@ -98,10 +98,22 @@ export default function AuthModal() {
             <X className="h-5 w-5" />
           </Button>
 
-          {/* Logo */}
-          <div className="flex items-center justify-center gap-1.5 pt-6">
-            <span className="text-primary text-xl">⚡</span>
-            <span className="font-display text-lg font-bold text-foreground">Froiv</span>
+          {/* Header with role badge */}
+          <div className="flex flex-col items-center gap-2 pt-6">
+            <div className="flex items-center gap-1.5">
+              <span className="text-primary text-xl">⚡</span>
+              <span className="font-display text-lg font-bold text-foreground">Froiv</span>
+            </div>
+            {authRole && mode === "register" && (
+              <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${
+                authRole === "buyer" 
+                  ? "bg-primary/10 text-primary" 
+                  : "bg-accent text-accent-foreground"
+              }`}>
+                {authRole === "buyer" ? <ShoppingCart className="h-3 w-3" /> : <Tag className="h-3 w-3" />}
+                {authRole === "buyer" ? "Cadastro de Comprador" : "Cadastro de Vendedor"}
+              </div>
+            )}
           </div>
 
           {/* Tabs as pills */}
