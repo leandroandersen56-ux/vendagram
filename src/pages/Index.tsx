@@ -35,6 +35,8 @@ export default function Index() {
   const [selectedPlatform, setSelectedPlatform] = useState<string | null>(null);
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [sortBy, setSortBy] = useState<"recent" | "price_asc" | "price_desc">("recent");
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000]);
+  const [minFollowers, setMinFollowers] = useState<number>(0);
 
   const handleSell = () => {
     if (isAuthenticated) {
@@ -109,6 +111,11 @@ export default function Index() {
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       if (!l.title.toLowerCase().includes(q) && !l.description.toLowerCase().includes(q)) return false;
+    }
+    if (l.price < priceRange[0] || l.price > priceRange[1]) return false;
+    if (minFollowers > 0) {
+      const followers = Number(l.fields?.followers || l.fields?.seguidores || l.fields?.followers_count || 0);
+      if (followers < minFollowers) return false;
     }
     return true;
   }).sort((a, b) => {
@@ -218,21 +225,90 @@ export default function Index() {
                 {showFilterMenu && (
                   <>
                     <div className="fixed inset-0 z-30" onClick={() => setShowFilterMenu(false)} />
-                    <div className="absolute top-full left-0 mt-2 z-40 bg-background border border-border rounded-xl shadow-lg p-3 min-w-[180px]">
-                      <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold mb-2">Ordenar por</p>
-                      {([
-                        { key: "recent" as const, label: "Mais recentes" },
-                        { key: "price_asc" as const, label: "Menor preço" },
-                        { key: "price_desc" as const, label: "Maior preço" },
-                      ]).map((opt) => (
-                        <button
-                          key={opt.key}
-                          onClick={() => { setSortBy(opt.key); setShowFilterMenu(false); }}
-                          className={`w-full text-left px-3 py-2 rounded-lg text-xs transition-colors ${sortBy === opt.key ? 'bg-primary/10 text-primary font-semibold' : 'text-foreground hover:bg-muted'}`}
+                    <div className="absolute top-full left-0 mt-2 z-40 bg-background border border-border rounded-xl shadow-lg p-4 min-w-[260px] space-y-4">
+                      {/* Ordenar */}
+                      <div>
+                        <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold mb-2">Ordenar por</p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {([
+                            { key: "recent" as const, label: "Recentes" },
+                            { key: "price_asc" as const, label: "Menor preço" },
+                            { key: "price_desc" as const, label: "Maior preço" },
+                          ]).map((opt) => (
+                            <button
+                              key={opt.key}
+                              onClick={() => setSortBy(opt.key)}
+                              className={`px-3 py-1.5 rounded-full text-[11px] font-medium transition-colors ${sortBy === opt.key ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground hover:bg-muted/80'}`}
+                            >
+                              {opt.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Faixa de preço */}
+                      <div>
+                        <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold mb-2">Faixa de preço</p>
+                        <div className="flex items-center gap-2">
+                          <Input
+                            type="number"
+                            placeholder="Mín"
+                            value={priceRange[0] || ""}
+                            onChange={(e) => setPriceRange([Number(e.target.value) || 0, priceRange[1]])}
+                            className="h-8 text-xs w-full"
+                          />
+                          <span className="text-muted-foreground text-xs">—</span>
+                          <Input
+                            type="number"
+                            placeholder="Máx"
+                            value={priceRange[1] === 10000 ? "" : priceRange[1]}
+                            onChange={(e) => setPriceRange([priceRange[0], Number(e.target.value) || 10000])}
+                            className="h-8 text-xs w-full"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Seguidores mínimo */}
+                      <div>
+                        <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold mb-2">Seguidores mínimos</p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {[
+                            { value: 0, label: "Todos" },
+                            { value: 1000, label: "1K+" },
+                            { value: 5000, label: "5K+" },
+                            { value: 10000, label: "10K+" },
+                            { value: 50000, label: "50K+" },
+                          ].map((opt) => (
+                            <button
+                              key={opt.value}
+                              onClick={() => setMinFollowers(opt.value)}
+                              className={`px-3 py-1.5 rounded-full text-[11px] font-medium transition-colors ${minFollowers === opt.value ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground hover:bg-muted/80'}`}
+                            >
+                              {opt.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Aplicar / Limpar */}
+                      <div className="flex gap-2 pt-1">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="flex-1 text-xs h-8"
+                          onClick={() => { setSortBy("recent"); setPriceRange([0, 10000]); setMinFollowers(0); }}
                         >
-                          {opt.label}
-                        </button>
-                      ))}
+                          Limpar
+                        </Button>
+                        <Button
+                          variant="hero"
+                          size="sm"
+                          className="flex-1 text-xs h-8"
+                          onClick={() => setShowFilterMenu(false)}
+                        >
+                          Aplicar
+                        </Button>
+                      </div>
                     </div>
                   </>
                 )}
@@ -262,13 +338,33 @@ export default function Index() {
               </button>
             </div>
 
-            {/* Active filter indicator */}
-            {selectedPlatform && (
-              <div className="flex items-center gap-2 mt-2">
-                <span className="text-[11px] bg-primary/10 text-primary px-3 py-1 rounded-full font-medium flex items-center gap-1">
-                  {PLATFORMS.find(p => p.id === selectedPlatform)?.name}
-                  <button onClick={() => setSelectedPlatform(null)} className="ml-1 hover:text-primary/70">✕</button>
-                </span>
+            {/* Active filter indicators */}
+            {(selectedPlatform || sortBy !== "recent" || priceRange[0] > 0 || priceRange[1] < 10000 || minFollowers > 0) && (
+              <div className="flex items-center gap-1.5 mt-2 flex-wrap">
+                {selectedPlatform && (
+                  <span className="text-[11px] bg-primary/10 text-primary px-3 py-1 rounded-full font-medium flex items-center gap-1">
+                    {PLATFORMS.find(p => p.id === selectedPlatform)?.name}
+                    <button onClick={() => setSelectedPlatform(null)} className="ml-1 hover:text-primary/70">✕</button>
+                  </span>
+                )}
+                {sortBy !== "recent" && (
+                  <span className="text-[11px] bg-primary/10 text-primary px-3 py-1 rounded-full font-medium flex items-center gap-1">
+                    {sortBy === "price_asc" ? "Menor preço" : "Maior preço"}
+                    <button onClick={() => setSortBy("recent")} className="ml-1 hover:text-primary/70">✕</button>
+                  </span>
+                )}
+                {(priceRange[0] > 0 || priceRange[1] < 10000) && (
+                  <span className="text-[11px] bg-primary/10 text-primary px-3 py-1 rounded-full font-medium flex items-center gap-1">
+                    R$ {priceRange[0]}–{priceRange[1] >= 10000 ? "∞" : priceRange[1]}
+                    <button onClick={() => setPriceRange([0, 10000])} className="ml-1 hover:text-primary/70">✕</button>
+                  </span>
+                )}
+                {minFollowers > 0 && (
+                  <span className="text-[11px] bg-primary/10 text-primary px-3 py-1 rounded-full font-medium flex items-center gap-1">
+                    {minFollowers >= 1000 ? `${minFollowers / 1000}K+` : `${minFollowers}+`} seguidores
+                    <button onClick={() => setMinFollowers(0)} className="ml-1 hover:text-primary/70">✕</button>
+                  </span>
+                )}
               </div>
             )}
           </div>
