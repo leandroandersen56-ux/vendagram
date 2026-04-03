@@ -159,57 +159,63 @@ export default function PanelListings() {
             const isReal = isUUID(listing.id);
             const demoClick = () => toast({ title: "Anúncio de demonstração", description: "Crie um anúncio real para usar esta ação." });
             return (
-              <Card key={listing.id} className="bg-card border-border p-4">
-                <div className="flex items-center gap-3 sm:gap-4">
-                  <div className="h-14 w-14 sm:h-14 sm:w-14 rounded-xl flex items-center justify-center shrink-0" style={{ background: `${cat.color}15` }}>
-                    <PlatformIcon platformId={listing.category} size={32} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-foreground text-sm truncate">{listing.title}</p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <Badge className={`${st.className} border-0 text-[10px]`}>{st.label}</Badge>
-                      <span className="text-xs text-muted-foreground">{cat.name}</span>
+              <Card key={listing.id} className="w-full overflow-hidden border-border bg-card">
+                <div className="flex min-w-0 flex-col gap-3 p-3.5 sm:flex-row sm:items-center sm:gap-4 sm:p-4">
+                  <div className="flex min-w-0 items-center gap-3 sm:flex-1 sm:gap-4">
+                    <div className="h-14 w-14 rounded-xl flex items-center justify-center shrink-0" style={{ background: `${cat.color}15` }}>
+                      <PlatformIcon platformId={listing.category} size={32} />
                     </div>
-                    <p className="text-sm font-bold text-primary mt-1 sm:hidden">{formatBRL(listing.price)}</p>
+                    <div className="min-w-0 flex-1">
+                      <p className="line-clamp-2 break-words text-sm font-medium leading-snug text-foreground sm:line-clamp-1">
+                        {listing.title}
+                      </p>
+                      <div className="mt-1 flex flex-wrap items-center gap-2">
+                        <Badge className={`${st.className} border-0 text-[10px]`}>{st.label}</Badge>
+                        <span className="text-xs text-muted-foreground">{cat.name}</span>
+                      </div>
+                    </div>
                   </div>
-                  <p className="text-lg font-bold text-primary shrink-0 hidden sm:block">{formatBRL(listing.price)}</p>
-                  <div className="hidden sm:flex gap-1 shrink-0">
-                    <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => isReal ? navigate(`/listing/${listing.id}`) : demoClick()} title="Ver anúncio">
-                      <Eye className="h-3 w-3" />
-                    </Button>
-                    <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => isReal ? navigate(`/painel/anuncios/editar/${listing.id}`) : demoClick()} title="Editar">
-                      <Edit className="h-3 w-3" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={() => isReal ? toggleStatus(listing) : demoClick()}
-                      title={listing.status === "active" ? "Pausar" : "Ativar"}
-                    >
-                      {listing.status === "active" ? <Pause className="h-3 w-3" /> : <Play className="h-3 w-3" />}
-                    </Button>
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" title="Remover" onClick={(e) => { if (!isReal) { e.preventDefault(); demoClick(); } }}>
-                          <Trash2 className="h-3 w-3" />
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>Remover anúncio?</AlertDialogTitle>
-                          <AlertDialogDescription>
-                            Essa ação irá remover o anúncio do marketplace. Você não poderá desfazer.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                          <AlertDialogAction onClick={() => deleteListing(listing.id)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                            Remover
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
+
+                  <div className="flex items-center justify-between gap-3 border-t border-border/60 pt-3 sm:ml-auto sm:border-t-0 sm:pt-0">
+                    <p className="shrink-0 text-base font-bold text-primary sm:text-lg">{formatBRL(listing.price)}</p>
+                    <div className="hidden shrink-0 items-center gap-1 sm:flex">
+                      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => isReal ? navigate(`/listing/${listing.id}`) : demoClick()} title="Ver anúncio">
+                        <Eye className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => isReal ? navigate(`/painel/anuncios/editar/${listing.id}`) : demoClick()} title="Editar">
+                        <Edit className="h-3 w-3" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8"
+                        onClick={() => isReal ? toggleStatus(listing) : demoClick()}
+                        title={listing.status === "active" ? "Pausar" : "Ativar"}
+                      >
+                        {listing.status === "active" ? <Pause className="h-3 w-3" /> : <Play className="h-3 w-3" />}
+                      </Button>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" title="Remover" onClick={(e) => { if (!isReal) { e.preventDefault(); demoClick(); } }}>
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Remover anúncio?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Essa ação irá remover o anúncio do marketplace. Você não poderá desfazer.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => deleteListing(listing.id)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                              Remover
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
                   </div>
                 </div>
               </Card>
