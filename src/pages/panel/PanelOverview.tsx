@@ -100,10 +100,10 @@ export default function PanelOverview() {
 
   return (
     <>
-      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className="space-y-5">
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className="space-y-5 overflow-hidden">
         {/* Header compacto */}
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
+        <div className="flex items-center justify-between gap-2">
+          <div className="min-w-0 flex-1">
             <h1 className="text-lg sm:text-2xl font-display font-bold text-foreground tracking-tight truncate">
               Olá, {user?.name} 👋
             </h1>
@@ -111,29 +111,28 @@ export default function PanelOverview() {
           </div>
           <Link to="/painel/anuncios/novo" className="shrink-0">
             <Button variant="hero" size="sm" className="gap-1 text-xs h-8 px-3">
-              <Plus className="h-3.5 w-3.5" /> Novo Anúncio
+              <Plus className="h-3.5 w-3.5" /> <span className="hidden xs:inline">Novo</span> Anúncio
             </Button>
           </Link>
         </div>
 
-        {/* Stats - horizontal scroll no mobile */}
-        <div className="flex gap-2.5 overflow-x-auto pb-1 -mx-1 px-1 sm:grid sm:grid-cols-3 sm:overflow-visible sm:mx-0 sm:px-0">
+        {/* Stats grid - always visible, no scroll */}
+        <div className="grid grid-cols-3 gap-2 sm:gap-3">
           {stats.map((stat, i) => (
             <motion.div
               key={stat.label}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
-              className="min-w-[140px] flex-1 sm:min-w-0"
             >
-              <div className="bg-background border border-border rounded-2xl p-4 sm:p-5 h-full">
-                <div className="flex items-start justify-between gap-2">
-                  <div className="min-w-0">
-                    <p className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wide">{stat.label}</p>
-                    <p className="text-xl sm:text-2xl font-display font-bold text-foreground mt-1">{stat.value}</p>
-                    <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5">{stat.change}</p>
+              <div className="bg-background border border-border rounded-2xl p-3 sm:p-5 h-full">
+                <div className="flex flex-col items-center text-center sm:flex-row sm:text-left sm:items-start sm:justify-between gap-1.5 sm:gap-2">
+                  <div className="order-2 sm:order-1 min-w-0">
+                    <p className="text-[9px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wide leading-tight">{stat.label}</p>
+                    <p className="text-xl sm:text-2xl font-display font-bold text-foreground mt-0.5">{stat.value}</p>
+                    <p className="text-[9px] sm:text-xs text-muted-foreground mt-0.5 truncate">{stat.change}</p>
                   </div>
-                  <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                  <div className="order-1 sm:order-2 h-8 w-8 sm:h-10 sm:w-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
                     <stat.icon className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                   </div>
                 </div>
@@ -176,20 +175,20 @@ export default function PanelOverview() {
           </div>
 
           {/* Pendente e Total lado a lado */}
-          <div className="grid grid-cols-2 gap-2.5 mb-5">
-            <div className="bg-background border border-border rounded-2xl p-4">
-              <div className="flex items-center gap-1.5 mb-1.5">
-                <Clock className="h-3.5 w-3.5 text-warning" />
-                <p className="text-[10px] sm:text-xs font-medium text-muted-foreground">Pendente</p>
+          <div className="grid grid-cols-2 gap-2 mb-5">
+            <div className="bg-background border border-border rounded-2xl p-3 sm:p-4 overflow-hidden">
+              <div className="flex items-center gap-1.5 mb-1">
+                <Clock className="h-3 w-3 text-warning shrink-0" />
+                <p className="text-[9px] sm:text-xs font-medium text-muted-foreground truncate">Pendente</p>
               </div>
-              <p className="text-lg sm:text-xl font-bold text-warning">{formatBRL(pending)}</p>
+              <p className="text-base sm:text-xl font-bold text-warning truncate">{formatBRL(pending)}</p>
             </div>
-            <div className="bg-background border border-border rounded-2xl p-4">
-              <div className="flex items-center gap-1.5 mb-1.5">
-                <TrendingUp className="h-3.5 w-3.5 text-primary" />
-                <p className="text-[10px] sm:text-xs font-medium text-muted-foreground">Total Ganho</p>
+            <div className="bg-background border border-border rounded-2xl p-3 sm:p-4 overflow-hidden">
+              <div className="flex items-center gap-1.5 mb-1">
+                <TrendingUp className="h-3 w-3 text-primary shrink-0" />
+                <p className="text-[9px] sm:text-xs font-medium text-muted-foreground truncate">Total Ganho</p>
               </div>
-              <p className="text-lg sm:text-xl font-bold text-foreground">{formatBRL(totalEarned)}</p>
+              <p className="text-base sm:text-xl font-bold text-foreground truncate">{formatBRL(totalEarned)}</p>
             </div>
           </div>
 
