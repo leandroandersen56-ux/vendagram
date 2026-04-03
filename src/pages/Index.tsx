@@ -215,6 +215,13 @@ export default function Index() {
           <div className="container mx-auto px-[5px] sm:px-4">
             <div className="flex items-center gap-0 overflow-x-auto scrollbar-hide h-10">
               <button
+                onClick={() => setShowFilterMenu(!showFilterMenu)}
+                className={`shrink-0 flex items-center gap-1 px-3 h-full text-[13px] font-semibold border-b-2 transition-colors ${showFilterMenu ? 'border-primary text-primary' : 'border-transparent text-txt-secondary hover:text-txt-primary'}`}
+                aria-label="Filtros"
+              >
+                <SlidersHorizontal className="h-3.5 w-3.5" /> Filtros
+              </button>
+              <button
                 onClick={() => setSelectedPlatform(null)}
                 className={`shrink-0 px-3 h-full text-[13px] font-semibold border-b-2 transition-colors ${!selectedPlatform ? 'border-primary text-primary' : 'border-transparent text-txt-secondary hover:text-txt-primary'}`}
               >
@@ -229,15 +236,6 @@ export default function Index() {
                   {p.name}
                 </button>
               ))}
-              <div className="ml-auto shrink-0 pl-2">
-                <button
-                  onClick={() => setShowFilterMenu(!showFilterMenu)}
-                  className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-[12px] font-semibold transition-colors ${showFilterMenu ? 'bg-primary text-white' : 'bg-muted text-txt-secondary hover:bg-border'}`}
-                  aria-label="Filtros"
-                >
-                  <SlidersHorizontal className="h-3.5 w-3.5" /> Filtros
-                </button>
-              </div>
             </div>
           </div>
         </section>
