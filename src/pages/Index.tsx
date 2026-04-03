@@ -355,7 +355,7 @@ export default function Index() {
                   const el = document.getElementById('destaques-scroll');
                   el?.scrollBy({ left: -180, behavior: 'smooth' });
                 }}
-                className="absolute left-0 top-1/2 -translate-y-1/2 z-20 h-7 w-7 rounded-full bg-white/90 dark:bg-card shadow-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 border border-border/40"
+                className="absolute left-0 top-1/2 -translate-y-1/2 z-20 h-7 w-7 rounded-full bg-white dark:bg-card shadow-md flex items-center justify-center border border-border/40"
                 aria-label="Scroll esquerda"
               >
                 <ChevronLeft className="h-4 w-4 text-txt-secondary" />
