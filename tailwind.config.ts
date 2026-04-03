@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        display: ['Inter', 'sans-serif'],
+        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        display: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -54,14 +54,36 @@ export default {
           foreground: "hsl(var(--card-foreground))",
           elevated: "hsl(var(--card-elevated))",
         },
-        success: "hsl(var(--success))",
-        warning: "hsl(var(--warning))",
-        info: "hsl(var(--info))",
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          light: "hsl(var(--success-light))",
+        },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          dark: "hsl(var(--warning-dark))",
+        },
+        danger: {
+          DEFAULT: "hsl(var(--danger))",
+          light: "hsl(var(--danger-light))",
+        },
+        escrow: {
+          DEFAULT: "hsl(var(--escrow))",
+          light: "hsl(var(--escrow-light))",
+        },
+        hot: {
+          DEFAULT: "hsl(var(--hot))",
+          light: "hsl(var(--hot-light))",
+        },
+        txt: {
+          primary: "hsl(var(--txt-primary))",
+          secondary: "hsl(var(--txt-secondary))",
+          hint: "hsl(var(--txt-hint))",
+        },
         ink: {
           DEFAULT: "hsl(var(--foreground))",
           muted: "hsl(var(--muted-foreground))",
         },
-        surface: "hsl(var(--secondary))",
+        surface: "hsl(var(--card))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -78,6 +100,11 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      boxShadow: {
+        'card': '0 1px 4px rgba(0,0,0,0.08)',
+        'card-hover': '0 4px 12px rgba(0,0,0,0.12)',
+        'nav': '0 -2px 8px rgba(0,0,0,0.06)',
+      },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
@@ -87,10 +114,15 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        shimmer: {
+          '0%': { backgroundPosition: '-200% 0' },
+          '100%': { backgroundPosition: '200% 0' },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        shimmer: 'shimmer 1.5s ease-in-out infinite',
       },
     },
   },

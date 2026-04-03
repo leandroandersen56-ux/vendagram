@@ -6,51 +6,62 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222 47% 11%;
+    --background: 0 0% 96%;
+    --foreground: 0 0% 7%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
-    --card-elevated: 213 100% 97%;
+    --card-foreground: 0 0% 7%;
+    --card-elevated: 0 0% 98%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 0 0% 7%;
 
-    --primary: 209 93% 56%;
+    --primary: 222 87% 56%;
     --primary-foreground: 0 0% 100%;
-    --primary-dark: 209 90% 45%;
-    --primary-light: 213 100% 95%;
+    --primary-dark: 222 79% 44%;
+    --primary-light: 222 100% 96%;
 
-    --secondary: 213 100% 97%;
-    --secondary-foreground: 222 47% 11%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 7%;
 
-    --muted: 213 100% 97%;
-    --muted-foreground: 215 16% 47%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 40%;
 
-    --accent: 209 93% 56%;
+    --accent: 222 87% 56%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 4 84% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 209 93% 56%;
+    --border: 0 0% 91%;
+    --input: 0 0% 91%;
+    --ring: 222 87% 56%;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
-    --success: 142 70% 45%;
-    --warning: 45 100% 51%;
-    --info: 209 93% 56%;
+    --success: 152 69% 31%;
+    --success-light: 152 60% 95%;
+    --warning: 54 100% 50%;
+    --warning-dark: 52 93% 47%;
+    --danger: 4 84% 55%;
+    --danger-light: 0 100% 97%;
+    --escrow: 187 100% 37%;
+    --escrow-light: 187 100% 96%;
+    --hot: 27 100% 50%;
+    --hot-light: 27 100% 97%;
+
+    --txt-primary: 0 0% 7%;
+    --txt-secondary: 0 0% 40%;
+    --txt-hint: 0 0% 60%;
 
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 222 47% 11%;
-    --sidebar-primary: 209 93% 56%;
+    --sidebar-foreground: 0 0% 7%;
+    --sidebar-primary: 222 87% 56%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 213 100% 97%;
-    --sidebar-accent-foreground: 222 47% 11%;
-    --sidebar-border: 214 32% 91%;
-    --sidebar-ring: 209 93% 56%;
+    --sidebar-accent: 0 0% 96%;
+    --sidebar-accent-foreground: 0 0% 7%;
+    --sidebar-border: 0 0% 91%;
+    --sidebar-ring: 222 87% 56%;
   }
 }
 
@@ -61,14 +72,15 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   h1, h2, h3, .font-display {
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
+    letter-spacing: -0.3px;
   }
 
   html {
@@ -81,7 +93,7 @@
     background: hsl(0 0% 100% / 0.95);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid hsl(214 32% 91%);
+    border-bottom: 1px solid hsl(0 0% 91%);
   }
 
   .card-hover {
@@ -89,23 +101,22 @@
   }
   .card-hover:hover {
     transform: translateY(-2px);
-    border-color: hsl(209 93% 56% / 0.3);
-    box-shadow: 0 8px 24px hsl(209 93% 56% / 0.08);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
   }
 
   .text-gradient-primary {
-    background: linear-gradient(135deg, hsl(209 93% 56%), hsl(209 93% 45%));
+    background: linear-gradient(135deg, hsl(222 87% 56%), hsl(222 79% 44%));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .glow-primary {
-    box-shadow: 0 0 20px hsl(209 93% 56% / 0.15), 0 0 60px hsl(209 93% 56% / 0.05);
+    box-shadow: 0 0 20px hsl(222 87% 56% / 0.15), 0 0 60px hsl(222 87% 56% / 0.05);
   }
 
   .glow-primary-sm {
-    box-shadow: 0 0 8px hsl(209 93% 56% / 0.2);
+    box-shadow: 0 0 8px hsl(222 87% 56% / 0.2);
   }
 
   .surface-elevated {
@@ -122,12 +133,24 @@
 
   .card-surface {
     background: hsl(0 0% 100%);
-    border: 1px solid hsl(214 32% 91%);
-    border-radius: 1rem;
+    border: 1px solid hsl(0 0% 91%);
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
   }
 
   .card-surface:hover {
-    border-color: hsl(209 93% 56% / 0.3);
-    box-shadow: 0 8px 24px hsl(209 93% 56% / 0.06);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    transform: translateY(-2px);
+  }
+
+  .skeleton-shimmer {
+    background: linear-gradient(90deg, hsl(0 0% 91%) 25%, hsl(0 0% 96%) 50%, hsl(0 0% 91%) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+
+  .fade-edges {
+    mask-image: linear-gradient(to right, transparent, black 16px, black calc(100% - 16px), transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 16px, black calc(100% - 16px), transparent);
   }
 }
