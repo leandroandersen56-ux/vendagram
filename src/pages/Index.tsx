@@ -1,9 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Search, Loader2, Shield, CheckCircle2, Clock, Zap, Gamepad2, Smartphone } from "lucide-react";
+import {
+  ArrowRight, Search, Loader2, Shield, CheckCircle2, Clock, Zap,
+  Gamepad2, Smartphone, ChevronLeft, ChevronRight, Tag, Plus, TrendingUp, Star
+} from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ListingCard from "@/components/ListingCard";
@@ -11,11 +14,30 @@ import PlatformIcon from "@/components/PlatformIcon";
 import { PLATFORMS, MOCK_LISTINGS, type Listing } from "@/lib/mock-data";
 import { supabase } from "@/integrations/supabase/client";
 
+import bannerHero1 from "@/assets/banners/banner-hero-1.jpg";
+import bannerHero2 from "@/assets/banners/banner-hero-2.jpg";
+import bannerHero3 from "@/assets/banners/banner-hero-3.jpg";
+
+const BANNERS = [
+  { img: bannerHero1, title: "Contas de Redes Sociais", subtitle: "Instagram, TikTok, YouTube e mais", cta: "Ver contas", link: "/marketplace?type=social" },
+  { img: bannerHero2, title: "Contas de Jogos", subtitle: "Free Fire, Valorant, Fortnite e mais", cta: "Ver contas", link: "/marketplace?type=games" },
+  { img: bannerHero3, title: "Compra 100% Segura", subtitle: "Pagamento protegido com escrow", cta: "Saiba mais", link: "/marketplace" },
+];
+
+const QUICK_ACTIONS = [
+  { icon: <Tag className="h-5 w-5" />, label: "Ofertas", link: "/marketplace", color: "text-amber-500" },
+  { icon: <TrendingUp className="h-5 w-5" />, label: "Populares", link: "/marketplace", color: "text-emerald-500" },
+  { icon: <Shield className="h-5 w-5" />, label: "Segurança", link: "/marketplace", color: "text-primary" },
+  { icon: <Star className="h-5 w-5" />, label: "Destaques", link: "/marketplace", color: "text-amber-400" },
+  { icon: <Plus className="h-5 w-5" />, label: "Vender", link: "/painel/anuncios/novo", color: "text-primary" },
+];
+
 export default function Index() {
   const { isAuthenticated, openAuth } = useAuth();
   const navigate = useNavigate();
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(true);
+  const [bannerIdx, setBannerIdx] = useState(0);
 
   const handleSell = () => {
     if (isAuthenticated) {
@@ -24,6 +46,16 @@ export default function Index() {
       openAuth("/painel/anuncios/novo");
     }
   };
+
+  // Auto-rotate banners
+  useEffect(() => {
+    const timer = setInterval(() => setBannerIdx((i) => (i + 1) % BANNERS.length), 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const goToBanner = useCallback((dir: number) => {
+    setBannerIdx((i) => (i + dir + BANNERS.length) % BANNERS.length);
+  }, []);
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -78,248 +110,262 @@ export default function Index() {
   const filtered = listings;
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-[hsl(var(--secondary))] flex flex-col">
       <Navbar />
 
-      {/* Hero Section */}
-      <section className="pt-20 sm:pt-24 pb-8 px-4 text-center order-1">
-        <div className="container mx-auto max-w-3xl">
-          {/* Tag pill */}
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
-            <span className="inline-flex items-center gap-1 rounded-full bg-primary-light text-primary text-xs font-semibold px-3 py-1 mb-4">
-              ✦ Marketplace #1 de contas digitais
-            </span>
-          </motion.div>
-
-          <motion.h1
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.1 }}
-            className="text-3xl sm:text-5xl font-display font-semibold text-foreground leading-tight"
-          >
-            Compre e venda contas com{" "}
-            <span className="text-gradient-primary">total segurança</span>
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="text-muted-foreground text-base mt-3 max-w-xl mx-auto"
-          >
-            Instagram, TikTok, YouTube, Free Fire e muito mais. Pagamento seguro e entrega imediata.
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="flex gap-3 justify-center flex-wrap mt-6"
-          >
-            <Link to="/marketplace">
-              <Button variant="hero" className="px-6 py-3 shadow-md shadow-primary/20">
-                Explorar contas <ArrowRight className="h-4 w-4 ml-1" />
-              </Button>
-            </Link>
-            <Button
-              variant="outline"
-              className="border-primary text-primary rounded-full px-6 py-3 font-semibold hover:bg-primary-light"
-              onClick={handleSell}
-            >
-              Vender agora
-            </Button>
-          </motion.div>
-
-          {/* Trust badges */}
-          <div className="flex gap-4 justify-center flex-wrap mt-5 text-xs text-muted-foreground">
-            <span className="flex items-center gap-1">✓ Pagamento seguro</span>
-            <span className="flex items-center gap-1">✓ Suporte 24h</span>
-            <span className="flex items-center gap-1">✓ Entrega imediata</span>
-          </div>
-        </div>
-      </section>
-
-      {/* Categories — navigates to marketplace */}
-      <section className="px-4 order-2">
-        <div className="container mx-auto">
-          <h2 className="font-display font-bold text-xl text-foreground mt-10 mb-4">Explorar por plataforma</h2>
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 sm:gap-3">
-            {PLATFORMS.map((p) => {
-              const count = listings.filter((l) => l.platform === p.id).length;
-              return (
-                <Link
-                  key={p.id}
-                  to={`/marketplace?platform=${p.id}`}
-                  className="flex flex-col items-center gap-1.5 p-3 sm:p-4 rounded-2xl border border-border bg-card hover:border-primary hover:bg-primary/5 transition-all duration-200 group"
-                >
-                  <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-                    <PlatformIcon platformId={p.id} size={28} />
-                  </div>
-                  <span className="text-xs font-semibold text-foreground">{p.name}</span>
-                  <span className="text-[10px] text-muted-foreground">{count} {count === 1 ? "anúncio" : "anúncios"}</span>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* How it works */}
-      <section className="py-10 sm:py-16 px-4 order-4">
-        <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-8 sm:mb-12">
-            <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 text-primary text-[10px] sm:text-xs font-semibold px-3 py-1 mb-3">
-              Simples e seguro
-            </span>
-            <h2 className="text-xl sm:text-3xl font-bold text-foreground font-display">
-              Como funciona
-            </h2>
-            <p className="text-xs sm:text-sm text-muted-foreground mt-1.5 max-w-md mx-auto">
-              Em 4 passos simples você compra ou vende com total segurança
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6">
-            {[
-              { icon: <Search className="h-5 w-5 sm:h-6 sm:w-6" />, title: "Encontre", desc: "Busque por plataforma e preço", num: "01" },
-              { icon: <Shield className="h-5 w-5 sm:h-6 sm:w-6" />, title: "Compre", desc: "Pix retido em escrow", num: "02" },
-              { icon: <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6" />, title: "Verifique", desc: "Valide a conta recebida", num: "03" },
-              { icon: <Zap className="h-5 w-5 sm:h-6 sm:w-6" />, title: "Pronto!", desc: "Pagamento liberado", num: "04" },
-            ].map((step, i) => (
-              <motion.div
-                key={step.title}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1, duration: 0.4 }}
-                viewport={{ once: true }}
-                className="relative rounded-2xl bg-muted/60 border border-border p-4 sm:p-6 text-center group hover:border-primary/40 hover:bg-primary/5 transition-all duration-300"
+      <div className="pt-14 md:pt-16">
+        {/* === BANNER CAROUSEL === */}
+        <section className="relative w-full">
+          <div className="relative overflow-hidden aspect-[2.2/1] sm:aspect-[3/1] md:aspect-[3.5/1]">
+            {BANNERS.map((b, i) => (
+              <div
+                key={i}
+                className={`absolute inset-0 transition-opacity duration-500 ${i === bannerIdx ? "opacity-100" : "opacity-0 pointer-events-none"}`}
               >
-                <span className="absolute top-3 right-3 text-[10px] sm:text-xs font-bold text-primary/25 font-display">
-                  {step.num}
-                </span>
-                <div className="h-11 w-11 sm:h-14 sm:w-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mx-auto mb-3 group-hover:bg-primary group-hover:text-white transition-all duration-300">
-                  {step.icon}
-                </div>
-                <h3 className="text-xs sm:text-sm font-bold text-foreground mb-1">{step.title}</h3>
-                <p className="text-[10px] sm:text-xs text-muted-foreground leading-relaxed">{step.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Listings Section */}
-      <section className="py-8 px-4 order-3">
-        <div className="container mx-auto">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="font-display font-bold text-xl text-foreground">Contas em destaque</h2>
-            <Link to="/marketplace" className="text-xs text-primary hover:underline flex items-center gap-1">
-              Ver todas <ArrowRight className="h-3 w-3" />
-            </Link>
-          </div>
-
-          {/* Grid */}
-          {loading ? (
-            <div className="flex items-center justify-center py-20">
-              <Loader2 className="h-5 w-5 animate-spin text-primary" />
-            </div>
-          ) : filtered.length > 0 ? (
-            <div className="space-y-8">
-              {(() => {
-                const GAME_PLATFORMS = ['free_fire', 'valorant', 'fortnite', 'roblox', 'clash_royale'];
-                const games = filtered.filter(l => GAME_PLATFORMS.includes(l.platform));
-                const SOCIAL_ORDER = ['instagram', 'tiktok', 'youtube', 'facebook', 'other'];
-                const social = filtered
-                  .filter(l => !GAME_PLATFORMS.includes(l.platform))
-                  .sort((a, b) => {
-                    const ai = SOCIAL_ORDER.indexOf(a.platform);
-                    const bi = SOCIAL_ORDER.indexOf(b.platform);
-                    return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
-                  });
-
-                return (
-                  <>
-                    {social.length > 0 && (
-                      <div>
-                        <div className="flex items-center justify-between mb-3">
-                          <h3 className="text-sm font-bold text-foreground uppercase tracking-wide flex items-center gap-2">
-                            <Smartphone className="h-4 w-4 text-primary" /> Redes Sociais
-                          </h3>
-                          {social.length > 5 && (
-                            <Link to="/marketplace?type=social" className="text-xs text-primary hover:underline flex items-center gap-1">
-                              Ver todos <ArrowRight className="h-3 w-3" />
-                            </Link>
-                          )}
-                        </div>
-                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-                          {social.slice(0, 5).map((listing) => (
-                            <ListingCard key={listing.id} listing={listing} />
-                          ))}
-                        </motion.div>
-                      </div>
-                    )}
-
-                    {games.length > 0 && (
-                      <div>
-                        <div className="flex items-center justify-between mb-3">
-                          <h3 className="text-sm font-bold text-foreground uppercase tracking-wide flex items-center gap-2">
-                            <Gamepad2 className="h-4 w-4 text-primary" /> Contas de Jogos
-                          </h3>
-                          {games.length > 5 && (
-                            <Link to="/marketplace?type=games" className="text-xs text-primary hover:underline flex items-center gap-1">
-                              Ver todos <ArrowRight className="h-3 w-3" />
-                            </Link>
-                          )}
-                        </div>
-                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-                          {games.slice(0, 5).map((listing) => (
-                            <ListingCard key={listing.id} listing={listing} />
-                          ))}
-                        </motion.div>
-                      </div>
-                    )}
-                  </>
-                );
-              })()}
-            </div>
-          ) : (
-            <div className="text-center py-16">
-              <Search className="h-8 w-8 text-muted-foreground mb-3 mx-auto" />
-              <p className="text-sm font-medium text-foreground mb-1">Nenhum anúncio encontrado</p>
-              <p className="text-muted-foreground text-xs mb-5">Seja o primeiro a anunciar!</p>
-              <Button variant="hero" size="sm" onClick={handleSell}>Criar Anúncio</Button>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Trust Section */}
-      <section className="py-10 sm:py-14 px-4 order-5">
-        <div className="container mx-auto max-w-3xl">
-          <div className="rounded-3xl bg-gradient-to-br from-primary to-primary-dark p-6 sm:p-10 text-white">
-            <h2 className="text-center text-base sm:text-xl font-bold font-display mb-6 sm:mb-8">
-              Por que escolher a Froiv?
-            </h2>
-            <div className="grid grid-cols-3 gap-4 sm:gap-8">
-              {[
-                { icon: <Shield className="h-5 w-5 sm:h-6 sm:w-6" />, value: "100%", label: "Escrow Seguro" },
-                { icon: <Clock className="h-5 w-5 sm:h-6 sm:w-6" />, value: "24h", label: "Garantia" },
-                { icon: <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6" />, value: "10%", label: "Taxa Fixa" },
-              ].map((stat) => (
-                <div key={stat.label} className="flex flex-col items-center gap-2 sm:gap-3 text-center">
-                  <div className="h-11 w-11 sm:h-14 sm:w-14 rounded-2xl bg-white/15 flex items-center justify-center backdrop-blur-sm">
-                    {stat.icon}
+                <img
+                  src={b.img}
+                  alt={b.title}
+                  className="w-full h-full object-cover"
+                  {...(i === 0 ? {} : { loading: "lazy" as const })}
+                />
+                {/* Overlay with text */}
+                <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent flex items-end sm:items-center">
+                  <div className="p-4 sm:p-8 md:p-12 max-w-lg">
+                    <h2 className="text-white text-lg sm:text-2xl md:text-3xl font-bold leading-tight drop-shadow-lg">
+                      {b.title}
+                    </h2>
+                    <p className="text-white/80 text-xs sm:text-sm mt-1 drop-shadow">{b.subtitle}</p>
+                    <Link to={b.link}>
+                      <Button size="sm" className="mt-3 bg-white text-foreground hover:bg-white/90 rounded-full text-xs font-semibold px-4 shadow-lg">
+                        {b.cta} <ArrowRight className="h-3 w-3 ml-1" />
+                      </Button>
+                    </Link>
                   </div>
-                  <p className="text-xl sm:text-3xl font-extrabold font-display">{stat.value}</p>
-                  <p className="text-[10px] sm:text-xs font-medium text-white/75">{stat.label}</p>
                 </div>
+              </div>
+            ))}
+
+            {/* Nav arrows */}
+            <button
+              onClick={() => goToBanner(-1)}
+              className="absolute left-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-white/80 backdrop-blur flex items-center justify-center shadow hover:bg-white transition z-10"
+            >
+              <ChevronLeft className="h-4 w-4 text-foreground" />
+            </button>
+            <button
+              onClick={() => goToBanner(1)}
+              className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-white/80 backdrop-blur flex items-center justify-center shadow hover:bg-white transition z-10"
+            >
+              <ChevronRight className="h-4 w-4 text-foreground" />
+            </button>
+
+            {/* Dots */}
+            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+              {BANNERS.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setBannerIdx(i)}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${i === bannerIdx ? "w-5 bg-white" : "w-1.5 bg-white/50"}`}
+                />
               ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <div className="order-6 w-full"><Footer /></div>
+        {/* === QUICK ACTIONS (horizontal scroll) === */}
+        <section className="px-4 py-3 bg-background border-b border-border">
+          <div className="container mx-auto">
+            <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-1">
+              {QUICK_ACTIONS.map((action) => (
+                <Link
+                  key={action.label}
+                  to={action.link}
+                  onClick={(e) => {
+                    if (action.label === "Vender") {
+                      e.preventDefault();
+                      handleSell();
+                    }
+                  }}
+                  className="flex flex-col items-center gap-1 min-w-[60px] group"
+                >
+                  <div className={`h-12 w-12 rounded-full bg-muted flex items-center justify-center ${action.color} group-hover:bg-primary/10 transition-colors`}>
+                    {action.icon}
+                  </div>
+                  <span className="text-[10px] font-medium text-foreground whitespace-nowrap">{action.label}</span>
+                </Link>
+              ))}
+
+              {/* Platform quick icons */}
+              {PLATFORMS.slice(0, 5).map((p) => (
+                <Link
+                  key={p.id}
+                  to={`/marketplace?platform=${p.id}`}
+                  className="flex flex-col items-center gap-1 min-w-[60px] group"
+                >
+                  <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+                    <PlatformIcon platformId={p.id} size={24} />
+                  </div>
+                  <span className="text-[10px] font-medium text-foreground whitespace-nowrap">{p.name}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* === CATEGORY TABS (horizontal scroll) === */}
+        <section className="px-4 pt-4 bg-background">
+          <div className="container mx-auto">
+            <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-3">
+              <Link to="/marketplace">
+                <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary text-primary-foreground text-xs font-semibold whitespace-nowrap shadow-sm">
+                  Todos
+                </span>
+              </Link>
+              {PLATFORMS.map((p) => (
+                <Link key={p.id} to={`/marketplace?platform=${p.id}`}>
+                  <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-card border border-border text-xs font-medium text-foreground whitespace-nowrap hover:border-primary hover:text-primary transition-colors">
+                    <PlatformIcon platformId={p.id} size={14} />
+                    {p.name}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* === FEATURED LISTINGS === */}
+        <section className="px-4 py-4 bg-background">
+          <div className="container mx-auto">
+            {loading ? (
+              <div className="flex items-center justify-center py-20">
+                <Loader2 className="h-5 w-5 animate-spin text-primary" />
+              </div>
+            ) : filtered.length > 0 ? (
+              <div className="space-y-6">
+                {(() => {
+                  const GAME_PLATFORMS = ['free_fire', 'valorant', 'fortnite', 'roblox', 'clash_royale'];
+                  const games = filtered.filter(l => GAME_PLATFORMS.includes(l.platform));
+                  const SOCIAL_ORDER = ['instagram', 'tiktok', 'youtube', 'facebook', 'other'];
+                  const social = filtered
+                    .filter(l => !GAME_PLATFORMS.includes(l.platform))
+                    .sort((a, b) => {
+                      const ai = SOCIAL_ORDER.indexOf(a.platform);
+                      const bi = SOCIAL_ORDER.indexOf(b.platform);
+                      return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+                    });
+
+                  return (
+                    <>
+                      {social.length > 0 && (
+                        <div>
+                          <div className="flex items-center justify-between mb-3">
+                            <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                              <Smartphone className="h-4 w-4 text-primary" /> Redes Sociais
+                            </h3>
+                            <Link to="/marketplace?type=social" className="text-xs text-primary hover:underline flex items-center gap-1">
+                              Ver todos <ArrowRight className="h-3 w-3" />
+                            </Link>
+                          </div>
+                          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-3">
+                            {social.slice(0, 5).map((listing) => (
+                              <ListingCard key={listing.id} listing={listing} />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {games.length > 0 && (
+                        <div>
+                          <div className="flex items-center justify-between mb-3">
+                            <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                              <Gamepad2 className="h-4 w-4 text-primary" /> Contas de Jogos
+                            </h3>
+                            <Link to="/marketplace?type=games" className="text-xs text-primary hover:underline flex items-center gap-1">
+                              Ver todos <ArrowRight className="h-3 w-3" />
+                            </Link>
+                          </div>
+                          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-3">
+                            {games.slice(0, 5).map((listing) => (
+                              <ListingCard key={listing.id} listing={listing} />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  );
+                })()}
+              </div>
+            ) : (
+              <div className="text-center py-16">
+                <Search className="h-8 w-8 text-muted-foreground mb-3 mx-auto" />
+                <p className="text-sm font-medium text-foreground mb-1">Nenhum anúncio encontrado</p>
+                <p className="text-muted-foreground text-xs mb-5">Seja o primeiro a anunciar!</p>
+                <Button variant="hero" size="sm" onClick={handleSell}>Criar Anúncio</Button>
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* === HOW IT WORKS === */}
+        <section className="py-6 px-4 bg-background border-t border-border">
+          <div className="container mx-auto max-w-4xl">
+            <h2 className="text-base sm:text-lg font-bold text-foreground text-center mb-4">
+              Como funciona
+            </h2>
+            <div className="grid grid-cols-4 gap-2 sm:gap-4">
+              {[
+                { icon: <Search className="h-5 w-5" />, title: "Encontre", desc: "Busque contas", num: "1" },
+                { icon: <Shield className="h-5 w-5" />, title: "Compre", desc: "Pix com escrow", num: "2" },
+                { icon: <CheckCircle2 className="h-5 w-5" />, title: "Verifique", desc: "Valide a conta", num: "3" },
+                { icon: <Zap className="h-5 w-5" />, title: "Pronto!", desc: "Pagamento liberado", num: "4" },
+              ].map((step, i) => (
+                <motion.div
+                  key={step.title}
+                  initial={{ opacity: 0, y: 12 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.08, duration: 0.3 }}
+                  viewport={{ once: true }}
+                  className="flex flex-col items-center text-center"
+                >
+                  <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-2">
+                    {step.icon}
+                  </div>
+                  <h3 className="text-[11px] sm:text-xs font-bold text-foreground">{step.title}</h3>
+                  <p className="text-[9px] sm:text-[10px] text-muted-foreground mt-0.5 leading-tight">{step.desc}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* === TRUST BANNER === */}
+        <section className="py-6 px-4 bg-background">
+          <div className="container mx-auto max-w-3xl">
+            <div className="rounded-2xl bg-gradient-to-br from-primary to-[hsl(var(--primary-dark))] p-5 sm:p-8 text-white">
+              <h2 className="text-center text-sm sm:text-lg font-bold mb-5">
+                Por que escolher a Froiv?
+              </h2>
+              <div className="grid grid-cols-3 gap-3 sm:gap-6">
+                {[
+                  { icon: <Shield className="h-5 w-5" />, value: "100%", label: "Escrow Seguro" },
+                  { icon: <Clock className="h-5 w-5" />, value: "24h", label: "Garantia" },
+                  { icon: <CheckCircle2 className="h-5 w-5" />, value: "10%", label: "Taxa Fixa" },
+                ].map((stat) => (
+                  <div key={stat.label} className="flex flex-col items-center gap-1.5 text-center">
+                    <div className="h-10 w-10 rounded-full bg-white/15 flex items-center justify-center">
+                      {stat.icon}
+                    </div>
+                    <p className="text-xl sm:text-2xl font-extrabold">{stat.value}</p>
+                    <p className="text-[10px] sm:text-xs text-white/75">{stat.label}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <Footer />
+      </div>
     </div>
   );
 }
