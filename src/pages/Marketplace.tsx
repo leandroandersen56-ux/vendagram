@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Search, SlidersHorizontal, X, Loader2 } from "lucide-react";
+import { Search, SlidersHorizontal, X, Loader2, ChevronDown, ArrowUpDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ListingCard from "@/components/ListingCard";
@@ -14,14 +13,19 @@ import PlatformIcon from "@/components/PlatformIcon";
 import { supabase } from "@/integrations/supabase/client";
 
 export default function Marketplace() {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const initialPlatform = searchParams.get("platform") || "all";
   const [search, setSearch] = useState("");
   const [platform, setPlatform] = useState(initialPlatform);
   const [sortBy, setSortBy] = useState("recent");
-  const [showFilters, setShowFilters] = useState(false);
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Sync platform filter with URL
+  useEffect(() => {
+    const p = searchParams.get("platform");
+    if (p && p !== platform) setPlatform(p);
+  }, [searchParams]);
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -39,7 +43,7 @@ export default function Marketplace() {
           sellerName: "Vendedor",
           sellerRating: 5.0,
           sellerSales: 0,
-          platform: row.category === "free_fire" ? "free_fire" : row.category,
+          platform: row.category,
           title: row.title,
           description: row.description || "",
           price: Number(row.price),
@@ -57,6 +61,16 @@ export default function Marketplace() {
     fetchListings();
   }, []);
 
+  const handlePlatformChange = (p: string) => {
+    setPlatform(p);
+    if (p === "all") {
+      searchParams.delete("platform");
+    } else {
+      searchParams.set("platform", p);
+    }
+    setSearchParams(searchParams, { replace: true });
+  };
+
   const filtered = listings
     .filter((l) => {
       if (platform !== "all" && l.platform !== platform) return false;
@@ -69,88 +83,97 @@ export default function Marketplace() {
       return 0;
     });
 
-  return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <div className="container mx-auto px-4 pt-24 pb-16">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-          <h1 className="text-3xl font-display font-bold text-foreground mb-2">Marketplace</h1>
-          <p className="text-muted-foreground mb-8">Encontre a conta perfeita com segurança garantida</p>
+  const activePlatform = PLATFORMS.find((p) => p.id === platform);
 
-          {/* Search and filters */}
-          <div className="flex flex-col sm:flex-row gap-3 mb-6">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Buscar contas..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-10 bg-muted border-border rounded-full"
-              />
+  return (
+    <div className="min-h-screen bg-background flex flex-col">
+      <Navbar />
+
+      <div className="flex-1">
+        <div className="container mx-auto px-4 pt-20 sm:pt-24 pb-16">
+          {/* Header with breadcrumb */}
+          <div className="mb-4">
+            <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-2">
+              <Link to="/" className="hover:text-foreground transition-colors">Início</Link>
+              <span>/</span>
+              <span className="text-foreground font-medium">
+                {platform === "all" ? "Marketplace" : activePlatform?.name || "Marketplace"}
+              </span>
             </div>
-            <Button variant="outline" onClick={() => setShowFilters(!showFilters)} className="sm:w-auto rounded-xl">
-              <SlidersHorizontal className="h-4 w-4 mr-2" />
-              Filtros
-            </Button>
+            <h1 className="text-xl sm:text-2xl font-bold text-foreground">
+              {platform === "all"
+                ? "Todas as contas"
+                : `Contas de ${activePlatform?.name || ""}` }
+            </h1>
+            <p className="text-sm text-muted-foreground mt-0.5">
+              {filtered.length} {filtered.length === 1 ? "resultado" : "resultados"}
+            </p>
           </div>
 
-          {/* Expanded filters */}
-          {showFilters && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              className="flex flex-wrap gap-3 mb-6 p-4 bg-muted border border-border rounded-2xl"
-            >
-              <Select value={platform} onValueChange={setPlatform}>
-                <SelectTrigger className="w-44 bg-background border-border rounded-xl">
-                  <SelectValue placeholder="Plataforma" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todas</SelectItem>
-                  {PLATFORMS.map((p) => (
-                    <SelectItem key={p.id} value={p.id}>
-                      <PlatformIcon platformId={p.id} size={16} className="mr-1" /> {p.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+          {/* Search bar — always visible, prominent */}
+          <div className="relative mb-4">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Buscar contas..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-10 pr-4 bg-muted border-border rounded-xl h-11 text-sm"
+            />
+            {search && (
+              <button
+                onClick={() => setSearch("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 rounded-full bg-muted-foreground/20 flex items-center justify-center hover:bg-muted-foreground/30 transition-colors"
+              >
+                <X className="h-3 w-3 text-muted-foreground" />
+              </button>
+            )}
+          </div>
 
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-44 bg-background border-border rounded-xl">
-                  <SelectValue placeholder="Ordenar" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="recent">Mais recentes</SelectItem>
-                  <SelectItem value="price-asc">Menor preço</SelectItem>
-                  <SelectItem value="price-desc">Maior preço</SelectItem>
-                </SelectContent>
-              </Select>
-
-              {platform !== "all" && (
-                <Button variant="ghost" size="sm" onClick={() => setPlatform("all")} className="text-muted-foreground">
-                  <X className="h-3 w-3 mr-1" /> Limpar
-                </Button>
-              )}
-            </motion.div>
-          )}
-
-          {/* Platform quick filters */}
-          <div className="flex flex-wrap gap-2 mb-8">
-            <Badge
-              className={`cursor-pointer transition-all rounded-full px-3 py-1.5 ${platform === "all" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/80 border border-border"}`}
-              onClick={() => setPlatform("all")}
+          {/* Platform filters — horizontal scroll on mobile */}
+          <div className="flex gap-1.5 overflow-x-auto scrollbar-hide pb-2 mb-3">
+            <button
+              onClick={() => handlePlatformChange("all")}
+              className={`shrink-0 px-3.5 py-2 rounded-full text-xs font-medium transition-all ${
+                platform === "all"
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted text-muted-foreground hover:text-foreground border border-border"
+              }`}
             >
               Todas
-            </Badge>
+            </button>
             {PLATFORMS.map((p) => (
-              <Badge
+              <button
                 key={p.id}
-                className={`cursor-pointer transition-all rounded-full px-3 py-1.5 ${platform === p.id ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/80 border border-border"}`}
-                onClick={() => setPlatform(p.id)}
+                onClick={() => handlePlatformChange(p.id)}
+                className={`shrink-0 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-medium transition-all ${
+                  platform === p.id
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-muted-foreground hover:text-foreground border border-border"
+                }`}
               >
-                <PlatformIcon platformId={p.id} size={16} className="mr-1" /> {p.name}
-              </Badge>
+                <PlatformIcon platformId={p.id} size={14} />
+                {p.name}
+              </button>
             ))}
+          </div>
+
+          {/* Sort bar */}
+          <div className="flex items-center justify-between mb-4 py-2 border-b border-border">
+            <p className="text-xs text-muted-foreground">
+              {filtered.length} {filtered.length === 1 ? "anúncio" : "anúncios"}
+              {platform !== "all" && ` em ${activePlatform?.name}`}
+            </p>
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="w-auto gap-1.5 border-0 bg-transparent h-auto p-0 text-xs text-muted-foreground hover:text-foreground shadow-none focus:ring-0">
+                <ArrowUpDown className="h-3 w-3" />
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent align="end">
+                <SelectItem value="recent">Mais recentes</SelectItem>
+                <SelectItem value="price-asc">Menor preço</SelectItem>
+                <SelectItem value="price-desc">Maior preço</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Results */}
@@ -169,13 +192,14 @@ export default function Marketplace() {
               <p className="text-4xl mb-4">🔍</p>
               <p className="text-lg font-medium text-foreground mb-2">Nenhum anúncio encontrado</p>
               <p className="text-muted-foreground text-sm mb-6">Tente alterar seus filtros ou busca</p>
-              <Button variant="hero" onClick={() => { setSearch(""); setPlatform("all"); }}>
+              <Button variant="hero" onClick={() => { setSearch(""); handlePlatformChange("all"); }}>
                 Limpar Filtros
               </Button>
             </div>
           )}
-        </motion.div>
+        </div>
       </div>
+
       <Footer />
     </div>
   );
