@@ -84,6 +84,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const closeAuth = () => {
     setShowAuthModal(false);
     setAuthRedirect(null);
+    setAuthRole(null);
   };
 
   return (
