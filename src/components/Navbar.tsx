@@ -108,9 +108,11 @@ export default function Navbar() {
 
         {/* Mobile: right icons */}
         <div className="flex items-center gap-2 md:hidden">
-          <button onClick={() => {}} className="h-9 w-9 flex items-center justify-center text-primary">
-            <Search className="h-5 w-5" />
-          </button>
+          {location.pathname !== "/" && (
+            <button onClick={() => navigate("/marketplace")} className="h-9 w-9 flex items-center justify-center text-primary">
+              <Search className="h-5 w-5" />
+            </button>
+          )}
           <Button variant="ghost" size="icon" className="text-primary" onClick={() => setMobileOpen(!mobileOpen)}>
             {mobileOpen ? <X /> : <Menu />}
           </Button>
