@@ -17,7 +17,8 @@ interface AuthContextType {
   authRedirect: string | null;
   login: (user: User) => void;
   logout: () => void;
-  openAuth: (redirect?: string) => void;
+  authRole: "buyer" | "seller" | null;
+  openAuth: (redirect?: string, role?: "buyer" | "seller") => void;
   closeAuth: () => void;
 }
 
