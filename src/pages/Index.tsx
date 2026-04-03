@@ -139,7 +139,7 @@ export default function Index() {
 
       <div className="pt-14 pb-16 sm:pb-0">
         {/* === BANNER CAROUSEL === */}
-        <section className="px-4 pt-3">
+        <section className="px-[5px] pt-3 sm:px-4">
           <div className="container mx-auto">
             <div className="relative overflow-hidden rounded-xl aspect-[2.2/1] sm:aspect-[3/1] md:aspect-[3.5/1]">
               {BANNERS.map((b, i) => (
@@ -188,7 +188,7 @@ export default function Index() {
         </section>
 
         {/* === QUICK CATEGORIES === */}
-        <section className="px-4 py-4">
+        <section className="px-[5px] py-4 sm:px-4">
           <div className="container mx-auto">
             <div className="flex items-center gap-4 overflow-x-auto scrollbar-hide fade-edges pb-1">
               {QUICK_CATEGORIES.map((cat) => {
@@ -212,7 +212,7 @@ export default function Index() {
 
         {/* === CATEGORY TABS + FILTER === */}
         <section className="bg-card border-y border-border sticky top-14 z-30">
-          <div className="container mx-auto px-4">
+          <div className="container mx-auto px-[5px] sm:px-4">
             <div className="flex items-center gap-0 overflow-x-auto scrollbar-hide h-10">
               <button
                 onClick={() => setSelectedPlatform(null)}
@@ -245,7 +245,7 @@ export default function Index() {
         {/* Filter panel */}
         {showFilterMenu && (
           <section className="bg-card border-b border-border">
-            <div className="container mx-auto px-4 py-4">
+            <div className="container mx-auto px-[5px] sm:px-4 py-4">
               <div className="grid gap-4 md:grid-cols-3">
                 <div>
                   <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-txt-hint">Ordenar por</p>
@@ -308,7 +308,7 @@ export default function Index() {
 
         {/* Active filter pills */}
         {(selectedPlatform || sortBy !== "recent" || priceRange[0] > 0 || priceRange[1] < 10000 || minFollowers > 0) && (
-          <div className="container mx-auto px-4 py-2">
+          <div className="container mx-auto px-[5px] sm:px-4 py-2">
             <div className="flex items-center gap-1.5 flex-wrap">
               {selectedPlatform && (
                 <span className="text-[11px] bg-primary-light text-primary px-3 py-1 rounded-full font-semibold flex items-center gap-1">
@@ -339,7 +339,7 @@ export default function Index() {
         )}
 
         {/* === DESTAQUES DO DIA === */}
-        <section className="px-4 py-4">
+        <section className="px-[5px] py-4 sm:px-4">
           <div className="container mx-auto">
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-[15px] font-bold text-txt-primary flex items-center gap-1.5">
@@ -364,7 +364,7 @@ export default function Index() {
         </section>
 
         {/* === LISTINGS BY CATEGORY === */}
-        <section className="px-4 py-2">
+        <section className="px-[5px] py-2 sm:px-4">
           <div className="container mx-auto">
             {loading ? (
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
@@ -418,7 +418,7 @@ export default function Index() {
         </section>
 
         {/* === HOW IT WORKS === */}
-        <section className="py-8 px-4 bg-muted">
+        <section className="py-8 px-[5px] sm:px-4 bg-muted">
           <div className="container mx-auto max-w-4xl">
             <h2 className="text-[16px] font-bold text-txt-primary text-center mb-6">Como funciona</h2>
             <div className="grid grid-cols-4 gap-3 sm:gap-6">
@@ -448,7 +448,7 @@ export default function Index() {
         </section>
 
         {/* === TRUST BANNER === */}
-        <section className="py-8 px-4">
+        <section className="py-8 px-[5px] sm:px-4">
           <div className="container mx-auto max-w-3xl">
             <div className="rounded-xl bg-gradient-to-br from-primary to-primary-dark p-6 sm:p-8 text-white">
               <h2 className="text-center text-[15px] sm:text-lg font-bold mb-6">Por que escolher a Froiv?</h2>

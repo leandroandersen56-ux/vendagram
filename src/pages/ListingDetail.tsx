@@ -146,7 +146,7 @@ export default function ListingDetail() {
 
       <div className="pt-16 sm:pt-20">
         {/* Floating back + actions row (mobile) */}
-        <div className="sm:hidden flex items-center justify-between px-4 py-2">
+        <div className="sm:hidden flex items-center justify-between px-[5px] py-2">
           <button
             onClick={() => navigate(-1)}
             className="flex items-center gap-1 text-[13px] text-[hsl(var(--txt-secondary))] hover:text-primary transition-colors"
@@ -186,7 +186,7 @@ export default function ListingDetail() {
             </div>
           </div>
 
-          <div className="container mx-auto px-4 pb-8">
+          <div className="container mx-auto px-[5px] sm:px-4 pb-8">
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-5 lg:gap-8">
               {/* Left column */}
               <div className="lg:col-span-3 space-y-4">
