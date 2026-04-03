@@ -1,6 +1,4 @@
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
-
-const DAYS = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, CartesianGrid } from "recharts";
 
 const data = [
   { day: "Seg", value: 315 },
@@ -12,36 +10,66 @@ const data = [
   { day: "Dom", value: 200 },
 ];
 
-export default function BalanceChart() {
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (!active || !payload?.length) return null;
+  const value = payload[0].value as number;
   return (
-    <div className="h-[120px] w-full">
+    <div className="bg-foreground/90 backdrop-blur-md text-background px-3 py-1.5 rounded-lg shadow-lg text-xs font-medium">
+      <span className="text-muted/70">{label}</span>
+      <span className="ml-2">
+        {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value)}
+      </span>
+    </div>
+  );
+};
+
+export default function BalanceChart() {
+  const maxVal = Math.max(...data.map(d => Math.abs(d.value)));
+
+  return (
+    <div className="h-[140px] w-full">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} barSize={20}>
+        <BarChart data={data} barSize={24} barGap={4} margin={{ top: 8, right: 4, bottom: 0, left: 4 }}>
+          <defs>
+            <linearGradient id="barPositive" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={1} />
+              <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0.5} />
+            </linearGradient>
+            <linearGradient id="barNegative" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="hsl(var(--destructive))" stopOpacity={0.5} />
+              <stop offset="100%" stopColor="hsl(var(--destructive))" stopOpacity={1} />
+            </linearGradient>
+            <linearGradient id="barZero" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="hsl(var(--muted-foreground))" stopOpacity={0.2} />
+              <stop offset="100%" stopColor="hsl(var(--muted-foreground))" stopOpacity={0.08} />
+            </linearGradient>
+          </defs>
+          <CartesianGrid
+            strokeDasharray="3 3"
+            vertical={false}
+            stroke="hsl(var(--border))"
+            strokeOpacity={0.4}
+          />
           <XAxis
             dataKey="day"
             axisLine={false}
             tickLine={false}
-            tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }}
+            tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 10, fontWeight: 500 }}
+            dy={6}
           />
-          <YAxis hide />
-          <Tooltip
-            contentStyle={{
-              background: "hsl(var(--card))",
-              border: "1px solid hsl(var(--border))",
-              borderRadius: "8px",
-              fontSize: 12,
-              color: "hsl(var(--foreground))",
-            }}
-            formatter={(value: number) =>
-              new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value)
-            }
-          />
-          <Bar dataKey="value" radius={[4, 4, 0, 0]}>
+          <YAxis hide domain={[-maxVal * 1.1, maxVal * 1.1]} />
+          <Tooltip content={<CustomTooltip />} cursor={false} />
+          <Bar dataKey="value" radius={[6, 6, 2, 2]} animationDuration={800} animationEasing="ease-out">
             {data.map((entry, i) => (
               <Cell
                 key={i}
-                fill={entry.value > 0 ? "#FFD700" : entry.value < 0 ? "hsl(var(--destructive))" : "hsl(var(--muted))"}
-                opacity={entry.value === 0 ? 0.3 : 0.85}
+                fill={
+                  entry.value > 0
+                    ? "url(#barPositive)"
+                    : entry.value < 0
+                    ? "url(#barNegative)"
+                    : "url(#barZero)"
+                }
               />
             ))}
           </Bar>
