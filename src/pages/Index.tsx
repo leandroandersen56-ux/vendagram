@@ -347,16 +347,44 @@ export default function Index() {
                 🔥 HOT
               </span>
             </div>
-            <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 fade-edges">
-              {(loading ? Array(5).fill(null) : filtered.slice(0, 8)).map((listing, i) =>
-                listing ? (
-                  <div key={listing.id} className="min-w-[160px] max-w-[160px]">
-                    <ListingCard listing={listing} />
-                  </div>
-                ) : (
-                  <div key={i} className="min-w-[160px] max-w-[160px]"><SkeletonCard /></div>
-                )
-              )}
+            <div className="relative group">
+              {/* Left gradient + arrow */}
+              <div className="absolute left-0 top-0 bottom-2 w-10 z-10 pointer-events-none bg-gradient-to-r from-background via-background/60 to-transparent" />
+              <button
+                onClick={() => {
+                  const el = document.getElementById('destaques-scroll');
+                  el?.scrollBy({ left: -180, behavior: 'smooth' });
+                }}
+                className="absolute left-0 top-1/2 -translate-y-1/2 z-20 h-7 w-7 rounded-full bg-white/90 dark:bg-card shadow-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 border border-border/40"
+                aria-label="Scroll esquerda"
+              >
+                <ChevronLeft className="h-4 w-4 text-txt-secondary" />
+              </button>
+
+              <div id="destaques-scroll" className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 px-1">
+                {(loading ? Array(5).fill(null) : filtered.slice(0, 8)).map((listing, i) =>
+                  listing ? (
+                    <div key={listing.id} className="min-w-[160px] max-w-[160px]">
+                      <ListingCard listing={listing} />
+                    </div>
+                  ) : (
+                    <div key={i} className="min-w-[160px] max-w-[160px]"><SkeletonCard /></div>
+                  )
+                )}
+              </div>
+
+              {/* Right gradient + arrow */}
+              <div className="absolute right-0 top-0 bottom-2 w-10 z-10 pointer-events-none bg-gradient-to-l from-background via-background/60 to-transparent" />
+              <button
+                onClick={() => {
+                  const el = document.getElementById('destaques-scroll');
+                  el?.scrollBy({ left: 180, behavior: 'smooth' });
+                }}
+                className="absolute right-0 top-1/2 -translate-y-1/2 z-20 h-7 w-7 rounded-full bg-white/90 dark:bg-card shadow-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 border border-border/40"
+                aria-label="Scroll direita"
+              >
+                <ChevronRight className="h-4 w-4 text-txt-secondary" />
+              </button>
             </div>
           </div>
         </section>
