@@ -139,8 +139,8 @@ export default function Index() {
 
       <div className="pt-14 pb-16 sm:pb-0">
         {/* === BANNER CAROUSEL === */}
-        <section className="px-4 pt-3 sm:px-4">
-          <div className="container mx-auto">
+        <section className="pt-3">
+          <div className="container mx-auto px-4">
             <div className="relative overflow-hidden rounded-xl aspect-[2.2/1] sm:aspect-[3/1] md:aspect-[3.5/1]">
               {BANNERS.map((b, i) => (
                 <div key={i} className={`absolute inset-0 transition-opacity duration-500 ${i === bannerIdx ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
