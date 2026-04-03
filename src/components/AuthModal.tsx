@@ -138,8 +138,39 @@ export default function AuthModal() {
             <p className="text-sm text-muted-foreground mb-5 text-center">
               {mode === "login"
                 ? "Bem-vindo de volta! Insira seus dados"
-                : "Crie sua conta e comece a negociar"}
+                : "Escolha seu perfil e crie sua conta para começar"}
             </p>
+
+            {mode === "register" && (
+              <div className="grid grid-cols-2 gap-3 mb-5">
+                <button
+                  type="button"
+                  onClick={() => setSelectedRole("buyer")}
+                  className={`rounded-2xl border p-4 text-left transition-all ${
+                    selectedRole === "buyer"
+                      ? "border-primary bg-primary/10 shadow-sm"
+                      : "border-border bg-muted/40 hover:bg-muted"
+                  }`}
+                >
+                  <ShoppingCart className="h-5 w-5 text-primary mb-2" />
+                  <p className="text-sm font-semibold text-foreground">Comprador</p>
+                  <p className="text-xs text-muted-foreground">Comprar contas com segurança</p>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedRole("seller")}
+                  className={`rounded-2xl border p-4 text-left transition-all ${
+                    selectedRole === "seller"
+                      ? "border-primary bg-primary/10 shadow-sm"
+                      : "border-border bg-muted/40 hover:bg-muted"
+                  }`}
+                >
+                  <Tag className="h-5 w-5 text-primary mb-2" />
+                  <p className="text-sm font-semibold text-foreground">Vendedor</p>
+                  <p className="text-xs text-muted-foreground">Anunciar e vender suas contas</p>
+                </button>
+              </div>
+            )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
               {mode === "register" && (
