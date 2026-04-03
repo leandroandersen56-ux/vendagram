@@ -1,9 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Store, PlusCircle, Wallet, Menu } from "lucide-react";
+import { Home, Store, PlusCircle, Wallet, Menu, LayoutDashboard, Tag, ShoppingBag, User } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 
-const NAV_ITEMS = [
+const PUBLIC_ITEMS = [
   { label: "Início", icon: Home, path: "/" },
   { label: "Marketplace", icon: Store, path: "/marketplace" },
   { label: "Anunciar", icon: PlusCircle, path: "/painel/anuncios/novo", highlight: true, auth: true },
@@ -11,29 +11,40 @@ const NAV_ITEMS = [
   { label: "Mais", icon: Menu, path: "/painel", auth: true },
 ];
 
+const PANEL_ITEMS = [
+  { label: "Painel", icon: LayoutDashboard, path: "/painel", exact: true },
+  { label: "Anúncios", icon: Tag, path: "/painel/anuncios" },
+  { label: "Anunciar", icon: PlusCircle, path: "/painel/anuncios/novo", highlight: true },
+  { label: "Carteira", icon: Wallet, path: "/painel/carteira" },
+  { label: "Perfil", icon: User, path: "/painel/perfil" },
+];
+
 export default function BottomNav() {
   const location = useLocation();
   const { isAuthenticated, openAuth } = useAuth();
 
-  // Hide on panel pages (has its own nav)
-  if (location.pathname.startsWith("/painel")) return null;
+  const isPanel = location.pathname.startsWith("/painel");
+  const items = isPanel ? PANEL_ITEMS : PUBLIC_ITEMS;
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-border sm:hidden">
       <div className="flex items-stretch justify-around h-14">
-        {NAV_ITEMS.map((item) => {
-          const isActive = item.path === "/"
-            ? location.pathname === "/"
-            : location.pathname.startsWith(item.path);
+        {items.map((item) => {
+          const isExact = "exact" in item && item.exact;
+          const isActive = isExact
+            ? location.pathname === item.path
+            : item.path === "/"
+              ? location.pathname === "/"
+              : location.pathname.startsWith(item.path);
 
           const handleClick = (e: React.MouseEvent) => {
-            if (item.auth && !isAuthenticated) {
+            if ("auth" in item && item.auth && !isAuthenticated) {
               e.preventDefault();
               openAuth(item.path);
             }
           };
 
-          if (item.highlight) {
+          if ("highlight" in item && item.highlight) {
             return (
               <Link
                 key={item.label}
@@ -65,7 +76,6 @@ export default function BottomNav() {
           );
         })}
       </div>
-      {/* Safe area for devices with home indicator */}
       <div className="h-[env(safe-area-inset-bottom)]" />
     </nav>
   );
