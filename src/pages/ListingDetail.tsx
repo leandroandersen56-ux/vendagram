@@ -274,7 +274,7 @@ export default function ListingDetail() {
 
                 <Button
                   variant="outline"
-                  className="w-full py-4 text-sm font-semibold border-primary text-primary rounded-full hover:bg-primary/5"
+                  className="w-full py-4 text-sm font-semibold border-primary text-primary hover:bg-primary/5"
                   size="lg"
                   onClick={() => {}}
                 >
