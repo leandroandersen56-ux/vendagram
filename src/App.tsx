@@ -49,6 +49,7 @@ function AppRoutes() {
     <>
       <ScrollToTop />
       <AuthModal />
+      <BottomNav />
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<Index />} />
