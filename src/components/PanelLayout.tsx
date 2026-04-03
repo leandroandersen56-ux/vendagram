@@ -193,8 +193,7 @@ export default function PanelLayout() {
             >
               <div className="h-14 flex items-center justify-between px-4 border-b border-border">
                 <Link to="/" className="flex items-center gap-1.5">
-                  <span className="text-primary text-lg">⚡</span>
-                  <span className="font-display text-sm font-bold text-foreground">Froiv</span>
+                  <img src={logoFroiv} alt="Froiv" className="h-6" />
                 </Link>
                 <Button variant="ghost" size="icon" className="h-8 w-8 rounded-xl" onClick={() => setSidebarOpen(false)}>
                   <X className="h-4 w-4" />
