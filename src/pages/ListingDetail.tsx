@@ -144,28 +144,32 @@ export default function ListingDetail() {
     <div className="min-h-screen bg-[hsl(var(--muted))] pb-20 sm:pb-0">
       <Navbar />
 
-      {/* PDP Header bar (mobile) */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-primary h-14 flex items-center justify-between px-4 sm:hidden">
-        <button onClick={() => navigate(-1)} className="text-white p-1" aria-label="Voltar">
-          <ArrowLeft className="h-6 w-6" />
-        </button>
-        <div className="flex items-center gap-3">
-          <button onClick={handleShare} className="text-white p-1" aria-label="Compartilhar">
-            <Share2 className="h-5 w-5" />
-          </button>
-          <motion.button
-            onClick={() => setFavorited(!favorited)}
-            className="text-white p-1"
-            aria-label={favorited ? "Remover dos favoritos" : "Adicionar aos favoritos"}
-            whileTap={{ scale: 1.3 }}
-            transition={{ type: "spring", stiffness: 500, damping: 15 }}
+      <div className="pt-16 sm:pt-20">
+        {/* Floating back + actions row (mobile) */}
+        <div className="sm:hidden flex items-center justify-between px-4 py-2">
+          <button
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-1 text-[13px] text-[hsl(var(--txt-secondary))] hover:text-primary transition-colors"
+            aria-label="Voltar"
           >
-            <Heart className={`h-5 w-5 ${favorited ? "fill-red-500 text-red-500" : ""}`} />
-          </motion.button>
+            <ArrowLeft className="h-4 w-4" />
+            <span>Voltar</span>
+          </button>
+          <div className="flex items-center gap-2">
+            <button onClick={handleShare} className="p-1.5 rounded-full hover:bg-[hsl(var(--muted))]" aria-label="Compartilhar">
+              <Share2 className="h-4 w-4 text-[hsl(var(--txt-secondary))]" />
+            </button>
+            <motion.button
+              onClick={() => setFavorited(!favorited)}
+              className="p-1.5 rounded-full hover:bg-[hsl(var(--muted))]"
+              aria-label={favorited ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+              whileTap={{ scale: 1.3 }}
+              transition={{ type: "spring", stiffness: 500, damping: 15 }}
+            >
+              <Heart className={`h-4 w-4 ${favorited ? "fill-red-500 text-red-500" : "text-[hsl(var(--txt-secondary))]"}`} />
+            </motion.button>
+          </div>
         </div>
-      </div>
-
-      <div className="pt-14 sm:pt-20">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
