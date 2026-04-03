@@ -73,8 +73,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   };
 
-  const openAuth = (redirect?: string) => {
+  const [authRole, setAuthRole] = useState<"buyer" | "seller" | null>(null);
+
+  const openAuth = (redirect?: string, role?: "buyer" | "seller") => {
     setAuthRedirect(redirect || null);
+    setAuthRole(role || null);
     setShowAuthModal(true);
   };
 
