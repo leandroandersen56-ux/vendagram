@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 const NAV_ITEMS = [
   { label: "Início", icon: Home, path: "/" },
   { label: "Marketplace", icon: Store, path: "/marketplace" },
-  { label: "Anunciar", icon: PlusCircle, path: "/painel/anuncios/novo", highlight: true },
+  { label: "Anunciar", icon: PlusCircle, path: "/painel/anuncios/novo", highlight: true, auth: true },
   { label: "Carteira", icon: Wallet, path: "/painel/carteira", auth: true },
   { label: "Mais", icon: Menu, path: "/painel", auth: true },
 ];

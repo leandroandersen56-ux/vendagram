@@ -86,7 +86,7 @@ export default function Marketplace() {
   const activePlatform = PLATFORMS.find((p) => p.id === platform);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col pb-16 sm:pb-0">
       <Navbar />
 
       <div className="flex-1">
