@@ -30,8 +30,9 @@ export default function BalanceChart() {
         <AreaChart data={data} margin={{ top: 8, right: 4, bottom: 0, left: 4 }}>
           <defs>
             <linearGradient id="areaFill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
-              <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0.02} />
+              <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.45} />
+              <stop offset="40%" stopColor="hsl(var(--primary))" stopOpacity={0.2} />
+              <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0} />
             </linearGradient>
           </defs>
           <CartesianGrid
