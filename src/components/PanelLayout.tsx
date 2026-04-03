@@ -191,7 +191,7 @@ export default function PanelLayout() {
               initial={{ x: -280 }}
               animate={{ x: 0 }}
               exit={{ x: -280 }}
-              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              transition={{ duration: 0.25, ease: "easeInOut" }}
               className="relative w-[260px] h-full bg-background border-r border-border flex flex-col"
             >
               <div className="h-14 flex items-center justify-between px-4 border-b border-border">
