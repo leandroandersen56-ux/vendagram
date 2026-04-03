@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
-import { Star, Share2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Star, Shield, Zap } from "lucide-react";
 import type { Listing } from "@/lib/mock-data";
 import { formatBRL, getPlatform, PLATFORM_COVERS } from "@/lib/mock-data";
 import PlatformIcon from "@/components/PlatformIcon";
@@ -27,17 +26,11 @@ export default function ListingCard({ listing }: ListingCardProps) {
   const coverImage = listing.screenshots?.[0] || PLATFORM_COVERS[listing.platform];
   const badgeColor = PLATFORM_BADGE_COLORS[listing.platform] || PLATFORM_BADGE_COLORS.other;
 
-  const handleShare = (e: React.MouseEvent) => {
-    e.preventDefault();
-    const message = `🎮 ${listing.title} por ${formatBRL(listing.price)} 🔒 Compra segura: ${window.location.origin}/listing/${listing.id}`;
-    window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
-  };
-
   return (
-    <Link to={`/listing/${listing.id}`}>
-      <div className="rounded-2xl overflow-hidden group relative bg-background border border-border hover:shadow-lg hover:shadow-primary/5 hover:border-primary/30 transition-all duration-200 cursor-pointer hover:scale-[1.01] flex flex-col h-full">
-        {/* Image area */}
-        <div className="relative overflow-hidden bg-muted aspect-square">
+    <Link to={`/listing/${listing.id}`} className="block h-full">
+      <div className="rounded-2xl overflow-hidden group relative bg-background border border-border hover:shadow-lg hover:shadow-primary/5 hover:border-primary/30 transition-all duration-200 cursor-pointer flex flex-col h-full">
+        {/* Image */}
+        <div className="relative overflow-hidden bg-muted aspect-[4/3]">
           {coverImage ? (
             <img
               src={coverImage}
@@ -47,52 +40,48 @@ export default function ListingCard({ listing }: ListingCardProps) {
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-muted">
-              <PlatformIcon platformId={listing.platform} size={56} />
+              <PlatformIcon platformId={listing.platform} size={48} />
             </div>
           )}
 
           {/* Platform badge */}
           <div className={`absolute top-2 right-2 ${badgeColor} rounded-full px-2 py-0.5 flex items-center gap-1`}>
             <PlatformIcon platformId={listing.platform} size={10} className="brightness-0 invert" />
-            <span className="text-[10px] font-bold text-white uppercase">
-              {platform.name}
-            </span>
+            <span className="text-[9px] font-bold text-white uppercase">{platform.name}</span>
           </div>
-
-          {/* Share button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="absolute top-2 left-2 h-7 w-7 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-200 bg-white/80 hover:bg-white text-foreground"
-            onClick={handleShare}
-          >
-            <Share2 className="h-3.5 w-3.5" />
-          </Button>
         </div>
 
-        {/* Info panel */}
+        {/* Info */}
         <div className="p-3 flex flex-col flex-1">
-          <h3 className="font-semibold text-[11px] sm:text-xs leading-snug line-clamp-1 text-foreground">
+          <h3 className="font-medium text-[12px] sm:text-[13px] leading-snug line-clamp-2 text-foreground min-h-[2.5em]">
             {listing.title}
           </h3>
 
-          <p className="text-xs text-muted-foreground mt-1">
-            {listing.fields?.["Seguidores"] || listing.fields?.["Nível"] || listing.fields?.["Level"] || ""}
-          </p>
-
-          <div className="flex items-center justify-between mt-1.5">
-            <p className="text-[13px] sm:text-sm font-bold text-primary">
-              {formatBRL(listing.price)}
-            </p>
-            <div className="flex items-center gap-1">
-              <Star className="h-3 w-3 text-warning fill-warning" />
-              <span className="text-[10px] font-bold text-muted-foreground">{listing.sellerRating}</span>
-            </div>
+          {/* Rating + sales */}
+          <div className="flex items-center gap-1.5 mt-1.5">
+            <Star className="h-3 w-3 text-warning fill-warning" />
+            <span className="text-[11px] font-medium text-foreground">{listing.sellerRating}</span>
+            {listing.sellerSales > 0 && (
+              <span className="text-[10px] text-muted-foreground">· {listing.sellerSales} vendas</span>
+            )}
           </div>
 
-          <button className="w-full mt-auto pt-2 bg-primary text-primary-foreground text-xs font-semibold rounded-xl py-2 hover:bg-primary-dark transition-all active:scale-[0.98]">
-            Ver detalhes
-          </button>
+          {/* Price */}
+          <div className="mt-2">
+            <p className="text-base sm:text-lg font-bold text-foreground leading-none">
+              {formatBRL(listing.price)}
+            </p>
+          </div>
+
+          {/* Trust badges */}
+          <div className="flex items-center gap-2 mt-2 pt-2 border-t border-border/50">
+            <span className="flex items-center gap-1 text-[10px] text-success font-medium">
+              <Shield className="h-3 w-3" /> Escrow
+            </span>
+            <span className="flex items-center gap-1 text-[10px] text-primary font-medium">
+              <Zap className="h-3 w-3" /> Entrega imediata
+            </span>
+          </div>
         </div>
       </div>
     </Link>

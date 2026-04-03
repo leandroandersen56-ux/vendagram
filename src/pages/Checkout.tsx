@@ -337,13 +337,32 @@ export default function Checkout() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-24 lg:pb-0">
       <Navbar />
-      <div className="container mx-auto px-4 pt-24 pb-16">
+      <div className="container mx-auto px-4 pt-20 sm:pt-24 pb-8">
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
-          <Link to={`/listing/${listing.id}`} className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6 text-sm">
-            <ArrowLeft className="h-4 w-4" /> Voltar ao anúncio
-          </Link>
+          {/* Breadcrumb */}
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-4">
+            <Link to="/marketplace" className="hover:text-foreground transition-colors">Marketplace</Link>
+            <span>/</span>
+            <Link to={`/listing/${listing.id}`} className="hover:text-foreground transition-colors">Anúncio</Link>
+            <span>/</span>
+            <span className="text-foreground">Checkout</span>
+          </div>
+
+          {/* Mobile: product summary bar */}
+          <div className="lg:hidden mb-4 flex items-center gap-3 p-3 bg-muted/50 border border-border rounded-xl">
+            <div
+              className="h-12 w-12 rounded-lg flex items-center justify-center shrink-0"
+              style={{ background: platform ? `${platform.color}15` : "hsl(var(--muted))" }}
+            >
+              <PlatformIcon platformId={listing.category} size={24} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-medium text-foreground line-clamp-1">{listing.title}</p>
+              <p className="text-sm font-bold text-foreground">{formatBRL(total)}</p>
+            </div>
+          </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left */}
@@ -592,7 +611,23 @@ export default function Checkout() {
           </div>
         </motion.div>
       </div>
-      <Footer />
+      <div className="hidden lg:block"><Footer /></div>
+
+      {/* Mobile sticky buy bar */}
+      {paymentStatus === "idle" && (
+        <div className="fixed bottom-0 left-0 right-0 z-40 bg-background/95 backdrop-blur-sm border-t border-border lg:hidden safe-area-bottom">
+          <div className="flex items-center gap-3 px-4 py-3">
+            <div className="flex-1 min-w-0">
+              <p className="text-[10px] text-muted-foreground">Total</p>
+              <p className="text-lg font-bold text-foreground">{formatBRL(total)}</p>
+            </div>
+            <Button variant="hero" className="px-6 py-4 text-sm font-bold" onClick={handleCheckout} disabled={submitting}>
+              {submitting ? <Loader2 className="h-4 w-4 animate-spin mr-1.5" /> : <ShoppingCart className="h-4 w-4 mr-1.5" />}
+              {submitting ? "..." : paymentMethod === "pix" ? "Gerar Pix" : "Pagar"}
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
