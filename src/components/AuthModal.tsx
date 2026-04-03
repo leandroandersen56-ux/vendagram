@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Eye, EyeOff, Shield } from "lucide-react";
+import { X, Eye, EyeOff, Shield, ShoppingCart, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,7 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 export default function AuthModal() {
-  const { showAuthModal, closeAuth, login, authRedirect } = useAuth();
+  const { showAuthModal, closeAuth, login, authRedirect, authRole } = useAuth();
   const navigate = useNavigate();
   const [mode, setMode] = useState<"login" | "register">("login");
   const [showPassword, setShowPassword] = useState(false);
@@ -19,6 +19,13 @@ export default function AuthModal() {
   const [password, setPassword] = useState("");
 
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (showAuthModal && authRole) {
+      setMode("register");
+    }
+  }, [showAuthModal, authRole]);
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -90,10 +97,22 @@ export default function AuthModal() {
             <X className="h-5 w-5" />
           </Button>
 
-          {/* Logo */}
-          <div className="flex items-center justify-center gap-1.5 pt-6">
-            <span className="text-primary text-xl">⚡</span>
-            <span className="font-display text-lg font-bold text-foreground">Froiv</span>
+          {/* Header with role badge */}
+          <div className="flex flex-col items-center gap-2 pt-6">
+            <div className="flex items-center gap-1.5">
+              <span className="text-primary text-xl">⚡</span>
+              <span className="font-display text-lg font-bold text-foreground">Froiv</span>
+            </div>
+            {authRole && mode === "register" && (
+              <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${
+                authRole === "buyer" 
+                  ? "bg-primary/10 text-primary" 
+                  : "bg-accent text-accent-foreground"
+              }`}>
+                {authRole === "buyer" ? <ShoppingCart className="h-3 w-3" /> : <Tag className="h-3 w-3" />}
+                {authRole === "buyer" ? "Cadastro de Comprador" : "Cadastro de Vendedor"}
+              </div>
+            )}
           </div>
 
           {/* Tabs as pills */}

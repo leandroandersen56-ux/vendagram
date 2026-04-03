@@ -17,7 +17,8 @@ interface AuthContextType {
   authRedirect: string | null;
   login: (user: User) => void;
   logout: () => void;
-  openAuth: (redirect?: string) => void;
+  authRole: "buyer" | "seller" | null;
+  openAuth: (redirect?: string, role?: "buyer" | "seller") => void;
   closeAuth: () => void;
 }
 
@@ -72,14 +73,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   };
 
-  const openAuth = (redirect?: string) => {
+  const [authRole, setAuthRole] = useState<"buyer" | "seller" | null>(null);
+
+  const openAuth = (redirect?: string, role?: "buyer" | "seller") => {
     setAuthRedirect(redirect || null);
+    setAuthRole(role || null);
     setShowAuthModal(true);
   };
 
   const closeAuth = () => {
     setShowAuthModal(false);
     setAuthRedirect(null);
+    setAuthRole(null);
   };
 
   return (
@@ -89,6 +94,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       isLoading,
       showAuthModal,
       authRedirect,
+      authRole,
       login,
       logout,
       openAuth,

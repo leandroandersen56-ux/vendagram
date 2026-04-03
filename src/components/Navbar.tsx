@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Search, Menu, X, User, LogOut, LayoutDashboard, Plus, Store, ShoppingBag } from "lucide-react";
+import { Search, Menu, X, User, LogOut, LayoutDashboard, Plus, Store, ShoppingBag, ShoppingCart, Tag } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
@@ -99,9 +99,30 @@ export default function Navbar() {
               <Button variant="ghost" size="sm" onClick={() => openAuth()} className="text-foreground font-semibold">
                 Entrar
               </Button>
-              <Button variant="hero" size="sm" onClick={() => openAuth()} className="px-5">
-                Cadastrar
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="hero" size="sm" className="px-5">
+                    Cadastrar
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-52 bg-background border-border">
+                  <DropdownMenuItem className="cursor-pointer py-3" onClick={() => openAuth(undefined, "buyer")}>
+                    <ShoppingCart className="h-4 w-4 mr-2 text-primary" />
+                    <div>
+                      <p className="font-semibold text-sm">Comprador</p>
+                      <p className="text-xs text-muted-foreground">Quero comprar contas</p>
+                    </div>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem className="cursor-pointer py-3" onClick={() => openAuth(undefined, "seller")}>
+                    <Tag className="h-4 w-4 mr-2 text-primary" />
+                    <div>
+                      <p className="font-semibold text-sm">Vendedor</p>
+                      <p className="text-xs text-muted-foreground">Quero vender minhas contas</p>
+                    </div>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           )}
         </div>
@@ -145,9 +166,17 @@ export default function Navbar() {
                   </Button>
                 </>
               ) : (
-                <Button variant="hero" className="w-full mt-2" onClick={() => { openAuth(); setMobileOpen(false); }}>
-                  Cadastre-se / Login
-                </Button>
+                <div className="flex flex-col gap-2 mt-2">
+                  <Button variant="hero" className="w-full" onClick={() => { openAuth(undefined, "buyer"); setMobileOpen(false); }}>
+                    <ShoppingCart className="h-4 w-4 mr-1" /> Cadastrar como Comprador
+                  </Button>
+                  <Button variant="outline" className="w-full" onClick={() => { openAuth(undefined, "seller"); setMobileOpen(false); }}>
+                    <Tag className="h-4 w-4 mr-1" /> Cadastrar como Vendedor
+                  </Button>
+                  <Button variant="ghost" className="w-full" onClick={() => { openAuth(); setMobileOpen(false); }}>
+                    Já tenho conta · Entrar
+                  </Button>
+                </div>
               )}
             </div>
           </motion.div>
