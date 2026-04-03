@@ -263,8 +263,13 @@ export default function ListingDetail() {
                   <Zap className="h-3 w-3 inline mr-0.5" /> Entrega imediata após confirmação
                 </p>
 
-                <Button variant="hero" className="w-full py-5 text-sm font-bold mb-2.5" size="lg" onClick={handleBuy}>
-                  <ShoppingCart className="h-4 w-4 mr-2" /> Comprar Agora
+                <Button
+                  variant="hero"
+                  className="w-full py-6 text-base font-bold mb-2.5 shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 hover:scale-[1.01] active:scale-[0.98] transition-all duration-200"
+                  size="lg"
+                  onClick={handleBuy}
+                >
+                  <ShoppingCart className="h-5 w-5 mr-2" /> Comprar Agora
                 </Button>
 
                 <Button
@@ -364,16 +369,23 @@ export default function ListingDetail() {
       <div className="hidden sm:block"><Footer /></div>
 
       {/* Fixed bottom buy bar on mobile */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-background/95 backdrop-blur-sm border-t border-border sm:hidden safe-area-bottom">
-        <div className="flex items-center gap-3 px-4 py-3">
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-background border-t border-border sm:hidden safe-area-bottom">
+        <div className="flex items-center gap-3 px-4 py-2.5">
           <div className="flex-1 min-w-0">
             {originalPrice && (
               <p className="text-[10px] text-muted-foreground line-through leading-none">R$ {originalPrice}</p>
             )}
             <p className="text-lg font-bold text-foreground leading-tight">{formatBRL(listing.price)}</p>
+            <p className="text-[10px] text-success font-medium flex items-center gap-0.5 mt-0.5">
+              <Shield className="h-3 w-3" /> Compra protegida
+            </p>
           </div>
-          <Button variant="hero" className="px-6 py-4 text-sm font-bold" onClick={handleBuy}>
-            Comprar
+          <Button
+            variant="hero"
+            className="px-8 py-5 text-sm font-bold shadow-lg shadow-primary/30 active:scale-[0.97] transition-all"
+            onClick={handleBuy}
+          >
+            Comprar Agora
           </Button>
         </div>
       </div>
