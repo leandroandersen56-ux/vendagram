@@ -341,9 +341,28 @@ export default function Checkout() {
       <Navbar />
       <div className="container mx-auto px-4 pt-20 sm:pt-24 pb-8">
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
-          <Link to={`/listing/${listing.id}`} className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6 text-sm">
-            <ArrowLeft className="h-4 w-4" /> Voltar ao anúncio
-          </Link>
+          {/* Breadcrumb */}
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-4">
+            <Link to="/marketplace" className="hover:text-foreground transition-colors">Marketplace</Link>
+            <span>/</span>
+            <Link to={`/listing/${listing.id}`} className="hover:text-foreground transition-colors">Anúncio</Link>
+            <span>/</span>
+            <span className="text-foreground">Checkout</span>
+          </div>
+
+          {/* Mobile: product summary bar */}
+          <div className="lg:hidden mb-4 flex items-center gap-3 p-3 bg-muted/50 border border-border rounded-xl">
+            <div
+              className="h-12 w-12 rounded-lg flex items-center justify-center shrink-0"
+              style={{ background: platform ? `${platform.color}15` : "hsl(var(--muted))" }}
+            >
+              <PlatformIcon platformId={listing.category} size={24} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-medium text-foreground line-clamp-1">{listing.title}</p>
+              <p className="text-sm font-bold text-foreground">{formatBRL(total)}</p>
+            </div>
+          </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left */}
