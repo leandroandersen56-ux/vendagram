@@ -139,7 +139,7 @@ export default function Index() {
 
       <div className="pt-14 pb-16 sm:pb-0">
         {/* === BANNER CAROUSEL === */}
-        <section className="px-4 pt-3">
+        <section className="px-[5px] pt-3 sm:px-4">
           <div className="container mx-auto">
             <div className="relative overflow-hidden rounded-xl aspect-[2.2/1] sm:aspect-[3/1] md:aspect-[3.5/1]">
               {BANNERS.map((b, i) => (
@@ -188,7 +188,7 @@ export default function Index() {
         </section>
 
         {/* === QUICK CATEGORIES === */}
-        <section className="px-4 py-4">
+        <section className="px-[5px] py-4 sm:px-4">
           <div className="container mx-auto">
             <div className="flex items-center gap-4 overflow-x-auto scrollbar-hide fade-edges pb-1">
               {QUICK_CATEGORIES.map((cat) => {
@@ -339,7 +339,7 @@ export default function Index() {
         )}
 
         {/* === DESTAQUES DO DIA === */}
-        <section className="px-4 py-4">
+        <section className="px-[5px] py-4 sm:px-4">
           <div className="container mx-auto">
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-[15px] font-bold text-txt-primary flex items-center gap-1.5">
@@ -364,7 +364,7 @@ export default function Index() {
         </section>
 
         {/* === LISTINGS BY CATEGORY === */}
-        <section className="px-4 py-2">
+        <section className="px-[5px] py-2 sm:px-4">
           <div className="container mx-auto">
             {loading ? (
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
@@ -418,7 +418,7 @@ export default function Index() {
         </section>
 
         {/* === HOW IT WORKS === */}
-        <section className="py-8 px-4 bg-muted">
+        <section className="py-8 px-[5px] sm:px-4 bg-muted">
           <div className="container mx-auto max-w-4xl">
             <h2 className="text-[16px] font-bold text-txt-primary text-center mb-6">Como funciona</h2>
             <div className="grid grid-cols-4 gap-3 sm:gap-6">
@@ -448,7 +448,7 @@ export default function Index() {
         </section>
 
         {/* === TRUST BANNER === */}
-        <section className="py-8 px-4">
+        <section className="py-8 px-[5px] sm:px-4">
           <div className="container mx-auto max-w-3xl">
             <div className="rounded-xl bg-gradient-to-br from-primary to-primary-dark p-6 sm:p-8 text-white">
               <h2 className="text-center text-[15px] sm:text-lg font-bold mb-6">Por que escolher a Froiv?</h2>
