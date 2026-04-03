@@ -160,8 +160,8 @@ export default function PanelListings() {
             const demoClick = () => toast({ title: "Anúncio de demonstração", description: "Crie um anúncio real para usar esta ação." });
             return (
               <Card key={listing.id} className="bg-card border-border p-4">
-                <div className="flex items-center gap-4">
-                  <div className="h-14 w-14 rounded-lg flex items-center justify-center shrink-0" style={{ background: `${cat.color}15` }}>
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <div className="h-14 w-14 sm:h-14 sm:w-14 rounded-xl flex items-center justify-center shrink-0" style={{ background: `${cat.color}15` }}>
                     <PlatformIcon platformId={listing.category} size={32} />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -170,9 +170,10 @@ export default function PanelListings() {
                       <Badge className={`${st.className} border-0 text-[10px]`}>{st.label}</Badge>
                       <span className="text-xs text-muted-foreground">{cat.name}</span>
                     </div>
+                    <p className="text-sm font-bold text-primary mt-1 sm:hidden">{formatBRL(listing.price)}</p>
                   </div>
-                  <p className="text-lg font-bold text-primary shrink-0">{formatBRL(listing.price)}</p>
-                  <div className="flex gap-1 shrink-0">
+                  <p className="text-lg font-bold text-primary shrink-0 hidden sm:block">{formatBRL(listing.price)}</p>
+                  <div className="hidden sm:flex gap-1 shrink-0">
                     <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => isReal ? navigate(`/listing/${listing.id}`) : demoClick()} title="Ver anúncio">
                       <Eye className="h-3 w-3" />
                     </Button>
