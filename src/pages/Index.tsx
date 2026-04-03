@@ -210,114 +210,21 @@ export default function Index() {
         <section className="px-4 py-3 bg-background border-b border-border">
           <div className="container mx-auto">
             <div className="flex items-center gap-3 overflow-x-auto scrollbar-hide pb-1 md:justify-between">
-              {/* Filter dropdown button */}
-              <div className="relative">
-                <button
-                  onClick={(e) => { e.stopPropagation(); setShowFilterMenu(!showFilterMenu); }}
-                  className="flex flex-col items-center gap-1 min-w-[56px] group"
-                >
-                  <div className={`h-11 w-11 rounded-full flex items-center justify-center transition-colors ${showFilterMenu ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground group-hover:bg-primary/10'}`}>
-                    <SlidersHorizontal className="h-5 w-5" />
-                  </div>
-                  <span className="text-[10px] font-medium text-foreground whitespace-nowrap">Filtro</span>
-                </button>
+              <button
+                type="button"
+                onClick={() => setShowFilterMenu((prev) => !prev)}
+                className="flex flex-col items-center gap-1 min-w-[56px] group"
+              >
+                <div className={`h-11 w-11 rounded-full flex items-center justify-center transition-colors ${showFilterMenu ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground group-hover:bg-primary/10'}`}>
+                  <SlidersHorizontal className="h-5 w-5" />
+                </div>
+                <span className={`text-[10px] font-medium whitespace-nowrap ${showFilterMenu ? 'text-primary' : 'text-foreground'}`}>Filtro</span>
+              </button>
 
-                {showFilterMenu && (
-                  <>
-                    <div className="fixed inset-0 z-30" onClick={() => setShowFilterMenu(false)} />
-                    <div className="absolute top-full left-0 mt-2 z-40 bg-background border border-border rounded-xl shadow-lg p-4 min-w-[260px] space-y-4">
-                      {/* Ordenar */}
-                      <div>
-                        <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold mb-2">Ordenar por</p>
-                        <div className="flex flex-wrap gap-1.5">
-                          {([
-                            { key: "recent" as const, label: "Recentes" },
-                            { key: "price_asc" as const, label: "Menor preço" },
-                            { key: "price_desc" as const, label: "Maior preço" },
-                          ]).map((opt) => (
-                            <button
-                              key={opt.key}
-                              onClick={() => setSortBy(opt.key)}
-                              className={`px-3 py-1.5 rounded-full text-[11px] font-medium transition-colors ${sortBy === opt.key ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground hover:bg-muted/80'}`}
-                            >
-                              {opt.label}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Faixa de preço */}
-                      <div>
-                        <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold mb-2">Faixa de preço</p>
-                        <div className="flex items-center gap-2">
-                          <Input
-                            type="number"
-                            placeholder="Mín"
-                            value={priceRange[0] || ""}
-                            onChange={(e) => setPriceRange([Number(e.target.value) || 0, priceRange[1]])}
-                            className="h-8 text-xs w-full"
-                          />
-                          <span className="text-muted-foreground text-xs">—</span>
-                          <Input
-                            type="number"
-                            placeholder="Máx"
-                            value={priceRange[1] === 10000 ? "" : priceRange[1]}
-                            onChange={(e) => setPriceRange([priceRange[0], Number(e.target.value) || 10000])}
-                            className="h-8 text-xs w-full"
-                          />
-                        </div>
-                      </div>
-
-                      {/* Seguidores mínimo */}
-                      <div>
-                        <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold mb-2">Seguidores mínimos</p>
-                        <div className="flex flex-wrap gap-1.5">
-                          {[
-                            { value: 0, label: "Todos" },
-                            { value: 1000, label: "1K+" },
-                            { value: 5000, label: "5K+" },
-                            { value: 10000, label: "10K+" },
-                            { value: 50000, label: "50K+" },
-                          ].map((opt) => (
-                            <button
-                              key={opt.value}
-                              onClick={() => setMinFollowers(opt.value)}
-                              className={`px-3 py-1.5 rounded-full text-[11px] font-medium transition-colors ${minFollowers === opt.value ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground hover:bg-muted/80'}`}
-                            >
-                              {opt.label}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Aplicar / Limpar */}
-                      <div className="flex gap-2 pt-1">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="flex-1 text-xs h-8"
-                          onClick={() => { setSortBy("recent"); setPriceRange([0, 10000]); setMinFollowers(0); }}
-                        >
-                          Limpar
-                        </Button>
-                        <Button
-                          variant="hero"
-                          size="sm"
-                          className="flex-1 text-xs h-8"
-                          onClick={() => setShowFilterMenu(false)}
-                        >
-                          Aplicar
-                        </Button>
-                      </div>
-                    </div>
-                  </>
-                )}
-              </div>
-
-              {/* Platform filters (local) */}
               {PLATFORMS.map((p) => (
                 <button
                   key={p.id}
+                  type="button"
                   onClick={() => setSelectedPlatform(selectedPlatform === p.id ? null : p.id)}
                   className="flex flex-col items-center gap-1 min-w-[56px] group"
                 >
@@ -328,6 +235,7 @@ export default function Index() {
                 </button>
               ))}
               <button
+                type="button"
                 onClick={handleSell}
                 className="flex flex-col items-center gap-1 min-w-[56px] group"
               >
@@ -337,6 +245,94 @@ export default function Index() {
                 <span className="text-[10px] font-medium text-primary whitespace-nowrap">Vender</span>
               </button>
             </div>
+
+            {showFilterMenu && (
+              <div className="mt-3 rounded-2xl border border-border bg-background p-4 shadow-sm">
+                <div className="grid gap-4 md:grid-cols-3">
+                  <div>
+                    <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Ordenar por</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {([
+                        { key: "recent" as const, label: "Recentes" },
+                        { key: "price_asc" as const, label: "Menor preço" },
+                        { key: "price_desc" as const, label: "Maior preço" },
+                      ]).map((opt) => (
+                        <button
+                          key={opt.key}
+                          type="button"
+                          onClick={() => setSortBy(opt.key)}
+                          className={`rounded-full px-3 py-1.5 text-[11px] font-medium transition-colors ${sortBy === opt.key ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground hover:bg-muted/80'}`}
+                        >
+                          {opt.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Faixa de preço</p>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        type="number"
+                        placeholder="Mín"
+                        value={priceRange[0] || ""}
+                        onChange={(e) => setPriceRange([Number(e.target.value) || 0, priceRange[1]])}
+                        className="h-9 w-full text-xs"
+                      />
+                      <span className="text-xs text-muted-foreground">—</span>
+                      <Input
+                        type="number"
+                        placeholder="Máx"
+                        value={priceRange[1] === 10000 ? "" : priceRange[1]}
+                        onChange={(e) => setPriceRange([priceRange[0], Number(e.target.value) || 10000])}
+                        className="h-9 w-full text-xs"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Seguidores mínimos</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {[
+                        { value: 0, label: "Todos" },
+                        { value: 1000, label: "1K+" },
+                        { value: 5000, label: "5K+" },
+                        { value: 10000, label: "10K+" },
+                        { value: 50000, label: "50K+" },
+                      ].map((opt) => (
+                        <button
+                          key={opt.value}
+                          type="button"
+                          onClick={() => setMinFollowers(opt.value)}
+                          className={`rounded-full px-3 py-1.5 text-[11px] font-medium transition-colors ${minFollowers === opt.value ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground hover:bg-muted/80'}`}
+                        >
+                          {opt.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-4 flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-9 flex-1 text-xs"
+                    onClick={() => { setSortBy("recent"); setPriceRange([0, 10000]); setMinFollowers(0); }}
+                  >
+                    Limpar
+                  </Button>
+                  <Button
+                    variant="hero"
+                    size="sm"
+                    className="h-9 flex-1 text-xs"
+                    onClick={() => setShowFilterMenu(false)}
+                  >
+                    Aplicar
+                  </Button>
+                </div>
+              </div>
+            )}
 
             {/* Active filter indicators */}
             {(selectedPlatform || sortBy !== "recent" || priceRange[0] > 0 || priceRange[1] < 10000 || minFollowers > 0) && (
