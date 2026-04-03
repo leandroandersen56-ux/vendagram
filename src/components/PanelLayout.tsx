@@ -150,8 +150,7 @@ export default function PanelLayout() {
           <Button variant="ghost" size="icon" className="h-9 w-9 rounded-xl" onClick={() => setSidebarOpen(true)}>
             <Menu className="h-5 w-5" />
           </Button>
-          <span className="text-primary text-lg">⚡</span>
-            <img src={logoFroiv} alt="Froiv" className="h-6" />
+          <img src={logoFroiv} alt="Froiv" className="h-6" />
         </div>
         <Popover>
           <PopoverTrigger asChild>
