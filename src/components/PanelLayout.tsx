@@ -151,7 +151,7 @@ export default function PanelLayout() {
             <Menu className="h-5 w-5" />
           </Button>
           <span className="text-primary text-lg">⚡</span>
-          <span className="font-display text-sm font-bold tracking-tight text-foreground">Froiv</span>
+            <img src={logoFroiv} alt="Froiv" className="h-6" />
         </div>
         <Popover>
           <PopoverTrigger asChild>
