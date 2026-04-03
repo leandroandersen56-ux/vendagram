@@ -155,25 +155,27 @@ export default function Index() {
         </div>
       </section>
 
-      {/* Categories */}
+      {/* Categories — navigates to marketplace */}
       <section className="px-4 order-2">
         <div className="container mx-auto">
           <h2 className="font-display font-bold text-xl text-foreground mt-10 mb-4">Explorar por plataforma</h2>
-          <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 md:grid md:grid-cols-6">
-            {PLATFORMS.map((p) => (
-              <button
-                key={p.id}
-                onClick={() => { setPlatform(p.id); }}
-                className={`min-w-[80px] flex flex-col items-center gap-2 p-3 rounded-2xl border transition-all duration-200 cursor-pointer ${
-                  platform === p.id
-                    ? "bg-primary-light border-primary"
-                    : "bg-muted border-border hover:border-primary hover:bg-primary-light"
-                }`}
-              >
-                <PlatformIcon platformId={p.id} size={32} />
-                <span className="text-xs font-semibold text-foreground">{p.name}</span>
-              </button>
-            ))}
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 sm:gap-3">
+            {PLATFORMS.map((p) => {
+              const count = listings.filter((l) => l.platform === p.id).length;
+              return (
+                <Link
+                  key={p.id}
+                  to={`/marketplace?platform=${p.id}`}
+                  className="flex flex-col items-center gap-1.5 p-3 sm:p-4 rounded-2xl border border-border bg-card hover:border-primary hover:bg-primary/5 transition-all duration-200 group"
+                >
+                  <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+                    <PlatformIcon platformId={p.id} size={28} />
+                  </div>
+                  <span className="text-xs font-semibold text-foreground">{p.name}</span>
+                  <span className="text-[10px] text-muted-foreground">{count} {count === 1 ? "anúncio" : "anúncios"}</span>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
