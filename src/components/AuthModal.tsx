@@ -37,7 +37,7 @@ export default function AuthModal() {
           email,
           password,
           options: {
-            data: { name: name || email.split("@")[0] },
+            data: { name: name || email.split("@")[0], role: selectedRole || "buyer" },
             emailRedirectTo: window.location.origin,
           },
         });
