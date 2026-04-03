@@ -5,7 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import {
   ArrowRight, Search, Loader2, Shield, CheckCircle2, Clock, Zap,
-  Gamepad2, Smartphone, ChevronLeft, ChevronRight, Tag, Plus, TrendingUp, Star
+  Gamepad2, Smartphone, ChevronLeft, ChevronRight, Plus
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -22,14 +22,6 @@ const BANNERS = [
   { img: bannerHero1, title: "Contas de Redes Sociais", subtitle: "Instagram, TikTok, YouTube e mais", cta: "Ver contas", link: "/marketplace?type=social" },
   { img: bannerHero2, title: "Contas de Jogos", subtitle: "Free Fire, Valorant, Fortnite e mais", cta: "Ver contas", link: "/marketplace?type=games" },
   { img: bannerHero3, title: "Compra 100% Segura", subtitle: "Pagamento protegido com escrow", cta: "Saiba mais", link: "/marketplace" },
-];
-
-const QUICK_ACTIONS = [
-  { icon: <Tag className="h-5 w-5" />, label: "Ofertas", link: "/marketplace", color: "text-amber-500" },
-  { icon: <TrendingUp className="h-5 w-5" />, label: "Populares", link: "/marketplace", color: "text-emerald-500" },
-  { icon: <Shield className="h-5 w-5" />, label: "Segurança", link: "/marketplace", color: "text-primary" },
-  { icon: <Star className="h-5 w-5" />, label: "Destaques", link: "/marketplace", color: "text-amber-400" },
-  { icon: <Plus className="h-5 w-5" />, label: "Vender", link: "/painel/anuncios/novo", color: "text-primary" },
 ];
 
 export default function Index() {
@@ -172,63 +164,35 @@ export default function Index() {
           </div>
         </section>
 
-        {/* === QUICK ACTIONS (horizontal scroll) === */}
+        {/* === PLATFORM NAV (horizontal scroll) === */}
         <section className="px-4 py-3 bg-background border-b border-border">
           <div className="container mx-auto">
-            <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-1">
-              {QUICK_ACTIONS.map((action) => (
-                <Link
-                  key={action.label}
-                  to={action.link}
-                  onClick={(e) => {
-                    if (action.label === "Vender") {
-                      e.preventDefault();
-                      handleSell();
-                    }
-                  }}
-                  className="flex flex-col items-center gap-1 min-w-[60px] group"
-                >
-                  <div className={`h-12 w-12 rounded-full bg-muted flex items-center justify-center ${action.color} group-hover:bg-primary/10 transition-colors`}>
-                    {action.icon}
+            <div className="flex items-center gap-3 overflow-x-auto scrollbar-hide pb-1">
+              <Link to="/marketplace">
+                <div className="flex flex-col items-center gap-1 min-w-[56px] group">
+                  <div className="h-11 w-11 rounded-full bg-primary flex items-center justify-center text-primary-foreground group-hover:shadow-md transition-shadow">
+                    <Search className="h-5 w-5" />
                   </div>
-                  <span className="text-[10px] font-medium text-foreground whitespace-nowrap">{action.label}</span>
-                </Link>
-              ))}
-
-              {/* Platform quick icons */}
-              {PLATFORMS.slice(0, 5).map((p) => (
-                <Link
-                  key={p.id}
-                  to={`/marketplace?platform=${p.id}`}
-                  className="flex flex-col items-center gap-1 min-w-[60px] group"
-                >
-                  <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-                    <PlatformIcon platformId={p.id} size={24} />
+                  <span className="text-[10px] font-semibold text-primary whitespace-nowrap">Todos</span>
+                </div>
+              </Link>
+              {PLATFORMS.map((p) => (
+                <Link key={p.id} to={`/marketplace?platform=${p.id}`} className="flex flex-col items-center gap-1 min-w-[56px] group">
+                  <div className="h-11 w-11 rounded-full bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+                    <PlatformIcon platformId={p.id} size={22} />
                   </div>
                   <span className="text-[10px] font-medium text-foreground whitespace-nowrap">{p.name}</span>
                 </Link>
               ))}
-            </div>
-          </div>
-        </section>
-
-        {/* === CATEGORY TABS (horizontal scroll) === */}
-        <section className="px-4 pt-4 bg-background">
-          <div className="container mx-auto">
-            <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-3">
-              <Link to="/marketplace">
-                <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary text-primary-foreground text-xs font-semibold whitespace-nowrap shadow-sm">
-                  Todos
-                </span>
-              </Link>
-              {PLATFORMS.map((p) => (
-                <Link key={p.id} to={`/marketplace?platform=${p.id}`}>
-                  <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-card border border-border text-xs font-medium text-foreground whitespace-nowrap hover:border-primary hover:text-primary transition-colors">
-                    <PlatformIcon platformId={p.id} size={14} />
-                    {p.name}
-                  </span>
-                </Link>
-              ))}
+              <button
+                onClick={handleSell}
+                className="flex flex-col items-center gap-1 min-w-[56px] group"
+              >
+                <div className="h-11 w-11 rounded-full bg-muted flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors">
+                  <Plus className="h-5 w-5" />
+                </div>
+                <span className="text-[10px] font-medium text-primary whitespace-nowrap">Vender</span>
+              </button>
             </div>
           </div>
         </section>
