@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Search, Bell, User, LogOut, LayoutDashboard, Store, ShoppingBag, Tag, ShoppingCart } from "lucide-react";
+import { Search, Bell, User, LogOut, LayoutDashboard, Store, ShoppingBag, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
@@ -10,17 +10,80 @@ import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem,
   DropdownMenuSeparator, DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
+import { supabase } from "@/integrations/supabase/client";
+
+interface Notification {
+  id: string;
+  title: string;
+  body: string;
+  link: string | null;
+  read: boolean;
+  created_at: string;
+}
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [notifOpen, setNotifOpen] = useState(false);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [notifLoading, setNotifLoading] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { user, isAuthenticated, openAuth, logout } = useAuth();
+
+  const unreadCount = notifications.filter((n) => !n.read).length;
+
+  const fetchNotifications = async () => {
+    if (!user) return;
+    setNotifLoading(true);
+    const { data } = await supabase
+      .from("notifications")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(10);
+    if (data) setNotifications(data);
+    setNotifLoading(false);
+  };
+
+  const markAsRead = async (id: string) => {
+    await supabase.from("notifications").update({ read: true }).eq("id", id);
+    setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
+  };
+
+  const markAllRead = async () => {
+    if (!user) return;
+    const unreadIds = notifications.filter((n) => !n.read).map((n) => n.id);
+    if (unreadIds.length === 0) return;
+    await supabase.from("notifications").update({ read: true }).in("id", unreadIds);
+    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+  };
+
+  const handleNotifClick = (notif: Notification) => {
+    markAsRead(notif.id);
+    setNotifOpen(false);
+    if (notif.link) navigate(notif.link);
+  };
+
+  const timeAgo = (dateStr: string) => {
+    const diff = Date.now() - new Date(dateStr).getTime();
+    const mins = Math.floor(diff / 60000);
+    if (mins < 1) return "agora";
+    if (mins < 60) return `${mins}min`;
+    const hours = Math.floor(mins / 60);
+    if (hours < 24) return `${hours}h`;
+    const days = Math.floor(hours / 24);
+    return `${days}d`;
+  };
 
   const handleSell = () => {
     if (isAuthenticated) navigate("/painel/anuncios/novo");
     else openAuth("/painel/anuncios/novo");
   };
+
+  // Close notif dropdown on route change
+  useEffect(() => {
+    setNotifOpen(false);
+  }, [location.pathname]);
 
   return (
     <>
@@ -31,7 +94,7 @@ export default function Navbar() {
             <img src={logoFroiv} alt="Froiv" className="h-7 md:h-8 brightness-0 invert" />
           </Link>
 
-          {/* Search bar - always visible */}
+          {/* Search bar */}
           <div className="flex-1 max-w-xl">
             <div className="relative w-full">
               <Input
@@ -60,9 +123,38 @@ export default function Navbar() {
 
           {/* Right side */}
           <div className="hidden md:flex items-center gap-2 shrink-0">
-            <button className="relative h-9 w-9 flex items-center justify-center text-white/80 hover:text-white transition-colors" aria-label="Notificações">
-              <Bell className="h-5 w-5" />
-            </button>
+            {/* Notification bell (desktop) */}
+            <div className="relative">
+              <button
+                className="relative h-9 w-9 flex items-center justify-center text-white/80 hover:text-white transition-colors"
+                aria-label="Notificações"
+                onClick={() => {
+                  if (!isAuthenticated) { openAuth(); return; }
+                  setNotifOpen(!notifOpen);
+                  if (!notifOpen) fetchNotifications();
+                }}
+              >
+                <Bell className="h-5 w-5" />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 h-4 min-w-4 px-1 rounded-full bg-[hsl(var(--danger))] text-white text-[9px] font-bold flex items-center justify-center">
+                    {unreadCount > 9 ? "9+" : unreadCount}
+                  </span>
+                )}
+              </button>
+
+              <AnimatePresence>
+                {notifOpen && (
+                  <NotifDropdown
+                    notifications={notifications}
+                    loading={notifLoading}
+                    onClose={() => setNotifOpen(false)}
+                    onClick={handleNotifClick}
+                    onMarkAllRead={markAllRead}
+                    timeAgo={timeAgo}
+                  />
+                )}
+              </AnimatePresence>
+            </div>
 
             {isAuthenticated ? (
               <DropdownMenu>
@@ -111,9 +203,39 @@ export default function Navbar() {
 
           {/* Mobile right icons */}
           <div className="flex items-center gap-0.5 md:hidden shrink-0">
-            <button className="h-9 w-9 flex items-center justify-center text-white/80" aria-label="Notificações">
-              <Bell className="h-5 w-5" />
-            </button>
+            <div className="relative">
+              <button
+                className="h-9 w-9 flex items-center justify-center text-white/80"
+                aria-label="Notificações"
+                onClick={() => {
+                  if (!isAuthenticated) { openAuth(); return; }
+                  setNotifOpen(!notifOpen);
+                  if (!notifOpen) fetchNotifications();
+                }}
+              >
+                <Bell className="h-5 w-5" />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 h-4 min-w-4 px-1 rounded-full bg-[hsl(var(--danger))] text-white text-[9px] font-bold flex items-center justify-center">
+                    {unreadCount > 9 ? "9+" : unreadCount}
+                  </span>
+                )}
+              </button>
+
+              <AnimatePresence>
+                {notifOpen && (
+                  <NotifDropdown
+                    notifications={notifications}
+                    loading={notifLoading}
+                    onClose={() => setNotifOpen(false)}
+                    onClick={handleNotifClick}
+                    onMarkAllRead={markAllRead}
+                    timeAgo={timeAgo}
+                    mobile
+                  />
+                )}
+              </AnimatePresence>
+            </div>
+
             {!isAuthenticated ? (
               <button
                 onClick={() => openAuth()}
@@ -174,6 +296,111 @@ export default function Navbar() {
           </>
         )}
       </AnimatePresence>
+
+      {/* Notif overlay backdrop (mobile) */}
+      <AnimatePresence>
+        {notifOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-40 bg-black/20"
+            onClick={() => setNotifOpen(false)}
+          />
+        )}
+      </AnimatePresence>
     </>
+  );
+}
+
+/* ── Notification Dropdown ── */
+function NotifDropdown({
+  notifications,
+  loading,
+  onClose,
+  onClick,
+  onMarkAllRead,
+  timeAgo,
+  mobile,
+}: {
+  notifications: Notification[];
+  loading: boolean;
+  onClose: () => void;
+  onClick: (n: Notification) => void;
+  onMarkAllRead: () => void;
+  timeAgo: (d: string) => string;
+  mobile?: boolean;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -8, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: -8, scale: 0.95 }}
+      transition={{ duration: 0.15 }}
+      className={`absolute z-50 bg-white rounded-xl shadow-lg border border-[hsl(var(--border))] overflow-hidden ${
+        mobile ? "right-0 top-12 w-[calc(100vw-32px)] max-w-sm" : "right-0 top-12 w-80"
+      }`}
+    >
+      {/* Header */}
+      <div className="flex items-center justify-between px-4 py-3 border-b border-[hsl(var(--border))]">
+        <h3 className="text-sm font-bold text-[hsl(var(--txt-primary))]">Notificações</h3>
+        {notifications.some((n) => !n.read) && (
+          <button
+            onClick={onMarkAllRead}
+            className="text-[11px] text-primary font-semibold hover:underline"
+          >
+            Marcar todas como lidas
+          </button>
+        )}
+      </div>
+
+      {/* Body */}
+      <div className="max-h-80 overflow-y-auto">
+        {loading ? (
+          <div className="flex items-center justify-center py-8">
+            <Loader2 className="h-5 w-5 animate-spin text-primary" />
+          </div>
+        ) : notifications.length === 0 ? (
+          <div className="text-center py-8 px-4">
+            <Bell className="h-8 w-8 text-[hsl(var(--border))] mx-auto mb-2" />
+            <p className="text-[13px] text-[hsl(var(--txt-hint))]">Nenhuma notificação</p>
+          </div>
+        ) : (
+          notifications.map((notif) => (
+            <button
+              key={notif.id}
+              onClick={() => onClick(notif)}
+              className={`w-full text-left px-4 py-3 border-b border-[hsl(var(--border))]/50 hover:bg-[hsl(var(--muted))] transition-colors ${
+                !notif.read ? "bg-primary/[0.03]" : ""
+              }`}
+            >
+              <div className="flex items-start gap-2.5">
+                {!notif.read && (
+                  <span className="mt-1.5 h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                )}
+                <div className={`flex-1 min-w-0 ${notif.read ? "ml-[18px]" : ""}`}>
+                  <p className={`text-[13px] leading-snug ${!notif.read ? "font-semibold text-[hsl(var(--txt-primary))]" : "text-[hsl(var(--txt-secondary))]"}`}>
+                    {notif.title}
+                  </p>
+                  <p className="text-[12px] text-[hsl(var(--txt-hint))] mt-0.5 line-clamp-2">{notif.body}</p>
+                  <p className="text-[10px] text-[hsl(var(--txt-hint))] mt-1">{timeAgo(notif.created_at)}</p>
+                </div>
+              </div>
+            </button>
+          ))
+        )}
+      </div>
+
+      {/* Footer */}
+      {notifications.length > 0 && (
+        <Link
+          to="/painel/notificacoes"
+          onClick={onClose}
+          className="block text-center py-2.5 text-[12px] text-primary font-semibold hover:bg-[hsl(var(--muted))] transition-colors border-t border-[hsl(var(--border))]"
+        >
+          Ver todas as notificações
+        </Link>
+      )}
+    </motion.div>
   );
 }
