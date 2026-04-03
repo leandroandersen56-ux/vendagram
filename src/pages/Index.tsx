@@ -165,6 +165,29 @@ export default function Index() {
           </div>
         </section>
 
+        {/* === SEARCH BAR (Home) === */}
+        <section className="px-4 pt-3 pb-2 bg-background">
+          <div className="container mx-auto">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (searchQuery.trim()) navigate(`/marketplace?q=${encodeURIComponent(searchQuery.trim())}`);
+              }}
+              className="relative w-full"
+            >
+              <Input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Buscar contas, jogos, redes sociais..."
+                className="w-full bg-muted border-border h-11 pl-4 pr-11 text-sm placeholder:text-muted-foreground rounded-full"
+              />
+              <button type="submit" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground">
+                <Search className="h-4 w-4" />
+              </button>
+            </form>
+          </div>
+        </section>
+
         {/* === PLATFORM NAV (horizontal scroll) === */}
         <section className="px-4 py-3 bg-background border-b border-border">
           <div className="container mx-auto">
