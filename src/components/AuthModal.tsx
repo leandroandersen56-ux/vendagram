@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Eye, EyeOff, Shield, ShoppingCart, Tag } from "lucide-react";
+import logoFroiv from "@/assets/logo-froiv.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -101,10 +102,7 @@ export default function AuthModal() {
 
           {/* Header with role selector */}
           <div className="flex flex-col items-center gap-2 pt-6">
-            <div className="flex items-center gap-1.5">
-              <span className="text-primary text-xl">⚡</span>
-              <span className="font-display text-lg font-bold text-foreground">Froiv</span>
-            </div>
+            <img src={logoFroiv} alt="Froiv" className="h-8" />
           </div>
 
           {/* Tabs as pills */}
