@@ -338,13 +338,33 @@ export default function Index() {
               </button>
             </div>
 
-            {/* Active filter indicator */}
-            {selectedPlatform && (
-              <div className="flex items-center gap-2 mt-2">
-                <span className="text-[11px] bg-primary/10 text-primary px-3 py-1 rounded-full font-medium flex items-center gap-1">
-                  {PLATFORMS.find(p => p.id === selectedPlatform)?.name}
-                  <button onClick={() => setSelectedPlatform(null)} className="ml-1 hover:text-primary/70">✕</button>
-                </span>
+            {/* Active filter indicators */}
+            {(selectedPlatform || sortBy !== "recent" || priceRange[0] > 0 || priceRange[1] < 10000 || minFollowers > 0) && (
+              <div className="flex items-center gap-1.5 mt-2 flex-wrap">
+                {selectedPlatform && (
+                  <span className="text-[11px] bg-primary/10 text-primary px-3 py-1 rounded-full font-medium flex items-center gap-1">
+                    {PLATFORMS.find(p => p.id === selectedPlatform)?.name}
+                    <button onClick={() => setSelectedPlatform(null)} className="ml-1 hover:text-primary/70">✕</button>
+                  </span>
+                )}
+                {sortBy !== "recent" && (
+                  <span className="text-[11px] bg-primary/10 text-primary px-3 py-1 rounded-full font-medium flex items-center gap-1">
+                    {sortBy === "price_asc" ? "Menor preço" : "Maior preço"}
+                    <button onClick={() => setSortBy("recent")} className="ml-1 hover:text-primary/70">✕</button>
+                  </span>
+                )}
+                {(priceRange[0] > 0 || priceRange[1] < 10000) && (
+                  <span className="text-[11px] bg-primary/10 text-primary px-3 py-1 rounded-full font-medium flex items-center gap-1">
+                    R$ {priceRange[0]}–{priceRange[1] >= 10000 ? "∞" : priceRange[1]}
+                    <button onClick={() => setPriceRange([0, 10000])} className="ml-1 hover:text-primary/70">✕</button>
+                  </span>
+                )}
+                {minFollowers > 0 && (
+                  <span className="text-[11px] bg-primary/10 text-primary px-3 py-1 rounded-full font-medium flex items-center gap-1">
+                    {minFollowers >= 1000 ? `${minFollowers / 1000}K+` : `${minFollowers}+`} seguidores
+                    <button onClick={() => setMinFollowers(0)} className="ml-1 hover:text-primary/70">✕</button>
+                  </span>
+                )}
               </div>
             )}
           </div>
