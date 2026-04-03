@@ -35,6 +35,8 @@ export default function Index() {
   const [selectedPlatform, setSelectedPlatform] = useState<string | null>(null);
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [sortBy, setSortBy] = useState<"recent" | "price_asc" | "price_desc">("recent");
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000]);
+  const [minFollowers, setMinFollowers] = useState<number>(0);
 
   const handleSell = () => {
     if (isAuthenticated) {
