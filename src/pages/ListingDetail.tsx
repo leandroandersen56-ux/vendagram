@@ -1,10 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
-  ArrowLeft, Star, Shield, ShoppingCart, CheckCircle2, Clock,
-  MessageCircle, Loader2, Copy, Check, Lock, Store, AlertCircle, Edit,
-  ChevronLeft, ChevronRight, Zap, Share2
+  ArrowLeft, Star, Shield, Edit, AlertCircle, Loader2,
+  Share2, Heart, ChevronRight, CheckCircle2, Copy, Check
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
@@ -14,6 +13,15 @@ import PlatformIcon from "@/components/PlatformIcon";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
+import ProductGallery from "@/components/pdp/ProductGallery";
+import BuyBox from "@/components/pdp/BuyBox";
+import TrustSignals from "@/components/pdp/TrustSignals";
+import SellerCard from "@/components/pdp/SellerCard";
+import AccountSpecs from "@/components/pdp/AccountSpecs";
+import StickyBuyBar from "@/components/pdp/StickyBuyBar";
+import ReviewSection from "@/components/pdp/ReviewSection";
+import RelatedProducts from "@/components/pdp/RelatedProducts";
+
 export default function ListingDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -21,8 +29,9 @@ export default function ListingDetail() {
   const [listing, setListing] = useState<any>(null);
   const [seller, setSeller] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [favorited, setFavorited] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(0);
+  const buyBoxRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     async function fetchListing() {
@@ -59,7 +68,7 @@ export default function ListingDetail() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-[hsl(var(--muted))]">
         <Navbar />
         <div className="flex items-center justify-center pt-40">
           <Loader2 className="h-6 w-6 animate-spin text-primary" />
@@ -70,13 +79,13 @@ export default function ListingDetail() {
 
   if (!listing) {
     return (
-      <div className="min-h-screen bg-background flex flex-col">
+      <div className="min-h-screen bg-[hsl(var(--muted))] flex flex-col">
         <Navbar />
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <p className="text-foreground font-medium mb-4">Anúncio não encontrado</p>
-            <Link to="/marketplace"><Button variant="hero">Voltar ao Marketplace</Button></Link>
+            <AlertCircle className="h-12 w-12 text-[hsl(var(--txt-hint))] mx-auto mb-4" />
+            <p className="text-[hsl(var(--txt-primary))] font-medium mb-4">Anúncio não encontrado</p>
+            <Link to="/marketplace"><Button className="bg-primary text-white rounded-xl">Voltar ao Marketplace</Button></Link>
           </div>
         </div>
       </div>
@@ -91,7 +100,7 @@ export default function ListingDetail() {
   const sellerRating = seller?.avg_rating || 5.0;
   const sellerSales = seller?.total_sales || 0;
 
-  const infoFields = Object.entries(highlights).filter(([_, v]) => typeof v === "string");
+  const infoFields = Object.entries(highlights).filter(([_, v]) => typeof v === "string" || typeof v === "number");
   const featureFlags = Object.entries(highlights).filter(([_, v]) => v === true);
   const itemsList = highlights["Itens"] as string[] | undefined;
   const originalPrice = highlights["Preço original"] as string | undefined;
@@ -119,314 +128,228 @@ export default function ListingDetail() {
     }
   };
 
-  const nextImage = () => setSelectedImage((prev) => (prev + 1) % allImages.length);
-  const prevImage = () => setSelectedImage((prev) => (prev - 1 + allImages.length) % allImages.length);
+  const PLATFORM_BADGE_COLORS: Record<string, string> = {
+    instagram: "bg-gradient-to-r from-[#833AB4] to-[#E1306C] text-white",
+    tiktok: "bg-[#111] text-white",
+    youtube: "bg-[#FF0000] text-white",
+    facebook: "bg-[#1877F2] text-white",
+    free_fire: "bg-[#FF6B35] text-white",
+    valorant: "bg-[#FF4655] text-white",
+    fortnite: "bg-[#9D4DBB] text-white",
+    roblox: "bg-[#E2231A] text-white",
+    clash_royale: "bg-[#F5C518] text-[#111]",
+  };
 
   return (
-    <div className="min-h-screen bg-background pb-20 sm:pb-0">
+    <div className="min-h-screen bg-[hsl(var(--muted))] pb-20 sm:pb-0">
       <Navbar />
 
-      <div className="container mx-auto px-4 pt-20 sm:pt-24 pb-8">
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}>
-          {/* Breadcrumb */}
-          <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-4">
-            <Link to="/" className="hover:text-foreground transition-colors">Início</Link>
-            <span>/</span>
-            <Link to="/marketplace" className="hover:text-foreground transition-colors">Marketplace</Link>
-            <span>/</span>
-            <Link to={`/marketplace?platform=${listing.category}`} className="hover:text-foreground transition-colors">{platform.name}</Link>
+      {/* PDP Header bar (mobile) */}
+      <div className="fixed top-0 left-0 right-0 z-50 bg-primary h-14 flex items-center justify-between px-4 sm:hidden">
+        <button onClick={() => navigate(-1)} className="text-white p-1" aria-label="Voltar">
+          <ArrowLeft className="h-6 w-6" />
+        </button>
+        <div className="flex items-center gap-3">
+          <button onClick={handleShare} className="text-white p-1" aria-label="Compartilhar">
+            <Share2 className="h-5 w-5" />
+          </button>
+          <motion.button
+            onClick={() => setFavorited(!favorited)}
+            className="text-white p-1"
+            aria-label={favorited ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+            whileTap={{ scale: 1.3 }}
+            transition={{ type: "spring", stiffness: 500, damping: 15 }}
+          >
+            <Heart className={`h-5 w-5 ${favorited ? "fill-red-500 text-red-500" : ""}`} />
+          </motion.button>
+        </div>
+      </div>
+
+      <div className="pt-14 sm:pt-20">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.25 }}
+        >
+          {/* Breadcrumb (desktop) */}
+          <div className="hidden sm:block container mx-auto px-4 py-3">
+            <div className="flex items-center gap-1.5 text-xs text-[hsl(var(--txt-hint))]">
+              <Link to="/" className="hover:text-primary transition-colors">Início</Link>
+              <ChevronRight className="h-3 w-3" />
+              <Link to="/marketplace" className="hover:text-primary transition-colors">Marketplace</Link>
+              <ChevronRight className="h-3 w-3" />
+              <Link to={`/marketplace?platform=${listing.category}`} className="hover:text-primary transition-colors">{platform.name}</Link>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-8">
-            {/* Left: Images (3 cols on desktop) */}
-            <div className="lg:col-span-3">
-              {allImages.length === 0 ? (
-                <div className="aspect-[4/3] rounded-2xl overflow-hidden flex items-center justify-center bg-muted">
-                  <div className="text-center">
-                    <PlatformIcon platformId={listing.category} size={80} />
-                    <p className="text-xs text-muted-foreground mt-3">Sem imagens</p>
+          <div className="container mx-auto px-4 pb-8">
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-5 lg:gap-8">
+              {/* Left column */}
+              <div className="lg:col-span-3 space-y-4">
+                {/* Gallery */}
+                <ProductGallery
+                  images={allImages}
+                  title={listing.title}
+                  category={listing.category}
+                  verified={sellerSales >= 5}
+                />
+
+                {/* Info block (mobile: below gallery, desktop: below gallery too) */}
+                <div className="bg-white rounded-xl p-4 border border-[hsl(var(--border))]">
+                  {/* Badges */}
+                  <div className="flex flex-wrap items-center gap-1.5 mb-2">
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${PLATFORM_BADGE_COLORS[listing.category] || "bg-[hsl(var(--muted))] text-[hsl(var(--txt-primary))]"}`}>
+                      {platform.name.toUpperCase()}
+                    </span>
+                    {sellerSales >= 5 && (
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[hsl(var(--success-light))] text-[hsl(var(--success))]">
+                        VERIFICADO
+                      </span>
+                    )}
+                    {sellerSales >= 15 && (
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[hsl(var(--hot-light))] text-[hsl(var(--hot))]">
+                        MAIS VENDIDO
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Title */}
+                  <div className="flex items-start justify-between gap-2">
+                    <h1 className="text-lg sm:text-[22px] font-semibold text-[hsl(var(--txt-primary))] leading-snug">
+                      {listing.title}
+                    </h1>
+                    {user && user.id === listing.seller_id && (
+                      <Button
+                        variant="outline" size="sm" className="shrink-0 text-xs rounded-lg"
+                        onClick={() => navigate(`/painel/anuncios/editar/${listing.id}`)}
+                      >
+                        <Edit className="h-3 w-3 mr-1" /> Editar
+                      </Button>
+                    )}
+                  </div>
+
+                  {/* Rating + sales */}
+                  <div className="flex items-center flex-wrap gap-x-2 gap-y-1 mt-2 text-[13px]">
+                    <div className="flex items-center gap-1">
+                      <Star className="h-3.5 w-3.5 text-amber-400 fill-amber-400" />
+                      <span className="font-bold text-primary">{sellerRating.toFixed(1)}</span>
+                    </div>
+                    <span className="text-[hsl(var(--border))]">|</span>
+                    <span className="text-[hsl(var(--txt-secondary))]">{sellerSales} vendas</span>
+                    <span className="text-[hsl(var(--border))]">|</span>
+                    <button className="text-primary font-medium hover:underline">Ver avaliações →</button>
                   </div>
                 </div>
-              ) : (
-                <div className="space-y-3">
-                  {/* Main image with carousel controls on mobile */}
-                  <div className="relative rounded-2xl overflow-hidden bg-muted group">
-                    <img
-                      src={allImages[selectedImage] || allImages[0]}
-                      alt={listing.title}
-                      className="w-full h-auto block"
-                    />
-                    {allImages.length > 1 && (
-                      <>
-                        <button
-                          onClick={prevImage}
-                          className="absolute left-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-background/80 backdrop-blur-sm border border-border flex items-center justify-center opacity-0 group-hover:opacity-100 sm:opacity-100 transition-opacity"
-                        >
-                          <ChevronLeft className="h-4 w-4 text-foreground" />
-                        </button>
-                        <button
-                          onClick={nextImage}
-                          className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-background/80 backdrop-blur-sm border border-border flex items-center justify-center opacity-0 group-hover:opacity-100 sm:opacity-100 transition-opacity"
-                        >
-                          <ChevronRight className="h-4 w-4 text-foreground" />
-                        </button>
-                        {/* Dots indicator on mobile */}
-                        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 sm:hidden">
-                          {allImages.map((_: string, i: number) => (
-                            <div
-                              key={i}
-                              className={`h-1.5 rounded-full transition-all ${
-                                selectedImage === i ? "w-4 bg-primary" : "w-1.5 bg-white/50"
-                              }`}
-                            />
+
+                {/* Buy Box (mobile only) */}
+                <div className="lg:hidden" ref={buyBoxRef}>
+                  <BuyBox
+                    price={listing.price}
+                    originalPrice={originalPrice}
+                    onBuy={handleBuy}
+                  />
+                </div>
+
+                {/* Trust Signals (mobile only) */}
+                <div className="lg:hidden">
+                  <TrustSignals />
+                </div>
+
+                {/* Seller Card (mobile only) */}
+                <div className="lg:hidden">
+                  <SellerCard
+                    name={sellerName}
+                    rating={sellerRating}
+                    sales={sellerSales}
+                  />
+                </div>
+
+                {/* Account Specs */}
+                <AccountSpecs infoFields={infoFields} featureFlags={featureFlags} />
+
+                {/* Description */}
+                {listing.description && (
+                  <div className="rounded-xl border border-[hsl(var(--border))] bg-white p-4">
+                    <h3 className="text-sm font-bold text-[hsl(var(--txt-primary))] mb-2">📝 Descrição completa</h3>
+                    <p className="text-[14px] text-[hsl(var(--txt-secondary))] leading-relaxed whitespace-pre-line">
+                      {listing.description}
+                    </p>
+                    {itemsList && itemsList.length > 0 && (
+                      <div className="mt-3 pt-3 border-t border-[hsl(var(--border))]/60">
+                        <p className="text-[13px] font-semibold text-[hsl(var(--txt-primary))] mb-2">O que está incluído:</p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                          {itemsList.map((item, i) => (
+                            <div key={i} className="flex items-center gap-2 text-[13px] text-[hsl(var(--txt-secondary))]">
+                              <CheckCircle2 className="h-3.5 w-3.5 text-[hsl(var(--success))] flex-shrink-0" />
+                              {item}
+                            </div>
                           ))}
                         </div>
-                      </>
-                    )}
-                    {/* Image counter */}
-                    {allImages.length > 1 && (
-                      <div className="absolute top-3 left-3 bg-background/80 backdrop-blur-sm rounded-lg px-2 py-1 text-[10px] text-foreground font-medium">
-                        {selectedImage + 1} / {allImages.length}
                       </div>
                     )}
                   </div>
-                  {/* Thumbnails — desktop only */}
-                  {allImages.length > 1 && (
-                    <div className="hidden sm:flex gap-2 overflow-x-auto">
-                      {allImages.map((img: string, i: number) => (
-                        <button
-                          key={i}
-                          onClick={() => setSelectedImage(i)}
-                          className={`flex-shrink-0 w-16 h-16 rounded-xl overflow-hidden border-2 transition-all ${
-                            selectedImage === i ? "border-primary" : "border-border hover:border-primary/40"
-                          }`}
-                        >
-                          <img src={img} alt={`Screenshot ${i + 1}`} className="w-full h-full object-cover object-top" />
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
+                )}
 
-              {/* Description — below images on desktop */}
-              <div className="hidden lg:block mt-6">
-                <ProductDescription
-                  description={listing.description}
-                  itemsList={itemsList}
-                  infoFields={infoFields}
-                  featureFlags={featureFlags}
-                />
-              </div>
-            </div>
+                {/* Reviews */}
+                <ReviewSection rating={sellerRating} totalSales={sellerSales} />
 
-            {/* Right: Product info + buy box (2 cols on desktop) */}
-            <div className="lg:col-span-2">
-              {/* Title + edit */}
-              <div className="flex items-start justify-between gap-3 mb-2">
-                <h1 className="text-lg sm:text-xl font-bold text-foreground leading-snug">{listing.title}</h1>
-                {user && user.id === listing.seller_id && (
-                  <Button
-                    variant="outline" size="sm" className="shrink-0 text-xs"
-                    onClick={() => navigate(`/painel/anuncios/editar/${listing.id}`)}
-                  >
-                    <Edit className="h-3 w-3 mr-1" /> Editar
+                {/* Related Products */}
+                <RelatedProducts currentId={listing.id} category={listing.category} />
+
+                {/* Share (mobile) */}
+                <div className="lg:hidden grid grid-cols-2 gap-2">
+                  <Button variant="outline" size="sm" className="text-xs rounded-lg border-[hsl(var(--border))]" onClick={handleShare}>
+                    <Share2 className="h-3.5 w-3.5 mr-1.5" /> WhatsApp
                   </Button>
-                )}
-              </div>
-
-              {/* Rating + seller */}
-              <div className="flex items-center gap-3 mb-4">
-                <div className="flex items-center gap-1">
-                  <Star className="h-3.5 w-3.5 text-warning fill-warning" />
-                  <span className="text-sm font-medium text-foreground">{sellerRating}</span>
-                </div>
-                <span className="text-xs text-muted-foreground">
-                  {sellerSales} vendas
-                </span>
-                {sellerSales >= 5 && (
-                  <span className="inline-flex items-center gap-1 text-[10px] text-primary font-medium bg-primary/10 px-2 py-0.5 rounded-full">
-                    <CheckCircle2 className="h-3 w-3" /> Verificado
-                  </span>
-                )}
-              </div>
-
-              {/* Price box */}
-              <div className="rounded-2xl border border-border p-4 sm:p-5 bg-background mb-4">
-                {originalPrice && (
-                  <p className="text-sm text-muted-foreground line-through mb-0.5">R$ {originalPrice}</p>
-                )}
-                <p className="text-2xl sm:text-3xl font-bold text-foreground mb-1">
-                  {formatBRL(listing.price)}
-                </p>
-                <p className="text-xs text-success font-medium mb-4">
-                  <Zap className="h-3 w-3 inline mr-0.5" /> Entrega imediata após confirmação
-                </p>
-
-                <Button
-                  variant="hero"
-                  className="w-full py-6 text-base font-bold mb-2.5 shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 hover:scale-[1.01] active:scale-[0.98] transition-all duration-200"
-                  size="lg"
-                  onClick={handleBuy}
-                >
-                  <ShoppingCart className="h-5 w-5 mr-2" /> Comprar Agora
-                </Button>
-
-                <Button
-                  variant="outline"
-                  className="w-full py-4 text-sm font-semibold border-primary text-primary hover:bg-primary/5"
-                  size="lg"
-                  onClick={() => {}}
-                >
-                  Fazer oferta
-                </Button>
-
-                <div className="flex justify-around mt-4 pt-3 border-t border-border text-[10px] text-muted-foreground">
-                  <span className="flex flex-col items-center gap-1">
-                    <Shield className="h-4 w-4 text-primary" />
-                    <span>Escrow seguro</span>
-                  </span>
-                  <span className="flex flex-col items-center gap-1">
-                    <Zap className="h-4 w-4 text-primary" />
-                    <span>Entrega imediata</span>
-                  </span>
-                  <span className="flex flex-col items-center gap-1">
-                    <Clock className="h-4 w-4 text-primary" />
-                    <span>Garantia 24h</span>
-                  </span>
+                  <Button variant="outline" size="sm" className="text-xs rounded-lg border-[hsl(var(--border))]" onClick={handleCopyLink}>
+                    {copied ? <Check className="h-3.5 w-3.5 mr-1.5" /> : <Copy className="h-3.5 w-3.5 mr-1.5" />}
+                    {copied ? "Copiado!" : "Copiar Link"}
+                  </Button>
                 </div>
               </div>
 
-              {/* Feature flags + info fields */}
-              {featureFlags.length > 0 && (
-                <div className="grid grid-cols-2 gap-2 mb-4">
-                  {featureFlags.map(([key]) => (
-                    <div key={key} className="border border-primary/20 bg-primary/5 rounded-xl px-3 py-2 flex items-center gap-2">
-                      <CheckCircle2 className="h-3.5 w-3.5 text-primary flex-shrink-0" />
-                      <span className="text-xs font-medium text-foreground">{key}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {infoFields.filter(([k]) => k !== "Preço original" && k !== "Itens").length > 0 && (
-                <div className="grid grid-cols-2 gap-2 mb-4">
-                  {infoFields.filter(([k]) => k !== "Preço original" && k !== "Itens").map(([key, value]) => (
-                    <div key={key} className="border border-border rounded-xl px-3 py-2 bg-muted/50">
-                      <p className="text-[10px] text-muted-foreground uppercase tracking-wider">{key}</p>
-                      <p className="text-sm font-semibold text-foreground">{String(value)}</p>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* Seller card */}
-              <div className="rounded-xl border border-border p-4 mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">
-                    {sellerName[0]}
+              {/* Right column (desktop sidebar) */}
+              <div className="hidden lg:block lg:col-span-2">
+                <div className="sticky top-20 space-y-4">
+                  <div ref={buyBoxRef}>
+                    <BuyBox
+                      price={listing.price}
+                      originalPrice={originalPrice}
+                      onBuy={handleBuy}
+                    />
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-foreground truncate">{sellerName}</p>
-                    <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
-                      <span className="flex items-center gap-0.5">
-                        <Star className="h-3 w-3 text-warning fill-warning" /> {sellerRating}
-                      </span>
-                      <span>· {sellerSales} vendas</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-1 text-[10px] text-muted-foreground bg-muted px-2 py-1 rounded-lg">
-                    <Store className="h-3 w-3" /> Vendedor
+                  <TrustSignals />
+                  <SellerCard
+                    name={sellerName}
+                    rating={sellerRating}
+                    sales={sellerSales}
+                  />
+                  {/* Share (desktop) */}
+                  <div className="grid grid-cols-2 gap-2">
+                    <Button variant="outline" size="sm" className="text-xs rounded-lg border-[hsl(var(--border))]" onClick={handleShare}>
+                      <Share2 className="h-3.5 w-3.5 mr-1.5" /> WhatsApp
+                    </Button>
+                    <Button variant="outline" size="sm" className="text-xs rounded-lg border-[hsl(var(--border))]" onClick={handleCopyLink}>
+                      {copied ? <Check className="h-3.5 w-3.5 mr-1.5" /> : <Copy className="h-3.5 w-3.5 mr-1.5" />}
+                      {copied ? "Copiado!" : "Copiar Link"}
+                    </Button>
                   </div>
                 </div>
-              </div>
-
-              {/* Share */}
-              <div className="grid grid-cols-2 gap-2">
-                <Button variant="outline" size="sm" className="text-xs border-border rounded-xl" onClick={handleShare}>
-                  <Share2 className="h-3.5 w-3.5 mr-1.5" /> WhatsApp
-                </Button>
-                <Button variant="outline" size="sm" className="text-xs border-border rounded-xl" onClick={handleCopyLink}>
-                  {copied ? <Check className="h-3.5 w-3.5 mr-1.5" /> : <Copy className="h-3.5 w-3.5 mr-1.5" />}
-                  {copied ? "Copiado!" : "Copiar Link"}
-                </Button>
-              </div>
-
-              {/* Description — mobile only (below buy box) */}
-              <div className="lg:hidden mt-6">
-                <ProductDescription
-                  description={listing.description}
-                  itemsList={itemsList}
-                  infoFields={infoFields}
-                  featureFlags={featureFlags}
-                />
               </div>
             </div>
           </div>
+
+          <div className="hidden sm:block"><Footer /></div>
         </motion.div>
       </div>
 
-      <div className="hidden sm:block"><Footer /></div>
-
-      {/* Fixed bottom buy bar on mobile */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-background border-t border-border sm:hidden safe-area-bottom">
-        <div className="flex items-center gap-3 px-4 py-2.5">
-          <div className="flex-1 min-w-0">
-            {originalPrice && (
-              <p className="text-[10px] text-muted-foreground line-through leading-none">R$ {originalPrice}</p>
-            )}
-            <p className="text-lg font-bold text-foreground leading-tight">{formatBRL(listing.price)}</p>
-            <p className="text-[10px] text-success font-medium flex items-center gap-0.5 mt-0.5">
-              <Shield className="h-3 w-3" /> Compra protegida
-            </p>
-          </div>
-          <Button
-            variant="hero"
-            className="px-8 py-5 text-sm font-bold shadow-lg shadow-primary/30 active:scale-[0.97] transition-all"
-            onClick={handleBuy}
-          >
-            Comprar Agora
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// Sub-component
-function ProductDescription({
-  description, itemsList, infoFields, featureFlags,
-}: {
-  description?: string;
-  itemsList?: string[];
-  infoFields: [string, any][];
-  featureFlags: [string, any][];
-}) {
-  if (!description && !itemsList?.length) return null;
-
-  return (
-    <div className="space-y-4">
-      {description && (
-        <div>
-          <h3 className="text-sm font-bold text-foreground mb-2">Descrição do produto</h3>
-          <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">{description}</p>
-        </div>
-      )}
-      {itemsList && itemsList.length > 0 && (
-        <div>
-          <h3 className="text-sm font-bold text-foreground mb-2">O que está incluído</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-            {itemsList.map((item, i) => (
-              <div key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
-                <CheckCircle2 className="h-3.5 w-3.5 text-success flex-shrink-0" />
-                {item}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      <Footer />
+      {/* Sticky buy bar (mobile) */}
+      <StickyBuyBar
+        price={listing.price}
+        originalPrice={originalPrice}
+        onBuy={handleBuy}
+        triggerRef={buyBoxRef}
+      />
     </div>
   );
 }
