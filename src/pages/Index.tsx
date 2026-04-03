@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   ArrowRight, Search, Loader2, Shield, CheckCircle2, Clock, Zap,
   Gamepad2, Smartphone, ChevronLeft, ChevronRight, Plus, SlidersHorizontal
@@ -30,6 +31,7 @@ export default function Index() {
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(true);
   const [bannerIdx, setBannerIdx] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleSell = () => {
     if (isAuthenticated) {
@@ -164,18 +166,33 @@ export default function Index() {
           </div>
         </section>
 
+        {/* === SEARCH BAR (Home) === */}
+        <section className="px-4 pt-3 pb-2 bg-background">
+          <div className="container mx-auto">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (searchQuery.trim()) navigate(`/marketplace?q=${encodeURIComponent(searchQuery.trim())}`);
+              }}
+              className="relative w-full"
+            >
+              <Input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Buscar contas, jogos, redes sociais..."
+                className="w-full bg-muted border-border h-11 pl-4 pr-11 text-sm placeholder:text-muted-foreground rounded-full"
+              />
+              <button type="submit" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground">
+                <Search className="h-4 w-4" />
+              </button>
+            </form>
+          </div>
+        </section>
+
         {/* === PLATFORM NAV (horizontal scroll) === */}
         <section className="px-4 py-3 bg-background border-b border-border">
           <div className="container mx-auto">
             <div className="flex items-center gap-3 overflow-x-auto scrollbar-hide pb-1 md:justify-between">
-              <Link to="/marketplace">
-                <div className="flex flex-col items-center gap-1 min-w-[56px] group">
-                  <div className="h-11 w-11 rounded-full bg-primary flex items-center justify-center text-primary-foreground group-hover:shadow-md transition-shadow">
-                    <Search className="h-5 w-5" />
-                  </div>
-                  <span className="text-[10px] font-semibold text-primary whitespace-nowrap">Buscar</span>
-                </div>
-              </Link>
               <Link to="/marketplace?filter=true">
                 <div className="flex flex-col items-center gap-1 min-w-[56px] group">
                   <div className="h-11 w-11 rounded-full bg-muted flex items-center justify-center text-foreground group-hover:bg-primary/10 transition-colors">
