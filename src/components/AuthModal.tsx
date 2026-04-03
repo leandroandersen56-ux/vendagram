@@ -17,13 +17,14 @@ export default function AuthModal() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [selectedRole, setSelectedRole] = useState<"buyer" | "seller" | null>(null);
 
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (showAuthModal && authRole) {
-      setMode("register");
-    }
+    if (!showAuthModal) return;
+    setSelectedRole(authRole || null);
+    if (authRole) setMode("register");
   }, [showAuthModal, authRole]);
 
 
