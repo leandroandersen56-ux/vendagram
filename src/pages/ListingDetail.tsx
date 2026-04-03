@@ -263,8 +263,13 @@ export default function ListingDetail() {
                   <Zap className="h-3 w-3 inline mr-0.5" /> Entrega imediata após confirmação
                 </p>
 
-                <Button variant="hero" className="w-full py-5 text-sm font-bold mb-2.5" size="lg" onClick={handleBuy}>
-                  <ShoppingCart className="h-4 w-4 mr-2" /> Comprar Agora
+                <Button
+                  variant="hero"
+                  className="w-full py-6 text-base font-bold mb-2.5 shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 hover:scale-[1.01] active:scale-[0.98] transition-all duration-200"
+                  size="lg"
+                  onClick={handleBuy}
+                >
+                  <ShoppingCart className="h-5 w-5 mr-2" /> Comprar Agora
                 </Button>
 
                 <Button
