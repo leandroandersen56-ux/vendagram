@@ -130,9 +130,30 @@ export default function Navbar() {
         {/* Mobile: right icons */}
         <div className="flex items-center gap-1 md:hidden">
           {!isAuthenticated && (
-            <Button variant="hero" size="sm" className="px-3 py-1 text-xs h-8" onClick={() => openAuth(undefined, "buyer")}>
-              Cadastrar
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="hero" size="sm" className="px-3 py-1 text-xs h-8">
+                  Cadastrar
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-52 bg-background border-border">
+                <DropdownMenuItem className="cursor-pointer py-3" onClick={() => openAuth(undefined, "buyer")}>
+                  <ShoppingCart className="h-4 w-4 mr-2 text-primary" />
+                  <div>
+                    <p className="font-semibold text-sm">Comprador</p>
+                    <p className="text-xs text-muted-foreground">Quero comprar contas</p>
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="cursor-pointer py-3" onClick={() => openAuth(undefined, "seller")}>
+                  <Tag className="h-4 w-4 mr-2 text-primary" />
+                  <div>
+                    <p className="font-semibold text-sm">Vendedor</p>
+                    <p className="text-xs text-muted-foreground">Quero vender minhas contas</p>
+                  </div>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           )}
           {location.pathname !== "/" && (
             <button onClick={() => navigate("/marketplace")} className="h-9 w-9 flex items-center justify-center text-primary">
