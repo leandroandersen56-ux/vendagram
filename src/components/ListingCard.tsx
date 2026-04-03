@@ -71,26 +71,26 @@ export default function ListingCard({ listing }: ListingCardProps) {
         </div>
 
         {/* Info panel */}
-        <div className="p-3 space-y-1.5">
+        <div className="p-3 flex flex-col flex-1">
           <h3 className="font-semibold text-[11px] sm:text-xs leading-snug line-clamp-1 text-foreground">
             {listing.title}
           </h3>
 
-          <p className="text-xs text-muted-foreground">
+          <p className="text-xs text-muted-foreground mt-1">
             {listing.fields?.["Seguidores"] || listing.fields?.["Nível"] || listing.fields?.["Level"] || ""}
           </p>
 
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between mt-1.5">
             <p className="text-[13px] sm:text-sm font-bold text-primary">
               {formatBRL(listing.price)}
             </p>
-          <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1">
               <Star className="h-3 w-3 text-warning fill-warning" />
               <span className="text-[10px] font-bold text-muted-foreground">{listing.sellerRating}</span>
             </div>
           </div>
 
-          <button className="w-full mt-1 bg-primary text-primary-foreground text-xs font-semibold rounded-xl py-2 hover:bg-primary-dark transition-all active:scale-[0.98]">
+          <button className="w-full mt-auto pt-2 bg-primary text-primary-foreground text-xs font-semibold rounded-xl py-2 hover:bg-primary-dark transition-all active:scale-[0.98]">
             Ver detalhes
           </button>
         </div>
