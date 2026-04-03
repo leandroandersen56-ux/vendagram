@@ -30,6 +30,7 @@ export default function Index() {
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(true);
   const [bannerIdx, setBannerIdx] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleSell = () => {
     if (isAuthenticated) {
