@@ -19,9 +19,7 @@ export default function Index() {
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [platform, setPlatform] = useState("all");
   const [sortBy, setSortBy] = useState("recent");
-  const [showFilters, setShowFilters] = useState(false);
 
   const handleSell = () => {
     if (isAuthenticated) {
