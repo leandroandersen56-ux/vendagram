@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Eye, EyeOff, Shield } from "lucide-react";
+import { X, Eye, EyeOff, Shield, ShoppingCart, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,13 +10,21 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 export default function AuthModal() {
-  const { showAuthModal, closeAuth, login, authRedirect } = useAuth();
+  const { showAuthModal, closeAuth, login, authRedirect, authRole } = useAuth();
   const navigate = useNavigate();
   const [mode, setMode] = useState<"login" | "register">("login");
   const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (showAuthModal && authRole) {
+      setMode("register");
+    }
+  }, [showAuthModal, authRole]);
 
   const [loading, setLoading] = useState(false);
 
