@@ -364,6 +364,7 @@ export type Database = {
           avatar_url: string | null
           avg_rating: number
           bio: string | null
+          cnpj: string | null
           cpf: string | null
           created_at: string
           email: string | null
@@ -386,6 +387,7 @@ export type Database = {
           avatar_url?: string | null
           avg_rating?: number
           bio?: string | null
+          cnpj?: string | null
           cpf?: string | null
           created_at?: string
           email?: string | null
@@ -408,6 +410,7 @@ export type Database = {
           avatar_url?: string | null
           avg_rating?: number
           bio?: string | null
+          cnpj?: string | null
           cpf?: string | null
           created_at?: string
           email?: string | null
