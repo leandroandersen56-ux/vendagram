@@ -270,6 +270,7 @@ export default function ListingDetail() {
                     name={sellerName}
                     rating={sellerRating}
                     sales={sellerSales}
+                    onViewProfile={() => seller?.username ? navigate(`/perfil/${seller.username}`) : undefined}
                   />
                 </div>
 
