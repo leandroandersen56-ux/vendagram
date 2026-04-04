@@ -416,7 +416,7 @@ export default function EditListingPanel() {
                       : "bg-card border-border text-muted-foreground hover:border-primary/30"
                   }`}
                 >
-                  {rank === r ? "✅" : "○"} {r}
+                  {rank === r ? "●" : "○"} {r}
                 </button>
               ))}
             </div>
