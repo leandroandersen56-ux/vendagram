@@ -80,6 +80,7 @@ function AppRoutes() {
         <Route path="/ajuda" element={<HelpPage />} />
         <Route path="/busca" element={<SearchResults />} />
         <Route path="/perfil/:username" element={<SellerProfile />} />
+        <Route path="/auth/callback" element={<AuthCallback />} />
 
         {/* User pages (protected) */}
         <Route path="/compras" element={<ProtectedRoute><Purchases /></ProtectedRoute>} />
