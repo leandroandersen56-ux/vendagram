@@ -353,7 +353,7 @@ export default function ListingDetail() {
                       <div className="flex items-center flex-wrap gap-x-2 gap-y-1 mt-2 text-[13px]">
                         <div className="flex items-center gap-1">
                           <Star className="h-3.5 w-3.5 text-amber-400 fill-amber-400" />
-                          <span className="font-bold text-primary">{sellerRating.toFixed(1)}</span>
+                          <span className="font-semibold text-primary">{sellerRating.toFixed(1)}</span>
                         </div>
                         <span className="text-[hsl(var(--border))]">|</span>
                         <span className="text-[hsl(var(--txt-secondary))]">{sellerSales} vendas</span>
