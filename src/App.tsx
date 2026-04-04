@@ -14,6 +14,7 @@ import ListingDetail from "./pages/ListingDetail.tsx";
 import TransactionFlow from "./pages/TransactionFlow.tsx";
 import Checkout from "./pages/Checkout.tsx";
 import Cart from "./pages/Cart.tsx";
+import Favorites from "./pages/Favorites.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import PanelLayout from "./components/PanelLayout.tsx";
 import PanelOverview from "./pages/panel/PanelOverview.tsx";
@@ -59,6 +60,7 @@ function AppRoutes() {
         <Route path="/marketplace" element={<Marketplace />} />
         <Route path="/listing/:id" element={<ListingDetail />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/favoritos" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
         <Route path="/checkout/:listingId" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
         <Route path="/transaction/:listingId" element={<TransactionFlow />} />
 

@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Search, Bell, User, LogOut, LayoutDashboard, ShoppingBag, ShoppingCart, Loader2 } from "lucide-react";
+import { Search, Bell, User, LogOut, LayoutDashboard, ShoppingBag, ShoppingCart, Loader2, Heart } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
+import { useFavorites } from "@/hooks/useFavorites";
+import { formatBRL } from "@/lib/mock-data";
 import logoFroiv from "@/assets/logo-froiv.png";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem,
@@ -29,6 +31,8 @@ export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, isAuthenticated, openAuth, logout } = useAuth();
+  const { favorites, loading: favLoading, fetchFavorites: fetchFavs } = useFavorites();
+  const [favOpen, setFavOpen] = useState(false);
 
   const unreadCount = notifications.filter((n) => !n.read).length;
 
@@ -83,6 +87,7 @@ export default function Navbar() {
   // Close notif dropdown on route change
   useEffect(() => {
     setNotifOpen(false);
+    setFavOpen(false);
   }, [location.pathname]);
 
   return (
@@ -150,6 +155,38 @@ export default function Navbar() {
                 )}
               </AnimatePresence>
             </div>
+
+            {/* Favorites */}
+            <div className="relative">
+              <button
+                className="relative h-9 w-9 flex items-center justify-center text-white/80 hover:text-white transition-colors"
+                aria-label="Favoritos"
+                onClick={() => {
+                  if (!isAuthenticated) { openAuth(); return; }
+                  setFavOpen(!favOpen);
+                  if (!favOpen) fetchFavs();
+                }}
+              >
+                <Heart className="h-5 w-5" />
+                {favorites.length > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 h-4 min-w-4 px-1 rounded-full bg-[hsl(var(--danger))] text-white text-[9px] font-semibold flex items-center justify-center">
+                    {favorites.length > 9 ? "9+" : favorites.length}
+                  </span>
+                )}
+              </button>
+
+              <AnimatePresence>
+                {favOpen && (
+                  <FavDropdown
+                    favorites={favorites}
+                    loading={favLoading}
+                    onClose={() => setFavOpen(false)}
+                    navigate={navigate}
+                  />
+                )}
+              </AnimatePresence>
+            </div>
+
             {/* Cart */}
             <Link to="/cart" className="relative h-9 w-9 flex items-center justify-center text-white/80 hover:text-white transition-colors">
               <ShoppingCart className="h-5 w-5" />
@@ -296,15 +333,15 @@ export default function Navbar() {
         )}
       </AnimatePresence>
 
-      {/* Notif overlay backdrop (mobile) */}
+      {/* Overlay backdrop for dropdowns */}
       <AnimatePresence>
-        {notifOpen && (
+        {(notifOpen || favOpen) && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-40 bg-black/20"
-            onClick={() => setNotifOpen(false)}
+            onClick={() => { setNotifOpen(false); setFavOpen(false); }}
           />
         )}
       </AnimatePresence>
@@ -398,6 +435,82 @@ function NotifDropdown({
           className="block text-center py-2.5 text-[12px] text-primary font-semibold hover:bg-[hsl(var(--muted))] transition-colors border-t border-[hsl(var(--border))]"
         >
           Ver todas as notificações
+        </Link>
+      )}
+    </motion.div>
+  );
+}
+
+/* ── Favorites Dropdown ── */
+function FavDropdown({
+  favorites,
+  loading,
+  onClose,
+  navigate,
+}: {
+  favorites: import("@/hooks/useFavorites").FavoriteWithListing[];
+  loading: boolean;
+  onClose: () => void;
+  navigate: (path: string) => void;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -8, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: -8, scale: 0.95 }}
+      transition={{ duration: 0.15 }}
+      className="absolute z-50 bg-white rounded-xl shadow-lg border border-[hsl(var(--border))] overflow-hidden right-0 top-11 w-80"
+    >
+      <div className="flex items-center justify-between px-4 py-3 border-b border-[hsl(var(--border))]">
+        <h3 className="text-sm font-semibold text-[hsl(var(--txt-primary))]">Favoritos</h3>
+        <span className="text-[11px] text-[hsl(var(--txt-hint))]">{favorites.length} itens</span>
+      </div>
+
+      <div className="max-h-80 overflow-y-auto">
+        {loading ? (
+          <div className="flex items-center justify-center py-8">
+            <Loader2 className="h-5 w-5 animate-spin text-primary" />
+          </div>
+        ) : favorites.length === 0 ? (
+          <div className="text-center py-8 px-4">
+            <Heart className="h-8 w-8 text-[hsl(var(--border))] mx-auto mb-2" />
+            <p className="text-[13px] text-[hsl(var(--txt-hint))]">Nenhum favorito</p>
+          </div>
+        ) : (
+          favorites.slice(0, 5).map((fav) => {
+            const listing = fav.listing;
+            if (!listing) return null;
+            const thumb = listing.screenshots?.[0];
+            return (
+              <button
+                key={fav.id}
+                onClick={() => { onClose(); navigate(`/listing/${listing.id}`); }}
+                className="w-full text-left px-4 py-3 border-b border-[hsl(var(--border))]/50 hover:bg-[hsl(var(--muted))] transition-colors flex items-center gap-3"
+              >
+                {thumb ? (
+                  <img src={thumb} alt={listing.title} className="h-10 w-10 rounded-lg object-cover shrink-0" />
+                ) : (
+                  <div className="h-10 w-10 rounded-lg bg-[hsl(var(--muted))] flex items-center justify-center shrink-0">
+                    <Heart className="h-4 w-4 text-[hsl(var(--txt-hint))]" />
+                  </div>
+                )}
+                <div className="flex-1 min-w-0">
+                  <p className="text-[13px] font-medium text-[hsl(var(--txt-primary))] truncate">{listing.title}</p>
+                  <p className="text-[12px] font-semibold text-primary mt-0.5">{formatBRL(listing.price)}</p>
+                </div>
+              </button>
+            );
+          })
+        )}
+      </div>
+
+      {favorites.length > 0 && (
+        <Link
+          to="/favoritos"
+          onClick={onClose}
+          className="block text-center py-2.5 text-[12px] text-primary font-semibold hover:bg-[hsl(var(--muted))] transition-colors border-t border-[hsl(var(--border))]"
+        >
+          Ver todos os favoritos
         </Link>
       )}
     </motion.div>
