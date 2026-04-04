@@ -278,6 +278,7 @@ export default function ListingDetail() {
                     rating={sellerRating}
                     sales={sellerSales}
                     avatarUrl={seller?.avatar_url || undefined}
+                    isVerified={seller?.is_verified || false}
                     onViewProfile={() => seller?.username ? navigate(`/perfil/${seller.username}`) : toast.info("Vendedor sem perfil público")}
                     onMessage={() => toast.info("Inicie uma compra para conversar com o vendedor")}
                   />
@@ -407,6 +408,7 @@ export default function ListingDetail() {
                     rating={sellerRating}
                     sales={sellerSales}
                     avatarUrl={seller?.avatar_url || undefined}
+                    isVerified={seller?.is_verified || false}
                     onViewProfile={() => seller?.username ? navigate(`/perfil/${seller.username}`) : toast.info("Vendedor sem perfil público")}
                     onMessage={() => toast.info("Inicie uma compra para conversar com o vendedor")}
                   />

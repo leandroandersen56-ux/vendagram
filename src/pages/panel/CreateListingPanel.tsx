@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Eye, Plus, X, Upload, ChevronRight, Gamepad2, Image as ImageIcon, Lock, ShieldCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -112,6 +112,18 @@ export default function CreateListing() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
+  const [isVerified, setIsVerified] = useState<boolean | null>(null);
+
+  // Check verification status on mount
+  useEffect(() => {
+    if (!user?.id) return;
+    supabase
+      .from("profiles")
+      .select("is_verified")
+      .eq("user_id", user.id)
+      .maybeSingle()
+      .then(({ data }) => setIsVerified(data?.is_verified ?? false));
+  }, [user?.id]);
 
   const [platform, setPlatform] = useState("");
   const [title, setTitle] = useState("");
@@ -280,6 +292,25 @@ export default function CreateListing() {
         </button>
         <span className="text-muted-foreground text-sm">Criar anúncio</span>
       </div>
+
+      {/* Verification banner */}
+      {isVerified === false && (
+        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
+          <ShieldCheck className="h-5 w-5 text-amber-600 mt-0.5 flex-shrink-0" />
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-amber-800">Conta não verificada</p>
+            <p className="text-xs text-amber-700 mt-0.5">
+              Você pode vender, mas contas verificadas transmitem mais confiança e vendem mais rápido.
+            </p>
+            <button
+              onClick={() => navigate("/painel/verificacao")}
+              className="text-xs font-semibold text-primary mt-2 hover:underline"
+            >
+              Verificar minha conta →
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="space-y-4">
         {/* ── Título + Preço (os únicos obrigatórios) ── */}
