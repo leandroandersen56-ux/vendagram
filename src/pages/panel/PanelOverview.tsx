@@ -113,7 +113,7 @@ export default function PanelOverview() {
             </h1>
             <p className="text-muted-foreground text-xs mt-0.5">Resumo da sua conta</p>
           </div>
-          <Link to="/painel/anuncios/novo" className="shrink-0">
+          <Link to="/vendedor/novo" className="shrink-0">
             <Button size="sm" className="gap-1.5 text-xs h-8 px-3 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90">
               <Plus className="h-3.5 w-3.5" /> Anúncio
             </Button>

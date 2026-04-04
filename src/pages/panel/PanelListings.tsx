@@ -182,7 +182,7 @@ export default function PanelListings() {
                       <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => isReal ? navigate(`/listing/${listing.id}`) : demoClick()} title="Ver anúncio">
                         <Eye className="h-3.5 w-3.5" />
                       </Button>
-                      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => isReal ? navigate(`/painel/anuncios/editar/${listing.id}`) : demoClick()} title="Editar">
+                      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => isReal ? navigate(`/vendedor/editar/${listing.id}`) : demoClick()} title="Editar">
                         <Edit className="h-3.5 w-3.5" />
                       </Button>
                       <Button

@@ -303,7 +303,7 @@ export default function CreateListing() {
               Você pode vender, mas contas verificadas transmitem mais confiança e vendem mais rápido.
             </p>
             <button
-              onClick={() => navigate("/painel/verificacao")}
+              onClick={() => navigate("/vendedor/verificacao")}
               className="text-xs font-semibold text-primary mt-2 hover:underline"
             >
               Verificar minha conta →
