@@ -156,37 +156,6 @@ export default function Navbar() {
               </AnimatePresence>
             </div>
 
-            {/* Favorites */}
-            <div className="relative">
-              <button
-                className="relative h-9 w-9 flex items-center justify-center text-white/80 hover:text-white transition-colors"
-                aria-label="Favoritos"
-                onClick={() => {
-                  if (!isAuthenticated) { openAuth(); return; }
-                  setFavOpen(!favOpen);
-                  if (!favOpen) fetchFavs();
-                }}
-              >
-                <Heart className="h-5 w-5" />
-                {favorites.length > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 h-4 min-w-4 px-1 rounded-full bg-[hsl(var(--danger))] text-white text-[9px] font-semibold flex items-center justify-center">
-                    {favorites.length > 9 ? "9+" : favorites.length}
-                  </span>
-                )}
-              </button>
-
-              <AnimatePresence>
-                {favOpen && (
-                  <FavDropdown
-                    favorites={favorites}
-                    loading={favLoading}
-                    onClose={() => setFavOpen(false)}
-                    navigate={navigate}
-                  />
-                )}
-              </AnimatePresence>
-            </div>
-
             {/* Cart */}
             <Link to="/cart" className="relative h-9 w-9 flex items-center justify-center text-white/80 hover:text-white transition-colors">
               <ShoppingCart className="h-5 w-5" />
@@ -203,6 +172,11 @@ export default function Navbar() {
                   <DropdownMenuItem asChild>
                     <Link to="/painel" className="cursor-pointer">
                       <LayoutDashboard className="h-4 w-4 mr-2" /> Meu Painel
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/favoritos" className="cursor-pointer">
+                      <Heart className="h-4 w-4 mr-2" /> Favoritos
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
@@ -239,37 +213,6 @@ export default function Navbar() {
 
           {/* Mobile right icons */}
           <div className="flex items-center gap-0 md:hidden shrink-0">
-            {/* Favorites (mobile) */}
-            <div className="relative">
-              <button
-                className="h-8 w-8 flex items-center justify-center text-white/80"
-                aria-label="Favoritos"
-                onClick={() => {
-                  if (!isAuthenticated) { openAuth(); return; }
-                  setFavOpen(!favOpen);
-                  if (!favOpen) fetchFavs();
-                }}
-              >
-                <Heart className="h-[18px] w-[18px]" />
-                {favorites.length > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 h-3.5 min-w-3.5 px-0.5 rounded-full bg-[hsl(var(--danger))] text-white text-[8px] font-semibold flex items-center justify-center">
-                    {favorites.length > 9 ? "9+" : favorites.length}
-                  </span>
-                )}
-              </button>
-
-              <AnimatePresence>
-                {favOpen && (
-                  <FavDropdown
-                    favorites={favorites}
-                    loading={favLoading}
-                    onClose={() => setFavOpen(false)}
-                    navigate={navigate}
-                  />
-                )}
-              </AnimatePresence>
-            </div>
-
             {/* Notifications (mobile) */}
             <div className="relative">
               <button
@@ -350,6 +293,11 @@ export default function Navbar() {
                 <Link to="/painel" onClick={() => setMobileMenuOpen(false)}>
                   <button className="w-full flex items-center gap-2 px-3 py-2.5 text-[13px] text-txt-primary hover:bg-muted rounded-md transition-colors">
                     <LayoutDashboard className="h-4 w-4" /> Meu Painel
+                  </button>
+                </Link>
+                <Link to="/favoritos" onClick={() => setMobileMenuOpen(false)}>
+                  <button className="w-full flex items-center gap-2 px-3 py-2.5 text-[13px] text-txt-primary hover:bg-muted rounded-md transition-colors">
+                    <Heart className="h-4 w-4" /> Favoritos
                   </button>
                 </Link>
                 <Link to="/painel/perfil" onClick={() => setMobileMenuOpen(false)}>
