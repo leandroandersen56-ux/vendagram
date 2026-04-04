@@ -75,6 +75,7 @@ function AppRoutes() {
         <Route path="/checkout/:listingId" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
         <Route path="/transaction/:listingId" element={<TransactionFlow />} />
         <Route path="/ajuda" element={<HelpPage />} />
+        <Route path="/busca" element={<SearchResults />} />
 
         {/* User pages (protected) */}
         <Route path="/compras" element={<ProtectedRoute><Purchases /></ProtectedRoute>} />
