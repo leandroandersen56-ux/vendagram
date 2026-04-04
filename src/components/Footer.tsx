@@ -1,6 +1,29 @@
 import { Link } from "react-router-dom";
-import PlatformIcon from "@/components/PlatformIcon";
 import logoFroiv from "@/assets/logo-froiv.png";
+
+function SocialIcon({ type, size = 18 }: { type: "instagram" | "tiktok" | "youtube"; size?: number }) {
+  const icons = {
+    instagram: (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="2" width="20" height="20" rx="5" />
+        <circle cx="12" cy="12" r="5" />
+        <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
+      </svg>
+    ),
+    tiktok: (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+        <path d="M16.6 5.82s.51.5 0 0A4.278 4.278 0 0 1 19.86 4v3.64a7.83 7.83 0 0 1-3.26-.72v5.34A6.27 6.27 0 1 1 10.34 6v3.82a2.46 2.46 0 1 0 1.74 2.35V2h3.35a4.13 4.13 0 0 0 1.17 3.82Z" />
+      </svg>
+    ),
+    youtube: (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+        <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19.1c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.43Z" />
+        <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="white" />
+      </svg>
+    ),
+  };
+  return <>{icons[type]}</>;
+}
 
 export default function Footer() {
   return (
@@ -11,10 +34,10 @@ export default function Footer() {
           <div className="flex items-center justify-center">
             <img src={logoFroiv} alt="Froiv" className="h-6" />
           </div>
-          <div className="flex items-center justify-center gap-4">
-            <a href="#" className="text-txt-hint hover:text-primary transition-colors" aria-label="Instagram"><PlatformIcon platformId="instagram" size={18} /></a>
-            <a href="#" className="text-txt-hint hover:text-primary transition-colors" aria-label="TikTok"><PlatformIcon platformId="tiktok" size={18} /></a>
-            <a href="#" className="text-txt-hint hover:text-primary transition-colors" aria-label="YouTube"><PlatformIcon platformId="youtube" size={18} /></a>
+          <div className="flex items-center justify-center gap-5">
+            <a href="#" className="text-primary hover:text-primary/80 transition-colors" aria-label="Instagram"><SocialIcon type="instagram" size={20} /></a>
+            <a href="#" className="text-primary hover:text-primary/80 transition-colors" aria-label="TikTok"><SocialIcon type="tiktok" size={20} /></a>
+            <a href="#" className="text-primary hover:text-primary/80 transition-colors" aria-label="YouTube"><SocialIcon type="youtube" size={20} /></a>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[11px] text-txt-hint">
             <span className="hover:text-primary transition-colors cursor-pointer">Termos</span>
@@ -36,9 +59,9 @@ export default function Footer() {
                 A plataforma mais segura para comprar e vender contas digitais com escrow automático.
               </p>
               <div className="flex items-center gap-3">
-                <a href="#" className="text-txt-hint hover:text-primary transition-colors" aria-label="Instagram"><PlatformIcon platformId="instagram" size={16} /></a>
-                <a href="#" className="text-txt-hint hover:text-primary transition-colors" aria-label="TikTok"><PlatformIcon platformId="tiktok" size={16} /></a>
-                <a href="#" className="text-txt-hint hover:text-primary transition-colors" aria-label="YouTube"><PlatformIcon platformId="youtube" size={16} /></a>
+                <a href="#" className="text-primary hover:text-primary/80 transition-colors" aria-label="Instagram"><SocialIcon type="instagram" size={18} /></a>
+                <a href="#" className="text-primary hover:text-primary/80 transition-colors" aria-label="TikTok"><SocialIcon type="tiktok" size={18} /></a>
+                <a href="#" className="text-primary hover:text-primary/80 transition-colors" aria-label="YouTube"><SocialIcon type="youtube" size={18} /></a>
               </div>
             </div>
             <div>
