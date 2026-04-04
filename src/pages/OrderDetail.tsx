@@ -61,6 +61,18 @@ export default function OrderDetail() {
 
       setTransaction(tx);
       setListing(tx.listings);
+
+      // Load credentials
+      try {
+        const credRes = await supabase.functions.invoke("manage-credentials", {
+          body: { transaction_id: id, action: "get" },
+        });
+        if (credRes.data?.credentials) {
+          setCredentials(credRes.data.credentials);
+          setCredentialsDeliveredAt(credRes.data.delivered_at);
+        }
+      } catch {}
+
     } catch {
       toast.error("Erro ao carregar pedido");
     } finally {
