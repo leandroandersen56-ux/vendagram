@@ -149,7 +149,7 @@ export default function Dashboard() {
           user_id: vr.user_id,
           title: "Conta verificada!",
           body: "Parabéns! Sua conta foi verificada. O selo de vendedor verificado já aparece no seu perfil.",
-          link: "/painel/perfil",
+          link: "/vendedor/verificacao",
         });
       }
     } else {
@@ -159,7 +159,7 @@ export default function Dashboard() {
           user_id: vr.user_id,
           title: "Verificação recusada",
           body: reason || "Seus documentos não atenderam aos requisitos. Envie novamente.",
-          link: "/painel/verificacao",
+          link: "/vendedor/verificacao",
         });
       }
     }
