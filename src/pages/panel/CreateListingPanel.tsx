@@ -371,7 +371,7 @@ export default function CreateListing() {
                       : "bg-card border-border text-muted-foreground hover:border-primary/30"
                   }`}
                 >
-                  {loginType === l ? "✅" : "○"} {l}
+                  {loginType === l ? "●" : "○"} {l}
                 </button>
               ))}
             </div>
