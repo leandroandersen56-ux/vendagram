@@ -369,6 +369,7 @@ export type Database = {
           name: string | null
           phone: string | null
           pix_key: string | null
+          referral_code: string | null
           total_purchases: number
           total_reviews: number
           total_sales: number
@@ -390,6 +391,7 @@ export type Database = {
           name?: string | null
           phone?: string | null
           pix_key?: string | null
+          referral_code?: string | null
           total_purchases?: number
           total_reviews?: number
           total_sales?: number
@@ -411,6 +413,7 @@ export type Database = {
           name?: string | null
           phone?: string | null
           pix_key?: string | null
+          referral_code?: string | null
           total_purchases?: number
           total_reviews?: number
           total_sales?: number
