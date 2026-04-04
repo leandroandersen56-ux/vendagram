@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Search, Star, ShoppingCart, ArrowRight, Loader2 } from "lucide-react";
+import { Search, Star, ShoppingCart, ArrowRight, Loader2, Clock, CheckCircle2, Eye, AlertTriangle, RotateCcw, XCircle } from "lucide-react";
 import PageHeader from "@/components/menu/PageHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
