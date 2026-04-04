@@ -221,6 +221,14 @@ export default function Dashboard() {
               <TabsTrigger value="transactions">Transações</TabsTrigger>
               <TabsTrigger value="disputes">Disputas {kpis.disputes > 0 && <Badge className="bg-destructive text-white ml-1 text-[10px] h-4 px-1">{kpis.disputes}</Badge>}</TabsTrigger>
               <TabsTrigger value="withdrawals">Saques</TabsTrigger>
+              <TabsTrigger value="verifications">
+                Verificações
+                {verifications.filter((v: any) => v.status === "pending").length > 0 && (
+                  <Badge className="bg-primary text-white ml-1 text-[10px] h-4 px-1">
+                    {verifications.filter((v: any) => v.status === "pending").length}
+                  </Badge>
+                )}
+              </TabsTrigger>
             </TabsList>
 
             {/* Overview */}
