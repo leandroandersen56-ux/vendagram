@@ -33,6 +33,8 @@ export default function OrderDetail() {
   // Transaction data
   const [transaction, setTransaction] = useState<any>(null);
   const [listing, setListing] = useState<any>(null);
+  const [credentials, setCredentials] = useState<any>(null);
+  const [credentialsDeliveredAt, setCredentialsDeliveredAt] = useState<string | null>(null);
 
   // Dispute form
   const [disputeReason, setDisputeReason] = useState("");
