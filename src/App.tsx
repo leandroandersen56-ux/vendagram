@@ -37,6 +37,8 @@ import Affiliates from "./pages/Affiliates.tsx";
 import SettingsPage from "./pages/SettingsPage.tsx";
 import HelpPage from "./pages/HelpPage.tsx";
 import SearchResults from "./pages/SearchResults.tsx";
+import SellerProfile from "./pages/SellerProfile.tsx";
+import ViewHistory from "./pages/ViewHistory.tsx";
 
 const queryClient = new QueryClient();
 
