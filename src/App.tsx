@@ -108,6 +108,7 @@ function AppRoutes() {
           <Route path="carteira" element={<PanelWallet />} />
           <Route path="notificacoes" element={<PanelNotifications />} />
           <Route path="perfil" element={<PanelProfile />} />
+          <Route path="verificacao" element={<PanelVerification />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />
