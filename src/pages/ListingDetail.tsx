@@ -304,68 +304,76 @@ export default function ListingDetail() {
               {/* Right column (desktop sidebar) */}
               <div className="hidden lg:block lg:col-span-2">
                 <div className="sticky top-20 space-y-4">
-                  {/* Info block (desktop) */}
-                  <div className="bg-white rounded-xl p-4 border border-[hsl(var(--border))]">
-                    <div className="flex flex-wrap items-center gap-1.5 mb-2">
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${PLATFORM_BADGE_COLORS[listing.category] || "bg-[hsl(var(--muted))] text-[hsl(var(--txt-primary))]"}`}>
-                        {platform.name.toUpperCase()}
-                      </span>
-                      {sellerSales >= 5 && (
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[hsl(var(--success-light))] text-[hsl(var(--success))]">
-                          VERIFICADO
+                  {/* Info + BuyBox + Trust unified card */}
+                  <div className="bg-white rounded-xl border border-[hsl(var(--border))] overflow-hidden">
+                    {/* Info block */}
+                    <div className="p-4 pb-0">
+                      <div className="flex flex-wrap items-center gap-1.5 mb-2">
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${PLATFORM_BADGE_COLORS[listing.category] || "bg-[hsl(var(--muted))] text-[hsl(var(--txt-primary))]"}`}>
+                          {platform.name.toUpperCase()}
                         </span>
-                      )}
-                      {sellerSales >= 15 && (
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[hsl(var(--hot-light))] text-[hsl(var(--hot))]">
-                          MAIS VENDIDO
-                        </span>
-                      )}
-                    </div>
-                    <div className="flex items-start justify-between gap-2">
-                      <h1 className="text-[22px] font-semibold text-[hsl(var(--txt-primary))] leading-snug">
-                        {listing.title}
-                      </h1>
-                      <div className="flex items-center gap-2 shrink-0">
-                        <motion.button
-                          onClick={() => {
-                            if (!isAuthenticated) { openAuth(); return; }
-                            if (id) toggleFavorite(id);
-                          }}
-                          className="h-9 w-9 flex items-center justify-center rounded-full hover:bg-[hsl(var(--muted))] transition-colors"
-                          aria-label={favorited ? "Remover dos favoritos" : "Adicionar aos favoritos"}
-                          whileTap={{ scale: 1.3 }}
-                          transition={{ type: "spring", stiffness: 500, damping: 15 }}
-                        >
-                          <Heart className={`h-5 w-5 ${favorited ? "fill-red-500 text-red-500" : "text-[hsl(var(--txt-hint))]"}`} />
-                        </motion.button>
-                        {user && user.id === listing.seller_id && (
-                          <Button
-                            variant="outline" size="sm" className="shrink-0 text-xs rounded-lg"
-                            onClick={() => navigate(`/painel/anuncios/editar/${listing.id}`)}
-                          >
-                            <Edit className="h-3 w-3 mr-1" /> Editar
-                          </Button>
+                        {sellerSales >= 5 && (
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[hsl(var(--success-light))] text-[hsl(var(--success))]">
+                            VERIFICADO
+                          </span>
+                        )}
+                        {sellerSales >= 15 && (
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[hsl(var(--hot-light))] text-[hsl(var(--hot))]">
+                            MAIS VENDIDO
+                          </span>
                         )}
                       </div>
-                    </div>
-                    <div className="flex items-center flex-wrap gap-x-2 gap-y-1 mt-2 text-[13px]">
-                      <div className="flex items-center gap-1">
-                        <Star className="h-3.5 w-3.5 text-amber-400 fill-amber-400" />
-                        <span className="font-bold text-primary">{sellerRating.toFixed(1)}</span>
+                      <div className="flex items-start justify-between gap-2">
+                        <h1 className="text-[22px] font-semibold text-[hsl(var(--txt-primary))] leading-snug">
+                          {listing.title}
+                        </h1>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <motion.button
+                            onClick={() => {
+                              if (!isAuthenticated) { openAuth(); return; }
+                              if (id) toggleFavorite(id);
+                            }}
+                            className="h-9 w-9 flex items-center justify-center rounded-full hover:bg-[hsl(var(--muted))] transition-colors"
+                            aria-label={favorited ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+                            whileTap={{ scale: 1.3 }}
+                            transition={{ type: "spring", stiffness: 500, damping: 15 }}
+                          >
+                            <Heart className={`h-5 w-5 ${favorited ? "fill-red-500 text-red-500" : "text-[hsl(var(--txt-hint))]"}`} />
+                          </motion.button>
+                          {user && user.id === listing.seller_id && (
+                            <Button
+                              variant="outline" size="sm" className="shrink-0 text-xs rounded-lg"
+                              onClick={() => navigate(`/painel/anuncios/editar/${listing.id}`)}
+                            >
+                              <Edit className="h-3 w-3 mr-1" /> Editar
+                            </Button>
+                          )}
+                        </div>
                       </div>
-                      <span className="text-[hsl(var(--border))]">|</span>
-                      <span className="text-[hsl(var(--txt-secondary))]">{sellerSales} vendas</span>
-                      <span className="text-[hsl(var(--border))]">|</span>
-                      <button className="text-primary font-medium hover:underline">Ver avaliações →</button>
+                      <div className="flex items-center flex-wrap gap-x-2 gap-y-1 mt-2 text-[13px]">
+                        <div className="flex items-center gap-1">
+                          <Star className="h-3.5 w-3.5 text-amber-400 fill-amber-400" />
+                          <span className="font-bold text-primary">{sellerRating.toFixed(1)}</span>
+                        </div>
+                        <span className="text-[hsl(var(--border))]">|</span>
+                        <span className="text-[hsl(var(--txt-secondary))]">{sellerSales} vendas</span>
+                        <span className="text-[hsl(var(--border))]">|</span>
+                        <button className="text-primary font-medium hover:underline">Ver avaliações →</button>
+                      </div>
                     </div>
-                  </div>
 
-                  <div ref={buyBoxRef}>
-                    <BuyBox
-                      price={listing.price}
-                      originalPrice={originalPrice}
-                      onBuy={handleBuy}
-                    />
+                    {/* Divider */}
+                    <div className="mx-4 my-3 border-t border-[hsl(var(--border))]" />
+
+                    {/* BuyBox inline */}
+                    <div ref={buyBoxRef} className="px-4 pb-4">
+                      <BuyBox
+                        price={listing.price}
+                        originalPrice={originalPrice}
+                        onBuy={handleBuy}
+                        inline
+                      />
+                    </div>
                   </div>
                   <TrustSignals />
                   <SellerCard

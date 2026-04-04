@@ -8,9 +8,10 @@ interface BuyBoxProps {
   originalPrice?: string;
   onBuy: () => void;
   onOffer?: () => void;
+  inline?: boolean;
 }
 
-export default function BuyBox({ price, originalPrice, onBuy, onOffer }: BuyBoxProps) {
+export default function BuyBox({ price, originalPrice, onBuy, onOffer, inline }: BuyBoxProps) {
   const discount = originalPrice
     ? Math.round((1 - price / parseFloat(originalPrice.replace(/\./g, "").replace(",", "."))) * 100)
     : 0;
@@ -19,7 +20,7 @@ export default function BuyBox({ price, originalPrice, onBuy, onOffer }: BuyBoxP
   const pixPrice = formatBRL(price * 0.95);
 
   return (
-    <div className="rounded-xl border border-[hsl(var(--border))] bg-white p-4 sm:p-5">
+    <div className={inline ? "" : "rounded-xl border border-[hsl(var(--border))] bg-white p-4 sm:p-5"}>
       {/* Price hierarchy */}
       <div className="mb-4">
         {originalPrice && (
@@ -70,18 +71,20 @@ export default function BuyBox({ price, originalPrice, onBuy, onOffer }: BuyBoxP
       </Button>
 
       {/* Trust signals */}
-      <div className="flex justify-around mt-5 pt-4 border-t border-[hsl(var(--border))]">
-        {[
-          { icon: Shield, label: "Escrow seguro", color: "text-[hsl(var(--escrow))]" },
-          { icon: Zap, label: "Entrega imediata", color: "text-[hsl(var(--success))]" },
-          { icon: Clock, label: "Garantia 24h", color: "text-primary" },
-        ].map(({ icon: Icon, label, color }) => (
-          <span key={label} className="flex flex-col items-center gap-1.5">
-            <Icon className={`h-5 w-5 ${color}`} />
-            <span className="text-[10px] text-[hsl(var(--txt-hint))] font-medium">{label}</span>
-          </span>
-        ))}
-      </div>
+      {!inline && (
+        <div className="flex justify-around mt-5 pt-4 border-t border-[hsl(var(--border))]">
+          {[
+            { icon: Shield, label: "Escrow seguro", color: "text-[hsl(var(--escrow))]" },
+            { icon: Zap, label: "Entrega imediata", color: "text-[hsl(var(--success))]" },
+            { icon: Clock, label: "Garantia 24h", color: "text-primary" },
+          ].map(({ icon: Icon, label, color }) => (
+            <span key={label} className="flex flex-col items-center gap-1.5">
+              <Icon className={`h-5 w-5 ${color}`} />
+              <span className="text-[10px] text-[hsl(var(--txt-hint))] font-medium">{label}</span>
+            </span>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
