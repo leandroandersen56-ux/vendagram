@@ -8,6 +8,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import CredentialsPanel from "@/components/CredentialsPanel";
+import TransactionChat from "@/components/TransactionChat";
 
 const DISPUTE_REASONS = [
   "Credenciais incorretas",
