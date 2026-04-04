@@ -366,23 +366,15 @@ export default function ListingDetail() {
                     <div className="mx-4 my-3 border-t border-[hsl(var(--border))]" />
 
                     {/* BuyBox inline */}
-                    <div ref={buyBoxRef} className="px-4 pb-4">
+                    <div ref={buyBoxRef}>
                       <BuyBox
                         price={listing.price}
                         originalPrice={originalPrice}
                         onBuy={handleBuy}
-                        inline
                       />
                     </div>
-
-                    {/* Divider */}
-                    <div className="mx-4 mb-3 border-t border-[hsl(var(--border))]" />
-
-                    {/* Trust Signals inline */}
-                    <div className="px-4 pb-4">
-                      <TrustSignals inline />
-                    </div>
                   </div>
+                  <TrustSignals />
                   <SellerCard
                     name={sellerName}
                     rating={sellerRating}
