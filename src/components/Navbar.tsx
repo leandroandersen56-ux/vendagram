@@ -239,39 +239,6 @@ export default function Navbar() {
 
           {/* Mobile right icons */}
           <div className="flex items-center gap-0 md:hidden shrink-0">
-            {/* Notifications (mobile) */}
-            <div className="relative">
-              <button
-                className="h-8 w-8 flex items-center justify-center text-white/80"
-                aria-label="Notificações"
-                onClick={() => {
-                  if (!isAuthenticated) { openAuth(); return; }
-                  setNotifOpen(!notifOpen);
-                  if (!notifOpen) fetchNotifications();
-                }}
-              >
-                <Bell className="h-[18px] w-[18px]" />
-                {unreadCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 h-3.5 min-w-3.5 px-0.5 rounded-full bg-[hsl(var(--danger))] text-white text-[8px] font-semibold flex items-center justify-center">
-                    {unreadCount > 9 ? "9+" : unreadCount}
-                  </span>
-                )}
-              </button>
-
-              <AnimatePresence>
-                {notifOpen && (
-                  <NotifDropdown
-                    notifications={notifications}
-                    loading={notifLoading}
-                    onClose={() => setNotifOpen(false)}
-                    onClick={handleNotifClick}
-                    onMarkAllRead={markAllRead}
-                    timeAgo={timeAgo}
-                    mobile
-                  />
-                )}
-              </AnimatePresence>
-            </div>
 
             {/* Cart (mobile) */}
             <Link to="/cart" className="relative h-8 w-8 flex items-center justify-center text-white/80">
