@@ -118,10 +118,6 @@ export default function Navbar() {
 
           {/* Right side */}
           <div className="hidden md:flex items-center gap-2 shrink-0">
-            {/* Cart */}
-            <Link to="/checkout" className="relative h-9 w-9 flex items-center justify-center text-white/80 hover:text-white transition-colors">
-              <ShoppingCart className="h-5 w-5" />
-            </Link>
             {/* Notification bell (desktop) */}
             <div className="relative">
               <button
@@ -154,6 +150,10 @@ export default function Navbar() {
                 )}
               </AnimatePresence>
             </div>
+            {/* Cart */}
+            <Link to="/checkout" className="relative h-9 w-9 flex items-center justify-center text-white/80 hover:text-white transition-colors">
+              <ShoppingCart className="h-5 w-5" />
+            </Link>
 
             {isAuthenticated ? (
               <DropdownMenu>
