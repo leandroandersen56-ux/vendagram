@@ -132,6 +132,13 @@ export default function CreateListing() {
   const [screenshots, setScreenshots] = useState<{ file: File; preview: string }[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Credential fields (pre-fill)
+  const [credLogin, setCredLogin] = useState("");
+  const [credPassword, setCredPassword] = useState("");
+  const [credEmail, setCredEmail] = useState("");
+  const [cred2fa, setCred2fa] = useState("");
+  const [credNotes, setCredNotes] = useState("");
+
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     const newScreenshots = files.slice(0, 6 - screenshots.length).map((file) => ({
