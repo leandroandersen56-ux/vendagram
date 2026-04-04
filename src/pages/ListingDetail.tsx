@@ -30,7 +30,8 @@ export default function ListingDetail() {
   const [listing, setListing] = useState<any>(null);
   const [seller, setSeller] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [favorited, setFavorited] = useState(false);
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const favorited = id ? isFavorite(id) : false;
   const [copied, setCopied] = useState(false);
   const buyBoxRef = useRef<HTMLDivElement>(null);
 
