@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      audit_logs: {
+        Row: {
+          action: string
+          created_at: string
+          details: Json | null
+          id: string
+          ip_address: string | null
+          user_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          ip_address?: string | null
+          user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          ip_address?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       credentials: {
         Row: {
           created_at: string
@@ -78,33 +105,45 @@ export type Database = {
       }
       disputes: {
         Row: {
+          admin_notes: string | null
           created_at: string
           description: string
           id: string
           opened_by: string
           resolution: string | null
+          resolution_type: string | null
+          resolved_at: string | null
+          resolved_by: string | null
           screenshot_url: string | null
           status: Database["public"]["Enums"]["dispute_status"]
           transaction_id: string
           updated_at: string
         }
         Insert: {
+          admin_notes?: string | null
           created_at?: string
           description: string
           id?: string
           opened_by: string
           resolution?: string | null
+          resolution_type?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
           screenshot_url?: string | null
           status?: Database["public"]["Enums"]["dispute_status"]
           transaction_id: string
           updated_at?: string
         }
         Update: {
+          admin_notes?: string | null
           created_at?: string
           description?: string
           id?: string
           opened_by?: string
           resolution?: string | null
+          resolution_type?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
           screenshot_url?: string | null
           status?: Database["public"]["Enums"]["dispute_status"]
           transaction_id?: string
@@ -580,6 +619,7 @@ export type Database = {
           created_at: string
           id: string
           pix_key: string
+          pix_key_type: string | null
           processed_at: string | null
           status: Database["public"]["Enums"]["withdrawal_status"]
           user_id: string
@@ -589,6 +629,7 @@ export type Database = {
           created_at?: string
           id?: string
           pix_key: string
+          pix_key_type?: string | null
           processed_at?: string | null
           status?: Database["public"]["Enums"]["withdrawal_status"]
           user_id: string
@@ -598,6 +639,7 @@ export type Database = {
           created_at?: string
           id?: string
           pix_key?: string
+          pix_key_type?: string | null
           processed_at?: string | null
           status?: Database["public"]["Enums"]["withdrawal_status"]
           user_id?: string
