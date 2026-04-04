@@ -99,7 +99,7 @@ export default function Footer() {
         <div className="container mx-auto px-4 py-12">
           <div className="grid grid-cols-4 gap-8">
             <div>
-              <img src={logoFroiv} alt="Froiv" className="h-7 mb-3" />
+              <img src={logoFroiv} alt="Froiv" className="h-9 mb-3" />
               <p className="text-[12px] text-txt-secondary leading-relaxed mb-5 max-w-[220px]">
                 A plataforma mais segura para comprar e vender contas digitais com escrow automático.
               </p>
