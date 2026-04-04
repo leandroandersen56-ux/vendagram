@@ -105,6 +105,7 @@ export default function Dashboard() {
     setTransactions(allTx);
     setDisputes(allDisputes);
     setWithdrawals(allWithdrawals);
+    setVerifications(verificationsRes.data || []);
 
     // Chart: group transactions by month
     const monthMap: Record<string, { transactions: number; revenue: number }> = {};
