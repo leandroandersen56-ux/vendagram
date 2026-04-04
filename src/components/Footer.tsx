@@ -79,6 +79,17 @@ export default function Footer() {
             <span className="hover:text-primary transition-colors cursor-pointer">Ajuda</span>
             <a href="mailto:contato@froiv.com" className="hover:text-primary transition-colors">Contato</a>
           </div>
+          <div className="flex flex-col items-center gap-1.5">
+            <p className="text-[10px] text-txt-hint uppercase tracking-wider">Métodos de pagamento</p>
+            <div className="flex items-center gap-2 justify-center">
+              <PaymentIcon type="pix" />
+              <PaymentIcon type="visa" />
+              <PaymentIcon type="mastercard" />
+              <PaymentIcon type="amex" />
+              <PaymentIcon type="elo" />
+              <PaymentIcon type="hipercard" />
+            </div>
+          </div>
           <p className="text-[10px] text-txt-hint text-center">© {new Date().getFullYear()} Froiv. Todos os direitos reservados.</p>
         </div>
       </div>
