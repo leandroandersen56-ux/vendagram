@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Eye, EyeOff, Shield, ShoppingCart, Tag } from "lucide-react";
-import logoFroiv from "@/assets/logo-froiv.png";
+import logoFroiv from "@/assets/logo-froiv.svg";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

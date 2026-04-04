@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import logoFroiv from "@/assets/logo-froiv.png";
+import logoFroiv from "@/assets/logo-froiv.svg";
 import amexIcon from "@/assets/amex-icon.svg";
 import eloIcon from "@/assets/elo-icon.png";
 import hipercardIcon from "@/assets/hipercard-icon.svg";
