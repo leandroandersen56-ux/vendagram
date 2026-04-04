@@ -190,7 +190,7 @@ export default function Index() {
         {/* === QUICK CATEGORIES === */}
         <section className="py-4">
           <div className="container mx-auto">
-            <div className="flex items-center gap-4 overflow-x-auto scrollbar-hide fade-edges py-1 px-1">
+            <div className="flex items-center gap-4 overflow-x-auto scrollbar-hide fade-edges py-1 px-1 md:justify-evenly md:gap-6">
               {QUICK_CATEGORIES.map((cat) => {
                 const IconComp = cat.icon;
                 return (
@@ -213,7 +213,7 @@ export default function Index() {
         {/* === CATEGORY TABS + FILTER === */}
         <section className="bg-card border-y border-border sticky top-14 z-30">
           <div className="container mx-auto">
-            <div className="flex items-center gap-0 overflow-x-auto scrollbar-hide h-10">
+            <div className="flex items-center gap-0 overflow-x-auto scrollbar-hide h-10 md:justify-evenly">
               <button
                 onClick={() => setShowFilterMenu(!showFilterMenu)}
                 className={`shrink-0 flex items-center gap-1 px-3 h-full text-[13px] font-semibold border-b-2 transition-colors ${showFilterMenu ? 'border-primary text-primary' : 'border-transparent text-txt-secondary hover:text-txt-primary'}`}
