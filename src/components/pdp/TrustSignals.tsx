@@ -66,15 +66,15 @@ export default function TrustSignals({ inline }: { inline?: boolean }) {
 
               <div className="space-y-0">
                 {[
-                  { emoji: "🛒", title: "Compre a conta", desc: "Escolha a conta e realize o pagamento normalmente." },
-                  { emoji: "🔒", title: "Pagamento em custódia", desc: "Seu dinheiro fica seguro conosco, não vai direto ao vendedor." },
-                  { emoji: "✅", title: "Você verifica a conta", desc: "Acesse a conta, confira tudo e confirme que está tudo certo." },
-                  { emoji: "💰", title: "Pagamento liberado", desc: "Só depois da sua confirmação, liberamos o pagamento ao vendedor." },
+                  { icon: ShoppingCart, title: "Compre a conta", desc: "Escolha a conta e realize o pagamento normalmente." },
+                  { icon: Lock, title: "Pagamento em custódia", desc: "Seu dinheiro fica seguro conosco, não vai direto ao vendedor." },
+                  { icon: CheckCircle2, title: "Você verifica a conta", desc: "Acesse a conta, confira tudo e confirme que está tudo certo." },
+                  { icon: Wallet, title: "Pagamento liberado", desc: "Só depois da sua confirmação, liberamos o pagamento ao vendedor." },
                 ].map((step, i) => (
                   <div key={i} className="flex gap-4">
                     <div className="flex flex-col items-center">
-                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-lg flex-shrink-0">
-                        {step.emoji}
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <step.icon className="h-5 w-5 text-primary" />
                       </div>
                       {i < 3 && <div className="w-0.5 h-full bg-primary/20 my-1" />}
                     </div>

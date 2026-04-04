@@ -70,7 +70,7 @@ export default function SellerCard({ name, rating, sales, avatarUrl, onMessage, 
           <span>Responde em menos de 1h</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-sm">📦</span>
+          <Package className="h-3.5 w-3.5 text-primary" />
           <span>{Math.min(98, 85 + Math.floor(sales * 0.5))}% de avaliações positivas</span>
         </div>
       </div>
