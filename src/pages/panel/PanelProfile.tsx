@@ -172,7 +172,7 @@ export default function PanelProfile() {
               variant="outline"
               size="sm"
               className="text-xs border-primary text-primary hover:bg-primary/5"
-              onClick={() => navigate("/painel/verificacao")}
+              onClick={() => navigate("/vendedor/verificacao")}
             >
               <ShieldCheck className="h-3.5 w-3.5 mr-1" /> Verificar conta
             </Button>

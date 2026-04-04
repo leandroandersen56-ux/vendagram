@@ -81,8 +81,8 @@ export default function Navbar() {
   };
 
   const handleSell = () => {
-    if (isAuthenticated) navigate("/painel/anuncios/novo");
-    else openAuth("/painel/anuncios/novo");
+    if (isAuthenticated) navigate("/vendedor/novo");
+    else openAuth("/vendedor/novo");
   };
 
   // Close notif dropdown on route change
@@ -215,8 +215,8 @@ export default function Navbar() {
                   </div>
 
                   <div className="p-1">
-                    <DropdownMenuItem asChild><Link to="/painel" className="cursor-pointer gap-2"><LayoutDashboard className="h-4 w-4" /> Meu Painel</Link></DropdownMenuItem>
-                    <DropdownMenuItem asChild><Link to="/painel/perfil" className="cursor-pointer gap-2"><User className="h-4 w-4" /> Meu Perfil</Link></DropdownMenuItem>
+                    <DropdownMenuItem asChild><Link to="/vendedor" className="cursor-pointer gap-2"><LayoutDashboard className="h-4 w-4" /> Meu Painel</Link></DropdownMenuItem>
+                    <DropdownMenuItem asChild><Link to="/vendedor" className="cursor-pointer gap-2"><User className="h-4 w-4" /> Meu Perfil</Link></DropdownMenuItem>
                     <DropdownMenuItem asChild><Link to="/compras" className="cursor-pointer gap-2"><ShoppingCart className="h-4 w-4" /> Minhas Compras</Link></DropdownMenuItem>
                     <DropdownMenuItem asChild><Link to="/vendedor" className="cursor-pointer gap-2"><ShoppingBag className="h-4 w-4" /> Central do Vendedor</Link></DropdownMenuItem>
                     <DropdownMenuItem asChild><Link to="/carteira" className="cursor-pointer gap-2"><Wallet className="h-4 w-4" /> Minha Carteira</Link></DropdownMenuItem>
@@ -297,7 +297,7 @@ export default function Navbar() {
               className="fixed top-14 right-4 z-50 bg-card rounded-lg shadow-card-hover border border-border w-56"
             >
               <div className="flex flex-col p-2">
-                <Link to="/painel" onClick={() => setMobileMenuOpen(false)}>
+                <Link to="/vendedor" onClick={() => setMobileMenuOpen(false)}>
                   <button className="w-full flex items-center gap-2 px-3 py-2.5 text-[13px] text-txt-primary hover:bg-muted rounded-md transition-colors">
                     <LayoutDashboard className="h-4 w-4" /> Meu Painel
                   </button>
@@ -307,7 +307,7 @@ export default function Navbar() {
                     <Heart className="h-4 w-4" /> Favoritos
                   </button>
                 </Link>
-                <Link to="/painel/perfil" onClick={() => setMobileMenuOpen(false)}>
+                <Link to="/vendedor" onClick={() => setMobileMenuOpen(false)}>
                   <button className="w-full flex items-center gap-2 px-3 py-2.5 text-[13px] text-txt-primary hover:bg-muted rounded-md transition-colors">
                     <User className="h-4 w-4" /> Meu Perfil
                   </button>
@@ -422,7 +422,7 @@ function NotifDropdown({
       {/* Footer */}
       {notifications.length > 0 && (
         <Link
-          to="/painel/notificacoes"
+          to="/notificacoes"
           onClick={onClose}
           className="block text-center py-2.5 text-[12px] text-primary font-semibold hover:bg-[hsl(var(--muted))] transition-colors border-t border-[hsl(var(--border))]"
         >

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Home, Store, PlusCircle, User, LayoutDashboard, Tag, Wallet, Menu } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
@@ -8,32 +8,33 @@ import MoreMenu from "@/components/menu/MoreMenu";
 const PUBLIC_ITEMS = [
   { label: "Início", icon: Home, path: "/" },
   { label: "Explorar", icon: Store, path: "/marketplace" },
-  { label: "Anunciar", icon: PlusCircle, path: "/painel/anuncios/novo", highlight: true, auth: true },
-  { label: "Perfil", icon: User, path: "/painel/perfil", auth: true },
+  { label: "Anunciar", icon: PlusCircle, path: "/vendedor/novo", highlight: true, auth: true },
+  { label: "Perfil", icon: User, path: "/vendedor", state: { tab: "perfil" }, auth: true },
   { label: "Mais", icon: Menu, path: "__more__" },
 ];
 
 const PANEL_ITEMS = [
-  { label: "Painel", icon: LayoutDashboard, path: "/painel", exact: true },
-  { label: "Anúncios", icon: Tag, path: "/painel/anuncios" },
-  { label: "Anunciar", icon: PlusCircle, path: "/painel/anuncios/novo", highlight: true },
-  { label: "Carteira", icon: Wallet, path: "/painel/carteira" },
+  { label: "Painel", icon: LayoutDashboard, path: "/vendedor", state: { tab: "overview" }, exact: true },
+  { label: "Anúncios", icon: Tag, path: "/vendedor", state: { tab: "anuncios" } },
+  { label: "Anunciar", icon: PlusCircle, path: "/vendedor/novo", highlight: true },
+  { label: "Carteira", icon: Wallet, path: "/vendedor", state: { tab: "carteira" } },
   { label: "Mais", icon: Menu, path: "__more__" },
 ];
 
 export default function BottomNav() {
   const location = useLocation();
+  const navigate = useNavigate();
   const { isAuthenticated, openAuth } = useAuth();
   const [moreOpen, setMoreOpen] = useState(false);
 
-  const isPanel = location.pathname.startsWith("/painel");
+  const isPanel = location.pathname.startsWith("/vendedor");
   const items = isPanel ? PANEL_ITEMS : PUBLIC_ITEMS;
 
   return (
     <>
       <nav className="fixed bottom-0 left-0 right-0 z-50 bg-card border-t border-border shadow-nav sm:hidden">
         <div className="flex items-stretch justify-around h-14">
-          {items.map((item) => {
+          {items.map((item, idx) => {
             if (item.path === "__more__") {
               return (
                 <button
@@ -48,17 +49,20 @@ export default function BottomNav() {
               );
             }
 
-            const isExact = "exact" in item && item.exact;
-            const isActive = isExact
-              ? location.pathname === item.path
-              : item.path === "/"
-                ? location.pathname === "/"
-                : location.pathname.startsWith(item.path);
+            const hasState = "state" in item && item.state;
+            const isActive = item.path === "/"
+              ? location.pathname === "/"
+              : location.pathname === item.path || location.pathname.startsWith(item.path + "/");
 
             const handleClick = (e: React.MouseEvent) => {
               if ("auth" in item && item.auth && !isAuthenticated) {
                 e.preventDefault();
                 openAuth(item.path);
+                return;
+              }
+              if (hasState) {
+                e.preventDefault();
+                navigate(item.path, { state: item.state });
               }
             };
 
@@ -81,7 +85,7 @@ export default function BottomNav() {
 
             return (
               <Link
-                key={item.label}
+                key={`${item.label}-${idx}`}
                 to={item.path}
                 onClick={handleClick}
                 className={cn(

@@ -113,7 +113,7 @@ export default function Footer() {
               <h4 className="font-semibold text-[12px] text-txt-primary mb-4 uppercase tracking-wider">Plataforma</h4>
               <div className="flex flex-col gap-2.5 text-[12px] text-txt-secondary">
                 <Link to="/marketplace" className="hover:text-primary transition-colors">Marketplace</Link>
-                <Link to="/painel/anuncios/novo" className="hover:text-primary transition-colors">Vender Conta</Link>
+                <Link to="/vendedor/novo" className="hover:text-primary transition-colors">Vender Conta</Link>
                 <Link to="/" className="hover:text-primary transition-colors">Como Funciona</Link>
               </div>
             </div>

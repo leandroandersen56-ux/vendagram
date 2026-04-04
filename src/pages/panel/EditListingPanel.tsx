@@ -152,7 +152,7 @@ export default function EditListingPanel() {
       const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
       if (!isUUID) {
         toast({ title: "Anúncio de demonstração", description: "Crie um anúncio real para editá-lo.", variant: "destructive" });
-        navigate("/painel/anuncios");
+        navigate("/vendedor", { state: { tab: "anuncios" } });
         return;
       }
 
@@ -164,7 +164,7 @@ export default function EditListingPanel() {
 
       if (error || !data) {
         toast({ title: "Anúncio não encontrado", variant: "destructive" });
-        navigate("/painel/anuncios");
+        navigate("/vendedor", { state: { tab: "anuncios" } });
         return;
       }
 
@@ -274,7 +274,7 @@ export default function EditListingPanel() {
       toast({ title: "Erro ao salvar", description: error.message, variant: "destructive" });
     } else {
       toast({ title: "Anúncio atualizado!" });
-      navigate("/painel/anuncios");
+      navigate("/vendedor", { state: { tab: "anuncios" } });
     }
   };
 
@@ -294,7 +294,7 @@ export default function EditListingPanel() {
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-2xl">
       {/* Header */}
-      <Button variant="ghost" onClick={() => navigate("/painel/anuncios")} className="mb-4 text-muted-foreground">
+      <Button variant="ghost" onClick={() => navigate("/vendedor", { state: { tab: "anuncios" } })} className="mb-4 text-muted-foreground">
         <ArrowLeft className="h-4 w-4 mr-2" /> Voltar
       </Button>
 

@@ -144,7 +144,7 @@ export default function PanelListings() {
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-xl font-semibold text-foreground">Meus Anúncios</h1>
-        <Link to="/painel/anuncios/novo">
+        <Link to="/vendedor/novo">
           <Button variant="hero" size="sm">
             <Plus className="h-4 w-4 mr-1" /> Novo Anúncio
           </Button>
@@ -182,7 +182,7 @@ export default function PanelListings() {
                       <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => isReal ? navigate(`/listing/${listing.id}`) : demoClick()} title="Ver anúncio">
                         <Eye className="h-3.5 w-3.5" />
                       </Button>
-                      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => isReal ? navigate(`/painel/anuncios/editar/${listing.id}`) : demoClick()} title="Editar">
+                      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => isReal ? navigate(`/vendedor/editar/${listing.id}`) : demoClick()} title="Editar">
                         <Edit className="h-3.5 w-3.5" />
                       </Button>
                       <Button
@@ -227,7 +227,7 @@ export default function PanelListings() {
           <p className="text-3xl mb-3">📦</p>
           <p className="font-medium text-foreground mb-2">Nenhum anúncio</p>
           <p className="text-sm text-muted-foreground mb-4">Crie seu primeiro anúncio e comece a vender</p>
-          <Link to="/painel/anuncios/novo">
+          <Link to="/vendedor/novo">
             <Button variant="hero">Criar Anúncio</Button>
           </Link>
         </Card>

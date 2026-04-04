@@ -245,7 +245,7 @@ export default function CreateListing() {
       toast({ title: "Erro ao criar anúncio", description: error.message, variant: "destructive" });
     } else {
       toast({ title: "Anúncio publicado!" });
-      navigate("/painel/anuncios");
+      navigate("/vendedor", { state: { tab: "anuncios" } });
     }
   };
 
@@ -303,7 +303,7 @@ export default function CreateListing() {
               Você pode vender, mas contas verificadas transmitem mais confiança e vendem mais rápido.
             </p>
             <button
-              onClick={() => navigate("/painel/verificacao")}
+              onClick={() => navigate("/vendedor/verificacao")}
               className="text-xs font-semibold text-primary mt-2 hover:underline"
             >
               Verificar minha conta →

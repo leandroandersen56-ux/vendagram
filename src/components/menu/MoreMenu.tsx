@@ -69,13 +69,13 @@ export default function MoreMenu({ open, onClose }: MoreMenuProps) {
     },
   ];
 
-  const handleNav = (path: string) => {
+  const handleNav = (path: string, opts?: { state?: any }) => {
     onClose();
     if (!isAuthenticated && !["/", "/marketplace", "/ajuda"].some(p => path.startsWith(p))) {
       openAuth(path);
       return;
     }
-    navigate(path);
+    navigate(path, opts);
   };
 
   return (
@@ -108,7 +108,7 @@ export default function MoreMenu({ open, onClose }: MoreMenuProps) {
             {/* Header */}
             <div
               className="bg-primary px-5 pt-[env(safe-area-inset-top)] pb-4 cursor-pointer"
-              onClick={() => handleNav("/painel/perfil")}
+              onClick={() => handleNav("/vendedor", { state: { tab: "perfil" } })}
             >
               <div className="pt-4 flex items-center gap-3">
                 <div className="h-14 w-14 rounded-full bg-white/20 flex items-center justify-center text-white font-semibold text-xl shrink-0">
