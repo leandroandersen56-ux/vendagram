@@ -63,7 +63,7 @@ export default function Favorites() {
                         />
                       ) : (
                         <div className="h-16 w-16 rounded-lg bg-muted flex items-center justify-center">
-                          <PlatformIcon category={listing.category} className="h-6 w-6 text-muted-foreground" />
+                          <PlatformIcon platformId={listing.category} className="h-6 w-6 text-muted-foreground" />
                         </div>
                       )}
                     </Link>
