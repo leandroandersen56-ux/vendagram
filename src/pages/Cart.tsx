@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ShoppingCart, Trash2, ArrowLeft } from "lucide-react";
+import { Trash2, ArrowLeft, ShoppingCart } from "lucide-react";
+import PlatformIcon from "@/components/PlatformIcon";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -90,7 +91,7 @@ export default function Cart() {
                       />
                     ) : (
                       <div className="h-16 w-16 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
-                        <ShoppingCart className="h-6 w-6 text-txt-hint" />
+                        <PlatformIcon platformId={item.category} size={32} />
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
