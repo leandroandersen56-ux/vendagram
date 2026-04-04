@@ -220,49 +220,52 @@ export default function ListingDetail() {
                   verified={sellerSales >= 5}
                 />
 
-                {/* Info block (mobile only) */}
-                <div className="lg:hidden bg-white rounded-xl p-4 border border-[hsl(var(--border))]">
-                  {/* Badges */}
-                  <div className="flex flex-wrap items-center gap-1.5 mb-2">
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${PLATFORM_BADGE_COLORS[listing.category] || "bg-[hsl(var(--muted))] text-[hsl(var(--txt-primary))]"}`}>
-                      {platform.name.toUpperCase()}
-                    </span>
-                    {sellerSales >= 5 && (
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[hsl(var(--success-light))] text-[hsl(var(--success))]">
-                        VERIFICADO
+                {/* Combined info + buy + trust block (mobile only) */}
+                <div className="lg:hidden bg-white rounded-xl border border-[hsl(var(--border))] overflow-hidden">
+                  {/* Info */}
+                  <div className="p-4 pb-0">
+                    <div className="flex flex-wrap items-center gap-1.5 mb-2">
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${PLATFORM_BADGE_COLORS[listing.category] || "bg-[hsl(var(--muted))] text-[hsl(var(--txt-primary))]"}`}>
+                        {platform.name.toUpperCase()}
                       </span>
-                    )}
-                    {sellerSales >= 15 && (
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[hsl(var(--hot-light))] text-[hsl(var(--hot))]">
-                        MAIS VENDIDO
-                      </span>
-                    )}
-                  </div>
-                  <h1 className="text-lg font-semibold text-[hsl(var(--txt-primary))] leading-snug">{listing.title}</h1>
-                  <div className="flex items-center flex-wrap gap-x-2 gap-y-1 mt-2 text-[13px]">
-                    <div className="flex items-center gap-1">
-                      <Star className="h-3.5 w-3.5 text-amber-400 fill-amber-400" />
-                      <span className="font-semibold text-primary">{sellerRating.toFixed(1)}</span>
+                      {sellerSales >= 5 && (
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[hsl(var(--success-light))] text-[hsl(var(--success))]">
+                          VERIFICADO
+                        </span>
+                      )}
+                      {sellerSales >= 15 && (
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[hsl(var(--hot-light))] text-[hsl(var(--hot))]">
+                          MAIS VENDIDO
+                        </span>
+                      )}
                     </div>
-                    <span className="text-[hsl(var(--border))]">|</span>
-                    <span className="text-[hsl(var(--txt-secondary))]">{sellerSales} vendas</span>
-                    <span className="text-[hsl(var(--border))]">|</span>
-                    <button className="text-primary font-medium hover:underline">Ver avaliações →</button>
+                    <h1 className="text-lg font-semibold text-[hsl(var(--txt-primary))] leading-snug">{listing.title}</h1>
+                    <div className="flex items-center flex-wrap gap-x-2 gap-y-1 mt-2 text-[13px]">
+                      <div className="flex items-center gap-1">
+                        <Star className="h-3.5 w-3.5 text-amber-400 fill-amber-400" />
+                        <span className="font-semibold text-primary">{sellerRating.toFixed(1)}</span>
+                      </div>
+                      <span className="text-[hsl(var(--border))]">|</span>
+                      <span className="text-[hsl(var(--txt-secondary))]">{sellerSales} vendas</span>
+                      <span className="text-[hsl(var(--border))]">|</span>
+                      <button className="text-primary font-medium hover:underline">Ver avaliações →</button>
+                    </div>
                   </div>
-                </div>
 
-                {/* Buy Box (mobile only) */}
-                <div className="lg:hidden" ref={buyBoxRef}>
-                  <BuyBox
-                    price={listing.price}
-                    originalPrice={originalPrice}
-                    onBuy={handleBuy}
-                  />
-                </div>
+                  {/* Buy Box */}
+                  <div ref={buyBoxRef} className="px-4 py-3 border-t border-[hsl(var(--border))]">
+                    <BuyBox
+                      price={listing.price}
+                      originalPrice={originalPrice}
+                      onBuy={handleBuy}
+                      inline
+                    />
+                  </div>
 
-                {/* Trust Signals (mobile only) */}
-                <div className="lg:hidden">
-                  <TrustSignals />
+                  {/* Trust Signals inline */}
+                  <div className="px-4 pb-4 pt-1 border-t border-[hsl(var(--border))]">
+                    <TrustSignals inline />
+                  </div>
                 </div>
 
                 {/* Seller Card (mobile only) */}
