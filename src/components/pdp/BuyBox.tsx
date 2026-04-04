@@ -20,7 +20,7 @@ export default function BuyBox({ price, originalPrice, onBuy, onOffer, inline }:
   const pixPrice = formatBRL(price * 0.95);
 
   return (
-    <div className="rounded-xl border border-[hsl(var(--border))] bg-white p-4 sm:p-5">
+    <div className={inline ? "" : "rounded-xl border border-[hsl(var(--border))] bg-white p-4 sm:p-5"}>
       {/* Price hierarchy */}
       <div className="mb-4">
         {originalPrice && (
