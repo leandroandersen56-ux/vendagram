@@ -445,7 +445,7 @@ export default function Index() {
 
         {/* === HOW IT WORKS === */}
         <section className="py-8 bg-muted">
-          <div className="container mx-auto max-w-4xl">
+          <div className="container mx-auto">
             <h2 className="text-[16px] font-bold text-txt-primary text-center mb-6">Como funciona</h2>
             <div className="grid grid-cols-4 gap-3 sm:gap-6">
               {[
