@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import AuthModal from "@/components/AuthModal";
 import ScrollToTop from "@/components/ScrollToTop";
+import PWAInstallBanner from "@/components/PWAInstallBanner";
 import BottomNav from "@/components/BottomNav";
 import Index from "./pages/Index.tsx";
 import Marketplace from "./pages/Marketplace.tsx";
