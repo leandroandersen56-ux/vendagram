@@ -79,12 +79,13 @@ export default function Dashboard() {
 
   const loadAll = async () => {
     setLoading(true);
-    const [profilesRes, txRes, disputesRes, walletsRes, withdrawalsRes] = await Promise.all([
+    const [profilesRes, txRes, disputesRes, walletsRes, withdrawalsRes, verificationsRes] = await Promise.all([
       supabase.from("profiles").select("*").order("created_at", { ascending: false }),
       supabase.from("transactions").select("*, listings(title)").order("created_at", { ascending: false }).limit(100),
       supabase.from("disputes").select("*, transactions(amount, listings(title)), profiles!disputes_opened_by_fkey(name)").order("created_at", { ascending: false }),
       supabase.from("wallets").select("pending"),
       supabase.from("withdrawals").select("*, profiles!withdrawals_user_id_fkey(name, email)").order("created_at", { ascending: false }),
+      supabase.from("verification_requests").select("*").order("created_at", { ascending: false }),
     ]);
 
     const allUsers = profilesRes.data || [];
