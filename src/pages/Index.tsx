@@ -61,8 +61,8 @@ export default function Index() {
   const [minFollowers, setMinFollowers] = useState<number>(0);
 
   const handleSell = () => {
-    if (isAuthenticated) navigate("/painel/anuncios/novo");
-    else openAuth("/painel/anuncios/novo");
+    if (isAuthenticated) navigate("/vendedor/novo");
+    else openAuth("/vendedor/novo");
   };
 
   useEffect(() => {

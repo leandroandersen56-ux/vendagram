@@ -381,7 +381,7 @@ export default function ListingDetail() {
                           {user && user.id === listing.seller_id && (
                             <Button
                               variant="outline" size="sm" className="shrink-0 text-xs rounded-lg"
-                              onClick={() => navigate(`/painel/anuncios/editar/${listing.id}`)}
+                              onClick={() => navigate(`/vendedor/editar/${listing.id}`)}
                             >
                               <Edit className="h-3 w-3 mr-1" /> Editar
                             </Button>
