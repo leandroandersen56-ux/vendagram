@@ -13,7 +13,7 @@ interface SellerCardProps {
 
 export default function SellerCard({ name, rating, sales, avatarUrl, isVerified, onMessage, onViewProfile }: SellerCardProps) {
   const initial = name?.[0]?.toUpperCase() || "V";
-  const level = sales >= 20 ? "Platinum" : sales >= 10 ? "Gold" : sales >= 5 ? "Silver" : null;
+  const level = isVerified ? (sales >= 20 ? "Platinum" : sales >= 10 ? "Gold" : sales >= 5 ? "Silver" : null) : null;
   const levelColors: Record<string, string> = {
     Platinum: "bg-amber-50 text-amber-700 border-amber-200",
     Gold: "bg-yellow-50 text-yellow-700 border-yellow-200",
