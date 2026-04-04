@@ -417,6 +417,62 @@ export default function Dashboard() {
                 </div>
               </Card>
             </TabsContent>
+
+            {/* Verifications */}
+            <TabsContent value="verifications">
+              <Card className="bg-card border-border overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-border bg-muted/30">
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">ID</th>
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">Usuário</th>
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">Tipo</th>
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">Documentos</th>
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">Status</th>
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">Data</th>
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">Ações</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {verifications.length === 0 ? (
+                        <tr><td colSpan={7} className="p-8 text-center text-muted-foreground text-sm">Nenhuma verificação encontrada</td></tr>
+                      ) : verifications.map((v: any) => {
+                        const vUser = users.find((u: any) => u.user_id === v.user_id);
+                        return (
+                          <tr key={v.id} className="border-b border-border/50 hover:bg-muted/20">
+                            <td className="p-3 text-xs text-primary font-mono">{v.id.slice(0, 8)}</td>
+                            <td className="p-3 text-sm text-foreground">{vUser?.name || vUser?.email || v.user_id.slice(0, 8)}</td>
+                            <td className="p-3 text-sm text-foreground">{v.doc_type === "cnpj" ? "PJ (CNPJ)" : "PF (CPF)"}</td>
+                            <td className="p-3 text-xs text-muted-foreground">
+                              {(v.documents?.length || 0) + (v.selfie_path ? 1 : 0)} arquivo(s)
+                            </td>
+                            <td className="p-3">
+                              <Badge className={`${statusColors[v.status] || ""} border-0 text-xs`}>
+                                {statusLabels[v.status] || v.status}
+                              </Badge>
+                            </td>
+                            <td className="p-3 text-xs text-muted-foreground">{new Date(v.created_at).toLocaleDateString("pt-BR")}</td>
+                            <td className="p-3">
+                              {v.status === "pending" && (
+                                <div className="flex gap-1">
+                                  <Button size="sm" variant="hero" className="text-xs h-7" onClick={() => handleVerification(v.id, "approved")}>
+                                    <CheckCircle2 className="h-3 w-3 mr-1" /> Aprovar
+                                  </Button>
+                                  <Button size="sm" variant="outline" className="text-xs h-7 text-destructive border-destructive/30" onClick={() => handleVerification(v.id, "rejected")}>
+                                    <XCircle className="h-3 w-3 mr-1" /> Recusar
+                                  </Button>
+                                </div>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </Card>
+            </TabsContent>
           </Tabs>
         </motion.div>
       </div>
