@@ -441,9 +441,12 @@ export default function Checkout() {
                         <QrCode className="h-5 w-5 text-primary" />
                         <p className="font-medium text-foreground text-sm">Pix via Mercado Pago</p>
                       </div>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-muted-foreground mb-3">
                         Ao finalizar, um QR Code será gerado para pagamento instantâneo. O valor fica retido em escrow até a conclusão da transação.
                       </p>
+                      <div className="flex items-center gap-2">
+                        <PaymentBadge type="pix" />
+                      </div>
                     </div>
                   )}
 
