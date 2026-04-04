@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Package } from "lucide-react";
 import { MOCK_LISTINGS, formatBRL } from "@/lib/mock-data";
 import ListingCard from "@/components/ListingCard";
 
