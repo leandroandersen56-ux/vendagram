@@ -263,8 +263,8 @@ export default function ListingDetail() {
                   </div>
 
                   {/* Trust Signals inline */}
-                  <div className="px-4 pb-4">
-                    <TrustSignals />
+                  <div className="px-4 pb-4 pt-1 border-t border-[hsl(var(--border))]">
+                    <TrustSignals inline />
                   </div>
                 </div>
 
