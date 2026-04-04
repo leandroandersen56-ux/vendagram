@@ -14,6 +14,7 @@ import { CheckCircle2, Star, Loader2, Camera, ShieldCheck } from "lucide-react";
 export default function PanelProfile() {
   const { user } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
