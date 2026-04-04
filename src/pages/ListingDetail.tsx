@@ -277,6 +277,14 @@ export default function ListingDetail() {
                       onBuy={handleBuy}
                       inline
                     />
+                    <div className="mt-2.5">
+                      <OfferButton
+                        listing={{ ...listing, price: Number(listing.price) }}
+                        offer={offer}
+                        offerLoading={offerLoading}
+                        onRefetch={refetchOffer}
+                      />
+                    </div>
                   </div>
 
                   {/* Trust Signals inline */}
