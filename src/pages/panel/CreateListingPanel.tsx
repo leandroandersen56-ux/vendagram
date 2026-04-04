@@ -114,8 +114,8 @@ export default function CreateListing() {
   const { user } = useAuth();
   const [isVerified, setIsVerified] = useState<boolean | null>(null);
 
-  // Check verification status
-  useState(() => {
+  // Check verification status on mount
+  useEffect(() => {
     if (!user?.id) return;
     supabase
       .from("profiles")
@@ -123,7 +123,7 @@ export default function CreateListing() {
       .eq("user_id", user.id)
       .maybeSingle()
       .then(({ data }) => setIsVerified(data?.is_verified ?? false));
-  });
+  }, [user?.id]);
 
   const [platform, setPlatform] = useState("");
   const [title, setTitle] = useState("");
