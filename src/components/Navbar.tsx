@@ -295,6 +295,11 @@ export default function Navbar() {
                     <LayoutDashboard className="h-4 w-4" /> Meu Painel
                   </button>
                 </Link>
+                <Link to="/favoritos" onClick={() => setMobileMenuOpen(false)}>
+                  <button className="w-full flex items-center gap-2 px-3 py-2.5 text-[13px] text-txt-primary hover:bg-muted rounded-md transition-colors">
+                    <Heart className="h-4 w-4" /> Favoritos
+                  </button>
+                </Link>
                 <Link to="/painel/perfil" onClick={() => setMobileMenuOpen(false)}>
                   <button className="w-full flex items-center gap-2 px-3 py-2.5 text-[13px] text-txt-primary hover:bg-muted rounded-md transition-colors">
                     <User className="h-4 w-4" /> Meu Perfil
