@@ -212,7 +212,7 @@ export default function CredentialsPanel({
         <div className="mt-3 flex items-start gap-2 bg-[#FFF8E0] rounded-lg p-3">
           <AlertTriangle className="h-4 w-4 text-[#FF6900] shrink-0 mt-0.5" />
           <p className="text-[12px] text-[#666]">
-            Altere a senha após o acesso. Você tem <strong>72h para verificar</strong> a conta antes da liberação automática.
+            Altere a senha após o acesso. Você tem <strong>24h para verificar</strong> a conta antes da liberação automática.
           </p>
         </div>
       </motion.div>
