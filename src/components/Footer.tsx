@@ -92,10 +92,13 @@ export default function Footer() {
             <div className="flex flex-col items-center gap-4">
               <div>
                 <p className="text-[10px] text-txt-hint uppercase tracking-wider text-center mb-2">Métodos de pagamento</p>
-                <div className="flex items-center gap-2 justify-center">
-                  <span className="bg-muted text-txt-secondary text-[10px] font-semibold px-3 py-1.5 rounded-lg border border-border">PIX</span>
-                  <span className="bg-muted text-txt-secondary text-[10px] font-semibold px-3 py-1.5 rounded-lg border border-border">VISA</span>
-                  <span className="bg-muted text-txt-secondary text-[10px] font-semibold px-3 py-1.5 rounded-lg border border-border">MASTER</span>
+                <div className="flex items-center gap-3 justify-center">
+                  <PaymentIcon type="pix" />
+                  <PaymentIcon type="visa" />
+                  <PaymentIcon type="mastercard" />
+                  <PaymentIcon type="amex" />
+                  <PaymentIcon type="elo" />
+                  <PaymentIcon type="hipercard" />
                 </div>
               </div>
               <p className="text-[10px] text-txt-hint">© {new Date().getFullYear()} Froiv. Todos os direitos reservados.</p>
