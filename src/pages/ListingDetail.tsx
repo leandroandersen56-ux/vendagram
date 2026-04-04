@@ -289,7 +289,7 @@ export default function ListingDetail() {
                 {/* Description */}
                 {listing.description && (
                   <div className="rounded-xl border border-[hsl(var(--border))] bg-white p-4">
-                    <h3 className="text-sm font-semibold text-[hsl(var(--txt-primary))] mb-2">📝 Descrição completa</h3>
+                    <h3 className="text-sm font-semibold text-[hsl(var(--txt-primary))] mb-2 flex items-center gap-1.5"><FileText className="h-4 w-4 text-primary" /> Descrição completa</h3>
                     <p className="text-[14px] text-[hsl(var(--txt-secondary))] leading-relaxed whitespace-pre-line">
                       {listing.description}
                     </p>

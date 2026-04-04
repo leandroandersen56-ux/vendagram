@@ -145,7 +145,7 @@ export default function Purchases() {
                   />
                   <div className="flex-1 min-w-0">
                     <span className={`inline-flex items-center gap-1 text-[12px] px-2 py-0.5 rounded-full ${status.color}`}>
-                      {status.icon} {status.label}
+                      <status.Icon className="h-3 w-3" /> {status.label}
                     </span>
                     {purchase.completed_at && (
                       <p className="text-[11px] text-[#999] mt-0.5">

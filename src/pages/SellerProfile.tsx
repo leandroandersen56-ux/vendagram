@@ -131,11 +131,11 @@ export default function SellerProfile() {
             </div>
 
             {/* Stats */}
-            <div className="flex gap-4 mt-4 text-sm flex-wrap">
-              <span>🏷️ {listings.length} anúncios</span>
-              <span>⭐ {avgRating}</span>
-              <span>💼 {seller.total_sales || 0} vendas</span>
-              <span>📅 Desde {memberSince}</span>
+            <div className="flex gap-4 mt-4 text-sm flex-wrap items-center">
+              <span className="flex items-center gap-1"><Tag className="h-3.5 w-3.5 text-primary" /> {listings.length} anúncios</span>
+              <span className="flex items-center gap-1"><Star className="h-3.5 w-3.5 text-primary fill-primary" /> {avgRating}</span>
+              <span className="flex items-center gap-1"><Briefcase className="h-3.5 w-3.5 text-primary" /> {seller.total_sales || 0} vendas</span>
+              <span className="flex items-center gap-1"><Calendar className="h-3.5 w-3.5 text-primary" /> Desde {memberSince}</span>
             </div>
           </motion.div>
 

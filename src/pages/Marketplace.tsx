@@ -189,7 +189,7 @@ export default function Marketplace() {
             </div>
           ) : (
             <div className="text-center py-20">
-              <p className="text-4xl mb-4">🔍</p>
+              <Search className="h-10 w-10 text-primary mx-auto mb-4" />
               <p className="text-lg font-medium text-foreground mb-2">Nenhum anúncio encontrado</p>
               <p className="text-muted-foreground text-sm mb-6">Tente alterar seus filtros ou busca</p>
               <Button variant="hero" onClick={() => { setSearch(""); handlePlatformChange("all"); }}>
