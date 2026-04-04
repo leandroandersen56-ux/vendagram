@@ -78,6 +78,7 @@ function AppRoutes() {
         <Route path="/transaction/:listingId" element={<TransactionFlow />} />
         <Route path="/ajuda" element={<HelpPage />} />
         <Route path="/busca" element={<SearchResults />} />
+        <Route path="/perfil/:username" element={<SellerProfile />} />
 
         {/* User pages (protected) */}
         <Route path="/compras" element={<ProtectedRoute><Purchases /></ProtectedRoute>} />
