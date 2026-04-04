@@ -36,6 +36,7 @@ import WalletPage from "./pages/WalletPage.tsx";
 import Affiliates from "./pages/Affiliates.tsx";
 import SettingsPage from "./pages/SettingsPage.tsx";
 import HelpPage from "./pages/HelpPage.tsx";
+import SearchResults from "./pages/SearchResults.tsx";
 
 const queryClient = new QueryClient();
 
