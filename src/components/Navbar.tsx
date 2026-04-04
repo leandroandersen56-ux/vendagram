@@ -213,37 +213,6 @@ export default function Navbar() {
 
           {/* Mobile right icons */}
           <div className="flex items-center gap-0 md:hidden shrink-0">
-            {/* Favorites (mobile) */}
-            <div className="relative">
-              <button
-                className="h-8 w-8 flex items-center justify-center text-white/80"
-                aria-label="Favoritos"
-                onClick={() => {
-                  if (!isAuthenticated) { openAuth(); return; }
-                  setFavOpen(!favOpen);
-                  if (!favOpen) fetchFavs();
-                }}
-              >
-                <Heart className="h-[18px] w-[18px]" />
-                {favorites.length > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 h-3.5 min-w-3.5 px-0.5 rounded-full bg-[hsl(var(--danger))] text-white text-[8px] font-semibold flex items-center justify-center">
-                    {favorites.length > 9 ? "9+" : favorites.length}
-                  </span>
-                )}
-              </button>
-
-              <AnimatePresence>
-                {favOpen && (
-                  <FavDropdown
-                    favorites={favorites}
-                    loading={favLoading}
-                    onClose={() => setFavOpen(false)}
-                    navigate={navigate}
-                  />
-                )}
-              </AnimatePresence>
-            </div>
-
             {/* Notifications (mobile) */}
             <div className="relative">
               <button
