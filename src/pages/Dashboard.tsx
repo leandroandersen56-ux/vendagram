@@ -61,6 +61,7 @@ export default function Dashboard() {
   const [transactions, setTransactions] = useState<any[]>([]);
   const [disputes, setDisputes] = useState<any[]>([]);
   const [withdrawals, setWithdrawals] = useState<any[]>([]);
+  const [verifications, setVerifications] = useState<any[]>([]);
   const [searchUser, setSearchUser] = useState("");
   const [chartData, setChartData] = useState<any[]>([]);
 
