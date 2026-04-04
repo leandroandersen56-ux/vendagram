@@ -232,7 +232,7 @@ export default function CreateListing() {
     if (error) {
       toast({ title: "Erro ao criar anúncio", description: error.message, variant: "destructive" });
     } else {
-      toast({ title: "Anúncio publicado! 🎉" });
+      toast({ title: "Anúncio publicado!" });
       navigate("/painel/anuncios");
     }
   };
