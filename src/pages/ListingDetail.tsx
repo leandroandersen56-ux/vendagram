@@ -205,42 +205,42 @@ export default function ListingDetail() {
                   verified={sellerSales >= 5}
                 />
 
-                {/* Favorite + Share bar (mobile) */}
-                <div className="lg:hidden flex items-center justify-end gap-2 -mt-2">
-                  <button onClick={handleShare} className="p-2 rounded-full hover:bg-[hsl(var(--muted))] transition-colors" aria-label="Compartilhar">
-                    <Share2 className="h-5 w-5 text-[hsl(var(--txt-secondary))]" />
-                  </button>
-                  <motion.button
-                    onClick={() => {
-                      if (!isAuthenticated) { openAuth(); return; }
-                      if (id) toggleFavorite(id);
-                    }}
-                    className="p-2 rounded-full hover:bg-[hsl(var(--muted))] transition-colors"
-                    aria-label={favorited ? "Remover dos favoritos" : "Adicionar aos favoritos"}
-                    whileTap={{ scale: 1.3 }}
-                    transition={{ type: "spring", stiffness: 500, damping: 15 }}
-                  >
-                    <Heart className={`h-5 w-5 ${favorited ? "fill-red-500 text-red-500" : "text-[hsl(var(--txt-secondary))]"}`} />
-                  </motion.button>
-                </div>
-
                 <div className="lg:hidden bg-white rounded-xl border border-[hsl(var(--border))] overflow-hidden">
                   {/* Info */}
                   <div className="p-4 pb-0">
-                    <div className="flex flex-wrap items-center gap-1.5 mb-2">
-                      <span className={`text-[10px] font-semibold px-2 py-0.5 rounded ${PLATFORM_BADGE_COLORS[listing.category] || "bg-[hsl(var(--muted))] text-[hsl(var(--txt-primary))]"}`}>
-                        {platform.name.toUpperCase()}
-                      </span>
-                      {sellerSales >= 5 && (
-                        <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-[hsl(var(--success-light))] text-[hsl(var(--success))]">
-                          VERIFICADO
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex flex-wrap items-center gap-1.5 mb-2 flex-1">
+                        <span className={`text-[10px] font-semibold px-2 py-0.5 rounded ${PLATFORM_BADGE_COLORS[listing.category] || "bg-[hsl(var(--muted))] text-[hsl(var(--txt-primary))]"}`}>
+                          {platform.name.toUpperCase()}
                         </span>
-                      )}
-                      {sellerSales >= 15 && (
-                        <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-[hsl(var(--hot-light))] text-[hsl(var(--hot))]">
-                          MAIS VENDIDO
-                        </span>
-                      )}
+                        {sellerSales >= 5 && (
+                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-[hsl(var(--success-light))] text-[hsl(var(--success))]">
+                            VERIFICADO
+                          </span>
+                        )}
+                        {sellerSales >= 15 && (
+                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-[hsl(var(--hot-light))] text-[hsl(var(--hot))]">
+                            MAIS VENDIDO
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-1 -mt-1 -mr-1 shrink-0">
+                        <button onClick={handleShare} className="p-1.5 rounded-full hover:bg-[hsl(var(--muted))] transition-colors" aria-label="Compartilhar">
+                          <Share2 className="h-4.5 w-4.5 text-[hsl(var(--txt-hint))]" />
+                        </button>
+                        <motion.button
+                          onClick={() => {
+                            if (!isAuthenticated) { openAuth(); return; }
+                            if (id) toggleFavorite(id);
+                          }}
+                          className="p-1.5 rounded-full hover:bg-[hsl(var(--muted))] transition-colors"
+                          aria-label={favorited ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+                          whileTap={{ scale: 1.3 }}
+                          transition={{ type: "spring", stiffness: 500, damping: 15 }}
+                        >
+                          <Heart className={`h-4.5 w-4.5 ${favorited ? "fill-red-500 text-red-500" : "text-[hsl(var(--txt-hint))]"}`} />
+                        </motion.button>
+                      </div>
                     </div>
                     <h1 className="text-lg font-semibold text-[hsl(var(--txt-primary))] leading-snug">{listing.title}</h1>
                     <div className="flex items-center flex-wrap gap-x-2 gap-y-1 mt-2 text-[13px]">
