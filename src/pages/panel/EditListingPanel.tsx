@@ -369,7 +369,7 @@ export default function EditListingPanel() {
                         : "bg-card border-border text-muted-foreground hover:border-primary/30"
                     }`}
                   >
-                    {on ? "✅" : "○"} {f}
+                    {on ? "●" : "○"} {f}
                   </button>
                 );
               })}
