@@ -64,7 +64,7 @@ export default function Footer() {
     <footer className="border-t border-border bg-card">
       {/* Mobile */}
       <div className="sm:hidden pb-16">
-        <div className="px-4 py-6 space-y-4">
+        <div className="px-4 py-6 space-y-6">
           <div className="flex items-center justify-center">
             <img src={logoFroiv} alt="Froiv" className="h-8" />
           </div>
