@@ -552,9 +552,51 @@ export default function CreateListing() {
           </div>
         </div>
 
+        {/* ── Credenciais para entrega automática ── */}
+        <div className="space-y-3 bg-primary/5 border border-primary/20 rounded-xl p-4">
+          <div className="flex items-center gap-2 mb-1">
+            <Lock className="h-4 w-4 text-primary" />
+            <Label className="text-foreground text-xs uppercase tracking-wide font-semibold">Dados de acesso da conta *</Label>
+          </div>
+          <p className="text-[12px] text-muted-foreground -mt-1">
+            Preencha os acessos. Serão entregues automaticamente ao comprador após o pagamento.
+          </p>
+
+          <div className="grid grid-cols-1 gap-3">
+            <div className="space-y-1">
+              <label className="text-[11px] text-muted-foreground uppercase font-medium">Login / Usuário *</label>
+              <Input value={credLogin} onChange={(e) => setCredLogin(e.target.value)} placeholder="ex: @usuario_conta" className="bg-card border-border" />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[11px] text-muted-foreground uppercase font-medium">Senha *</label>
+              <Input type="password" value={credPassword} onChange={(e) => setCredPassword(e.target.value)} placeholder="Senha da conta" className="bg-card border-border" />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[11px] text-muted-foreground uppercase font-medium">Email vinculado</label>
+              <Input value={credEmail} onChange={(e) => setCredEmail(e.target.value)} placeholder="email@exemplo.com (opcional)" className="bg-card border-border" />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[11px] text-muted-foreground uppercase font-medium">Código 2FA</label>
+              <Input value={cred2fa} onChange={(e) => setCred2fa(e.target.value)} placeholder="JBSWY3DPEHPK3PXP (opcional)" className="bg-card border-border font-mono" />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[11px] text-muted-foreground uppercase font-medium">Observações</label>
+              <Textarea value={credNotes} onChange={(e) => setCredNotes(e.target.value)} placeholder="Ex: Troque a senha imediatamente" className="bg-card border-border min-h-[50px]" />
+            </div>
+          </div>
+
+          <div className="flex items-start gap-2 bg-[#FFF8E0] rounded-lg p-3">
+            <ShieldCheck className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+            <p className="text-[11px] text-muted-foreground">
+              Os dados são criptografados e só serão revelados ao comprador após a confirmação do pagamento. 
+              O valor é liberado em <strong>24h</strong> automaticamente ou quando o comprador confirmar.
+            </p>
+          </div>
+        </div>
+
         {/* ── Descrição extra ── */}
         <div className="space-y-1.5">
-          <Label className="text-muted-foreground text-xs uppercase tracking-wide">Observações (opcional)</Label>
+          <Label className="text-muted-foreground text-xs uppercase tracking-wide">Observações públicas (opcional)</Label>
           <Textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
