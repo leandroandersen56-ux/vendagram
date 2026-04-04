@@ -366,11 +366,12 @@ export default function ListingDetail() {
                     <div className="mx-4 my-3 border-t border-[hsl(var(--border))]" />
 
                     {/* BuyBox inline */}
-                    <div ref={buyBoxRef}>
+                    <div ref={buyBoxRef} className="px-4 pb-4">
                       <BuyBox
                         price={listing.price}
                         originalPrice={originalPrice}
                         onBuy={handleBuy}
+                        inline
                       />
                     </div>
                   </div>
