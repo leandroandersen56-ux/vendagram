@@ -141,6 +141,16 @@ export default function ListingDetail() {
   };
 
   const handleBuy = () => {
+    if (listing) {
+      addToCart({
+        listingId: listing.id,
+        title: listing.title,
+        price: Number(listing.price),
+        category: listing.category,
+        screenshot: listing.screenshots?.[0] || undefined,
+      });
+      toast.success("Adicionado ao carrinho!");
+    }
     if (isAuthenticated) {
       navigate(`/checkout/${listing.id}`);
     } else {
