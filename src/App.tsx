@@ -39,6 +39,7 @@ import HelpPage from "./pages/HelpPage.tsx";
 import SearchResults from "./pages/SearchResults.tsx";
 import SellerProfile from "./pages/SellerProfile.tsx";
 import ViewHistory from "./pages/ViewHistory.tsx";
+import AuthCallback from "./pages/AuthCallback.tsx";
 
 const queryClient = new QueryClient();
 
@@ -79,6 +80,7 @@ function AppRoutes() {
         <Route path="/ajuda" element={<HelpPage />} />
         <Route path="/busca" element={<SearchResults />} />
         <Route path="/perfil/:username" element={<SellerProfile />} />
+        <Route path="/auth/callback" element={<AuthCallback />} />
 
         {/* User pages (protected) */}
         <Route path="/compras" element={<ProtectedRoute><Purchases /></ProtectedRoute>} />

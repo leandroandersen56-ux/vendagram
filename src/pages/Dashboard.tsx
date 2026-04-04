@@ -1,242 +1,249 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   BarChart3, Users, ShoppingBag, AlertTriangle, DollarSign,
   TrendingUp, ArrowUpRight, ArrowDownRight, Shield, Search,
-  Ban, Eye, Settings, Percent
+  Ban, Eye, Settings, Percent, CheckCircle2, Loader2, Wallet,
+  ChevronRight, XCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { formatBRL } from "@/lib/mock-data";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer, LineChart, Line, AreaChart, Area
+  AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid,
+  Tooltip, ResponsiveContainer
 } from "recharts";
 
-const chartData = [
-  { month: 'Jan', transactions: 45, revenue: 4500 },
-  { month: 'Fev', transactions: 62, revenue: 6200 },
-  { month: 'Mar', transactions: 78, revenue: 7800 },
-  { month: 'Abr', transactions: 95, revenue: 9500 },
-  { month: 'Mai', transactions: 110, revenue: 11000 },
-  { month: 'Jun', transactions: 145, revenue: 14500 },
-];
-
-const mockUsers = [
-  { id: '1', name: 'GameMaster99', email: 'gm99@email.com', role: 'seller', sales: 23, status: 'active', rating: 4.8 },
-  { id: '2', name: 'SocialSeller', email: 'ss@email.com', role: 'seller', sales: 12, status: 'active', rating: 4.5 },
-  { id: '3', name: 'Buyer001', email: 'b1@email.com', role: 'buyer', sales: 0, status: 'active', rating: 4.9 },
-  { id: '4', name: 'FlaggedUser', email: 'fu@email.com', role: 'seller', sales: 2, status: 'banned', rating: 2.1 },
-];
-
-const mockTransactions = [
-  { id: 'TX001', listing: 'Conta FF Nível 75', buyer: 'Buyer001', seller: 'GameMaster99', amount: 350, status: 'completed', date: '2024-03-20' },
-  { id: 'TX002', listing: 'Instagram 50K', buyer: 'Buyer002', seller: 'SocialSeller', amount: 1200, status: 'transfer_in_progress', date: '2024-03-21' },
-  { id: 'TX003', listing: 'TikTok 100K', buyer: 'Buyer003', seller: 'TikTokPro', amount: 2500, status: 'disputed', date: '2024-03-22' },
-  { id: 'TX004', listing: 'Valorant Imortal', buyer: 'Buyer004', seller: 'ValPlayer', amount: 800, status: 'pending_payment', date: '2024-03-23' },
-];
-
 const statusColors: Record<string, string> = {
-  completed: 'bg-success/10 text-success',
-  transfer_in_progress: 'bg-warning/10 text-warning',
-  disputed: 'bg-destructive/10 text-destructive',
-  pending_payment: 'bg-muted text-muted-foreground',
-  credentials_pending: 'bg-info/10 text-info',
-  cancelled: 'bg-muted text-muted-foreground',
-  active: 'bg-success/10 text-success',
-  banned: 'bg-destructive/10 text-destructive',
+  completed: "bg-success/10 text-success",
+  transfer_in_progress: "bg-warning/10 text-warning",
+  disputed: "bg-destructive/10 text-destructive",
+  pending_payment: "bg-muted text-muted-foreground",
+  paid: "bg-primary/10 text-primary",
+  cancelled: "bg-muted text-muted-foreground",
+  refunded: "bg-warning/10 text-warning",
+  open: "bg-destructive/10 text-destructive",
+  under_review: "bg-warning/10 text-warning",
+  resolved: "bg-success/10 text-success",
+  closed: "bg-muted text-muted-foreground",
+  pending: "bg-warning/10 text-warning",
+  processing: "bg-primary/10 text-primary",
+  processed: "bg-success/10 text-success",
+  rejected: "bg-destructive/10 text-destructive",
+};
+
+const statusLabels: Record<string, string> = {
+  completed: "Concluída", transfer_in_progress: "Transferindo",
+  disputed: "Disputada", pending_payment: "Aguardando pagamento",
+  paid: "Pago", cancelled: "Cancelada", refunded: "Reembolsada",
+  open: "Aberta", under_review: "Em análise", resolved: "Resolvida", closed: "Fechada",
+  pending: "Pendente", processing: "Processando", processed: "Processado", rejected: "Rejeitado",
 };
 
 export default function Dashboard() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [tab, setTab] = useState("overview");
+  const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
 
-  const kpis = [
-    { label: "Transações", value: "1,247", change: "+12%", up: true, icon: <ShoppingBag className="h-5 w-5" /> },
-    { label: "Volume (BRL)", value: "R$ 2.4M", change: "+18%", up: true, icon: <DollarSign className="h-5 w-5" /> },
-    { label: "Receita Plataforma", value: "R$ 240K", change: "+15%", up: true, icon: <TrendingUp className="h-5 w-5" /> },
-    { label: "Disputas Ativas", value: "3", change: "-25%", up: false, icon: <AlertTriangle className="h-5 w-5" /> },
+  // Data
+  const [kpis, setKpis] = useState({ users: 0, volume: 0, platformFee: 0, disputes: 0, escrow: 0 });
+  const [users, setUsers] = useState<any[]>([]);
+  const [transactions, setTransactions] = useState<any[]>([]);
+  const [disputes, setDisputes] = useState<any[]>([]);
+  const [withdrawals, setWithdrawals] = useState<any[]>([]);
+  const [searchUser, setSearchUser] = useState("");
+  const [chartData, setChartData] = useState<any[]>([]);
+
+  useEffect(() => {
+    checkAdmin();
+  }, [user?.id]);
+
+  const checkAdmin = async () => {
+    if (!user?.id) return;
+    const { data } = await supabase.from("user_roles").select("role").eq("user_id", user.id).eq("role", "admin");
+    if (!data || data.length === 0) { navigate("/"); return; }
+    setIsAdmin(true);
+    loadAll();
+  };
+
+  const loadAll = async () => {
+    setLoading(true);
+    const [profilesRes, txRes, disputesRes, walletsRes, withdrawalsRes] = await Promise.all([
+      supabase.from("profiles").select("*").order("created_at", { ascending: false }),
+      supabase.from("transactions").select("*, listings(title)").order("created_at", { ascending: false }).limit(100),
+      supabase.from("disputes").select("*, transactions(amount, listings(title)), profiles!disputes_opened_by_fkey(name)").order("created_at", { ascending: false }),
+      supabase.from("wallets").select("pending"),
+      supabase.from("withdrawals").select("*, profiles!withdrawals_user_id_fkey(name, email)").order("created_at", { ascending: false }),
+    ]);
+
+    const allUsers = profilesRes.data || [];
+    const allTx = txRes.data || [];
+    const allDisputes = disputesRes.data || [];
+    const allWallets = walletsRes.data || [];
+    const allWithdrawals = withdrawalsRes.data || [];
+
+    const completedTx = allTx.filter((t: any) => t.status === "completed");
+    const volume = completedTx.reduce((s: number, t: any) => s + Number(t.amount), 0);
+    const fees = completedTx.reduce((s: number, t: any) => s + Number(t.platform_fee), 0);
+    const escrow = allWallets.reduce((s: number, w: any) => s + Number(w.pending || 0), 0);
+    const openDisputes = allDisputes.filter((d: any) => d.status === "open" || d.status === "under_review").length;
+
+    setKpis({ users: allUsers.length, volume, platformFee: fees, disputes: openDisputes, escrow });
+    setUsers(allUsers);
+    setTransactions(allTx);
+    setDisputes(allDisputes);
+    setWithdrawals(allWithdrawals);
+
+    // Chart: group transactions by month
+    const monthMap: Record<string, { transactions: number; revenue: number }> = {};
+    allTx.forEach((t: any) => {
+      const m = new Date(t.created_at).toLocaleDateString("pt-BR", { month: "short" });
+      if (!monthMap[m]) monthMap[m] = { transactions: 0, revenue: 0 };
+      monthMap[m].transactions++;
+      if (t.status === "completed") monthMap[m].revenue += Number(t.amount);
+    });
+    setChartData(Object.entries(monthMap).map(([month, v]) => ({ month, ...v })).slice(-6));
+    setLoading(false);
+  };
+
+  const handleReleaseEscrow = async (txId: string) => {
+    const { error } = await supabase.functions.invoke("release-escrow", { body: { transaction_id: txId } });
+    if (error) toast.error("Erro ao liberar escrow");
+    else { toast.success("Escrow liberado!"); loadAll(); }
+  };
+
+  const handleProcessWithdrawal = async (wId: string) => {
+    const { error } = await supabase.functions.invoke("process-withdrawal", { body: { withdrawal_id: wId } });
+    if (error) toast.error("Erro ao processar saque");
+    else { toast.success("Saque processado!"); loadAll(); }
+  };
+
+  const filteredUsers = users.filter((u: any) =>
+    !searchUser || (u.name || "").toLowerCase().includes(searchUser.toLowerCase()) || (u.email || "").toLowerCase().includes(searchUser.toLowerCase())
+  );
+
+  if (!isAdmin || loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <div className="flex items-center justify-center pt-40">
+          <Loader2 className="h-6 w-6 animate-spin text-primary" />
+        </div>
+      </div>
+    );
+  }
+
+  const kpiCards = [
+    { label: "Usuários", value: String(kpis.users), icon: <Users className="h-5 w-5" />, color: "text-primary" },
+    { label: "Volume Total", value: `R$ ${kpis.volume.toLocaleString("pt-BR")}`, icon: <DollarSign className="h-5 w-5" />, color: "text-success" },
+    { label: "Receita Plataforma", value: `R$ ${kpis.platformFee.toLocaleString("pt-BR")}`, icon: <TrendingUp className="h-5 w-5" />, color: "text-primary" },
+    { label: "Em Escrow", value: `R$ ${kpis.escrow.toLocaleString("pt-BR")}`, icon: <Shield className="h-5 w-5" />, color: "text-warning" },
+    { label: "Disputas Abertas", value: String(kpis.disputes), icon: <AlertTriangle className="h-5 w-5" />, color: kpis.disputes > 0 ? "text-destructive" : "text-success" },
   ];
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <div className="container mx-auto px-4 pt-24 pb-16">
+      <div className="container mx-auto px-4 pt-20 pb-16">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-2xl font-display font-bold text-foreground">Admin Dashboard</h1>
-              <p className="text-muted-foreground text-sm">Visão geral da plataforma</p>
+              <h1 className="text-2xl font-bold text-foreground">Admin Dashboard</h1>
+              <p className="text-muted-foreground text-sm">Visão geral da plataforma Froiv</p>
             </div>
-            <Button variant="glass" size="sm">
-              <Settings className="h-4 w-4 mr-2" /> Configurações
-            </Button>
           </div>
 
-          {/* KPI Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            {kpis.map((kpi) => (
-              <Card key={kpi.label} className="bg-card border-border p-5">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="text-xs text-muted-foreground mb-1">{kpi.label}</p>
-                    <p className="text-2xl font-bold text-foreground">{kpi.value}</p>
-                    <div className={`flex items-center gap-1 text-xs mt-2 ${kpi.up ? 'text-success' : 'text-destructive'}`}>
-                      {kpi.up ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}
-                      {kpi.change} vs mês anterior
-                    </div>
-                  </div>
-                  <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                    {kpi.icon}
-                  </div>
-                </div>
+          {/* KPIs */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-6">
+            {kpiCards.map((k) => (
+              <Card key={k.label} className="bg-card border-border p-4">
+                <div className={`h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center ${k.color} mb-2`}>{k.icon}</div>
+                <p className="text-xl font-bold text-foreground">{k.value}</p>
+                <p className="text-xs text-muted-foreground">{k.label}</p>
               </Card>
             ))}
           </div>
 
-          {/* Tabs */}
           <Tabs value={tab} onValueChange={setTab}>
-            <TabsList className="bg-card border border-border mb-6">
+            <TabsList className="bg-card border border-border mb-6 flex-wrap">
               <TabsTrigger value="overview">Visão Geral</TabsTrigger>
               <TabsTrigger value="users">Usuários</TabsTrigger>
               <TabsTrigger value="transactions">Transações</TabsTrigger>
-              <TabsTrigger value="disputes">Disputas</TabsTrigger>
+              <TabsTrigger value="disputes">Disputas {kpis.disputes > 0 && <Badge className="bg-destructive text-white ml-1 text-[10px] h-4 px-1">{kpis.disputes}</Badge>}</TabsTrigger>
+              <TabsTrigger value="withdrawals">Saques</TabsTrigger>
             </TabsList>
 
+            {/* Overview */}
             <TabsContent value="overview">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <Card className="bg-card border-border p-6">
                   <h3 className="font-semibold text-foreground mb-4">Transações por Mês</h3>
                   <ResponsiveContainer width="100%" height={250}>
                     <AreaChart data={chartData}>
-                      <defs>
-                        <linearGradient id="colorTx" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="hsl(263, 70%, 50%)" stopOpacity={0.3} />
-                          <stop offset="95%" stopColor="hsl(263, 70%, 50%)" stopOpacity={0} />
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(240, 8%, 18%)" />
-                      <XAxis dataKey="month" stroke="hsl(220, 10%, 55%)" fontSize={12} />
-                      <YAxis stroke="hsl(220, 10%, 55%)" fontSize={12} />
-                      <Tooltip contentStyle={{ background: 'hsl(240, 10%, 10%)', border: '1px solid hsl(240, 8%, 18%)', borderRadius: '8px', color: 'hsl(220, 20%, 95%)' }} />
-                      <Area type="monotone" dataKey="transactions" stroke="hsl(263, 70%, 50%)" fill="url(#colorTx)" strokeWidth={2} />
+                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                      <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" fontSize={12} />
+                      <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
+                      <Tooltip />
+                      <Area type="monotone" dataKey="transactions" stroke="hsl(var(--primary))" fill="hsl(var(--primary) / 0.1)" strokeWidth={2} />
                     </AreaChart>
                   </ResponsiveContainer>
                 </Card>
-
                 <Card className="bg-card border-border p-6">
                   <h3 className="font-semibold text-foreground mb-4">Receita por Mês (R$)</h3>
                   <ResponsiveContainer width="100%" height={250}>
                     <BarChart data={chartData}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(240, 8%, 18%)" />
-                      <XAxis dataKey="month" stroke="hsl(220, 10%, 55%)" fontSize={12} />
-                      <YAxis stroke="hsl(220, 10%, 55%)" fontSize={12} />
-                      <Tooltip contentStyle={{ background: 'hsl(240, 10%, 10%)', border: '1px solid hsl(240, 8%, 18%)', borderRadius: '8px', color: 'hsl(220, 20%, 95%)' }} />
-                      <Bar dataKey="revenue" fill="hsl(187, 94%, 43%)" radius={[4, 4, 0, 0]} />
+                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                      <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" fontSize={12} />
+                      <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
+                      <Tooltip />
+                      <Bar dataKey="revenue" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
-                </Card>
-
-                {/* Quick settings */}
-                <Card className="bg-card border-border p-6">
-                  <h3 className="font-semibold text-foreground mb-4">Configurações Rápidas</h3>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Percent className="h-4 w-4 text-primary" />
-                        <span className="text-sm text-foreground">Taxa da Plataforma</span>
-                      </div>
-                      <Badge className="bg-primary/10 text-primary border-0">10%</Badge>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Shield className="h-4 w-4 text-success" />
-                        <span className="text-sm text-foreground">Modo Manutenção</span>
-                      </div>
-                      <Badge className="bg-success/10 text-success border-0">Desativado</Badge>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Users className="h-4 w-4 text-info" />
-                        <span className="text-sm text-foreground">Novos Usuários Hoje</span>
-                      </div>
-                      <Badge className="bg-info/10 text-info border-0">14</Badge>
-                    </div>
-                  </div>
-                </Card>
-
-                {/* Top categories */}
-                <Card className="bg-card border-border p-6">
-                  <h3 className="font-semibold text-foreground mb-4">Top Categorias</h3>
-                  <div className="space-y-3">
-                    {[
-                      { name: 'Free Fire', pct: 35, color: 'bg-orange-500' },
-                      { name: 'Instagram', pct: 28, color: 'bg-pink-500' },
-                      { name: 'TikTok', pct: 20, color: 'bg-cyan-400' },
-                      { name: 'Valorant', pct: 12, color: 'bg-red-500' },
-                      { name: 'Outros', pct: 5, color: 'bg-primary' },
-                    ].map((cat) => (
-                      <div key={cat.name} className="space-y-1">
-                        <div className="flex justify-between text-sm">
-                          <span className="text-foreground">{cat.name}</span>
-                          <span className="text-muted-foreground">{cat.pct}%</span>
-                        </div>
-                        <div className="h-2 bg-muted rounded-full overflow-hidden">
-                          <div className={`h-full ${cat.color} rounded-full transition-all`} style={{ width: `${cat.pct}%` }} />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
                 </Card>
               </div>
             </TabsContent>
 
+            {/* Users */}
             <TabsContent value="users">
               <Card className="bg-card border-border">
                 <div className="p-4 border-b border-border">
-                  <div className="flex items-center gap-3">
-                    <div className="relative flex-1 max-w-sm">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                      <Input placeholder="Buscar usuários..." className="pl-10 bg-muted border-border" />
-                    </div>
+                  <div className="relative max-w-sm">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input placeholder="Buscar por nome ou email..." value={searchUser} onChange={(e) => setSearchUser(e.target.value)} className="pl-10 bg-muted border-border" />
                   </div>
                 </div>
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead>
                       <tr className="border-b border-border">
-                        <th className="text-left p-4 text-xs text-muted-foreground font-medium">Usuário</th>
-                        <th className="text-left p-4 text-xs text-muted-foreground font-medium">Função</th>
-                        <th className="text-left p-4 text-xs text-muted-foreground font-medium">Vendas</th>
-                        <th className="text-left p-4 text-xs text-muted-foreground font-medium">Rating</th>
-                        <th className="text-left p-4 text-xs text-muted-foreground font-medium">Status</th>
-                        <th className="text-left p-4 text-xs text-muted-foreground font-medium">Ações</th>
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">Usuário</th>
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">Vendas</th>
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">Rating</th>
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">Verificado</th>
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">Desde</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {mockUsers.map((user) => (
-                        <tr key={user.id} className="border-b border-border/50 hover:bg-muted/20 transition-colors">
-                          <td className="p-4">
-                            <div>
-                              <p className="text-sm font-medium text-foreground">{user.name}</p>
-                              <p className="text-xs text-muted-foreground">{user.email}</p>
-                            </div>
+                      {filteredUsers.slice(0, 50).map((u: any) => (
+                        <tr key={u.id} className="border-b border-border/50 hover:bg-muted/20">
+                          <td className="p-3">
+                            <p className="text-sm font-medium text-foreground">{u.name || "Sem nome"}</p>
+                            <p className="text-xs text-muted-foreground">{u.email}</p>
                           </td>
-                          <td className="p-4"><Badge className="bg-muted text-muted-foreground border-0 text-xs capitalize">{user.role}</Badge></td>
-                          <td className="p-4 text-sm text-foreground">{user.sales}</td>
-                          <td className="p-4 text-sm text-foreground">⭐ {user.rating}</td>
-                          <td className="p-4"><Badge className={`${statusColors[user.status]} border-0 text-xs capitalize`}>{user.status}</Badge></td>
-                          <td className="p-4">
-                            <div className="flex gap-1">
-                              <Button variant="ghost" size="icon" className="h-8 w-8"><Eye className="h-3 w-3" /></Button>
-                              <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive"><Ban className="h-3 w-3" /></Button>
-                            </div>
-                          </td>
+                          <td className="p-3 text-sm text-foreground">{u.total_sales || 0}</td>
+                          <td className="p-3 text-sm text-foreground">⭐ {(u.avg_rating || 0).toFixed(1)}</td>
+                          <td className="p-3">{u.is_verified ? <CheckCircle2 className="h-4 w-4 text-success" /> : <XCircle className="h-4 w-4 text-muted-foreground/40" />}</td>
+                          <td className="p-3 text-xs text-muted-foreground">{new Date(u.created_at).toLocaleDateString("pt-BR")}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -245,44 +252,36 @@ export default function Dashboard() {
               </Card>
             </TabsContent>
 
+            {/* Transactions */}
             <TabsContent value="transactions">
               <Card className="bg-card border-border">
-                <div className="p-4 border-b border-border flex gap-3">
-                  <Select defaultValue="all">
-                    <SelectTrigger className="w-48 bg-muted border-border">
-                      <SelectValue placeholder="Status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Todos</SelectItem>
-                      <SelectItem value="completed">Concluídas</SelectItem>
-                      <SelectItem value="transfer_in_progress">Em progresso</SelectItem>
-                      <SelectItem value="disputed">Disputadas</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead>
                       <tr className="border-b border-border">
-                        <th className="text-left p-4 text-xs text-muted-foreground font-medium">ID</th>
-                        <th className="text-left p-4 text-xs text-muted-foreground font-medium">Anúncio</th>
-                        <th className="text-left p-4 text-xs text-muted-foreground font-medium">Comprador</th>
-                        <th className="text-left p-4 text-xs text-muted-foreground font-medium">Vendedor</th>
-                        <th className="text-left p-4 text-xs text-muted-foreground font-medium">Valor</th>
-                        <th className="text-left p-4 text-xs text-muted-foreground font-medium">Status</th>
-                        <th className="text-left p-4 text-xs text-muted-foreground font-medium">Data</th>
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">ID</th>
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">Anúncio</th>
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">Valor</th>
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">Taxa</th>
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">Status</th>
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">Data</th>
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">Ações</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {mockTransactions.map((tx) => (
-                        <tr key={tx.id} className="border-b border-border/50 hover:bg-muted/20 transition-colors">
-                          <td className="p-4 text-xs text-primary font-mono">{tx.id}</td>
-                          <td className="p-4 text-sm text-foreground">{tx.listing}</td>
-                          <td className="p-4 text-sm text-foreground">{tx.buyer}</td>
-                          <td className="p-4 text-sm text-foreground">{tx.seller}</td>
-                          <td className="p-4 text-sm text-foreground font-medium">{formatBRL(tx.amount)}</td>
-                          <td className="p-4"><Badge className={`${statusColors[tx.status]} border-0 text-xs`}>{tx.status.replace(/_/g, ' ')}</Badge></td>
-                          <td className="p-4 text-xs text-muted-foreground">{tx.date}</td>
+                      {transactions.slice(0, 50).map((tx: any) => (
+                        <tr key={tx.id} className="border-b border-border/50 hover:bg-muted/20">
+                          <td className="p-3 text-xs text-primary font-mono">{tx.id.slice(0, 8)}</td>
+                          <td className="p-3 text-sm text-foreground">{tx.listings?.title || "—"}</td>
+                          <td className="p-3 text-sm font-medium text-foreground">R$ {Number(tx.amount).toFixed(2)}</td>
+                          <td className="p-3 text-xs text-muted-foreground">R$ {Number(tx.platform_fee).toFixed(2)}</td>
+                          <td className="p-3"><Badge className={`${statusColors[tx.status] || "bg-muted text-muted-foreground"} border-0 text-xs`}>{statusLabels[tx.status] || tx.status}</Badge></td>
+                          <td className="p-3 text-xs text-muted-foreground">{new Date(tx.created_at).toLocaleDateString("pt-BR")}</td>
+                          <td className="p-3">
+                            {tx.status === "paid" && (
+                              <Button size="sm" variant="outline" className="text-xs h-7" onClick={() => handleReleaseEscrow(tx.id)}>Liberar</Button>
+                            )}
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -291,27 +290,82 @@ export default function Dashboard() {
               </Card>
             </TabsContent>
 
+            {/* Disputes */}
             <TabsContent value="disputes">
-              <Card className="bg-card border-border p-6">
-                <div className="flex items-center gap-3 mb-6">
-                  <AlertTriangle className="h-5 w-5 text-destructive" />
-                  <h3 className="font-semibold text-foreground">Disputas Ativas</h3>
-                  <Badge className="bg-destructive/10 text-destructive border-0">1</Badge>
+              <Card className="bg-card border-border">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-border">
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">ID</th>
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">Descrição</th>
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">Valor</th>
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">Status</th>
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">Aberta em</th>
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">Ações</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {disputes.length === 0 ? (
+                        <tr><td colSpan={6} className="p-8 text-center text-muted-foreground text-sm">Nenhuma disputa encontrada</td></tr>
+                      ) : disputes.map((d: any) => (
+                        <tr key={d.id} className="border-b border-border/50 hover:bg-muted/20">
+                          <td className="p-3 text-xs text-primary font-mono">{d.id.slice(0, 8)}</td>
+                          <td className="p-3 text-sm text-foreground max-w-[200px] truncate">{d.description}</td>
+                          <td className="p-3 text-sm text-foreground">R$ {Number(d.transactions?.amount || 0).toFixed(2)}</td>
+                          <td className="p-3"><Badge className={`${statusColors[d.status] || ""} border-0 text-xs`}>{statusLabels[d.status] || d.status}</Badge></td>
+                          <td className="p-3 text-xs text-muted-foreground">{new Date(d.created_at).toLocaleDateString("pt-BR")}</td>
+                          <td className="p-3">
+                            {(d.status === "open" || d.status === "under_review") && (
+                              <div className="flex gap-1">
+                                <Button size="sm" variant="outline" className="text-xs h-7" onClick={() => handleReleaseEscrow(d.transaction_id)}>Liberar vendedor</Button>
+                              </div>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
-                <div className="space-y-4">
-                  <div className="p-4 bg-muted/30 border border-destructive/20 rounded-lg">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <p className="font-medium text-foreground text-sm">TX003 — TikTok 100K</p>
-                        <p className="text-xs text-muted-foreground mt-1">Aberta por: Buyer003 · Motivo: "Conta com seguidores falsos"</p>
-                        <p className="text-xs text-muted-foreground">Data: 2024-03-22</p>
-                      </div>
-                      <div className="flex gap-2">
-                        <Button size="sm" variant="hero" className="text-xs h-8">Resolver</Button>
-                        <Button size="sm" variant="glass" className="text-xs h-8">Ver Detalhes</Button>
-                      </div>
-                    </div>
-                  </div>
+              </Card>
+            </TabsContent>
+
+            {/* Withdrawals */}
+            <TabsContent value="withdrawals">
+              <Card className="bg-card border-border">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-border">
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">ID</th>
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">Usuário</th>
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">Valor</th>
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">Chave Pix</th>
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">Status</th>
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">Data</th>
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">Ações</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {withdrawals.length === 0 ? (
+                        <tr><td colSpan={7} className="p-8 text-center text-muted-foreground text-sm">Nenhum saque encontrado</td></tr>
+                      ) : withdrawals.map((w: any) => (
+                        <tr key={w.id} className="border-b border-border/50 hover:bg-muted/20">
+                          <td className="p-3 text-xs text-primary font-mono">{w.id.slice(0, 8)}</td>
+                          <td className="p-3 text-sm text-foreground">{w.profiles?.name || w.profiles?.email || "—"}</td>
+                          <td className="p-3 text-sm font-medium text-foreground">R$ {Number(w.amount).toFixed(2)}</td>
+                          <td className="p-3 text-xs text-muted-foreground font-mono">{w.pix_key}</td>
+                          <td className="p-3"><Badge className={`${statusColors[w.status] || ""} border-0 text-xs`}>{statusLabels[w.status] || w.status}</Badge></td>
+                          <td className="p-3 text-xs text-muted-foreground">{new Date(w.created_at).toLocaleDateString("pt-BR")}</td>
+                          <td className="p-3">
+                            {w.status === "pending" && (
+                              <Button size="sm" variant="hero" className="text-xs h-7" onClick={() => handleProcessWithdrawal(w.id)}>Processar</Button>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </Card>
             </TabsContent>
