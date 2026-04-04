@@ -47,7 +47,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
           {/* Platform badge - top left */}
           <div className={`absolute top-2 left-2 ${badge.bg} rounded-[4px] px-2 py-0.5 flex items-center gap-1`}>
             <PlatformIcon platformId={listing.platform} size={10} className="brightness-0 invert" />
-            <span className={`text-[10px] font-bold ${badge.text} uppercase leading-none`}>{platform.name}</span>
+            <span className={`text-[10px] font-semibold ${badge.text} uppercase leading-none`}>{platform.name}</span>
           </div>
         </div>
 
@@ -68,7 +68,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
 
           {/* Price */}
           <div className="mt-2">
-            <p className="text-[16px] font-extrabold text-txt-primary leading-none tracking-tight">
+            <p className="text-[16px] font-semibold text-txt-primary leading-none tracking-tight">
               {formatBRL(listing.price)}
             </p>
           </div>

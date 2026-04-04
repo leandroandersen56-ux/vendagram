@@ -42,7 +42,7 @@ export default function Footer() {
               </div>
             </div>
             <div>
-              <h4 className="font-bold text-[12px] text-txt-primary mb-4 uppercase tracking-wider">Plataforma</h4>
+              <h4 className="font-semibold text-[12px] text-txt-primary mb-4 uppercase tracking-wider">Plataforma</h4>
               <div className="flex flex-col gap-2.5 text-[12px] text-txt-secondary">
                 <Link to="/marketplace" className="hover:text-primary transition-colors">Marketplace</Link>
                 <Link to="/painel/anuncios/novo" className="hover:text-primary transition-colors">Vender Conta</Link>
@@ -50,7 +50,7 @@ export default function Footer() {
               </div>
             </div>
             <div>
-              <h4 className="font-bold text-[12px] text-txt-primary mb-4 uppercase tracking-wider">Políticas</h4>
+              <h4 className="font-semibold text-[12px] text-txt-primary mb-4 uppercase tracking-wider">Políticas</h4>
               <div className="flex flex-col gap-2.5 text-[12px] text-txt-secondary">
                 <span className="hover:text-primary transition-colors cursor-pointer">Termos e Condições</span>
                 <span className="hover:text-primary transition-colors cursor-pointer">Política de Privacidade</span>
@@ -58,7 +58,7 @@ export default function Footer() {
               </div>
             </div>
             <div>
-              <h4 className="font-bold text-[12px] text-txt-primary mb-4 uppercase tracking-wider">Suporte</h4>
+              <h4 className="font-semibold text-[12px] text-txt-primary mb-4 uppercase tracking-wider">Suporte</h4>
               <div className="flex flex-col gap-2.5 text-[12px] text-txt-secondary">
                 <span className="hover:text-primary transition-colors cursor-pointer">Central de Ajuda</span>
                 <a href="mailto:contato@froiv.com" className="hover:text-primary transition-colors">contato@froiv.com</a>
@@ -70,9 +70,9 @@ export default function Footer() {
               <div>
                 <p className="text-[10px] text-txt-hint uppercase tracking-wider text-center mb-2">Métodos de pagamento</p>
                 <div className="flex items-center gap-2 justify-center">
-                  <span className="bg-muted text-txt-secondary text-[10px] font-bold px-3 py-1.5 rounded-lg border border-border">PIX</span>
-                  <span className="bg-muted text-txt-secondary text-[10px] font-bold px-3 py-1.5 rounded-lg border border-border">VISA</span>
-                  <span className="bg-muted text-txt-secondary text-[10px] font-bold px-3 py-1.5 rounded-lg border border-border">MASTER</span>
+                  <span className="bg-muted text-txt-secondary text-[10px] font-semibold px-3 py-1.5 rounded-lg border border-border">PIX</span>
+                  <span className="bg-muted text-txt-secondary text-[10px] font-semibold px-3 py-1.5 rounded-lg border border-border">VISA</span>
+                  <span className="bg-muted text-txt-secondary text-[10px] font-semibold px-3 py-1.5 rounded-lg border border-border">MASTER</span>
                 </div>
               </div>
               <p className="text-[10px] text-txt-hint">© {new Date().getFullYear()} Froiv. Todos os direitos reservados.</p>
