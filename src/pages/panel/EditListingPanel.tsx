@@ -354,7 +354,7 @@ export default function EditListingPanel() {
         {/* ── Features ── */}
         {featureList.length > 0 && (
           <div className="space-y-2">
-            <Label className="text-foreground text-xs uppercase tracking-wide">Marque o que se aplica ✅</Label>
+            <Label className="text-foreground text-xs uppercase tracking-wide">Marque o que se aplica</Label>
             <div className="flex flex-wrap gap-2">
               {featureList.map((f) => {
                 const on = feats.includes(f);
