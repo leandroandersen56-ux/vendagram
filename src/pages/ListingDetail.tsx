@@ -253,11 +253,12 @@ export default function ListingDetail() {
                   </div>
 
                   {/* Buy Box */}
-                  <div ref={buyBoxRef} className="px-4 py-3">
+                  <div ref={buyBoxRef} className="px-4 py-3 border-t border-[hsl(var(--border))]">
                     <BuyBox
                       price={listing.price}
                       originalPrice={originalPrice}
                       onBuy={handleBuy}
+                      inline
                     />
                   </div>
 
