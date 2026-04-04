@@ -175,21 +175,6 @@ export default function ListingDetail() {
             <span>Voltar</span>
           </button>
           <div className="flex items-center gap-2">
-            <button onClick={handleShare} className="p-1.5 rounded-full hover:bg-[hsl(var(--muted))]" aria-label="Compartilhar">
-              <Share2 className="h-4 w-4 text-[hsl(var(--txt-secondary))]" />
-            </button>
-            <motion.button
-              onClick={() => {
-                if (!isAuthenticated) { openAuth(); return; }
-                if (id) toggleFavorite(id);
-              }}
-              className="p-1.5 rounded-full hover:bg-[hsl(var(--muted))]"
-              aria-label={favorited ? "Remover dos favoritos" : "Adicionar aos favoritos"}
-              whileTap={{ scale: 1.3 }}
-              transition={{ type: "spring", stiffness: 500, damping: 15 }}
-            >
-              <Heart className={`h-4 w-4 ${favorited ? "fill-red-500 text-red-500" : "text-[hsl(var(--txt-secondary))]"}`} />
-            </motion.button>
           </div>
         </div>
         <motion.div
@@ -220,7 +205,25 @@ export default function ListingDetail() {
                   verified={sellerSales >= 5}
                 />
 
-                {/* Combined info + buy + trust block (mobile only) */}
+                {/* Favorite + Share bar (mobile) */}
+                <div className="lg:hidden flex items-center justify-end gap-2 -mt-2">
+                  <button onClick={handleShare} className="p-2 rounded-full hover:bg-[hsl(var(--muted))] transition-colors" aria-label="Compartilhar">
+                    <Share2 className="h-5 w-5 text-[hsl(var(--txt-secondary))]" />
+                  </button>
+                  <motion.button
+                    onClick={() => {
+                      if (!isAuthenticated) { openAuth(); return; }
+                      if (id) toggleFavorite(id);
+                    }}
+                    className="p-2 rounded-full hover:bg-[hsl(var(--muted))] transition-colors"
+                    aria-label={favorited ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+                    whileTap={{ scale: 1.3 }}
+                    transition={{ type: "spring", stiffness: 500, damping: 15 }}
+                  >
+                    <Heart className={`h-5 w-5 ${favorited ? "fill-red-500 text-red-500" : "text-[hsl(var(--txt-secondary))]"}`} />
+                  </motion.button>
+                </div>
+
                 <div className="lg:hidden bg-white rounded-xl border border-[hsl(var(--border))] overflow-hidden">
                   {/* Info */}
                   <div className="p-4 pb-0">
