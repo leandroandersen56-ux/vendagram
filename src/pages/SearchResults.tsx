@@ -60,7 +60,7 @@ export default function SearchResults() {
       }
 
       if (selectedPlatforms.length > 0) {
-        q = q.in("category", selectedPlatforms);
+        q = q.in("category", selectedPlatforms as any);
       }
 
       if (minPrice) q = q.gte("price", Number(minPrice));
