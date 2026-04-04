@@ -294,6 +294,7 @@ export default function SearchResults() {
                         description: listing.description || "",
                         status: listing.status,
                         fields: listing.highlights || {},
+                        createdAt: listing.created_at,
                       }}
                     />
                   </motion.div>
