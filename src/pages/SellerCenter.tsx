@@ -37,11 +37,10 @@ export default function SellerCenter() {
       revenue,
       sales: completedTx.length,
       rating: profileRes.data?.avg_rating || 5.0,
-    });
-    setIsVerified(profileRes.data?.is_verified || false);
       views,
       listingCount: (listingsRes.data || []).length,
     });
+    setIsVerified(profileRes.data?.is_verified || false);
 
     if (walletRes.data) setWallet({ balance: Number(walletRes.data.balance), pending: Number(walletRes.data.pending) });
     setLoading(false);
