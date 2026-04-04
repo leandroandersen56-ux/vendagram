@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Eye, Plus, X, Upload, ChevronRight, Gamepad2, Image as ImageIcon, Lock, ShieldCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
