@@ -88,7 +88,7 @@ export default function Navbar() {
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 bg-primary" style={{ height: '56px' }}>
-        <div className="container mx-auto flex items-center h-full px-4 gap-3">
+        <div className="container mx-auto flex items-center h-full gap-3">
           {/* Logo */}
           <Link to="/" className="shrink-0">
             <img src={logoFroiv} alt="Froiv" className="h-7 md:h-8 brightness-0 invert" />
