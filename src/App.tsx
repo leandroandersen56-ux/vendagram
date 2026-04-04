@@ -90,6 +90,7 @@ function AppRoutes() {
         <Route path="/carteira" element={<ProtectedRoute><WalletPage /></ProtectedRoute>} />
         <Route path="/afiliados" element={<ProtectedRoute><Affiliates /></ProtectedRoute>} />
         <Route path="/configuracoes" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
+        <Route path="/historico" element={<ProtectedRoute><ViewHistory /></ProtectedRoute>} />
 
         {/* Admin */}
         <Route path="/admin" element={<Dashboard />} />
