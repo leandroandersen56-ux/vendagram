@@ -281,13 +281,20 @@ export default function SearchResults() {
                     transition={{ delay: i * 0.03 }}
                   >
                     <ListingCard
-                      id={listing.id}
-                      title={listing.title}
-                      price={listing.price}
-                      platform={listing.category}
-                      image={listing.screenshots?.[0] || "/placeholder.svg"}
-                      seller=""
-                      rating={0}
+                      listing={{
+                        id: listing.id,
+                        title: listing.title,
+                        price: listing.price,
+                        platform: listing.category,
+                        screenshots: listing.screenshots,
+                        sellerId: listing.seller_id,
+                        sellerName: "",
+                        sellerRating: 0,
+                        sellerSales: 0,
+                        description: listing.description || "",
+                        status: listing.status,
+                        fields: [],
+                      }}
                     />
                   </motion.div>
                 ))}
