@@ -31,6 +31,8 @@ export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, isAuthenticated, openAuth, logout } = useAuth();
+  const { favorites, loading: favLoading, fetchFavorites: fetchFavs } = useFavorites();
+  const [favOpen, setFavOpen] = useState(false);
 
   const unreadCount = notifications.filter((n) => !n.read).length;
 
