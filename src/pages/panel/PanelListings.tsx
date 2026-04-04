@@ -227,7 +227,7 @@ export default function PanelListings() {
           <p className="text-3xl mb-3">📦</p>
           <p className="font-medium text-foreground mb-2">Nenhum anúncio</p>
           <p className="text-sm text-muted-foreground mb-4">Crie seu primeiro anúncio e comece a vender</p>
-          <Link to="/painel/anuncios/novo">
+          <Link to="/vendedor/novo">
             <Button variant="hero">Criar Anúncio</Button>
           </Link>
         </Card>
