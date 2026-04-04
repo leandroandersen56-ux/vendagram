@@ -8,6 +8,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import CredentialsPanel from "@/components/CredentialsPanel";
+import TransactionChat from "@/components/TransactionChat";
 
 const DISPUTE_REASONS = [
   "Credenciais incorretas",
@@ -31,6 +33,8 @@ export default function OrderDetail() {
   // Transaction data
   const [transaction, setTransaction] = useState<any>(null);
   const [listing, setListing] = useState<any>(null);
+  const [credentials, setCredentials] = useState<any>(null);
+  const [credentialsDeliveredAt, setCredentialsDeliveredAt] = useState<string | null>(null);
 
   // Dispute form
   const [disputeReason, setDisputeReason] = useState("");
@@ -57,6 +61,18 @@ export default function OrderDetail() {
 
       setTransaction(tx);
       setListing(tx.listings);
+
+      // Load credentials
+      try {
+        const credRes = await supabase.functions.invoke("manage-credentials", {
+          body: { transaction_id: id, action: "get" },
+        });
+        if (credRes.data?.credentials) {
+          setCredentials(credRes.data.credentials);
+          setCredentialsDeliveredAt(credRes.data.delivered_at);
+        }
+      } catch {}
+
     } catch {
       toast.error("Erro ao carregar pedido");
     } finally {
@@ -246,7 +262,23 @@ export default function OrderDetail() {
           </div>
         </div>
 
-        {/* Action Buttons */}
+        {/* Credentials Panel */}
+        {transaction && (
+          <CredentialsPanel
+            transactionId={transaction.id}
+            isSeller={transaction.seller_id === user?.id}
+            transactionStatus={transaction.status}
+            credentials={credentials}
+            deliveredAt={credentialsDeliveredAt}
+            onCredentialsSent={loadTransaction}
+          />
+        )}
+
+        {/* Transaction Chat */}
+        {transaction && ["paid", "transfer_in_progress", "disputed"].includes(transaction.status) && (
+          <TransactionChat transactionId={transaction.id} />
+        )}
+
         <div className="space-y-2.5">
           {canRelease && (
             <button
