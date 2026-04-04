@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFavorites } from "@/hooks/useFavorites";
-import { formatBRL } from "@/lib/mock-data";
+import { formatBRL, PLATFORM_COVERS } from "@/lib/mock-data";
 import logoFroiv from "@/assets/logo-froiv.png";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem,
@@ -480,7 +480,7 @@ function FavDropdown({
           favorites.slice(0, 5).map((fav) => {
             const listing = fav.listing;
             if (!listing) return null;
-            const thumb = listing.screenshots?.[0];
+            const thumb = listing.screenshots?.[0] || PLATFORM_COVERS[listing.category as keyof typeof PLATFORM_COVERS];
             return (
               <button
                 key={fav.id}
