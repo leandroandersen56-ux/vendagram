@@ -47,13 +47,13 @@ function PaymentIcon({ type }: { type: "pix" | "visa" | "mastercard" | "amex" | 
       </svg>
     ),
     amex: (
-      <span className="text-[8px] font-semibold tracking-tight leading-none">AMEX</span>
+      <img src={amexIcon} alt="American Express" className="h-4 w-auto brightness-0 opacity-60" style={{ filter: "brightness(0) saturate(100%) invert(33%) sepia(93%) saturate(1752%) hue-rotate(213deg) brightness(97%) contrast(91%)" }} />
     ),
     elo: (
-      <span className="text-[8px] font-semibold tracking-tight leading-none">ELO</span>
+      <img src={eloIcon} alt="Elo" className="h-4 w-auto brightness-0 opacity-60" style={{ filter: "brightness(0) saturate(100%) invert(33%) sepia(93%) saturate(1752%) hue-rotate(213deg) brightness(97%) contrast(91%)" }} />
     ),
     hipercard: (
-      <span className="text-[8px] font-semibold tracking-tight leading-none">HIPER</span>
+      <img src={hipercardIcon} alt="Hipercard" className="h-4 w-auto brightness-0 opacity-60" style={{ filter: "brightness(0) saturate(100%) invert(33%) sepia(93%) saturate(1752%) hue-rotate(213deg) brightness(97%) contrast(91%)" }} />
     ),
   };
   return <span className="text-primary flex items-center justify-center min-w-[40px] h-7 px-1.5 rounded-md border border-border bg-muted/50">{icons[type]}</span>;
