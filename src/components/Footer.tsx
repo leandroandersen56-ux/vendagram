@@ -66,7 +66,7 @@ export default function Footer() {
       <div className="sm:hidden pb-16">
         <div className="px-4 py-6 space-y-4">
           <div className="flex items-center justify-center">
-            <img src={logoFroiv} alt="Froiv" className="h-6" />
+            <img src={logoFroiv} alt="Froiv" className="h-8" />
           </div>
           <div className="flex items-center justify-center gap-5">
             <a href="#" className="text-primary hover:text-primary/80 transition-colors" aria-label="Instagram"><SocialIcon type="instagram" size={26} /></a>
@@ -99,7 +99,7 @@ export default function Footer() {
         <div className="container mx-auto px-4 py-12">
           <div className="grid grid-cols-4 gap-8">
             <div>
-              <img src={logoFroiv} alt="Froiv" className="h-7 mb-3" />
+              <img src={logoFroiv} alt="Froiv" className="h-9 mb-3" />
               <p className="text-[12px] text-txt-secondary leading-relaxed mb-5 max-w-[220px]">
                 A plataforma mais segura para comprar e vender contas digitais com escrow automático.
               </p>
