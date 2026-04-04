@@ -7,7 +7,7 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const MERCADOPAGO_ACCESS_TOKEN = Deno.env.get("MERCADOPAGO_ACCESS_TOKEN");
+    const MERCADOPAGO_ACCESS_TOKEN = Deno.env.get("MERCADOPAGO_ACCESS_TOKEN")?.trim();
     if (!MERCADOPAGO_ACCESS_TOKEN) {
       throw new Error("MERCADOPAGO_ACCESS_TOKEN not configured");
     }
@@ -98,7 +98,8 @@ Deno.serve(async (req) => {
       console.error("Mercado Pago error:", JSON.stringify(mpData));
       return new Response(JSON.stringify({ 
         error: "Failed to create payment",
-        details: mpData.message || mpData.cause?.[0]?.description || "Unknown error"
+        details: mpData.message || mpData.cause?.[0]?.description || "Unknown error",
+        mercado_pago_status: mpData.status || null,
       }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
