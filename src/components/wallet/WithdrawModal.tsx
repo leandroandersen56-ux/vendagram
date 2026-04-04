@@ -87,7 +87,7 @@ export default function WithdrawModal({ open, onClose, balance, pixKey }: Withdr
             <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
               <ArrowUp className="h-4 w-4 text-primary" />
             </div>
-            <h2 className="text-lg font-bold text-foreground">Solicitar Saque</h2>
+            <h2 className="text-lg font-semibold text-foreground">Solicitar Saque</h2>
           </div>
 
           <div className="space-y-4">

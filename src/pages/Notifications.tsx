@@ -76,7 +76,7 @@ export default function Notifications() {
                           <Icon className="h-5 w-5 text-[#444]" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className={`text-[14px] ${notif.read ? "text-[#333]" : "text-[#111] font-bold"}`}>{notif.title}</p>
+                          <p className={`text-[14px] ${notif.read ? "text-[#333]" : "text-[#111] font-semibold"}`}>{notif.title}</p>
                           <p className="text-[13px] text-[#666] truncate">{notif.desc}</p>
                           <p className="text-[11px] text-[#999] mt-0.5">{notif.time}</p>
                         </div>

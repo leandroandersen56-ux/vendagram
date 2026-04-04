@@ -69,7 +69,7 @@ export default function SellerCenter() {
   return (
     <div className="min-h-screen bg-[#F5F5F5] pb-20">
       <PageHeader title="Central do Vendedor" rightAction={
-        <span className="text-[11px] bg-success/20 text-success font-bold px-2 py-1 rounded-full">⭐ {repName}</span>
+        <span className="text-[11px] bg-success/20 text-success font-semibold px-2 py-1 rounded-full">⭐ {repName}</span>
       } />
 
       <div className="px-4 pt-4 space-y-4">
@@ -82,7 +82,7 @@ export default function SellerCenter() {
                 <motion.div key={i} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: i * 0.05 }} className="bg-white rounded-xl border border-[#E8E8E8] p-4">
                   <m.icon className={`h-5 w-5 ${m.color} mb-2`} />
-                  <p className="text-2xl font-black text-primary">{m.value}</p>
+                  <p className="text-2xl font-semibold text-primary">{m.value}</p>
                   <p className="text-[12px] text-[#666]">{m.label}</p>
                   <p className="text-[11px] text-[#999]">{m.sub}</p>
                 </motion.div>
@@ -90,7 +90,7 @@ export default function SellerCenter() {
             </div>
 
             <div className="bg-white rounded-xl border border-[#E8E8E8] p-4">
-              <p className="text-sm font-bold text-[#111] mb-2">
+              <p className="text-sm font-semibold text-[#111] mb-2">
                 Sua reputação: <span className="text-success">{repName}</span>
               </p>
               <div className="flex gap-1 h-3 rounded-full overflow-hidden">
@@ -115,7 +115,7 @@ export default function SellerCenter() {
             </div>
 
             <button onClick={() => navigate("/painel/anuncios/novo")}
-              className="w-full flex items-center justify-center gap-2 bg-primary text-white py-3.5 rounded-xl text-[14px] font-bold">
+              className="w-full flex items-center justify-center gap-2 bg-primary text-white py-3.5 rounded-xl text-[14px] font-semibold">
               <PlusCircle className="h-5 w-5" /> Criar novo anúncio
             </button>
           </>

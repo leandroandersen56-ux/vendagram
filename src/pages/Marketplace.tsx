@@ -100,7 +100,7 @@ export default function Marketplace() {
                 {platform === "all" ? "Marketplace" : activePlatform?.name || "Marketplace"}
               </span>
             </div>
-            <h1 className="text-xl sm:text-2xl font-bold text-foreground">
+            <h1 className="text-xl sm:text-2xl font-semibold text-foreground">
               {platform === "all"
                 ? "Todas as contas"
                 : `Contas de ${activePlatform?.name || ""}` }

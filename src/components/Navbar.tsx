@@ -203,7 +203,7 @@ export default function Navbar() {
                   {/* Profile header */}
                   <div className="bg-gradient-to-br from-primary to-[#1A4BC4] rounded-t-xl px-4 py-3 text-white">
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center text-base font-bold">
+                      <div className="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center text-base font-semibold">
                         {user?.name?.[0]?.toUpperCase() || "U"}
                       </div>
                       <div className="min-w-0">

@@ -101,7 +101,7 @@ export default function DepositModal({ open, onClose }: DepositModalProps) {
             <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
               <ArrowDown className="h-4 w-4 text-primary" />
             </div>
-            <h2 className="text-lg font-bold text-foreground">Depositar via Pix</h2>
+            <h2 className="text-lg font-semibold text-foreground">Depositar via Pix</h2>
           </div>
 
           {step === "amount" && (
@@ -146,7 +146,7 @@ export default function DepositModal({ open, onClose }: DepositModalProps) {
           {step === "qr" && (
             <div className="space-y-5">
               <div className="text-center">
-                <p className="text-2xl font-bold text-primary mb-4">{formatBRL(amount)}</p>
+                <p className="text-2xl font-semibold text-primary mb-4">{formatBRL(amount)}</p>
                 <div className="bg-white p-4 rounded-xl inline-block">
                   <QRCodeSVG value={pixKey} size={180} level="M" />
                 </div>
@@ -155,7 +155,7 @@ export default function DepositModal({ open, onClose }: DepositModalProps) {
               <div className="flex items-center gap-2 justify-center text-sm">
                 <Clock className="h-4 w-4 text-warning" />
                 <span className="text-muted-foreground">Válido por</span>
-                <span className={`font-mono font-bold ${secondsLeft < 300 ? "text-destructive" : "text-warning"}`}>
+                <span className={`font-mono font-semibold ${secondsLeft < 300 ? "text-destructive" : "text-warning"}`}>
                   {formatTime(secondsLeft)}
                 </span>
               </div>

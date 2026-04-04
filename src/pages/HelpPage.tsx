@@ -61,7 +61,7 @@ export default function HelpPage() {
 
         {/* FAQs */}
         <div>
-          <h3 className="text-sm font-bold text-[#111] mb-3">Perguntas frequentes</h3>
+          <h3 className="text-sm font-semibold text-[#111] mb-3">Perguntas frequentes</h3>
           <div className="space-y-2">
             {filteredFaqs.map((faq, i) => (
               <div key={i} className="bg-white rounded-xl border border-[#E8E8E8] overflow-hidden">
@@ -93,7 +93,7 @@ export default function HelpPage() {
         </div>
 
         {/* Contact */}
-        <button className="w-full flex items-center justify-center gap-2 bg-primary text-white py-3.5 rounded-xl text-[14px] font-bold">
+        <button className="w-full flex items-center justify-center gap-2 bg-primary text-white py-3.5 rounded-xl text-[14px] font-semibold">
           <MessageCircle className="h-5 w-5" /> Falar com suporte
         </button>
       </div>

@@ -11,7 +11,7 @@ const STATUS_MAP: Record<string, { label: string; color: string; icon: string }>
   pending_payment: { label: "Aguardando pagamento", color: "text-[#FF6900] bg-[#FF6900]/10", icon: "⏳" },
   paid: { label: "Pagamento confirmado", color: "text-success bg-success/10", icon: "✅" },
   transfer_in_progress: { label: "Em verificação", color: "text-primary bg-primary/10", icon: "🔍" },
-  completed: { label: "Conta Liberada", color: "text-success bg-success/10 font-bold", icon: "✅" },
+  completed: { label: "Conta Liberada", color: "text-success bg-success/10 font-semibold", icon: "✅" },
   disputed: { label: "Disputa aberta", color: "text-[#FF6900] bg-[#FF6900]/10", icon: "⚠️" },
   refunded: { label: "Reembolsado", color: "text-[#888] bg-[#888]/10", icon: "↩️" },
   cancelled: { label: "Cancelado", color: "text-[#888] bg-[#888]/10", icon: "✖️" },

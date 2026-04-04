@@ -27,7 +27,7 @@ export default function BuyBox({ price, originalPrice, onBuy, onOffer, inline }:
           <div className="flex items-center gap-2 mb-0.5">
             <span className="text-sm text-[hsl(var(--txt-hint))] line-through">R$ {originalPrice}</span>
             {discount > 0 && (
-              <span className="bg-[hsl(var(--warning))] text-[hsl(var(--txt-primary))] text-xs font-extrabold px-2 py-0.5 rounded">
+              <span className="bg-[hsl(var(--warning))] text-[hsl(var(--txt-primary))] text-xs font-semibold px-2 py-0.5 rounded">
                 {discount}% OFF
               </span>
             )}
@@ -51,7 +51,7 @@ export default function BuyBox({ price, originalPrice, onBuy, onOffer, inline }:
       {/* CTA Buttons */}
       <motion.div whileTap={{ scale: 0.97 }}>
         <Button
-          className="w-full h-[52px] text-base font-bold rounded-xl bg-primary text-white shadow-[0_4px_14px_rgba(45,111,240,0.4)] hover:bg-primary-dark hover:shadow-[0_6px_20px_rgba(45,111,240,0.5)] active:scale-[0.98] transition-all"
+          className="w-full h-[52px] text-base font-semibold rounded-xl bg-primary text-white shadow-[0_4px_14px_rgba(45,111,240,0.4)] hover:bg-primary-dark hover:shadow-[0_6px_20px_rgba(45,111,240,0.5)] active:scale-[0.98] transition-all"
           onClick={onBuy}
           aria-label="Comprar agora com proteção Escrow"
         >
@@ -62,7 +62,7 @@ export default function BuyBox({ price, originalPrice, onBuy, onOffer, inline }:
 
       <Button
         variant="outline"
-        className="w-full h-[52px] text-base font-bold rounded-xl border-2 border-primary text-primary hover:bg-primary/5 mt-2.5"
+        className="w-full h-[52px] text-base font-semibold rounded-xl border-2 border-primary text-primary hover:bg-primary/5 mt-2.5"
         onClick={onOffer}
         aria-label="Fazer uma oferta ao vendedor"
       >

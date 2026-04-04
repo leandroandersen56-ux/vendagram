@@ -134,7 +134,7 @@ export default function PanelOverview() {
                 <stat.icon className="h-4 w-4 text-primary" />
               </div>
               <p className="text-[8px] font-semibold text-muted-foreground tracking-widest leading-none">{stat.label}</p>
-              <p className="text-xl font-bold text-foreground mt-1">{stat.value}</p>
+              <p className="text-xl font-semibold text-foreground mt-1">{stat.value}</p>
               <p className="text-[9px] text-muted-foreground mt-0.5">{stat.sub}</p>
             </motion.div>
           ))}
@@ -149,7 +149,7 @@ export default function PanelOverview() {
 
           <div className="bg-background border border-border rounded-2xl p-4">
             <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Disponível</p>
-            <p className="text-2xl font-bold text-success mt-0.5 tabular-nums">{formatBRL(balance)}</p>
+            <p className="text-2xl font-semibold text-success mt-0.5 tabular-nums">{formatBRL(balance)}</p>
 
             <div className="flex items-center justify-around mt-4 pt-3 border-t border-border">
               {walletActions.map((action) => (
@@ -174,14 +174,14 @@ export default function PanelOverview() {
                 <Clock className="h-3 w-3 text-warning shrink-0" />
                 <span className="text-[9px] font-semibold text-muted-foreground uppercase tracking-wider">Pendente</span>
               </div>
-              <p className="text-base font-bold text-warning tabular-nums truncate">{formatBRL(pending)}</p>
+              <p className="text-base font-semibold text-warning tabular-nums truncate">{formatBRL(pending)}</p>
             </div>
             <div className="bg-background border border-border rounded-2xl p-3">
               <div className="flex items-center gap-1 mb-0.5">
                 <TrendingUp className="h-3 w-3 text-primary shrink-0" />
                 <span className="text-[9px] font-semibold text-muted-foreground uppercase tracking-wider">Total Ganho</span>
               </div>
-              <p className="text-base font-bold text-foreground tabular-nums truncate">{formatBRL(totalEarned)}</p>
+              <p className="text-base font-semibold text-foreground tabular-nums truncate">{formatBRL(totalEarned)}</p>
             </div>
           </div>
         </div>
@@ -238,7 +238,7 @@ export default function PanelOverview() {
                     </p>
                   </div>
                   <div className="text-right shrink-0 pl-1">
-                    <p className={`text-xs font-bold tabular-nums ${h.amount > 0 ? "text-success" : "text-destructive"}`}>
+                    <p className={`text-xs font-semibold tabular-nums ${h.amount > 0 ? "text-success" : "text-destructive"}`}>
                       {h.amount > 0 ? "+" : ""}{formatBRL(Math.abs(h.amount))}
                     </p>
                     <Badge className={`border-0 text-[9px] px-1.5 py-0 mt-0.5 ${getStatusColor(h.status)}`}>{h.status}</Badge>

@@ -325,7 +325,7 @@ export default function EditListingPanel() {
               type="number"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
-              className="bg-card border-border h-12 text-lg font-bold"
+              className="bg-card border-border h-12 text-lg font-semibold"
             />
           </div>
           {isGame ? (

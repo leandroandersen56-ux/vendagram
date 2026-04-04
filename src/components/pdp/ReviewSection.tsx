@@ -24,7 +24,7 @@ export default function ReviewSection({ rating, totalSales }: ReviewSectionProps
   return (
     <div className="rounded-xl border border-[hsl(var(--border))] bg-white overflow-hidden">
       <div className="px-4 py-3.5">
-        <h3 className="text-sm font-bold text-[hsl(var(--txt-primary))]">⭐ Opiniões de compradores</h3>
+        <h3 className="text-sm font-semibold text-[hsl(var(--txt-primary))]">⭐ Opiniões de compradores</h3>
       </div>
 
       {/* Rating summary */}
@@ -64,7 +64,7 @@ export default function ReviewSection({ rating, totalSales }: ReviewSectionProps
             <div key={i} className="border border-[hsl(var(--border))]/60 rounded-lg p-3">
               <div className="flex items-center justify-between mb-1.5">
                 <div className="flex items-center gap-2">
-                  <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
+                  <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold text-xs">
                     {review.name[0]}
                   </div>
                   <div>

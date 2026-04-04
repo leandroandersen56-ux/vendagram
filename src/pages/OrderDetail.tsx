@@ -186,7 +186,7 @@ export default function OrderDetail() {
           >
             <CheckCircle2 className="h-6 w-6 text-success shrink-0" />
             <div>
-              <p className="text-[14px] font-bold text-success">Transação concluída</p>
+              <p className="text-[14px] font-semibold text-success">Transação concluída</p>
               <p className="text-[12px] text-[#666]">
                 Pagamento de R$ {Number(transaction.seller_receives).toFixed(2).replace(".", ",")} liberado ao vendedor.
               </p>
@@ -203,7 +203,7 @@ export default function OrderDetail() {
           >
             <AlertTriangle className="h-6 w-6 text-[#FF6900] shrink-0" />
             <div>
-              <p className="text-[14px] font-bold text-[#FF6900]">Disputa em andamento</p>
+              <p className="text-[14px] font-semibold text-[#FF6900]">Disputa em andamento</p>
               <p className="text-[12px] text-[#666]">Admin está analisando o caso. Aguarde até 24h.</p>
             </div>
           </motion.div>
@@ -220,7 +220,7 @@ export default function OrderDetail() {
             <div className="flex-1 min-w-0">
               <p className="text-[14px] font-semibold text-[#111] truncate">{listing.title}</p>
               <p className="text-[12px] text-[#999] capitalize">{listing.category?.replace("_", " ")}</p>
-              <p className="text-[16px] font-bold text-primary mt-1">
+              <p className="text-[16px] font-semibold text-primary mt-1">
                 R$ {Number(transaction.amount).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
               </p>
             </div>
@@ -229,7 +229,7 @@ export default function OrderDetail() {
 
         {/* Status Timeline */}
         <div className="bg-white rounded-xl border border-[#E8E8E8] p-5">
-          <h3 className="text-sm font-bold text-[#111] mb-4">Status do pedido</h3>
+          <h3 className="text-sm font-semibold text-[#111] mb-4">Status do pedido</h3>
           <div className="relative">
             {steps.map((step, i) => (
               <div key={i} className="flex gap-3 relative">
@@ -283,7 +283,7 @@ export default function OrderDetail() {
           {canRelease && (
             <button
               onClick={() => setConfirmOpen(true)}
-              className="w-full flex items-center justify-center gap-2 bg-primary text-white py-3.5 rounded-xl text-[14px] font-bold"
+              className="w-full flex items-center justify-center gap-2 bg-primary text-white py-3.5 rounded-xl text-[14px] font-semibold"
             >
               <CheckCircle2 className="h-5 w-5" /> Confirmar recebimento e liberar pagamento
             </button>
@@ -328,7 +328,7 @@ export default function OrderDetail() {
             <button
               onClick={handleReleaseEscrow}
               disabled={releasing}
-              className="flex-1 py-2.5 rounded-xl bg-destructive text-white text-sm font-bold flex items-center justify-center gap-2"
+              className="flex-1 py-2.5 rounded-xl bg-destructive text-white text-sm font-semibold flex items-center justify-center gap-2"
             >
               {releasing ? <Loader2 className="h-4 w-4 animate-spin" /> : "Sim, confirmar"}
             </button>
@@ -385,7 +385,7 @@ export default function OrderDetail() {
             <button
               onClick={handleOpenDispute}
               disabled={openingDispute || !disputeReason || disputeDescription.length < 20}
-              className="w-full py-3 rounded-xl bg-destructive text-white text-[14px] font-bold flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full py-3 rounded-xl bg-destructive text-white text-[14px] font-semibold flex items-center justify-center gap-2 disabled:opacity-50"
             >
               {openingDispute ? <Loader2 className="h-4 w-4 animate-spin" /> : (
                 <>

@@ -107,14 +107,14 @@ export default function SellerProfile() {
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
             className="bg-gradient-to-br from-primary to-[#1A4BC4] rounded-2xl p-6 text-white mb-6">
             <div className="flex items-start gap-4">
-              <div className="h-20 w-20 rounded-full bg-white/20 flex items-center justify-center text-3xl font-bold shrink-0">
+              <div className="h-20 w-20 rounded-full bg-white/20 flex items-center justify-center text-3xl font-semibold shrink-0">
                 {seller.avatar_url ? (
                   <img src={seller.avatar_url} alt="" className="h-full w-full rounded-full object-cover" />
                 ) : seller.name?.[0]?.toUpperCase() || "?"}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <h1 className="text-xl font-bold">{seller.name || "Vendedor"}</h1>
+                  <h1 className="text-xl font-semibold">{seller.name || "Vendedor"}</h1>
                   {seller.is_verified && <CheckCircle2 className="h-5 w-5 text-white/80" />}
                 </div>
                 <p className="text-white/70 text-sm">@{seller.username || "usuario"}</p>
@@ -171,7 +171,7 @@ export default function SellerProfile() {
               ) : reviews.map((r: any) => (
                 <div key={r.id} className="bg-card rounded-xl border border-border p-4">
                   <div className="flex items-center gap-2 mb-2">
-                    <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center text-xs font-bold text-foreground">
+                    <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center text-xs font-semibold text-foreground">
                       {(r.profiles as any)?.name?.[0]?.toUpperCase() || "?"}
                     </div>
                     <div>

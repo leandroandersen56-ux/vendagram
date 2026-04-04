@@ -91,7 +91,7 @@ export default function TransferModal({ open, onClose, balance }: TransferModalP
             <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
               <ArrowRight className="h-4 w-4 text-primary" />
             </div>
-            <h2 className="text-lg font-bold text-foreground">Transferir Saldo</h2>
+            <h2 className="text-lg font-semibold text-foreground">Transferir Saldo</h2>
           </div>
 
           <div className="space-y-5">

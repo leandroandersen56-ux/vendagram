@@ -73,7 +73,7 @@ export default function QRScannerModal({ open, onClose, balance }: QRScannerModa
             <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
               <ScanLine className="h-4 w-4 text-primary" />
             </div>
-            <h2 className="text-lg font-bold text-foreground">Pagar com QR Code</h2>
+            <h2 className="text-lg font-semibold text-foreground">Pagar com QR Code</h2>
           </div>
 
           {(mode === "scan" || mode === "paste") && (
@@ -116,7 +116,7 @@ export default function QRScannerModal({ open, onClose, balance }: QRScannerModa
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Valor</span>
-                  <span className="text-primary font-bold text-lg">{formatBRL(parsedData.amount)}</span>
+                  <span className="text-primary font-semibold text-lg">{formatBRL(parsedData.amount)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Descrição</span>

@@ -219,7 +219,7 @@ export default function CreateListing() {
   if (!platform) {
     return (
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-        <h1 className="text-xl font-bold text-foreground mb-1">O que você quer vender?</h1>
+        <h1 className="text-xl font-semibold text-foreground mb-1">O que você quer vender?</h1>
         <p className="text-muted-foreground text-sm mb-5">Toque na plataforma pra começar</p>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {PLATFORMS.map((p) => (
@@ -280,7 +280,7 @@ export default function CreateListing() {
               value={price}
               onChange={(e) => setPrice(e.target.value)}
               placeholder="130"
-              className="bg-card border-border h-12 text-lg font-bold"
+              className="bg-card border-border h-12 text-lg font-semibold"
             />
           </div>
           {isGame ? (

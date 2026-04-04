@@ -93,7 +93,7 @@ export default function PanelTransactions() {
 
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-      <h1 className="text-xl font-bold text-foreground mb-6">Minhas Transações</h1>
+      <h1 className="text-xl font-semibold text-foreground mb-6">Minhas Transações</h1>
 
       {transactions.length > 0 ? (
         <div className="space-y-3">
@@ -111,7 +111,7 @@ export default function PanelTransactions() {
                       <span className="text-xs text-muted-foreground">{formatDate(tx.created_at)}</span>
                     </div>
                   </div>
-                  <p className="text-lg font-bold text-primary shrink-0">{formatBRL(tx.amount)}</p>
+                  <p className="text-lg font-semibold text-primary shrink-0">{formatBRL(tx.amount)}</p>
                   <Button
                     variant="ghost"
                     size="icon"
@@ -178,7 +178,7 @@ export default function PanelTransactions() {
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Vendedor recebe</span>
-                  <span className="text-primary font-bold">{formatBRL(selectedTx.seller_receives)}</span>
+                  <span className="text-primary font-semibold">{formatBRL(selectedTx.seller_receives)}</span>
                 </div>
               </div>
 
