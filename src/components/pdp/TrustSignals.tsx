@@ -11,7 +11,7 @@ export default function TrustSignals({ inline }: { inline?: boolean }) {
         <div className="flex items-start gap-3">
           <Zap className="h-5 w-5 text-[hsl(var(--success))] mt-0.5 flex-shrink-0" />
           <div>
-            <p className="text-sm font-bold text-[hsl(var(--txt-primary))]">Entrega Imediata</p>
+            <p className="text-sm font-semibold text-[hsl(var(--txt-primary))]">Entrega Imediata</p>
             <p className="text-[13px] text-[hsl(var(--txt-secondary))]">Receba os dados da conta em instantes</p>
           </div>
         </div>
@@ -19,7 +19,7 @@ export default function TrustSignals({ inline }: { inline?: boolean }) {
         <div className="border-t border-[hsl(var(--success))]/20 pt-3 flex items-start gap-3">
           <Shield className="h-5 w-5 text-[hsl(var(--escrow))] mt-0.5 flex-shrink-0" />
           <div>
-            <p className="text-sm font-bold text-[hsl(var(--txt-primary))]">Proteção Escrow</p>
+            <p className="text-sm font-semibold text-[hsl(var(--txt-primary))]">Proteção Escrow</p>
             <p className="text-[13px] text-[hsl(var(--txt-secondary))]">
               Pague com segurança. Liberamos o pagamento só após você verificar a conta
             </p>
@@ -58,7 +58,7 @@ export default function TrustSignals({ inline }: { inline?: boolean }) {
               <div className="sm:hidden w-10 h-1 bg-[hsl(var(--border))] rounded-full mx-auto mb-4" />
 
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-bold text-[hsl(var(--txt-primary))]">Como funciona o Escrow</h3>
+                <h3 className="text-lg font-semibold text-[hsl(var(--txt-primary))]">Como funciona o Escrow</h3>
                 <button onClick={() => setShowEscrowModal(false)} className="p-1" aria-label="Fechar">
                   <X className="h-5 w-5 text-[hsl(var(--txt-hint))]" />
                 </button>
@@ -79,7 +79,7 @@ export default function TrustSignals({ inline }: { inline?: boolean }) {
                       {i < 3 && <div className="w-0.5 h-full bg-primary/20 my-1" />}
                     </div>
                     <div className="pb-5">
-                      <p className="text-sm font-bold text-[hsl(var(--txt-primary))]">{step.title}</p>
+                      <p className="text-sm font-semibold text-[hsl(var(--txt-primary))]">{step.title}</p>
                       <p className="text-[13px] text-[hsl(var(--txt-secondary))] mt-0.5">{step.desc}</p>
                     </div>
                   </div>

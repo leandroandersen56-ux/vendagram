@@ -24,7 +24,7 @@ export default function AccountSpecs({ infoFields, featureFlags }: AccountSpecsP
         className="w-full flex items-center justify-between px-4 py-3.5 text-left"
         aria-expanded={open}
       >
-        <span className="text-sm font-bold text-[hsl(var(--txt-primary))]">📊 Detalhes da conta</span>
+        <span className="text-sm font-semibold text-[hsl(var(--txt-primary))]">📊 Detalhes da conta</span>
         <ChevronDown className={`h-4 w-4 text-[hsl(var(--txt-hint))] transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
 

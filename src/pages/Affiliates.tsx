@@ -65,13 +65,13 @@ export default function Affiliates() {
     <div className="min-h-screen bg-[#F5F5F5] pb-20">
       <PageHeader
         title="Afiliados"
-        rightAction={<span className="text-[10px] bg-success text-white font-bold px-2 py-0.5 rounded-full">GANHA $</span>}
+        rightAction={<span className="text-[10px] bg-success text-white font-semibold px-2 py-0.5 rounded-full">GANHA $</span>}
       />
 
       <div className="px-4 pt-4 space-y-4">
         {/* Hero */}
         <div className="bg-gradient-to-br from-[#064E3B] to-[#065F46] rounded-2xl p-6 text-white">
-          <p className="text-2xl font-black">💰 Ganhe 10% de comissão</p>
+          <p className="text-2xl font-semibold">💰 Ganhe 10% de comissão</p>
           <p className="text-sm text-white/80 mt-1">Por cada venda indicada pelo seu link</p>
           <div className="mt-4 bg-white/10 rounded-xl px-4 py-3 flex items-center gap-2">
             <p className="text-sm font-mono flex-1 truncate text-white/90">{link}</p>
@@ -95,7 +95,7 @@ export default function Affiliates() {
               { label: "Ganho total", value: `R$ ${stats.earned.toFixed(0)}` },
             ].map((m) => (
               <div key={m.label} className="bg-white rounded-xl border border-[#E8E8E8] p-3 text-center">
-                <p className="text-lg font-black text-primary">{m.value}</p>
+                <p className="text-lg font-semibold text-primary">{m.value}</p>
                 <p className="text-[11px] text-[#666]">{m.label}</p>
               </div>
             ))}
@@ -104,10 +104,10 @@ export default function Affiliates() {
 
         {/* How it works */}
         <div className="bg-white rounded-xl border border-[#E8E8E8] p-4">
-          <h3 className="text-sm font-bold text-[#111] mb-3">Como funciona</h3>
+          <h3 className="text-sm font-semibold text-[#111] mb-3">Como funciona</h3>
           {["Copie seu link de afiliado", "Compartilhe em redes sociais, grupos, Discord", "Ganhe 10% de cada venda realizada"].map((step, i) => (
             <div key={i} className="flex gap-3 items-start mb-2.5 last:mb-0">
-              <div className="h-6 w-6 rounded-full bg-primary text-white text-xs font-bold flex items-center justify-center shrink-0">{i + 1}</div>
+              <div className="h-6 w-6 rounded-full bg-primary text-white text-xs font-semibold flex items-center justify-center shrink-0">{i + 1}</div>
               <p className="text-[13px] text-[#333] pt-0.5">{step}</p>
             </div>
           ))}
@@ -116,7 +116,7 @@ export default function Affiliates() {
         {/* History */}
         {history.length > 0 && (
           <div className="bg-white rounded-xl border border-[#E8E8E8] overflow-hidden">
-            <h3 className="text-sm font-bold text-[#111] px-4 pt-4 pb-2">Histórico de comissões</h3>
+            <h3 className="text-sm font-semibold text-[#111] px-4 pt-4 pb-2">Histórico de comissões</h3>
             <div className="overflow-x-auto">
               <table className="w-full text-[13px]">
                 <thead>

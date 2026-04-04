@@ -111,7 +111,7 @@ export default function MoreMenu({ open, onClose }: MoreMenuProps) {
               onClick={() => handleNav("/painel/perfil")}
             >
               <div className="pt-4 flex items-center gap-3">
-                <div className="h-14 w-14 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-xl shrink-0">
+                <div className="h-14 w-14 rounded-full bg-white/20 flex items-center justify-center text-white font-semibold text-xl shrink-0">
                   {isAuthenticated ? user?.name?.[0]?.toUpperCase() || "U" : (
                     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                   )}
@@ -119,11 +119,11 @@ export default function MoreMenu({ open, onClose }: MoreMenuProps) {
                 <div className="flex-1 min-w-0">
                   {isAuthenticated ? (
                     <>
-                      <p className="text-white font-bold text-base truncate">{user?.name}</p>
+                      <p className="text-white font-semibold text-base truncate">{user?.name}</p>
                       <p className="text-white/75 text-[13px]">Meu perfil <ChevronRight className="inline h-3 w-3" /></p>
                     </>
                   ) : (
-                    <p className="text-white font-bold text-base">
+                    <p className="text-white font-semibold text-base">
                       Entrar ou cadastrar <ChevronRight className="inline h-4 w-4" />
                     </p>
                   )}
@@ -140,7 +140,7 @@ export default function MoreMenu({ open, onClose }: MoreMenuProps) {
                 >
                   <Shield className="h-5 w-5 text-white shrink-0" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-white text-sm font-bold">Saldo disponível: R$ 0,00</p>
+                    <p className="text-white text-sm font-semibold">Saldo disponível: R$ 0,00</p>
                     <p className="text-white/75 text-xs">Gerencie seus pagamentos</p>
                   </div>
                   <ChevronRight className="h-4 w-4 text-white/60 shrink-0" />
@@ -166,7 +166,7 @@ export default function MoreMenu({ open, onClose }: MoreMenuProps) {
                       <item.icon className="h-[22px] w-[22px] text-[#444] shrink-0" strokeWidth={1.5} />
                       <span className="flex-1 text-left text-[15px] text-[#111]">{item.label}</span>
                       {item.badge && (
-                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${item.badge.color}`}>
+                        <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${item.badge.color}`}>
                           {item.badge.text}
                         </span>
                       )}

@@ -42,13 +42,13 @@ export default function StickyBuyBar({ price, originalPrice, onBuy, triggerRef }
               {originalPrice && (
                 <p className="text-[10px] text-[hsl(var(--txt-hint))] line-through leading-none">R$ {originalPrice}</p>
               )}
-              <p className="text-lg font-black text-[hsl(var(--txt-primary))] leading-tight">{formatBRL(price)}</p>
+              <p className="text-lg font-semibold text-[hsl(var(--txt-primary))] leading-tight">{formatBRL(price)}</p>
               <p className="text-[10px] text-[hsl(var(--success))] font-medium flex items-center gap-0.5 mt-0.5">
                 <Shield className="h-3 w-3" /> Compra protegida
               </p>
             </div>
             <Button
-              className="px-6 h-11 text-sm font-bold rounded-xl bg-primary text-white shadow-[0_4px_14px_rgba(45,111,240,0.4)] active:scale-[0.97]"
+              className="px-6 h-11 text-sm font-semibold rounded-xl bg-primary text-white shadow-[0_4px_14px_rgba(45,111,240,0.4)] active:scale-[0.97]"
               onClick={onBuy}
               aria-label="Comprar agora"
             >

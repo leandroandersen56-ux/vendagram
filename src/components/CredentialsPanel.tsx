@@ -89,7 +89,7 @@ export default function CredentialsPanel({
         animate={{ opacity: 1, y: 0 }}
         className="bg-[#FFF8E0] border border-[#FFD700] rounded-xl p-4"
       >
-        <h3 className="text-sm font-bold text-[#111] mb-3 flex items-center gap-2">
+        <h3 className="text-sm font-semibold text-[#111] mb-3 flex items-center gap-2">
           📦 Enviar credenciais da conta
         </h3>
         <div className="space-y-3">
@@ -142,7 +142,7 @@ export default function CredentialsPanel({
           <button
             onClick={handleSendCredentials}
             disabled={sending || !login.trim() || !password.trim()}
-            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-primary text-white text-[14px] font-bold disabled:opacity-50"
+            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-primary text-white text-[14px] font-semibold disabled:opacity-50"
           >
             {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : (
               <>
@@ -186,7 +186,7 @@ export default function CredentialsPanel({
         animate={{ opacity: 1, y: 0 }}
         className="bg-[#F0F8FF] border border-primary rounded-xl p-4"
       >
-        <h3 className="text-sm font-bold text-[#111] mb-3 flex items-center gap-2">
+        <h3 className="text-sm font-semibold text-[#111] mb-3 flex items-center gap-2">
           🔐 Dados de acesso da conta
         </h3>
         <div className="space-y-3">

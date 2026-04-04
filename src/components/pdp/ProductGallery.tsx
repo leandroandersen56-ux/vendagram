@@ -60,7 +60,7 @@ export default function ProductGallery({ images, title, category, verified }: Pr
           </AnimatePresence>
 
           {verified && (
-            <div className="absolute top-3 right-3 flex items-center gap-1 bg-[hsl(var(--success-light))] text-[hsl(var(--success))] px-2.5 py-1 rounded-full text-[10px] font-bold">
+            <div className="absolute top-3 right-3 flex items-center gap-1 bg-[hsl(var(--success-light))] text-[hsl(var(--success))] px-2.5 py-1 rounded-full text-[10px] font-semibold">
               <CheckCircle2 className="h-3 w-3" /> VERIFICADO
             </div>
           )}

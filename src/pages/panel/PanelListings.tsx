@@ -143,7 +143,7 @@ export default function PanelListings() {
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-xl font-bold text-foreground">Meus Anúncios</h1>
+        <h1 className="text-xl font-semibold text-foreground">Meus Anúncios</h1>
         <Link to="/painel/anuncios/novo">
           <Button variant="hero" size="sm">
             <Plus className="h-4 w-4 mr-1" /> Novo Anúncio
@@ -177,7 +177,7 @@ export default function PanelListings() {
                   </div>
 
                   <div className="flex items-center justify-between gap-2 border-t border-border/60 pt-3 sm:ml-auto sm:border-t-0 sm:pt-0">
-                    <p className="shrink-0 text-base font-bold text-primary sm:text-lg">{formatBRL(listing.price)}</p>
+                    <p className="shrink-0 text-base font-semibold text-primary sm:text-lg">{formatBRL(listing.price)}</p>
                     <div className="flex shrink-0 items-center gap-0.5">
                       <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => isReal ? navigate(`/listing/${listing.id}`) : demoClick()} title="Ver anúncio">
                         <Eye className="h-3.5 w-3.5" />

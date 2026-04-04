@@ -360,7 +360,7 @@ export default function Checkout() {
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-xs font-medium text-foreground line-clamp-1">{listing.title}</p>
-              <p className="text-sm font-bold text-foreground">{formatBRL(total)}</p>
+              <p className="text-sm font-semibold text-foreground">{formatBRL(total)}</p>
             </div>
           </div>
 
@@ -375,7 +375,7 @@ export default function Checkout() {
                 <>
                   {/* Payment method selection */}
                   <div>
-                    <h1 className="text-xl font-bold text-foreground mb-1 flex items-center gap-2">
+                    <h1 className="text-xl font-semibold text-foreground mb-1 flex items-center gap-2">
                       <div className="w-1 h-6 bg-primary rounded-full" />
                       Forma de pagamento
                     </h1>
@@ -508,7 +508,7 @@ export default function Checkout() {
 
                   {/* Personal info */}
                   <div>
-                    <h2 className="font-bold text-foreground text-sm mb-4">Precisamos de informações adicionais</h2>
+                    <h2 className="font-semibold text-foreground text-sm mb-4">Precisamos de informações adicionais</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-1.5">
                         <Label className="text-foreground text-xs">Nome <span className="text-primary">*</span></Label>
@@ -545,7 +545,7 @@ export default function Checkout() {
             {/* Right: Order summary */}
             <div className="lg:col-span-1">
               <div className="bg-card border border-border rounded-lg p-5 sticky top-24">
-                <h3 className="font-bold text-foreground text-sm mb-4">Resumo do Pedido</h3>
+                <h3 className="font-semibold text-foreground text-sm mb-4">Resumo do Pedido</h3>
                 <div className="flex gap-3 mb-5 pb-5 border-b border-border">
                   <div
                     className="h-16 w-16 rounded-lg flex items-center justify-center shrink-0"
@@ -576,8 +576,8 @@ export default function Checkout() {
                   )}
                   <div className="border-t border-border pt-2">
                     <div className="flex justify-between text-sm">
-                      <span className="font-bold text-primary">Total</span>
-                      <span className="font-bold text-primary text-lg">{formatBRL(total)}</span>
+                      <span className="font-semibold text-primary">Total</span>
+                      <span className="font-semibold text-primary text-lg">{formatBRL(total)}</span>
                     </div>
                   </div>
                 </div>
@@ -586,7 +586,7 @@ export default function Checkout() {
                   <span className="text-primary underline cursor-pointer">Termos e Condições</span>
                 </p>
                 {paymentStatus === "idle" && (
-                  <Button variant="hero" className="w-full py-5 text-sm font-bold" onClick={handleCheckout} disabled={submitting}>
+                  <Button variant="hero" className="w-full py-5 text-sm font-semibold" onClick={handleCheckout} disabled={submitting}>
                     {submitting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <ShoppingCart className="h-4 w-4 mr-2" />}
                     {submitting ? "Processando..." : paymentMethod === "pix" ? "Gerar Pix" : "Pagar com Cartão"}
                   </Button>
@@ -619,9 +619,9 @@ export default function Checkout() {
           <div className="flex items-center gap-3 px-4 py-3">
             <div className="flex-1 min-w-0">
               <p className="text-[10px] text-muted-foreground">Total</p>
-              <p className="text-lg font-bold text-foreground">{formatBRL(total)}</p>
+              <p className="text-lg font-semibold text-foreground">{formatBRL(total)}</p>
             </div>
-            <Button variant="hero" className="px-6 py-4 text-sm font-bold" onClick={handleCheckout} disabled={submitting}>
+            <Button variant="hero" className="px-6 py-4 text-sm font-semibold" onClick={handleCheckout} disabled={submitting}>
               {submitting ? <Loader2 className="h-4 w-4 animate-spin mr-1.5" /> : <ShoppingCart className="h-4 w-4 mr-1.5" />}
               {submitting ? "..." : paymentMethod === "pix" ? "Gerar Pix" : "Pagar"}
             </Button>
@@ -639,7 +639,7 @@ function PixPaymentView({ pixData, onCopy, copied }: { pixData: any; onCopy: () 
       <div className="bg-card border border-border rounded-lg p-6 text-center">
         <div className="flex items-center justify-center gap-2 mb-4">
           <QrCode className="h-5 w-5 text-primary" />
-          <h2 className="text-lg font-bold text-foreground">Pague com Pix</h2>
+          <h2 className="text-lg font-semibold text-foreground">Pague com Pix</h2>
         </div>
         <p className="text-sm text-muted-foreground mb-6">Escaneie o QR Code ou copie o código para pagar</p>
         {pixData.qr_code_base64 && (
@@ -676,7 +676,7 @@ function PaymentConfirmed() {
   return (
     <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-card border border-success/30 rounded-lg p-8 text-center">
       <CheckCircle2 className="h-16 w-16 text-success mx-auto mb-4" />
-      <h2 className="text-xl font-bold text-foreground mb-2">Pagamento Confirmado!</h2>
+      <h2 className="text-xl font-semibold text-foreground mb-2">Pagamento Confirmado!</h2>
       <p className="text-sm text-muted-foreground">Redirecionando para acompanhar a transação...</p>
       <Loader2 className="h-5 w-5 animate-spin text-primary mx-auto mt-4" />
     </motion.div>

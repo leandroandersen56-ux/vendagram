@@ -132,7 +132,7 @@ export default function Reviews() {
                     <button
                       onClick={() => handlePublish(tx)}
                       disabled={submitting === tx.id}
-                      className="w-full py-2.5 bg-primary text-white rounded-xl text-[13px] font-bold disabled:opacity-50"
+                      className="w-full py-2.5 bg-primary text-white rounded-xl text-[13px] font-semibold disabled:opacity-50"
                     >
                       {submitting === tx.id ? "Publicando..." : "Publicar avaliação"}
                     </button>

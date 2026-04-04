@@ -89,7 +89,7 @@ export default function PanelWallet() {
   return (
     <>
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-        <h1 className="text-xl font-bold text-foreground mb-6">Carteira</h1>
+        <h1 className="text-xl font-semibold text-foreground mb-6">Carteira</h1>
 
         {/* Balance Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
@@ -98,21 +98,21 @@ export default function PanelWallet() {
               <Wallet className="h-4 w-4 text-success" />
               <p className="text-xs text-muted-foreground">Disponível</p>
             </div>
-            <p className="text-2xl font-bold text-success">{formatBRL(balance)}</p>
+            <p className="text-2xl font-semibold text-success">{formatBRL(balance)}</p>
           </Card>
           <Card className="bg-card border-border p-5">
             <div className="flex items-center gap-2 mb-2">
               <Clock className="h-4 w-4 text-warning" />
               <p className="text-xs text-muted-foreground">Pendente (escrow)</p>
             </div>
-            <p className="text-2xl font-bold text-warning">{formatBRL(pending)}</p>
+            <p className="text-2xl font-semibold text-warning">{formatBRL(pending)}</p>
           </Card>
           <Card className="bg-card border-border p-5">
             <div className="flex items-center gap-2 mb-2">
               <ArrowUpRight className="h-4 w-4 text-primary" />
               <p className="text-xs text-muted-foreground">Total Ganho</p>
             </div>
-            <p className="text-2xl font-bold text-foreground">{formatBRL(totalEarned)}</p>
+            <p className="text-2xl font-semibold text-foreground">{formatBRL(totalEarned)}</p>
           </Card>
         </div>
 
@@ -203,7 +203,7 @@ export default function PanelWallet() {
                     </div>
                   </div>
                   <div className="text-right shrink-0">
-                    <p className={`text-sm font-bold ${h.amount > 0 ? "text-success" : "text-destructive"}`}>
+                    <p className={`text-sm font-semibold ${h.amount > 0 ? "text-success" : "text-destructive"}`}>
                       {h.amount > 0 ? "+" : ""}{formatBRL(Math.abs(h.amount))}
                     </p>
                     <Badge className={`border-0 text-[10px] ${getStatusColor(h.status)}`}>

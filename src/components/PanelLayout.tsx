@@ -98,7 +98,7 @@ export default function PanelLayout() {
 
         <div className="px-4 py-4 border-t border-border">
           <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">
+            <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold text-sm">
               {user?.name?.[0]?.toUpperCase()}
             </div>
             <div className="min-w-0 flex-1">
@@ -135,11 +135,11 @@ export default function PanelLayout() {
         <Link to="/painel/notificacoes">
           <Button variant="ghost" size="icon" className="relative h-9 w-9 rounded-xl hover:bg-muted">
             <Bell className="h-4 w-4" />
-            <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-destructive text-destructive-foreground text-[9px] flex items-center justify-center font-bold">3</span>
+            <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-destructive text-destructive-foreground text-[9px] flex items-center justify-center font-semibold">3</span>
           </Button>
         </Link>
 
-        <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
+        <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold text-xs">
           {user?.name?.[0]?.toUpperCase()}
         </div>
       </div>

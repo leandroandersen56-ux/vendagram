@@ -62,17 +62,17 @@ export default function PanelProfile() {
 
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-      <h1 className="text-xl font-bold text-foreground mb-6">Meu Perfil</h1>
+      <h1 className="text-xl font-semibold text-foreground mb-6">Meu Perfil</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Profile card */}
         <Card className="bg-card border-border p-6 text-center">
-          <div className="h-20 w-20 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-2xl mx-auto mb-4">
+          <div className="h-20 w-20 rounded-full bg-primary/20 flex items-center justify-center text-primary font-semibold text-2xl mx-auto mb-4">
             {profile?.avatar_url ? (
               <img src={profile.avatar_url} alt="" className="h-full w-full rounded-full object-cover" />
             ) : name?.[0]?.toUpperCase() || "?"}
           </div>
-          <h3 className="font-bold text-foreground">{name}</h3>
+          <h3 className="font-semibold text-foreground">{name}</h3>
           <p className="text-xs text-muted-foreground mb-1">@{username || "usuario"}</p>
           <p className="text-xs text-muted-foreground mb-3">{profile?.email}</p>
           <div className="flex items-center justify-center gap-2 mb-3">

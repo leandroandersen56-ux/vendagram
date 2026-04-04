@@ -124,9 +124,9 @@ export default function TransactionFlow() {
           <div className="bg-card border border-border rounded-lg p-6 mb-6">
             <div className="flex items-start justify-between flex-wrap gap-4">
               <div>
-                <h1 className="text-xl font-bold text-foreground mb-1">Transação Segura</h1>
+                <h1 className="text-xl font-semibold text-foreground mb-1">Transação Segura</h1>
                 <p className="text-sm text-muted-foreground">{listing.title}</p>
-                <p className="text-lg font-display font-bold text-primary mt-2">{formatBRL(listing.price)}</p>
+                <p className="text-lg font-display font-semibold text-primary mt-2">{formatBRL(listing.price)}</p>
               </div>
               <div className="text-right">
                 <Badge className={`${STATUS_CONFIG[status].color} bg-muted border-0 text-xs`}>
@@ -152,7 +152,7 @@ export default function TransactionFlow() {
                   <CheckCircle2 className="h-6 w-6 text-success" />
                 ) : (
                   <div className="h-6 w-6 rounded-full border-2 border-warning flex items-center justify-center">
-                    <span className="text-xs font-bold text-warning">1</span>
+                    <span className="text-xs font-semibold text-warning">1</span>
                   </div>
                 )}
                 <h2 className="font-semibold text-foreground">Pagamento</h2>
@@ -181,7 +181,7 @@ export default function TransactionFlow() {
                   <CheckCircle2 className="h-6 w-6 text-success" />
                 ) : (
                   <div className="h-6 w-6 rounded-full border-2 border-muted-foreground flex items-center justify-center">
-                    <span className="text-xs font-bold text-muted-foreground">2</span>
+                    <span className="text-xs font-semibold text-muted-foreground">2</span>
                   </div>
                 )}
                 <h2 className="font-semibold text-foreground">Entrega de Credenciais</h2>
@@ -211,7 +211,7 @@ export default function TransactionFlow() {
                   <CheckCircle2 className="h-6 w-6 text-success" />
                 ) : (
                   <div className="h-6 w-6 rounded-full border-2 border-muted-foreground flex items-center justify-center">
-                    <span className="text-xs font-bold text-muted-foreground">3</span>
+                    <span className="text-xs font-semibold text-muted-foreground">3</span>
                   </div>
                 )}
                 <h2 className="font-semibold text-foreground">Checklist de Transferência</h2>
@@ -312,7 +312,7 @@ export default function TransactionFlow() {
                   <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring" }}>
                     <CheckCircle2 className="h-16 w-16 text-success mx-auto mb-4" />
                   </motion.div>
-                  <h3 className="text-lg font-bold text-foreground mb-2">Transação Concluída! 🎉</h3>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">Transação Concluída! 🎉</h3>
                   <p className="text-sm text-muted-foreground mb-6">
                     Pagamento de {formatBRL(listing.price * 0.9)} liberado ao vendedor.
                     <br />Taxa da plataforma: {formatBRL(listing.price * 0.1)}

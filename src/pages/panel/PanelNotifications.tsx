@@ -16,7 +16,7 @@ export default function PanelNotifications() {
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-xl font-bold text-foreground">Notificações</h1>
+        <h1 className="text-xl font-semibold text-foreground">Notificações</h1>
         <Button variant="ghost" size="sm" className="text-muted-foreground text-xs">Marcar todas como lidas</Button>
       </div>
 

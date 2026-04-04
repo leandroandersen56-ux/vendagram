@@ -158,7 +158,7 @@ export default function Dashboard() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-2xl font-bold text-foreground">Admin Dashboard</h1>
+              <h1 className="text-2xl font-semibold text-foreground">Admin Dashboard</h1>
               <p className="text-muted-foreground text-sm">Visão geral da plataforma Froiv</p>
             </div>
           </div>
@@ -168,7 +168,7 @@ export default function Dashboard() {
             {kpiCards.map((k) => (
               <Card key={k.label} className="bg-card border-border p-4">
                 <div className={`h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center ${k.color} mb-2`}>{k.icon}</div>
-                <p className="text-xl font-bold text-foreground">{k.value}</p>
+                <p className="text-xl font-semibold text-foreground">{k.value}</p>
                 <p className="text-xs text-muted-foreground">{k.label}</p>
               </Card>
             ))}

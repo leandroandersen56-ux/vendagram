@@ -225,16 +225,16 @@ export default function ListingDetail() {
                   {/* Info */}
                   <div className="p-4 pb-0">
                     <div className="flex flex-wrap items-center gap-1.5 mb-2">
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${PLATFORM_BADGE_COLORS[listing.category] || "bg-[hsl(var(--muted))] text-[hsl(var(--txt-primary))]"}`}>
+                      <span className={`text-[10px] font-semibold px-2 py-0.5 rounded ${PLATFORM_BADGE_COLORS[listing.category] || "bg-[hsl(var(--muted))] text-[hsl(var(--txt-primary))]"}`}>
                         {platform.name.toUpperCase()}
                       </span>
                       {sellerSales >= 5 && (
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[hsl(var(--success-light))] text-[hsl(var(--success))]">
+                        <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-[hsl(var(--success-light))] text-[hsl(var(--success))]">
                           VERIFICADO
                         </span>
                       )}
                       {sellerSales >= 15 && (
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[hsl(var(--hot-light))] text-[hsl(var(--hot))]">
+                        <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-[hsl(var(--hot-light))] text-[hsl(var(--hot))]">
                           MAIS VENDIDO
                         </span>
                       )}
@@ -286,7 +286,7 @@ export default function ListingDetail() {
                 {/* Description */}
                 {listing.description && (
                   <div className="rounded-xl border border-[hsl(var(--border))] bg-white p-4">
-                    <h3 className="text-sm font-bold text-[hsl(var(--txt-primary))] mb-2">📝 Descrição completa</h3>
+                    <h3 className="text-sm font-semibold text-[hsl(var(--txt-primary))] mb-2">📝 Descrição completa</h3>
                     <p className="text-[14px] text-[hsl(var(--txt-secondary))] leading-relaxed whitespace-pre-line">
                       {listing.description}
                     </p>
@@ -332,16 +332,16 @@ export default function ListingDetail() {
                     {/* Info block */}
                     <div className="p-4 pb-0">
                       <div className="flex flex-wrap items-center gap-1.5 mb-2">
-                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${PLATFORM_BADGE_COLORS[listing.category] || "bg-[hsl(var(--muted))] text-[hsl(var(--txt-primary))]"}`}>
+                        <span className={`text-[10px] font-semibold px-2 py-0.5 rounded ${PLATFORM_BADGE_COLORS[listing.category] || "bg-[hsl(var(--muted))] text-[hsl(var(--txt-primary))]"}`}>
                           {platform.name.toUpperCase()}
                         </span>
                         {sellerSales >= 5 && (
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[hsl(var(--success-light))] text-[hsl(var(--success))]">
+                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-[hsl(var(--success-light))] text-[hsl(var(--success))]">
                             VERIFICADO
                           </span>
                         )}
                         {sellerSales >= 15 && (
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[hsl(var(--hot-light))] text-[hsl(var(--hot))]">
+                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-[hsl(var(--hot-light))] text-[hsl(var(--hot))]">
                             MAIS VENDIDO
                           </span>
                         )}

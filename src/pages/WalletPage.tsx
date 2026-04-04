@@ -183,7 +183,7 @@ export default function WalletPage() {
         {/* Balance Card */}
         <div className="bg-gradient-to-br from-primary to-[#1A4BC4] rounded-2xl p-6 text-white">
           <p className="text-xs text-white/70">Saldo disponível</p>
-          <p className="text-4xl font-black mt-1">
+          <p className="text-4xl font-semibold mt-1">
             R$ {wallet.balance.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
           </p>
           {wallet.pending > 0 && (
@@ -194,7 +194,7 @@ export default function WalletPage() {
           <div className="flex gap-3 mt-5">
             <button
               onClick={() => setShowWithdraw(true)}
-              className="flex-1 bg-white text-primary py-2.5 rounded-xl text-sm font-bold"
+              className="flex-1 bg-white text-primary py-2.5 rounded-xl text-sm font-semibold"
             >
               Sacar →
             </button>
@@ -207,7 +207,7 @@ export default function WalletPage() {
         {/* Transaction History */}
         {transactions.length > 0 ? (
           <div>
-            <h3 className="text-sm font-bold text-[#111] mb-3">Histórico</h3>
+            <h3 className="text-sm font-semibold text-[#111] mb-3">Histórico</h3>
             {groups.map((group) => (
               <div key={group}>
                 <p className="text-[12px] text-[#999] uppercase font-semibold pt-3 pb-2">{group}</p>
@@ -239,7 +239,7 @@ export default function WalletPage() {
                           <p className="text-[11px] text-[#999]">{tx.date}</p>
                         </div>
                         <p
-                          className={`text-[15px] font-bold ${
+                          className={`text-[15px] font-semibold ${
                             tx.amount > 0 ? "text-success" : "text-destructive"
                           }`}
                         >

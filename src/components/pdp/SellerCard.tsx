@@ -28,22 +28,22 @@ export default function SellerCard({ name, rating, sales, avatarUrl, onMessage, 
         {avatarUrl ? (
           <img src={avatarUrl} alt={name} className="h-12 w-12 rounded-full object-cover" />
         ) : (
-          <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-base">
+          <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold text-base">
             {initial}
           </div>
         )}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5">
-            <p className="text-sm font-bold text-[hsl(var(--txt-primary))] truncate">{name}</p>
+            <p className="text-sm font-semibold text-[hsl(var(--txt-primary))] truncate">{name}</p>
             {level && (
-              <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded border ${levelColors[level]}`}>
+              <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded border ${levelColors[level]}`}>
                 {level}
               </span>
             )}
           </div>
           <div className="flex items-center gap-1.5 mt-0.5">
             <Star className="h-3.5 w-3.5 text-amber-400 fill-amber-400" />
-            <span className="text-[13px] font-bold text-primary">{rating.toFixed(1)}</span>
+            <span className="text-[13px] font-semibold text-primary">{rating.toFixed(1)}</span>
             <span className="text-[12px] text-[hsl(var(--txt-hint))]">({sales} vendas)</span>
           </div>
         </div>

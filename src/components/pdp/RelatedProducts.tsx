@@ -22,7 +22,7 @@ export default function RelatedProducts({ currentId, category }: RelatedProducts
   return (
     <div>
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-bold text-[hsl(var(--txt-primary))]">📦 Contas semelhantes</h3>
+        <h3 className="text-sm font-semibold text-[hsl(var(--txt-primary))]">📦 Contas semelhantes</h3>
         <Link to="/marketplace" className="text-[13px] text-primary font-semibold hover:underline">
           Ver todos →
         </Link>

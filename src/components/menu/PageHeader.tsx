@@ -17,7 +17,7 @@ export default function PageHeader({ title, rightAction }: PageHeaderProps) {
       >
         <ArrowLeft className="h-5 w-5 text-white" />
       </button>
-      <h1 className="text-white font-bold text-base flex-1 truncate">{title}</h1>
+      <h1 className="text-white font-semibold text-base flex-1 truncate">{title}</h1>
       {rightAction && <div className="shrink-0">{rightAction}</div>}
     </div>
   );

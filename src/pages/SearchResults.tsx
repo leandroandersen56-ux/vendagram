@@ -108,7 +108,7 @@ export default function SearchResults() {
     <div className="space-y-6">
       {/* Platforms */}
       <div>
-        <p className="text-[13px] font-bold text-[#111] mb-3">Plataforma</p>
+        <p className="text-[13px] font-semibold text-[#111] mb-3">Plataforma</p>
         <div className="flex flex-wrap gap-2">
           {PLATFORMS.map((p) => (
             <button
@@ -128,7 +128,7 @@ export default function SearchResults() {
 
       {/* Price range */}
       <div>
-        <p className="text-[13px] font-bold text-[#111] mb-3">Faixa de preço</p>
+        <p className="text-[13px] font-semibold text-[#111] mb-3">Faixa de preço</p>
         <div className="flex gap-3">
           <input
             type="number"
@@ -149,7 +149,7 @@ export default function SearchResults() {
 
       {/* Sort */}
       <div>
-        <p className="text-[13px] font-bold text-[#111] mb-3">Ordenar por</p>
+        <p className="text-[13px] font-semibold text-[#111] mb-3">Ordenar por</p>
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
@@ -188,7 +188,7 @@ export default function SearchResults() {
         {/* Header + filter trigger */}
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h1 className="text-[16px] font-bold text-[#111]">
+            <h1 className="text-[16px] font-semibold text-[#111]">
               {query ? `Resultados para "${query}"` : "Todos os anúncios"}
             </h1>
             <p className="text-[12px] text-[#999]">{results.length} encontrados</p>
@@ -254,7 +254,7 @@ export default function SearchResults() {
           {/* Desktop sidebar filters */}
           <div className="hidden md:block w-64 shrink-0">
             <div className="bg-white rounded-xl border border-[#E8E8E8] p-5 sticky top-4">
-              <h3 className="text-[14px] font-bold text-[#111] mb-4">Filtros</h3>
+              <h3 className="text-[14px] font-semibold text-[#111] mb-4">Filtros</h3>
               <FilterContent />
             </div>
           </div>
