@@ -144,7 +144,7 @@ export default function PanelListings() {
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-xl font-semibold text-foreground">Meus Anúncios</h1>
-        <Link to="/painel/anuncios/novo">
+        <Link to="/vendedor/novo">
           <Button variant="hero" size="sm">
             <Plus className="h-4 w-4 mr-1" /> Novo Anúncio
           </Button>
