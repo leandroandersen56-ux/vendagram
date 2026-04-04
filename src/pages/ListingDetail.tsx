@@ -162,7 +162,10 @@ export default function ListingDetail() {
               <Share2 className="h-4 w-4 text-[hsl(var(--txt-secondary))]" />
             </button>
             <motion.button
-              onClick={() => setFavorited(!favorited)}
+              onClick={() => {
+                if (!isAuthenticated) { openAuth(); return; }
+                if (id) toggleFavorite(id);
+              }}
               className="p-1.5 rounded-full hover:bg-[hsl(var(--muted))]"
               aria-label={favorited ? "Remover dos favoritos" : "Adicionar aos favoritos"}
               whileTap={{ scale: 1.3 }}
