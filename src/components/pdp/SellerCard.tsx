@@ -36,6 +36,9 @@ export default function SellerCard({ name, rating, sales, avatarUrl, isVerified,
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5">
             <p className="text-sm font-semibold text-[hsl(var(--txt-primary))] truncate">{name}</p>
+            {isVerified && (
+              <ShieldCheck className="h-4 w-4 text-primary flex-shrink-0" />
+            )}
             {level && (
               <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded border ${levelColors[level]}`}>
                 {level}
