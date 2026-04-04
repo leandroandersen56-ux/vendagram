@@ -446,8 +446,8 @@ export default function Index() {
         {/* === TRUST BANNER === */}
         <section className="py-8">
           <div className="container mx-auto">
-            <div className="rounded-xl bg-gradient-to-br from-primary to-primary-dark p-6 sm:p-8 text-white">
-              <h2 className="text-center text-[15px] sm:text-lg font-bold mb-6">Por que escolher a Froiv?</h2>
+            <div className="rounded-xl bg-muted/60 border border-border p-6 sm:p-8">
+              <h2 className="text-center text-[15px] sm:text-lg font-bold text-txt-primary mb-6">Por que escolher a Froiv?</h2>
               <div className="grid grid-cols-3 gap-4 sm:gap-6">
                 {[
                   { icon: <Shield className="h-5 w-5" />, value: "100%", label: "Escrow Seguro" },
@@ -455,9 +455,9 @@ export default function Index() {
                   { icon: <CheckCircle2 className="h-5 w-5" />, value: "10%", label: "Taxa Fixa" },
                 ].map((stat) => (
                   <div key={stat.label} className="flex flex-col items-center gap-2 text-center">
-                    <div className="h-10 w-10 rounded-full bg-white/15 backdrop-blur flex items-center justify-center">{stat.icon}</div>
-                    <p className="text-[28px] font-black leading-none">{stat.value}</p>
-                    <p className="text-[11px] text-white/70 font-medium">{stat.label}</p>
+                    <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">{stat.icon}</div>
+                    <p className="text-[28px] font-black leading-none text-txt-primary">{stat.value}</p>
+                    <p className="text-[11px] text-txt-hint font-medium">{stat.label}</p>
                   </div>
                 ))}
               </div>
