@@ -8,6 +8,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useFavorites } from "@/hooks/useFavorites";
 import { formatBRL, PLATFORM_COVERS } from "@/lib/mock-data";
 import logoFroiv from "@/assets/logo-froiv.png";
+import logoFroivWhite from "@/assets/logo-froiv-white.svg";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem,
   DropdownMenuSeparator, DropdownMenuTrigger
@@ -96,7 +97,7 @@ export default function Navbar() {
         <div className="container mx-auto flex items-center h-full gap-3">
           {/* Logo */}
           <Link to="/" className="shrink-0">
-            <img src={logoFroiv} alt="Froiv" className="h-7 md:h-8 brightness-0 invert" />
+            <img src={logoFroivWhite} alt="Froiv" className="h-7 md:h-8" />
           </Link>
 
           {/* Search bar */}
