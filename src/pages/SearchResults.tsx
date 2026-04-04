@@ -293,7 +293,7 @@ export default function SearchResults() {
                         sellerSales: 0,
                         description: listing.description || "",
                         status: listing.status,
-                        fields: [],
+                        fields: listing.highlights || {},
                       }}
                     />
                   </motion.div>
