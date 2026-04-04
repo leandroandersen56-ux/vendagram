@@ -6,6 +6,7 @@ import logoWhite from "@/assets/logo-froiv-white.svg";
 import { useAuth } from "@/contexts/AuthContext";
 import PanelOverview from "@/pages/panel/PanelOverview";
 import PanelListings from "@/pages/panel/PanelListings";
+import PanelOffers from "@/pages/panel/PanelOffers";
 import PanelTransactions from "@/pages/panel/PanelTransactions";
 import PanelWallet from "@/pages/panel/PanelWallet";
 import PanelProfile from "@/pages/panel/PanelProfile";
