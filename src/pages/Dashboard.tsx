@@ -131,6 +131,43 @@ export default function Dashboard() {
     else { toast.success("Saque processado!"); loadAll(); }
   };
 
+  const handleVerification = async (vId: string, action: "approved" | "rejected", reason?: string) => {
+    const { error } = await supabase.from("verification_requests").update({
+      status: action,
+      rejection_reason: action === "rejected" ? (reason || "Documentos não atenderam os requisitos") : null,
+      reviewed_by: user!.id,
+      reviewed_at: new Date().toISOString(),
+    }).eq("id", vId);
+
+    if (error) { toast.error("Erro ao processar verificação"); return; }
+
+    if (action === "approved") {
+      const vr = verifications.find((v: any) => v.id === vId);
+      if (vr) {
+        await supabase.from("profiles").update({ is_verified: true }).eq("user_id", vr.user_id);
+        await supabase.from("notifications").insert({
+          user_id: vr.user_id,
+          title: "Conta verificada!",
+          body: "Parabéns! Sua conta foi verificada. O selo de vendedor verificado já aparece no seu perfil.",
+          link: "/painel/perfil",
+        });
+      }
+    } else {
+      const vr = verifications.find((v: any) => v.id === vId);
+      if (vr) {
+        await supabase.from("notifications").insert({
+          user_id: vr.user_id,
+          title: "Verificação recusada",
+          body: reason || "Seus documentos não atenderam aos requisitos. Envie novamente.",
+          link: "/painel/verificacao",
+        });
+      }
+    }
+
+    toast.success(action === "approved" ? "Conta verificada!" : "Verificação recusada");
+    loadAll();
+  };
+
   const filteredUsers = users.filter((u: any) =>
     !searchUser || (u.name || "").toLowerCase().includes(searchUser.toLowerCase()) || (u.email || "").toLowerCase().includes(searchUser.toLowerCase())
   );
