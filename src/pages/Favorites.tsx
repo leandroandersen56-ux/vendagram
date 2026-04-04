@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useFavorites } from "@/hooks/useFavorites";
-import { formatBRL } from "@/lib/mock-data";
+import { formatBRL, PLATFORM_COVERS } from "@/lib/mock-data";
 import PlatformIcon from "@/components/PlatformIcon";
 
 export default function Favorites() {
