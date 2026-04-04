@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Copy, Check, Lock, Loader2, AlertTriangle, Send } from "lucide-react";
+import { Copy, Check, Lock, Loader2, AlertTriangle, Send, Package } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
