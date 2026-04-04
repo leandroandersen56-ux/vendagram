@@ -262,7 +262,23 @@ export default function OrderDetail() {
           </div>
         </div>
 
-        {/* Action Buttons */}
+        {/* Credentials Panel */}
+        {transaction && (
+          <CredentialsPanel
+            transactionId={transaction.id}
+            isSeller={transaction.seller_id === user?.id}
+            transactionStatus={transaction.status}
+            credentials={credentials}
+            deliveredAt={credentialsDeliveredAt}
+            onCredentialsSent={loadTransaction}
+          />
+        )}
+
+        {/* Transaction Chat */}
+        {transaction && ["paid", "transfer_in_progress", "disputed"].includes(transaction.status) && (
+          <TransactionChat transactionId={transaction.id} />
+        )}
+
         <div className="space-y-2.5">
           {canRelease && (
             <button
