@@ -14,6 +14,7 @@ import PlatformIcon from "@/components/PlatformIcon";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFavorites } from "@/hooks/useFavorites";
+import { addToCart } from "@/pages/Cart";
 
 import ProductGallery from "@/components/pdp/ProductGallery";
 import BuyBox from "@/components/pdp/BuyBox";
@@ -140,6 +141,16 @@ export default function ListingDetail() {
   };
 
   const handleBuy = () => {
+    if (listing) {
+      addToCart({
+        listingId: listing.id,
+        title: listing.title,
+        price: Number(listing.price),
+        category: listing.category,
+        screenshot: listing.screenshots?.[0] || undefined,
+      });
+      toast.success("Adicionado ao carrinho!");
+    }
     if (isAuthenticated) {
       navigate(`/checkout/${listing.id}`);
     } else {
