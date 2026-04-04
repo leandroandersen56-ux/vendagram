@@ -452,9 +452,18 @@ export default function Checkout() {
 
                   {paymentMethod === "card" && (
                     <div className="bg-card border border-border rounded-lg p-5 space-y-4">
-                      <div className="flex items-center gap-3 mb-1">
-                        <CreditCard className="h-5 w-5 text-primary" />
-                        <p className="font-medium text-foreground text-sm">Dados do cartão</p>
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="flex items-center gap-3">
+                          <CreditCard className="h-5 w-5 text-primary" />
+                          <p className="font-medium text-foreground text-sm">Dados do cartão</p>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <PaymentBadge type="visa" />
+                          <PaymentBadge type="mastercard" />
+                          <PaymentBadge type="amex" />
+                          <PaymentBadge type="elo" />
+                          <PaymentBadge type="hipercard" />
+                        </div>
                       </div>
                       <div className="space-y-4">
                         <div className="space-y-1.5">
