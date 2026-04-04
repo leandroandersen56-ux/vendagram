@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { X, Download } from "lucide-react";
-import logoFroiv from "@/assets/logo-froiv.png";
+
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
