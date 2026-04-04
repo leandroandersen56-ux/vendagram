@@ -248,7 +248,7 @@ export default function ListingDetail() {
                       <span className="text-[hsl(var(--border))]">|</span>
                       <span className="text-[hsl(var(--txt-secondary))]">{sellerSales} vendas</span>
                       <span className="text-[hsl(var(--border))]">|</span>
-                      <button className="text-primary font-medium hover:underline">Ver avaliações →</button>
+                      <button className="text-primary font-medium hover:underline" onClick={() => seller?.username ? navigate(`/perfil/${seller.username}`) : toast.info("Vendedor sem perfil público")}>Ver avaliações →</button>
                     </div>
                   </div>
 
