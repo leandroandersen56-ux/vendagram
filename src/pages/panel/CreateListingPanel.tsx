@@ -112,6 +112,18 @@ export default function CreateListing() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
+  const [isVerified, setIsVerified] = useState<boolean | null>(null);
+
+  // Check verification status
+  useState(() => {
+    if (!user?.id) return;
+    supabase
+      .from("profiles")
+      .select("is_verified")
+      .eq("user_id", user.id)
+      .maybeSingle()
+      .then(({ data }) => setIsVerified(data?.is_verified ?? false));
+  });
 
   const [platform, setPlatform] = useState("");
   const [title, setTitle] = useState("");
