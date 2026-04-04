@@ -1,4 +1,4 @@
-import { Star, MessageCircle, User, CheckCircle2, Package } from "lucide-react";
+import { Star, MessageCircle, User, CheckCircle2, Package, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface SellerCardProps {
@@ -6,6 +6,7 @@ interface SellerCardProps {
   rating: number;
   sales: number;
   avatarUrl?: string;
+  isVerified?: boolean;
   onMessage?: () => void;
   onViewProfile?: () => void;
 }
