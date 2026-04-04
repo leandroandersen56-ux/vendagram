@@ -245,7 +245,7 @@ export default function CreateListing() {
       toast({ title: "Erro ao criar anúncio", description: error.message, variant: "destructive" });
     } else {
       toast({ title: "Anúncio publicado!" });
-      navigate("/painel/anuncios");
+      navigate("/vendedor", { state: { tab: "anuncios" } });
     }
   };
 
