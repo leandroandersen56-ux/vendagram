@@ -2,12 +2,12 @@ import { useState } from "react";
 import { Zap, Shield, ChevronRight, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function TrustSignals() {
+export default function TrustSignals({ inline }: { inline?: boolean }) {
   const [showEscrowModal, setShowEscrowModal] = useState(false);
 
   return (
     <>
-      <div className="rounded-xl border border-[hsl(var(--success))]/30 bg-[hsl(var(--success-light))] p-4 space-y-3">
+      <div className={inline ? "space-y-3" : "rounded-xl border border-[hsl(var(--success))]/30 bg-[hsl(var(--success-light))] p-4 space-y-3"}>
         <div className="flex items-start gap-3">
           <Zap className="h-5 w-5 text-[hsl(var(--success))] mt-0.5 flex-shrink-0" />
           <div>
