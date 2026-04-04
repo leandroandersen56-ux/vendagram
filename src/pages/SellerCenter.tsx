@@ -59,7 +59,7 @@ export default function SellerCenter() {
   ];
 
   const repLevel = metrics.rating >= 4.8 ? 4 : metrics.rating >= 4.5 ? 3 : metrics.rating >= 4.0 ? 2 : 1;
-  const repName = repLevel >= 4 ? "Platinum" : repLevel >= 3 ? "Gold" : repLevel >= 2 ? "Silver" : "Bronze";
+  const repName = isVerified ? (repLevel >= 4 ? "Platinum" : repLevel >= 3 ? "Gold" : repLevel >= 2 ? "Silver" : "Bronze") : "Não verificado";
 
   const QUICK_LINKS = [
     { icon: ClipboardList, label: "Meus anúncios", count: metrics.listingCount, path: "/painel/anuncios" },
