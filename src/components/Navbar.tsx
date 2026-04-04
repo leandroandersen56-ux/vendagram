@@ -175,6 +175,11 @@ export default function Navbar() {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
+                    <Link to="/favoritos" className="cursor-pointer">
+                      <Heart className="h-4 w-4 mr-2" /> Favoritos
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
                     <Link to="/painel/perfil" className="cursor-pointer">
                       <User className="h-4 w-4 mr-2" /> Meu Perfil
                     </Link>
