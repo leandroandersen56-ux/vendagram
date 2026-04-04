@@ -65,7 +65,7 @@ export default function Footer() {
       {/* Mobile */}
       <div className="sm:hidden pb-16">
         <div className="px-4 py-6 space-y-6">
-          <div className="flex items-center justify-center mb-6">
+          <div className="flex items-center justify-center mb-12">
             <img src={logoFroiv} alt="Froiv" className="h-8" />
           </div>
           <div className="flex items-center justify-center gap-5">
