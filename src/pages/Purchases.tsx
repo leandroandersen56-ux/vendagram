@@ -1,9 +1,11 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Search, Star, ShoppingCart, ArrowRight } from "lucide-react";
+import { Search, Star, ShoppingCart, ArrowRight, Loader2 } from "lucide-react";
 import PageHeader from "@/components/menu/PageHeader";
-import { Skeleton } from "@/components/ui/skeleton";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 const STATUS_MAP: Record<string, { label: string; color: string; icon: string }> = {
   pending_payment: { label: "Aguardando pagamento", color: "text-[#FF6900] bg-[#FF6900]/10", icon: "⏳" },
@@ -17,54 +19,49 @@ const STATUS_MAP: Record<string, { label: string; color: string; icon: string }>
 
 const FILTERS = ["Todos", "Em andamento", "Concluídos", "Disputas"];
 
-const MOCK_PURCHASES = [
-  {
-    id: "FRV-2026-001",
-    title: "Instagram 50K - Fitness",
-    thumb: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=128&h=128&fit=crop",
-    status: "completed",
-    date: "15 de março de 2026",
-    receivedDate: "15 de março",
-    price: 819.99,
-    qty: 1,
-    rated: false,
-  },
-  {
-    id: "FRV-2026-002",
-    title: "TikTok 120K - Nicho Humor",
-    thumb: "https://images.unsplash.com/photo-1611605698335-8b1569810432?w=128&h=128&fit=crop",
-    status: "transfer_in_progress",
-    date: "18 de março de 2026",
-    receivedDate: null,
-    price: 1200,
-    qty: 1,
-    rated: false,
-  },
-  {
-    id: "FRV-2026-003",
-    title: "Free Fire Nível 80 - Full Skin",
-    thumb: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=128&h=128&fit=crop",
-    status: "pending_payment",
-    date: "20 de março de 2026",
-    receivedDate: null,
-    price: 450,
-    qty: 1,
-    rated: false,
-  },
-];
-
 export default function Purchases() {
   const [filter, setFilter] = useState("Todos");
   const [search, setSearch] = useState("");
+  const [purchases, setPurchases] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { user } = useAuth();
 
-  const filtered = MOCK_PURCHASES.filter((p) => {
-    if (search && !p.title.toLowerCase().includes(search.toLowerCase())) return false;
+  useEffect(() => {
+    if (user?.id) loadPurchases();
+  }, [user?.id]);
+
+  const loadPurchases = async () => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from("transactions")
+        .select("*, listings(title, category, screenshots)")
+        .eq("buyer_id", user!.id)
+        .order("created_at", { ascending: false });
+
+      if (!error && data) {
+        setPurchases(data);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filtered = purchases.filter((p) => {
+    const title = p.listings?.title || "";
+    if (search && !title.toLowerCase().includes(search.toLowerCase())) return false;
     if (filter === "Em andamento") return ["pending_payment", "paid", "transfer_in_progress"].includes(p.status);
     if (filter === "Concluídos") return p.status === "completed";
     if (filter === "Disputas") return p.status === "disputed";
     return true;
   });
+
+  const formatDate = (dateStr: string) => {
+    return new Date(dateStr).toLocaleDateString("pt-BR", { day: "numeric", month: "long", year: "numeric" });
+  };
 
   return (
     <div className="min-h-screen bg-[#F5F5F5] pb-20">
@@ -87,9 +84,7 @@ export default function Purchases() {
               key={f}
               onClick={() => setFilter(f)}
               className={`px-4 py-1.5 rounded-full text-[13px] font-medium whitespace-nowrap transition-colors ${
-                filter === f
-                  ? "bg-primary text-white"
-                  : "bg-white border border-[#E0E0E0] text-[#555]"
+                filter === f ? "bg-primary text-white" : "bg-white border border-[#E0E0E0] text-[#555]"
               }`}
             >
               {f}
@@ -107,7 +102,11 @@ export default function Purchases() {
 
       {/* Purchase cards */}
       <div className="px-4 space-y-3">
-        {filtered.length === 0 ? (
+        {loading ? (
+          <div className="flex items-center justify-center py-16">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        ) : filtered.length === 0 ? (
           <div className="text-center py-16">
             <ShoppingCart className="h-16 w-16 text-[#DDD] mx-auto mb-3" strokeWidth={1} />
             <p className="text-[#333] font-semibold">Você ainda não comprou nada</p>
@@ -121,7 +120,11 @@ export default function Purchases() {
           </div>
         ) : (
           filtered.map((purchase, i) => {
-            const status = STATUS_MAP[purchase.status];
+            const status = STATUS_MAP[purchase.status] || STATUS_MAP.pending_payment;
+            const listing = purchase.listings;
+            const thumb = listing?.screenshots?.[0] || "/placeholder.svg";
+            const title = listing?.title || "Conta";
+
             return (
               <motion.div
                 key={purchase.id}
@@ -132,29 +135,30 @@ export default function Purchases() {
                 onClick={() => navigate(`/compras/${purchase.id}`)}
               >
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-[12px] text-[#999]">{purchase.date}</span>
-                  <span className="text-[13px] text-primary font-semibold flex items-center gap-1">
-                    Comprar novamente <ArrowRight className="h-3 w-3" />
-                  </span>
+                  <span className="text-[12px] text-[#999]">{formatDate(purchase.created_at)}</span>
                 </div>
                 <div className="flex gap-3">
                   <img
-                    src={purchase.thumb}
-                    alt={purchase.title}
+                    src={thumb}
+                    alt={title}
                     className="h-16 w-16 rounded-lg object-cover shrink-0"
                   />
                   <div className="flex-1 min-w-0">
                     <span className={`inline-flex items-center gap-1 text-[12px] px-2 py-0.5 rounded-full ${status.color}`}>
                       {status.icon} {status.label}
                     </span>
-                    {purchase.receivedDate && (
-                      <p className="text-[11px] text-[#999] mt-0.5">Recebida em {purchase.receivedDate}</p>
+                    {purchase.completed_at && (
+                      <p className="text-[11px] text-[#999] mt-0.5">
+                        Concluída em {formatDate(purchase.completed_at)}
+                      </p>
                     )}
-                    <p className="text-[14px] text-[#111] font-medium truncate mt-0.5">{purchase.title}</p>
-                    <p className="text-[13px] text-[#666]">{purchase.qty} conta · R$ {purchase.price.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</p>
+                    <p className="text-[14px] text-[#111] font-medium truncate mt-0.5">{title}</p>
+                    <p className="text-[13px] text-[#666]">
+                      R$ {Number(purchase.amount).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+                    </p>
                   </div>
                 </div>
-                {purchase.status === "completed" && !purchase.rated && (
+                {purchase.status === "completed" && (
                   <button className="mt-3 w-full flex items-center justify-center gap-1.5 bg-[#FF6900] text-white py-2 rounded-lg text-[13px] font-semibold">
                     <Star className="h-3.5 w-3.5" fill="white" /> Avaliar e ganhar recompensas
                   </button>
