@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useFavorites } from "@/hooks/useFavorites";
-import { formatBRL } from "@/lib/mock-data";
+import { formatBRL, PLATFORM_COVERS } from "@/lib/mock-data";
 import PlatformIcon from "@/components/PlatformIcon";
 
 export default function Favorites() {
@@ -48,7 +48,7 @@ export default function Favorites() {
               {favorites.map((fav) => {
                 const listing = fav.listing;
                 if (!listing) return null;
-                const thumb = listing.screenshots?.[0];
+                const thumb = listing.screenshots?.[0] || PLATFORM_COVERS[listing.category as keyof typeof PLATFORM_COVERS];
                 return (
                   <div
                     key={fav.id}
