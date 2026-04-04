@@ -215,6 +215,38 @@ export type Database = {
         }
         Relationships: []
       }
+      listing_views: {
+        Row: {
+          id: string
+          listing_id: string
+          session_id: string | null
+          user_id: string | null
+          viewed_at: string
+        }
+        Insert: {
+          id?: string
+          listing_id: string
+          session_id?: string | null
+          user_id?: string | null
+          viewed_at?: string
+        }
+        Update: {
+          id?: string
+          listing_id?: string
+          session_id?: string | null
+          user_id?: string | null
+          viewed_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "listing_views_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       listings: {
         Row: {
           category: Database["public"]["Enums"]["listing_category"]
@@ -388,6 +420,44 @@ export type Database = {
           whatsapp?: string | null
         }
         Relationships: []
+      }
+      referrals: {
+        Row: {
+          commission_amount: number | null
+          created_at: string
+          id: string
+          referred_id: string
+          referrer_id: string
+          status: string
+          transaction_id: string | null
+        }
+        Insert: {
+          commission_amount?: number | null
+          created_at?: string
+          id?: string
+          referred_id: string
+          referrer_id: string
+          status?: string
+          transaction_id?: string | null
+        }
+        Update: {
+          commission_amount?: number | null
+          created_at?: string
+          id?: string
+          referred_id?: string
+          referrer_id?: string
+          status?: string
+          transaction_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referrals_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       reviews: {
         Row: {
