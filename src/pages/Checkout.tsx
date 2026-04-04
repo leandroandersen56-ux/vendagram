@@ -16,6 +16,35 @@ import { formatBRL, getPlatform } from "@/lib/mock-data";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import amexIcon from "@/assets/amex-icon.svg";
+import eloIcon from "@/assets/elo-icon.png";
+import hipercardIcon from "@/assets/hipercard-icon.svg";
+
+function PaymentBadge({ type }: { type: "pix" | "visa" | "mastercard" | "amex" | "elo" | "hipercard" }) {
+  const h = 16;
+  const iconFilter = "brightness(0) saturate(100%) invert(33%) sepia(93%) saturate(1752%) hue-rotate(213deg) brightness(97%) contrast(91%)";
+  const icons: Record<string, React.ReactNode> = {
+    pix: (
+      <svg width={h} height={h} viewBox="0 0 24 24" fill="currentColor">
+        <path d="M5.283 18.36a3.505 3.505 0 0 0 2.493-1.032l3.6-3.6a.684.684 0 0 1 .946 0l3.613 3.613a3.504 3.504 0 0 0 2.493 1.032h.71l-4.56 4.56a3.647 3.647 0 0 1-5.156 0L4.85 18.36ZM18.428 5.627a3.505 3.505 0 0 0-2.493 1.032l-3.613 3.614a.67.67 0 0 1-.946 0l-3.6-3.6A3.505 3.505 0 0 0 5.283 5.64h-.434l4.573-4.572a3.646 3.646 0 0 1 5.156 0l4.559 4.559ZM1.068 9.422 3.79 6.699h1.492a2.483 2.483 0 0 1 1.744.722l3.6 3.6a1.73 1.73 0 0 0 2.443 0l3.614-3.613a2.482 2.482 0 0 1 1.744-.723h1.767l2.737 2.737a3.646 3.646 0 0 1 0 5.156l-2.736 2.736h-1.768a2.482 2.482 0 0 1-1.744-.722l-3.613-3.613a1.77 1.77 0 0 0-2.444 0l-3.6 3.6a2.483 2.483 0 0 1-1.744.722H3.791l-2.723-2.723a3.646 3.646 0 0 1 0-5.156"/>
+      </svg>
+    ),
+    visa: (
+      <svg width={h * 1.5} height={h} viewBox="0 0 24 15" fill="currentColor">
+        <path d="M9.112 1.262L5.97 8.758H3.92L2.374 2.775c-.094-.368-.175-.503-.461-.658C1.447 1.864.677 1.627 0 1.479l.046-.217h3.3a.904.904 0 01.894.764l.817 4.338 2.018-5.102zm8.033 5.049c.008-1.979-2.736-2.088-2.717-2.972.006-.269.262-.555.822-.628a3.66 3.66 0 011.913.336l.34-1.59a5.207 5.207 0 00-1.814-.333c-1.917 0-3.266 1.02-3.278 2.479-.012 1.079.963 1.68 1.698 2.04.756.367 1.01.603 1.006.931-.005.504-.602.725-1.16.734-.975.015-1.54-.263-1.992-.473l-.351 1.642c.453.208 1.289.39 2.156.398 2.037 0 3.37-1.006 3.377-2.564m5.061 2.447H24l-1.565-7.496h-1.656a.883.883 0 00-.826.55l-2.909 6.946h2.036l.405-1.12h2.488zm-2.163-2.656l1.02-2.815.588 2.815zm-8.16-4.84l-1.603 7.496H8.34l1.605-7.496z"/>
+      </svg>
+    ),
+    mastercard: (
+      <svg width={h * 1.2} height={h * 1.2} viewBox="0 0 24 24" fill="currentColor">
+        <path d="M11.343 18.031c.058.049.12.098.181.146-1.177.783-2.59 1.238-4.107 1.238C3.32 19.416 0 16.096 0 12c0-4.095 3.32-7.416 7.416-7.416 1.518 0 2.931.456 4.105 1.238-.06.051-.12.098-.165.15C9.6 7.489 8.595 9.688 8.595 12c0 2.311 1.001 4.51 2.748 6.031zm5.241-13.447c-1.52 0-2.931.456-4.105 1.238.06.051.12.098.165.15C14.4 7.489 15.405 9.688 15.405 12c0 2.31-1.001 4.507-2.748 6.031-.058.049-.12.098-.181.146 1.177.783 2.588 1.238 4.107 1.238C20.68 19.416 24 16.096 24 12c0-4.094-3.32-7.416-7.416-7.416zM12 6.174c-.096.075-.189.15-.28.231C10.156 7.764 9.169 9.765 9.169 12c0 2.236.987 4.236 2.551 5.595.09.08.185.158.28.232.096-.074.189-.152.28-.232 1.563-1.359 2.551-3.359 2.551-5.595 0-2.235-.987-4.236-2.551-5.595-.09-.08-.184-.156-.28-.231z"/>
+      </svg>
+    ),
+    amex: <img src={amexIcon} alt="Amex" className="h-3.5 w-auto" style={{ filter: iconFilter }} />,
+    elo: <img src={eloIcon} alt="Elo" className="h-3.5 w-auto" style={{ filter: iconFilter }} />,
+    hipercard: <img src={hipercardIcon} alt="Hipercard" className="h-3.5 w-auto" style={{ filter: iconFilter }} />,
+  };
+  return <span className="text-primary flex items-center justify-center min-w-[36px] h-6 px-1 rounded border border-border bg-muted/50">{icons[type]}</span>;
+}
 
 const PAYMENT_METHODS = [
   { id: "pix", label: "Pix", icon: <QrCode className="h-5 w-5" />, description: "Aprovação instantânea" },
@@ -412,17 +441,29 @@ export default function Checkout() {
                         <QrCode className="h-5 w-5 text-primary" />
                         <p className="font-medium text-foreground text-sm">Pix via Mercado Pago</p>
                       </div>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-muted-foreground mb-3">
                         Ao finalizar, um QR Code será gerado para pagamento instantâneo. O valor fica retido em escrow até a conclusão da transação.
                       </p>
+                      <div className="flex items-center gap-2">
+                        <PaymentBadge type="pix" />
+                      </div>
                     </div>
                   )}
 
                   {paymentMethod === "card" && (
                     <div className="bg-card border border-border rounded-lg p-5 space-y-4">
-                      <div className="flex items-center gap-3 mb-1">
-                        <CreditCard className="h-5 w-5 text-primary" />
-                        <p className="font-medium text-foreground text-sm">Dados do cartão</p>
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="flex items-center gap-3">
+                          <CreditCard className="h-5 w-5 text-primary" />
+                          <p className="font-medium text-foreground text-sm">Dados do cartão</p>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <PaymentBadge type="visa" />
+                          <PaymentBadge type="mastercard" />
+                          <PaymentBadge type="amex" />
+                          <PaymentBadge type="elo" />
+                          <PaymentBadge type="hipercard" />
+                        </div>
                       </div>
                       <div className="space-y-4">
                         <div className="space-y-1.5">
