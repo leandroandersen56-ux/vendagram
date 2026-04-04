@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Zap, Shield, ChevronRight, X } from "lucide-react";
+import { Zap, Shield, ChevronRight, X, ShoppingCart, Lock, CheckCircle2, Wallet, ClipboardList } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function TrustSignals({ inline }: { inline?: boolean }) {
