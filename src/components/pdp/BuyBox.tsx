@@ -60,15 +60,7 @@ export default function BuyBox({ price, originalPrice, onBuy, onOffer, inline }:
         </Button>
       </motion.div>
 
-      <Button
-        variant="outline"
-        className="w-full h-[52px] text-base font-semibold rounded-xl border-2 border-primary text-primary hover:bg-primary/5 mt-2.5"
-        onClick={onOffer}
-        aria-label="Fazer uma oferta ao vendedor"
-      >
-        <MessageCircle className="h-5 w-5 mr-2" />
-        FAZER OFERTA
-      </Button>
+      {/* Offer button is now rendered separately via OfferButton component */}
 
       {/* Trust signals */}
       {!inline && (
