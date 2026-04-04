@@ -333,15 +333,15 @@ export default function Navbar() {
         )}
       </AnimatePresence>
 
-      {/* Notif overlay backdrop (mobile) */}
+      {/* Overlay backdrop for dropdowns */}
       <AnimatePresence>
-        {notifOpen && (
+        {(notifOpen || favOpen) && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-40 bg-black/20"
-            onClick={() => setNotifOpen(false)}
+            onClick={() => { setNotifOpen(false); setFavOpen(false); }}
           />
         )}
       </AnimatePresence>
