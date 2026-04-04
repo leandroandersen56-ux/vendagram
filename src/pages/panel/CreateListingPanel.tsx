@@ -288,7 +288,7 @@ export default function CreateListing() {
           <Input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder={isGame ? "Ex: BBZONA A VENDA! PROMOÇÃO 🔥" : "Ex: VENDO CONTA TIKTOK BR 2K SEGUIDORES"}
+            placeholder={isGame ? "Ex: BBZONA A VENDA! PROMOÇÃO" : "Ex: VENDO CONTA TIKTOK BR 2K SEGUIDORES"}
             className="bg-card border-border text-base font-medium h-12"
             autoFocus
           />
