@@ -23,6 +23,7 @@ import PanelTransactions from "./pages/panel/PanelTransactions.tsx";
 import PanelWallet from "./pages/panel/PanelWallet.tsx";
 import PanelNotifications from "./pages/panel/PanelNotifications.tsx";
 import PanelProfile from "./pages/panel/PanelProfile.tsx";
+import PanelVerification from "./pages/panel/PanelVerification.tsx";
 import CreateListingPanel from "./pages/panel/CreateListingPanel.tsx";
 import EditListingPanel from "./pages/panel/EditListingPanel.tsx";
 import NotFound from "./pages/NotFound.tsx";
