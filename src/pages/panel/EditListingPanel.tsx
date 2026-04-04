@@ -273,7 +273,7 @@ export default function EditListingPanel() {
     if (error) {
       toast({ title: "Erro ao salvar", description: error.message, variant: "destructive" });
     } else {
-      toast({ title: "Anúncio atualizado! ✅" });
+      toast({ title: "Anúncio atualizado!" });
       navigate("/painel/anuncios");
     }
   };
@@ -354,7 +354,7 @@ export default function EditListingPanel() {
         {/* ── Features ── */}
         {featureList.length > 0 && (
           <div className="space-y-2">
-            <Label className="text-foreground text-xs uppercase tracking-wide">Marque o que se aplica ✅</Label>
+            <Label className="text-foreground text-xs uppercase tracking-wide">Marque o que se aplica</Label>
             <div className="flex flex-wrap gap-2">
               {featureList.map((f) => {
                 const on = feats.includes(f);
@@ -369,7 +369,7 @@ export default function EditListingPanel() {
                         : "bg-card border-border text-muted-foreground hover:border-primary/30"
                     }`}
                   >
-                    {on ? "✅" : "○"} {f}
+                    {on ? "●" : "○"} {f}
                   </button>
                 );
               })}
@@ -393,7 +393,7 @@ export default function EditListingPanel() {
                       : "bg-card border-border text-muted-foreground hover:border-primary/30"
                   }`}
                 >
-                  {loginType === l ? "✅" : "○"} {l}
+                  {loginType === l ? "●" : "○"} {l}
                 </button>
               ))}
             </div>
@@ -416,7 +416,7 @@ export default function EditListingPanel() {
                       : "bg-card border-border text-muted-foreground hover:border-primary/30"
                   }`}
                 >
-                  {rank === r ? "✅" : "○"} {r}
+                  {rank === r ? "●" : "○"} {r}
                 </button>
               ))}
             </div>
@@ -603,7 +603,7 @@ export default function EditListingPanel() {
             disabled={!title || !price || saving}
           >
             <Save className="h-4 w-4 mr-2" />
-            {saving ? "Salvando..." : "Salvar Alterações ✅"}
+            {saving ? "Salvando..." : "Salvar Alterações"}
           </Button>
         </div>
       </div>

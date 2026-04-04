@@ -232,7 +232,7 @@ export default function CreateListing() {
     if (error) {
       toast({ title: "Erro ao criar anúncio", description: error.message, variant: "destructive" });
     } else {
-      toast({ title: "Anúncio publicado! 🎉" });
+      toast({ title: "Anúncio publicado!" });
       navigate("/painel/anuncios");
     }
   };
@@ -288,7 +288,7 @@ export default function CreateListing() {
           <Input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder={isGame ? "Ex: BBZONA A VENDA! PROMOÇÃO 🔥" : "Ex: VENDO CONTA TIKTOK BR 2K SEGUIDORES"}
+            placeholder={isGame ? "Ex: BBZONA A VENDA! PROMOÇÃO" : "Ex: VENDO CONTA TIKTOK BR 2K SEGUIDORES"}
             className="bg-card border-border text-base font-medium h-12"
             autoFocus
           />
@@ -332,7 +332,7 @@ export default function CreateListing() {
         {/* ── Features: toque pra marcar ── */}
         {featureList.length > 0 && (
           <div className="space-y-2">
-            <Label className="text-foreground text-xs uppercase tracking-wide">Marque o que se aplica ✅</Label>
+            <Label className="text-foreground text-xs uppercase tracking-wide">Marque o que se aplica</Label>
             <div className="flex flex-wrap gap-2">
               {featureList.map((f) => {
                 const on = feats.includes(f);
@@ -347,7 +347,7 @@ export default function CreateListing() {
                         : "bg-card border-border text-muted-foreground hover:border-primary/30"
                     }`}
                   >
-                    {on ? "✅" : "○"} {f}
+                    {on ? "●" : "○"} {f}
                   </button>
                 );
               })}
@@ -371,7 +371,7 @@ export default function CreateListing() {
                       : "bg-card border-border text-muted-foreground hover:border-primary/30"
                   }`}
                 >
-                  {loginType === l ? "✅" : "○"} {l}
+                  {loginType === l ? "●" : "○"} {l}
                 </button>
               ))}
             </div>
@@ -394,7 +394,7 @@ export default function CreateListing() {
                       : "bg-card border-border text-muted-foreground hover:border-primary/30"
                   }`}
                 >
-                  {rank === r ? "✅" : "○"} {r}
+                  {rank === r ? "●" : "○"} {r}
                 </button>
               ))}
             </div>
@@ -613,7 +613,7 @@ export default function CreateListing() {
             onClick={handlePublish}
             disabled={!title || !price || loading}
           >
-            {loading ? "Publicando..." : "Publicar Anúncio 🚀"}
+            {loading ? "Publicando..." : "Publicar Anúncio"}
           </Button>
         </div>
       </div>

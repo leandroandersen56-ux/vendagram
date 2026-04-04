@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ShoppingCart, MessageCircle, Shield, Zap, Clock } from "lucide-react";
+import { ShoppingCart, MessageCircle, Shield, Zap, Clock, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatBRL } from "@/lib/mock-data";
 
@@ -43,7 +43,7 @@ export default function BuyBox({ price, originalPrice, onBuy, onOffer, inline }:
         </p>
 
         <div className="flex items-center gap-1.5 mt-2 text-[13px] text-[hsl(var(--success))] font-semibold">
-          <span>🏷️</span>
+          <Tag className="h-3.5 w-3.5" />
           <span>5% OFF no Pix → {pixPrice}</span>
         </div>
       </div>

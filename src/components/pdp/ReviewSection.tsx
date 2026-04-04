@@ -24,7 +24,7 @@ export default function ReviewSection({ rating, totalSales }: ReviewSectionProps
   return (
     <div className="rounded-xl border border-[hsl(var(--border))] bg-white overflow-hidden">
       <div className="px-4 py-3.5">
-        <h3 className="text-sm font-semibold text-[hsl(var(--txt-primary))]">⭐ Opiniões de compradores</h3>
+        <h3 className="text-sm font-semibold text-[hsl(var(--txt-primary))] flex items-center gap-1.5"><Star className="h-4 w-4 text-primary" /> Opiniões de compradores</h3>
       </div>
 
       {/* Rating summary */}

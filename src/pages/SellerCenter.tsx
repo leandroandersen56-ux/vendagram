@@ -69,7 +69,7 @@ export default function SellerCenter() {
   return (
     <div className="min-h-screen bg-[#F5F5F5] pb-20">
       <PageHeader title="Central do Vendedor" rightAction={
-        <span className="text-[11px] bg-success/20 text-success font-semibold px-2 py-1 rounded-full">⭐ {repName}</span>
+        <span className="text-[11px] bg-success/20 text-success font-semibold px-2 py-1 rounded-full flex items-center gap-1"><Star className="h-3 w-3 fill-current" /> {repName}</span>
       } />
 
       <div className="px-4 pt-4 space-y-4">

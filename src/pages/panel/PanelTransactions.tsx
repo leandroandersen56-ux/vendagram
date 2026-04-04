@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Eye, Loader2 } from "lucide-react";
+import { Eye, Loader2, ClipboardList } from "lucide-react";
 import { formatBRL } from "@/lib/mock-data";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -133,7 +133,7 @@ export default function PanelTransactions() {
         </div>
       ) : (
         <Card className="bg-card border-border p-12 text-center">
-          <p className="text-3xl mb-3">📋</p>
+          <ClipboardList className="h-8 w-8 text-primary mx-auto mb-3" />
           <p className="font-medium text-foreground mb-2">Nenhuma transação</p>
           <p className="text-sm text-muted-foreground">Suas compras e vendas aparecerão aqui</p>
         </Card>

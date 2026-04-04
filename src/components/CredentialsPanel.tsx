@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Copy, Check, Lock, Loader2, AlertTriangle, Send } from "lucide-react";
+import { Copy, Check, Lock, Loader2, AlertTriangle, Send, Package } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -90,7 +90,7 @@ export default function CredentialsPanel({
         className="bg-[#FFF8E0] border border-[#FFD700] rounded-xl p-4"
       >
         <h3 className="text-sm font-semibold text-[#111] mb-3 flex items-center gap-2">
-          📦 Enviar credenciais da conta
+          <Package className="h-4 w-4 text-primary" /> Enviar credenciais da conta
         </h3>
         <div className="space-y-3">
           <div>

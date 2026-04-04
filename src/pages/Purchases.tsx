@@ -2,19 +2,19 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Search, Star, ShoppingCart, ArrowRight, Loader2 } from "lucide-react";
+import { Search, Star, ShoppingCart, ArrowRight, Loader2, Clock, CheckCircle2, Eye, AlertTriangle, RotateCcw, XCircle } from "lucide-react";
 import PageHeader from "@/components/menu/PageHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
-const STATUS_MAP: Record<string, { label: string; color: string; icon: string }> = {
-  pending_payment: { label: "Aguardando pagamento", color: "text-[#FF6900] bg-[#FF6900]/10", icon: "⏳" },
-  paid: { label: "Pagamento confirmado", color: "text-success bg-success/10", icon: "✅" },
-  transfer_in_progress: { label: "Em verificação", color: "text-primary bg-primary/10", icon: "🔍" },
-  completed: { label: "Conta Liberada", color: "text-success bg-success/10 font-semibold", icon: "✅" },
-  disputed: { label: "Disputa aberta", color: "text-[#FF6900] bg-[#FF6900]/10", icon: "⚠️" },
-  refunded: { label: "Reembolsado", color: "text-[#888] bg-[#888]/10", icon: "↩️" },
-  cancelled: { label: "Cancelado", color: "text-[#888] bg-[#888]/10", icon: "✖️" },
+const STATUS_MAP: Record<string, { label: string; color: string; Icon: React.ElementType }> = {
+  pending_payment: { label: "Aguardando pagamento", color: "text-[#FF6900] bg-[#FF6900]/10", Icon: Clock },
+  paid: { label: "Pagamento confirmado", color: "text-success bg-success/10", Icon: CheckCircle2 },
+  transfer_in_progress: { label: "Em verificação", color: "text-primary bg-primary/10", Icon: Eye },
+  completed: { label: "Conta Liberada", color: "text-success bg-success/10 font-semibold", Icon: CheckCircle2 },
+  disputed: { label: "Disputa aberta", color: "text-[#FF6900] bg-[#FF6900]/10", Icon: AlertTriangle },
+  refunded: { label: "Reembolsado", color: "text-[#888] bg-[#888]/10", Icon: RotateCcw },
+  cancelled: { label: "Cancelado", color: "text-[#888] bg-[#888]/10", Icon: XCircle },
 };
 
 const FILTERS = ["Todos", "Em andamento", "Concluídos", "Disputas"];
@@ -145,7 +145,7 @@ export default function Purchases() {
                   />
                   <div className="flex-1 min-w-0">
                     <span className={`inline-flex items-center gap-1 text-[12px] px-2 py-0.5 rounded-full ${status.color}`}>
-                      {status.icon} {status.label}
+                      <status.Icon className="h-3 w-3" /> {status.label}
                     </span>
                     {purchase.completed_at && (
                       <p className="text-[11px] text-[#999] mt-0.5">

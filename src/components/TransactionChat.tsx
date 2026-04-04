@@ -1,7 +1,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, Loader2 } from "lucide-react";
+import { Send, Loader2, MessageSquare } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -103,7 +103,7 @@ export default function TransactionChat({ transactionId, otherUserName = "Usuár
   return (
     <div className="bg-white rounded-xl border border-[#E8E8E8] overflow-hidden">
       <div className="px-4 py-3 border-b border-[#E8E8E8] flex items-center gap-2">
-        <span className="text-[14px] font-semibold text-[#111]">💬 Chat da transação</span>
+        <span className="text-[14px] font-semibold text-[#111] flex items-center gap-1.5"><MessageSquare className="h-4 w-4 text-primary" /> Chat da transação</span>
       </div>
 
       <div

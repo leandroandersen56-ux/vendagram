@@ -593,12 +593,12 @@ export default function Checkout() {
                 )}
                 {paymentStatus === "pending" && (
                   <div className="text-center py-2">
-                    <p className="text-xs text-primary font-medium">⏳ Aguardando pagamento</p>
+                    <p className="text-xs text-primary font-medium flex items-center justify-center gap-1"><Clock className="h-3 w-3" /> Aguardando pagamento</p>
                   </div>
                 )}
                 {paymentStatus === "approved" && (
                   <div className="text-center py-2">
-                    <p className="text-xs text-success font-medium">✅ Pagamento confirmado</p>
+                    <p className="text-xs text-success font-medium flex items-center justify-center gap-1"><CheckCircle2 className="h-3 w-3" /> Pagamento confirmado</p>
                   </div>
                 )}
                 <div className="flex items-center justify-center gap-4 mt-4">

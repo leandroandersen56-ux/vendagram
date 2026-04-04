@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Package } from "lucide-react";
 import { MOCK_LISTINGS, formatBRL } from "@/lib/mock-data";
 import ListingCard from "@/components/ListingCard";
 
@@ -22,7 +23,7 @@ export default function RelatedProducts({ currentId, category }: RelatedProducts
   return (
     <div>
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-semibold text-[hsl(var(--txt-primary))]">📦 Contas semelhantes</h3>
+        <h3 className="text-sm font-semibold text-[hsl(var(--txt-primary))] flex items-center gap-1.5"><Package className="h-4 w-4 text-primary" /> Contas semelhantes</h3>
         <Link to="/marketplace" className="text-[13px] text-primary font-semibold hover:underline">
           Ver todos →
         </Link>
