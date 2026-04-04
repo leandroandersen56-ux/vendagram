@@ -87,6 +87,7 @@ export default function Navbar() {
   // Close notif dropdown on route change
   useEffect(() => {
     setNotifOpen(false);
+    setFavOpen(false);
   }, [location.pathname]);
 
   return (
