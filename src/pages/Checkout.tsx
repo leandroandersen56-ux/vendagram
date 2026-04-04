@@ -598,7 +598,7 @@ export default function Checkout() {
                 )}
                 {paymentStatus === "approved" && (
                   <div className="text-center py-2">
-                    <p className="text-xs text-success font-medium">✅ Pagamento confirmado</p>
+                    <p className="text-xs text-success font-medium flex items-center justify-center gap-1"><CheckCircle2 className="h-3 w-3" /> Pagamento confirmado</p>
                   </div>
                 )}
                 <div className="flex items-center justify-center gap-4 mt-4">
