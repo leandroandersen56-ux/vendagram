@@ -227,14 +227,29 @@ export default function ListingDetail() {
                     <h1 className="text-lg sm:text-[22px] font-semibold text-[hsl(var(--txt-primary))] leading-snug">
                       {listing.title}
                     </h1>
-                    {user && user.id === listing.seller_id && (
-                      <Button
-                        variant="outline" size="sm" className="shrink-0 text-xs rounded-lg"
-                        onClick={() => navigate(`/painel/anuncios/editar/${listing.id}`)}
+                    <div className="flex items-center gap-2 shrink-0">
+                      {/* Desktop favorite button */}
+                      <motion.button
+                        onClick={() => {
+                          if (!isAuthenticated) { openAuth(); return; }
+                          if (id) toggleFavorite(id);
+                        }}
+                        className="hidden sm:flex h-9 w-9 items-center justify-center rounded-full hover:bg-[hsl(var(--muted))] transition-colors"
+                        aria-label={favorited ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+                        whileTap={{ scale: 1.3 }}
+                        transition={{ type: "spring", stiffness: 500, damping: 15 }}
                       >
-                        <Edit className="h-3 w-3 mr-1" /> Editar
-                      </Button>
-                    )}
+                        <Heart className={`h-5 w-5 ${favorited ? "fill-red-500 text-red-500" : "text-[hsl(var(--txt-hint))]"}`} />
+                      </motion.button>
+                      {user && user.id === listing.seller_id && (
+                        <Button
+                          variant="outline" size="sm" className="shrink-0 text-xs rounded-lg"
+                          onClick={() => navigate(`/painel/anuncios/editar/${listing.id}`)}
+                        >
+                          <Edit className="h-3 w-3 mr-1" /> Editar
+                        </Button>
+                      )}
+                    </div>
                   </div>
 
                   {/* Rating + sales */}
