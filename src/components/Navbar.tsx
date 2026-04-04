@@ -151,7 +151,7 @@ export default function Navbar() {
               </AnimatePresence>
             </div>
             {/* Cart */}
-            <Link to="/checkout" className="relative h-9 w-9 flex items-center justify-center text-white/80 hover:text-white transition-colors">
+            <Link to="/cart" className="relative h-9 w-9 flex items-center justify-center text-white/80 hover:text-white transition-colors">
               <ShoppingCart className="h-5 w-5" />
             </Link>
 
