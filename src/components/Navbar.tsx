@@ -480,7 +480,7 @@ function FavDropdown({
           favorites.slice(0, 5).map((fav) => {
             const listing = fav.listing;
             if (!listing) return null;
-            const thumb = listing.screenshots?.[0];
+            const thumb = listing.screenshots?.[0] || PLATFORM_COVERS[listing.category as keyof typeof PLATFORM_COVERS];
             return (
               <button
                 key={fav.id}
