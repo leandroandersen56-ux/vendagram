@@ -6,6 +6,7 @@ import logoWhite from "@/assets/logo-froiv-white.svg";
 import { useAuth } from "@/contexts/AuthContext";
 import PanelOverview from "@/pages/panel/PanelOverview";
 import PanelListings from "@/pages/panel/PanelListings";
+import PanelOffers from "@/pages/panel/PanelOffers";
 import PanelTransactions from "@/pages/panel/PanelTransactions";
 import PanelWallet from "@/pages/panel/PanelWallet";
 import PanelProfile from "@/pages/panel/PanelProfile";
@@ -13,6 +14,7 @@ import PanelProfile from "@/pages/panel/PanelProfile";
 const TABS = [
   { id: "overview", label: "Visão Geral" },
   { id: "anuncios", label: "Meus Anúncios" },
+  { id: "ofertas", label: "Ofertas" },
   { id: "transacoes", label: "Transações" },
   { id: "carteira", label: "Carteira" },
   { id: "perfil", label: "Perfil" },
@@ -92,6 +94,7 @@ export default function SellerDashboard() {
           >
             {activeTab === "overview" && <PanelOverview />}
             {activeTab === "anuncios" && <PanelListings />}
+            {activeTab === "ofertas" && <PanelOffers />}
             {activeTab === "transacoes" && <PanelTransactions />}
             {activeTab === "carteira" && <PanelWallet />}
             {activeTab === "perfil" && <PanelProfile />}

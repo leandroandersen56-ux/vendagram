@@ -15,6 +15,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFavorites } from "@/hooks/useFavorites";
 import { addToCart } from "@/pages/Cart";
+import { useOffer } from "@/hooks/useOffer";
+import OfferButton from "@/components/offers/OfferButton";
 
 import ProductGallery from "@/components/pdp/ProductGallery";
 import BuyBox from "@/components/pdp/BuyBox";
@@ -36,6 +38,7 @@ export default function ListingDetail() {
   const favorited = id ? isFavorite(id) : false;
   const [copied, setCopied] = useState(false);
   const buyBoxRef = useRef<HTMLDivElement>(null);
+  const { offer, loading: offerLoading, refetch: refetchOffer } = useOffer(id);
 
   useEffect(() => {
     async function fetchListing() {
@@ -274,6 +277,14 @@ export default function ListingDetail() {
                       onBuy={handleBuy}
                       inline
                     />
+                    <div className="mt-2.5">
+                      <OfferButton
+                        listing={{ ...listing, price: Number(listing.price) }}
+                        offer={offer}
+                        offerLoading={offerLoading}
+                        onRefetch={refetchOffer}
+                      />
+                    </div>
                   </div>
 
                   {/* Trust Signals inline */}
@@ -411,6 +422,14 @@ export default function ListingDetail() {
                         onBuy={handleBuy}
                         inline
                       />
+                      <div className="mt-2.5">
+                        <OfferButton
+                          listing={{ ...listing, price: Number(listing.price) }}
+                          offer={offer}
+                          offerLoading={offerLoading}
+                          onRefetch={refetchOffer}
+                        />
+                      </div>
                     </div>
                   </div>
                   <TrustSignals />

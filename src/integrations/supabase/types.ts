@@ -249,6 +249,7 @@ export type Database = {
       }
       listings: {
         Row: {
+          accepts_offers: boolean
           category: Database["public"]["Enums"]["listing_category"]
           created_at: string
           description: string | null
@@ -257,6 +258,7 @@ export type Database = {
           id: string
           includes: string | null
           level: number | null
+          min_price: number | null
           platform_username: string | null
           prefilled_credentials: string | null
           price: number
@@ -268,6 +270,7 @@ export type Database = {
           views_count: number
         }
         Insert: {
+          accepts_offers?: boolean
           category?: Database["public"]["Enums"]["listing_category"]
           created_at?: string
           description?: string | null
@@ -276,6 +279,7 @@ export type Database = {
           id?: string
           includes?: string | null
           level?: number | null
+          min_price?: number | null
           platform_username?: string | null
           prefilled_credentials?: string | null
           price: number
@@ -287,6 +291,7 @@ export type Database = {
           views_count?: number
         }
         Update: {
+          accepts_offers?: boolean
           category?: Database["public"]["Enums"]["listing_category"]
           created_at?: string
           description?: string | null
@@ -295,6 +300,7 @@ export type Database = {
           id?: string
           includes?: string | null
           level?: number | null
+          min_price?: number | null
           platform_username?: string | null
           prefilled_credentials?: string | null
           price?: number
@@ -336,6 +342,65 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      offers: {
+        Row: {
+          buyer_id: string
+          buyer_message: string | null
+          counter_price: number | null
+          created_at: string
+          expires_at: string
+          final_price: number | null
+          id: string
+          listing_id: string
+          offered_price: number
+          original_price: number
+          responded_at: string | null
+          seller_id: string
+          seller_message: string | null
+          status: string
+        }
+        Insert: {
+          buyer_id: string
+          buyer_message?: string | null
+          counter_price?: number | null
+          created_at?: string
+          expires_at?: string
+          final_price?: number | null
+          id?: string
+          listing_id: string
+          offered_price: number
+          original_price: number
+          responded_at?: string | null
+          seller_id: string
+          seller_message?: string | null
+          status?: string
+        }
+        Update: {
+          buyer_id?: string
+          buyer_message?: string | null
+          counter_price?: number | null
+          created_at?: string
+          expires_at?: string
+          final_price?: number | null
+          id?: string
+          listing_id?: string
+          offered_price?: number
+          original_price?: number
+          responded_at?: string | null
+          seller_id?: string
+          seller_message?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "offers_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       platform_settings: {
         Row: {
