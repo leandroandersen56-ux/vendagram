@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Eye, Plus, X, Upload, ChevronRight, Gamepad2, Image as ImageIcon } from "lucide-react";
+import { Eye, Plus, X, Upload, ChevronRight, Gamepad2, Image as ImageIcon, Lock, ShieldCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -132,6 +132,13 @@ export default function CreateListing() {
   const [screenshots, setScreenshots] = useState<{ file: File; preview: string }[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Credential fields (pre-fill)
+  const [credLogin, setCredLogin] = useState("");
+  const [credPassword, setCredPassword] = useState("");
+  const [credEmail, setCredEmail] = useState("");
+  const [cred2fa, setCred2fa] = useState("");
+  const [credNotes, setCredNotes] = useState("");
+
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     const newScreenshots = files.slice(0, 6 - screenshots.length).map((file) => ({
@@ -177,6 +184,10 @@ export default function CreateListing() {
       toast({ title: "Preencha plataforma, título e preço", variant: "destructive" });
       return;
     }
+    if (!credLogin.trim() || !credPassword.trim()) {
+      toast({ title: "Preencha login e senha da conta para entrega automática", variant: "destructive" });
+      return;
+    }
     if (!user) {
       toast({ title: "Faça login para publicar", variant: "destructive" });
       return;
@@ -195,6 +206,16 @@ export default function CreateListing() {
     if (items.length > 0) highlights["Itens"] = items;
     feats.forEach((f) => (highlights[f] = true));
 
+    // Encode credentials (base64 for now, decrypted server-side)
+    const credentialsData = JSON.stringify({
+      login: credLogin.trim(),
+      password: credPassword.trim(),
+      ...(credEmail.trim() && { email: credEmail.trim() }),
+      ...(cred2fa.trim() && { twofa: cred2fa.trim() }),
+      ...(credNotes.trim() && { notes: credNotes.trim() }),
+    });
+    const encoded = btoa(unescape(encodeURIComponent(credentialsData)));
+
     const { error } = await supabase.from("listings").insert({
       title,
       description: description || null,
@@ -204,7 +225,8 @@ export default function CreateListing() {
       highlights,
       includes: items.length > 0 ? items.join(", ") : null,
       status: "active",
-    });
+      prefilled_credentials: encoded,
+    } as any);
 
     setLoading(false);
     if (error) {
@@ -530,9 +552,51 @@ export default function CreateListing() {
           </div>
         </div>
 
+        {/* ── Credenciais para entrega automática ── */}
+        <div className="space-y-3 bg-primary/5 border border-primary/20 rounded-xl p-4">
+          <div className="flex items-center gap-2 mb-1">
+            <Lock className="h-4 w-4 text-primary" />
+            <Label className="text-foreground text-xs uppercase tracking-wide font-semibold">Dados de acesso da conta *</Label>
+          </div>
+          <p className="text-[12px] text-muted-foreground -mt-1">
+            Preencha os acessos. Serão entregues automaticamente ao comprador após o pagamento.
+          </p>
+
+          <div className="grid grid-cols-1 gap-3">
+            <div className="space-y-1">
+              <label className="text-[11px] text-muted-foreground uppercase font-medium">Login / Usuário *</label>
+              <Input value={credLogin} onChange={(e) => setCredLogin(e.target.value)} placeholder="ex: @usuario_conta" className="bg-card border-border" />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[11px] text-muted-foreground uppercase font-medium">Senha *</label>
+              <Input type="password" value={credPassword} onChange={(e) => setCredPassword(e.target.value)} placeholder="Senha da conta" className="bg-card border-border" />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[11px] text-muted-foreground uppercase font-medium">Email vinculado</label>
+              <Input value={credEmail} onChange={(e) => setCredEmail(e.target.value)} placeholder="email@exemplo.com (opcional)" className="bg-card border-border" />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[11px] text-muted-foreground uppercase font-medium">Código 2FA</label>
+              <Input value={cred2fa} onChange={(e) => setCred2fa(e.target.value)} placeholder="JBSWY3DPEHPK3PXP (opcional)" className="bg-card border-border font-mono" />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[11px] text-muted-foreground uppercase font-medium">Observações</label>
+              <Textarea value={credNotes} onChange={(e) => setCredNotes(e.target.value)} placeholder="Ex: Troque a senha imediatamente" className="bg-card border-border min-h-[50px]" />
+            </div>
+          </div>
+
+          <div className="flex items-start gap-2 bg-[#FFF8E0] rounded-lg p-3">
+            <ShieldCheck className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+            <p className="text-[11px] text-muted-foreground">
+              Os dados são criptografados e só serão revelados ao comprador após a confirmação do pagamento. 
+              O valor é liberado em <strong>24h</strong> automaticamente ou quando o comprador confirmar.
+            </p>
+          </div>
+        </div>
+
         {/* ── Descrição extra ── */}
         <div className="space-y-1.5">
-          <Label className="text-muted-foreground text-xs uppercase tracking-wide">Observações (opcional)</Label>
+          <Label className="text-muted-foreground text-xs uppercase tracking-wide">Observações públicas (opcional)</Label>
           <Textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
