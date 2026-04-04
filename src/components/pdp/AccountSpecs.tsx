@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronDown, CheckCircle2 } from "lucide-react";
+import { ChevronDown, CheckCircle2, BarChart3 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface AccountSpecsProps {
