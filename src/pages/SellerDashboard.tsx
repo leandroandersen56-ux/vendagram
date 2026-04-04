@@ -14,6 +14,7 @@ import PanelProfile from "@/pages/panel/PanelProfile";
 const TABS = [
   { id: "overview", label: "Visão Geral" },
   { id: "anuncios", label: "Meus Anúncios" },
+  { id: "ofertas", label: "Ofertas" },
   { id: "transacoes", label: "Transações" },
   { id: "carteira", label: "Carteira" },
   { id: "perfil", label: "Perfil" },
