@@ -58,6 +58,7 @@ function AppRoutes() {
         <Route path="/" element={<Index />} />
         <Route path="/marketplace" element={<Marketplace />} />
         <Route path="/listing/:id" element={<ListingDetail />} />
+        <Route path="/cart" element={<Cart />} />
         <Route path="/checkout/:listingId" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
         <Route path="/transaction/:listingId" element={<TransactionFlow />} />
 
