@@ -440,3 +440,79 @@ function NotifDropdown({
     </motion.div>
   );
 }
+
+/* ── Favorites Dropdown ── */
+function FavDropdown({
+  favorites,
+  loading,
+  onClose,
+  navigate,
+}: {
+  favorites: import("@/hooks/useFavorites").FavoriteWithListing[];
+  loading: boolean;
+  onClose: () => void;
+  navigate: (path: string) => void;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -8, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: -8, scale: 0.95 }}
+      transition={{ duration: 0.15 }}
+      className="absolute z-50 bg-white rounded-xl shadow-lg border border-[hsl(var(--border))] overflow-hidden right-0 top-11 w-80"
+    >
+      <div className="flex items-center justify-between px-4 py-3 border-b border-[hsl(var(--border))]">
+        <h3 className="text-sm font-semibold text-[hsl(var(--txt-primary))]">Favoritos</h3>
+        <span className="text-[11px] text-[hsl(var(--txt-hint))]">{favorites.length} itens</span>
+      </div>
+
+      <div className="max-h-80 overflow-y-auto">
+        {loading ? (
+          <div className="flex items-center justify-center py-8">
+            <Loader2 className="h-5 w-5 animate-spin text-primary" />
+          </div>
+        ) : favorites.length === 0 ? (
+          <div className="text-center py-8 px-4">
+            <Heart className="h-8 w-8 text-[hsl(var(--border))] mx-auto mb-2" />
+            <p className="text-[13px] text-[hsl(var(--txt-hint))]">Nenhum favorito</p>
+          </div>
+        ) : (
+          favorites.slice(0, 5).map((fav) => {
+            const listing = fav.listing;
+            if (!listing) return null;
+            const thumb = listing.screenshots?.[0];
+            return (
+              <button
+                key={fav.id}
+                onClick={() => { onClose(); navigate(`/listing/${listing.id}`); }}
+                className="w-full text-left px-4 py-3 border-b border-[hsl(var(--border))]/50 hover:bg-[hsl(var(--muted))] transition-colors flex items-center gap-3"
+              >
+                {thumb ? (
+                  <img src={thumb} alt={listing.title} className="h-10 w-10 rounded-lg object-cover shrink-0" />
+                ) : (
+                  <div className="h-10 w-10 rounded-lg bg-[hsl(var(--muted))] flex items-center justify-center shrink-0">
+                    <Heart className="h-4 w-4 text-[hsl(var(--txt-hint))]" />
+                  </div>
+                )}
+                <div className="flex-1 min-w-0">
+                  <p className="text-[13px] font-medium text-[hsl(var(--txt-primary))] truncate">{listing.title}</p>
+                  <p className="text-[12px] font-semibold text-primary mt-0.5">{formatBRL(listing.price)}</p>
+                </div>
+              </button>
+            );
+          })
+        )}
+      </div>
+
+      {favorites.length > 0 && (
+        <Link
+          to="/favoritos"
+          onClick={onClose}
+          className="block text-center py-2.5 text-[12px] text-primary font-semibold hover:bg-[hsl(var(--muted))] transition-colors border-t border-[hsl(var(--border))]"
+        >
+          Ver todos os favoritos
+        </Link>
+      )}
+    </motion.div>
+  );
+}
