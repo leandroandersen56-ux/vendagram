@@ -156,6 +156,37 @@ export default function Navbar() {
               </AnimatePresence>
             </div>
 
+            {/* Favorites (desktop) */}
+            <div className="relative">
+              <button
+                className="relative h-9 w-9 flex items-center justify-center text-white/80 hover:text-white transition-colors"
+                aria-label="Favoritos"
+                onClick={() => {
+                  if (!isAuthenticated) { openAuth(); return; }
+                  setFavOpen(!favOpen);
+                  if (!favOpen) fetchFavs();
+                }}
+              >
+                <Heart className="h-5 w-5" />
+                {favorites.length > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 h-4 min-w-4 px-1 rounded-full bg-[hsl(var(--danger))] text-white text-[9px] font-semibold flex items-center justify-center">
+                    {favorites.length > 9 ? "9+" : favorites.length}
+                  </span>
+                )}
+              </button>
+
+              <AnimatePresence>
+                {favOpen && (
+                  <FavDropdown
+                    favorites={favorites}
+                    loading={favLoading}
+                    onClose={() => setFavOpen(false)}
+                    navigate={navigate}
+                  />
+                )}
+              </AnimatePresence>
+            </div>
+
             {/* Cart */}
             <Link to="/cart" className="relative h-9 w-9 flex items-center justify-center text-white/80 hover:text-white transition-colors">
               <ShoppingCart className="h-5 w-5" />
@@ -172,11 +203,6 @@ export default function Navbar() {
                   <DropdownMenuItem asChild>
                     <Link to="/painel" className="cursor-pointer">
                       <LayoutDashboard className="h-4 w-4 mr-2" /> Meu Painel
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/favoritos" className="cursor-pointer">
-                      <Heart className="h-4 w-4 mr-2" /> Favoritos
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
