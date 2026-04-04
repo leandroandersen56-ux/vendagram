@@ -147,7 +147,7 @@ export default function ListingDetail() {
         title: listing.title,
         price: Number(listing.price),
         category: listing.category,
-        screenshot: listing.screenshots?.[0] || undefined,
+        screenshot: listing.screenshots?.[0] || PLATFORM_COVERS[listing.category] || undefined,
       });
       toast.success("Adicionado ao carrinho!");
     }

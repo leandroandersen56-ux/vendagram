@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ShoppingCart, Trash2, ArrowLeft } from "lucide-react";
+import { Trash2, ArrowLeft, ShoppingCart } from "lucide-react";
+import PlatformIcon from "@/components/PlatformIcon";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
