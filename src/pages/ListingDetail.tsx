@@ -38,6 +38,7 @@ export default function ListingDetail() {
   const favorited = id ? isFavorite(id) : false;
   const [copied, setCopied] = useState(false);
   const buyBoxRef = useRef<HTMLDivElement>(null);
+  const { offer, loading: offerLoading, refetch: refetchOffer } = useOffer(id);
 
   useEffect(() => {
     async function fetchListing() {
