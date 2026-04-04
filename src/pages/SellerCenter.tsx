@@ -14,6 +14,7 @@ export default function SellerCenter() {
   const { user } = useAuth();
   const [metrics, setMetrics] = useState({ revenue: 0, sales: 0, rating: 0, views: 0, listingCount: 0 });
   const [wallet, setWallet] = useState({ balance: 0, pending: 0 });
+  const [isVerified, setIsVerified] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -22,7 +23,7 @@ export default function SellerCenter() {
 
   const loadData = async () => {
     const [profileRes, txRes, listingsRes, walletRes] = await Promise.all([
-      supabase.from("profiles").select("avg_rating, total_sales, total_reviews").eq("user_id", user!.id).single(),
+      supabase.from("profiles").select("avg_rating, total_sales, total_reviews, is_verified").eq("user_id", user!.id).single(),
       supabase.from("transactions").select("amount, status, created_at").eq("seller_id", user!.id),
       supabase.from("listings").select("id, views_count").eq("seller_id", user!.id),
       supabase.from("wallets").select("balance, pending").eq("user_id", user!.id).single(),
@@ -39,6 +40,7 @@ export default function SellerCenter() {
       views,
       listingCount: (listingsRes.data || []).length,
     });
+    setIsVerified(profileRes.data?.is_verified || false);
 
     if (walletRes.data) setWallet({ balance: Number(walletRes.data.balance), pending: Number(walletRes.data.pending) });
     setLoading(false);
@@ -57,7 +59,7 @@ export default function SellerCenter() {
   ];
 
   const repLevel = metrics.rating >= 4.8 ? 4 : metrics.rating >= 4.5 ? 3 : metrics.rating >= 4.0 ? 2 : 1;
-  const repName = repLevel >= 4 ? "Platinum" : repLevel >= 3 ? "Gold" : repLevel >= 2 ? "Silver" : "Bronze";
+  const repName = isVerified ? (repLevel >= 4 ? "Platinum" : repLevel >= 3 ? "Gold" : repLevel >= 2 ? "Silver" : "Bronze") : "Não verificado";
 
   const QUICK_LINKS = [
     { icon: ClipboardList, label: "Meus anúncios", count: metrics.listingCount, path: "/painel/anuncios" },
