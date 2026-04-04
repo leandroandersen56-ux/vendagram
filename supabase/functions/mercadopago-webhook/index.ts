@@ -25,7 +25,6 @@ Deno.serve(async (req) => {
         return new Response("ok", { status: 200 });
       }
 
-      // Fetch payment details from Mercado Pago
       const mpResponse = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
         headers: { "Authorization": `Bearer ${MERCADOPAGO_ACCESS_TOKEN}` },
       });
@@ -45,7 +44,6 @@ Deno.serve(async (req) => {
       console.log(`Payment ${paymentId} status: ${payment.status} for transaction: ${transactionId}`);
 
       if (payment.status === "approved") {
-        // Fetch transaction to get seller info and amounts
         const { data: tx, error: txFetchError } = await supabase
           .from("transactions")
           .select("*")
@@ -58,7 +56,6 @@ Deno.serve(async (req) => {
           return new Response("ok", { status: 200 });
         }
 
-        // Update transaction to paid
         const { error: updateError } = await supabase
           .from("transactions")
           .update({ status: "paid", paid_at: new Date().toISOString() })
@@ -72,10 +69,8 @@ Deno.serve(async (req) => {
 
         console.log(`Transaction ${transactionId} marked as paid`);
 
-        // Credit seller wallet: seller_receives = amount - platform_fee (10%)
         const sellerReceives = Number(tx.seller_receives);
 
-        // Add to seller's pending balance (released after buyer confirms)
         const { data: wallet } = await supabase
           .from("wallets")
           .select("*")
@@ -94,21 +89,61 @@ Deno.serve(async (req) => {
           console.log(`Seller ${tx.seller_id} pending +${sellerReceives}`);
         }
 
-        // Notify seller
-        await supabase.from("notifications").insert({
-          user_id: tx.seller_id,
-          title: "Pagamento recebido! 💰",
-          body: `Compra confirmada no valor de R$ ${Number(tx.amount).toFixed(2)}. Envie as credenciais para liberar o pagamento.`,
-          link: `/transaction/${tx.listing_id}`,
-        });
+        // Auto-deliver prefilled credentials
+        const { data: listing } = await supabase
+          .from("listings")
+          .select("prefilled_credentials")
+          .eq("id", tx.listing_id)
+          .single();
 
-        // Notify buyer
-        await supabase.from("notifications").insert({
-          user_id: tx.buyer_id,
-          title: "Pagamento confirmado! ✅",
-          body: "Seu pagamento foi aprovado. Aguarde o vendedor enviar as credenciais.",
-          link: `/transaction/${tx.listing_id}`,
-        });
+        if (listing?.prefilled_credentials) {
+          console.log("Auto-delivering prefilled credentials");
+
+          await supabase.from("credentials").insert({
+            transaction_id: transactionId,
+            data_encrypted: listing.prefilled_credentials,
+            delivered_at: new Date().toISOString(),
+          });
+
+          await supabase.from("transactions").update({
+            status: "transfer_in_progress",
+            updated_at: new Date().toISOString(),
+          }).eq("id", transactionId);
+
+          await supabase.from("transaction_messages").insert({
+            transaction_id: transactionId,
+            sender_id: tx.seller_id,
+            message: "📦 Credenciais da conta entregues automaticamente. Verifique os dados de acesso.",
+          });
+
+          await supabase.from("notifications").insert({
+            user_id: tx.buyer_id,
+            title: "🔐 Credenciais disponíveis!",
+            body: "O pagamento foi aprovado e as credenciais já estão disponíveis. Verifique e confirme em até 24h.",
+            link: `/compras/${transactionId}`,
+          });
+
+          await supabase.from("notifications").insert({
+            user_id: tx.seller_id,
+            title: "Pagamento recebido! 💰",
+            body: `Compra de R$ ${Number(tx.amount).toFixed(2)} confirmada. Credenciais entregues automaticamente.`,
+            link: `/transaction/${tx.listing_id}`,
+          });
+        } else {
+          await supabase.from("notifications").insert({
+            user_id: tx.seller_id,
+            title: "Pagamento recebido! 💰",
+            body: `Compra confirmada no valor de R$ ${Number(tx.amount).toFixed(2)}. Envie as credenciais para liberar o pagamento.`,
+            link: `/transaction/${tx.listing_id}`,
+          });
+
+          await supabase.from("notifications").insert({
+            user_id: tx.buyer_id,
+            title: "Pagamento confirmado! ✅",
+            body: "Seu pagamento foi aprovado. Aguarde o vendedor enviar as credenciais.",
+            link: `/compras/${transactionId}`,
+          });
+        }
 
       } else if (payment.status === "cancelled" || payment.status === "rejected") {
         await supabase
