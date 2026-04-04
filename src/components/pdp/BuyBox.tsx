@@ -33,7 +33,7 @@ export default function BuyBox({ price, originalPrice, onBuy, onOffer }: BuyBoxP
           </div>
         )}
 
-        <p className="text-[28px] font-black text-[hsl(var(--txt-primary))] leading-tight tracking-tight">
+        <p className="text-[28px] font-semibold text-[hsl(var(--txt-primary))] leading-tight tracking-tight">
           {formatBRL(price)}
         </p>
 
