@@ -8,9 +8,10 @@ interface BuyBoxProps {
   originalPrice?: string;
   onBuy: () => void;
   onOffer?: () => void;
+  inline?: boolean;
 }
 
-export default function BuyBox({ price, originalPrice, onBuy, onOffer }: BuyBoxProps) {
+export default function BuyBox({ price, originalPrice, onBuy, onOffer, inline }: BuyBoxProps) {
   const discount = originalPrice
     ? Math.round((1 - price / parseFloat(originalPrice.replace(/\./g, "").replace(",", "."))) * 100)
     : 0;
