@@ -199,21 +199,34 @@ export default function Navbar() {
                     {user?.name?.[0]?.toUpperCase() || <User className="h-4 w-4" />}
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48 bg-card border-border">
-                  <DropdownMenuItem asChild>
-                    <Link to="/painel" className="cursor-pointer">
-                      <LayoutDashboard className="h-4 w-4 mr-2" /> Meu Painel
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/painel/perfil" className="cursor-pointer">
-                      <User className="h-4 w-4 mr-2" /> Meu Perfil
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem className="cursor-pointer text-danger" onClick={logout}>
-                    <LogOut className="h-4 w-4 mr-2" /> Sair
-                  </DropdownMenuItem>
+                <DropdownMenuContent align="end" className="w-64 bg-card border-border p-0 rounded-xl shadow-lg">
+                  {/* Profile header */}
+                  <div className="bg-gradient-to-br from-primary to-[#1A4BC4] rounded-t-xl px-4 py-3 text-white">
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center text-base font-bold">
+                        {user?.name?.[0]?.toUpperCase() || "U"}
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold truncate">{user?.name || "Usuário"}</p>
+                        <p className="text-[11px] text-white/70 truncate">{user?.email}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-1">
+                    <DropdownMenuItem asChild><Link to="/painel" className="cursor-pointer gap-2"><LayoutDashboard className="h-4 w-4" /> Meu Painel</Link></DropdownMenuItem>
+                    <DropdownMenuItem asChild><Link to="/painel/perfil" className="cursor-pointer gap-2"><User className="h-4 w-4" /> Meu Perfil</Link></DropdownMenuItem>
+                    <DropdownMenuItem asChild><Link to="/compras" className="cursor-pointer gap-2"><ShoppingCart className="h-4 w-4" /> Minhas Compras</Link></DropdownMenuItem>
+                    <DropdownMenuItem asChild><Link to="/vendedor" className="cursor-pointer gap-2"><ShoppingBag className="h-4 w-4" /> Central do Vendedor</Link></DropdownMenuItem>
+                    <DropdownMenuItem asChild><Link to="/carteira" className="cursor-pointer gap-2"><Wallet className="h-4 w-4" /> Minha Carteira</Link></DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild><Link to="/configuracoes" className="cursor-pointer gap-2"><Settings className="h-4 w-4" /> Configurações</Link></DropdownMenuItem>
+                    <DropdownMenuItem asChild><Link to="/ajuda" className="cursor-pointer gap-2"><HelpCircle className="h-4 w-4" /> Ajuda</Link></DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem className="cursor-pointer text-destructive gap-2" onClick={logout}>
+                      <LogOut className="h-4 w-4" /> Sair da conta
+                    </DropdownMenuItem>
+                  </div>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
