@@ -30,7 +30,7 @@ export default function TrustSignals({ inline }: { inline?: boolean }) {
           onClick={() => setShowEscrowModal(true)}
           className="flex items-center gap-1 text-[13px] text-primary font-semibold hover:underline mt-1 ml-8"
         >
-          📋 Como funciona o Escrow? <ChevronRight className="h-3.5 w-3.5" />
+          <ClipboardList className="h-3.5 w-3.5" /> Como funciona o Escrow? <ChevronRight className="h-3.5 w-3.5" />
         </button>
       </div>
 
