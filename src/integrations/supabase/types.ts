@@ -258,6 +258,7 @@ export type Database = {
           includes: string | null
           level: number | null
           platform_username: string | null
+          prefilled_credentials: string | null
           price: number
           screenshots: string[] | null
           seller_id: string
@@ -276,6 +277,7 @@ export type Database = {
           includes?: string | null
           level?: number | null
           platform_username?: string | null
+          prefilled_credentials?: string | null
           price: number
           screenshots?: string[] | null
           seller_id: string
@@ -294,6 +296,7 @@ export type Database = {
           includes?: string | null
           level?: number | null
           platform_username?: string | null
+          prefilled_credentials?: string | null
           price?: number
           screenshots?: string[] | null
           seller_id?: string
@@ -724,6 +727,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      auto_release_escrow: { Args: never; Returns: undefined }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
