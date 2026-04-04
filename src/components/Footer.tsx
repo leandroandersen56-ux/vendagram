@@ -1,5 +1,8 @@
 import { Link } from "react-router-dom";
 import logoFroiv from "@/assets/logo-froiv.png";
+import amexIcon from "@/assets/amex-icon.svg";
+import eloIcon from "@/assets/elo-icon.png";
+import hipercardIcon from "@/assets/hipercard-icon.svg";
 
 function SocialIcon({ type, size = 18 }: { type: "instagram" | "tiktok" | "youtube"; size?: number }) {
   const icons = {
