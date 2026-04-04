@@ -31,7 +31,7 @@ export default function ReviewSection({ rating, totalSales }: ReviewSectionProps
       <div className="px-4 pb-4">
         <div className="flex items-start gap-5 mb-4">
           <div className="text-center">
-            <p className="text-4xl font-black text-[hsl(var(--txt-primary))]">{rating.toFixed(1)}</p>
+            <p className="text-4xl font-semibold text-[hsl(var(--txt-primary))]">{rating.toFixed(1)}</p>
             <div className="flex gap-0.5 mt-1 justify-center">
               {[1, 2, 3, 4, 5].map((s) => (
                 <Star
