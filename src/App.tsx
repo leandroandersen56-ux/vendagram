@@ -16,13 +16,6 @@ import Checkout from "./pages/Checkout.tsx";
 import Cart from "./pages/Cart.tsx";
 import Favorites from "./pages/Favorites.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
-import PanelLayout from "./components/PanelLayout.tsx";
-import PanelOverview from "./pages/panel/PanelOverview.tsx";
-import PanelListings from "./pages/panel/PanelListings.tsx";
-import PanelTransactions from "./pages/panel/PanelTransactions.tsx";
-import PanelWallet from "./pages/panel/PanelWallet.tsx";
-import PanelNotifications from "./pages/panel/PanelNotifications.tsx";
-import PanelProfile from "./pages/panel/PanelProfile.tsx";
 import PanelVerification from "./pages/panel/PanelVerification.tsx";
 import CreateListingPanel from "./pages/panel/CreateListingPanel.tsx";
 import EditListingPanel from "./pages/panel/EditListingPanel.tsx";
@@ -32,7 +25,7 @@ import OrderDetail from "./pages/OrderDetail.tsx";
 import Notifications from "./pages/Notifications.tsx";
 import Questions from "./pages/Questions.tsx";
 import Reviews from "./pages/Reviews.tsx";
-import SellerCenter from "./pages/SellerCenter.tsx";
+import SellerDashboard from "./pages/SellerDashboard.tsx";
 import WalletPage from "./pages/WalletPage.tsx";
 import Affiliates from "./pages/Affiliates.tsx";
 import SettingsPage from "./pages/SettingsPage.tsx";
@@ -89,27 +82,30 @@ function AppRoutes() {
         <Route path="/notificacoes" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
         <Route path="/perguntas" element={<ProtectedRoute><Questions /></ProtectedRoute>} />
         <Route path="/avaliacoes" element={<ProtectedRoute><Reviews /></ProtectedRoute>} />
-        <Route path="/vendedor" element={<ProtectedRoute><SellerCenter /></ProtectedRoute>} />
         <Route path="/carteira" element={<ProtectedRoute><WalletPage /></ProtectedRoute>} />
         <Route path="/afiliados" element={<ProtectedRoute><Affiliates /></ProtectedRoute>} />
         <Route path="/configuracoes" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
         <Route path="/historico" element={<ProtectedRoute><ViewHistory /></ProtectedRoute>} />
 
+        {/* Seller Dashboard - unified */}
+        <Route path="/vendedor" element={<ProtectedRoute><SellerDashboard /></ProtectedRoute>} />
+        <Route path="/vendedor/novo" element={<ProtectedRoute><CreateListingPanel /></ProtectedRoute>} />
+        <Route path="/vendedor/verificacao" element={<ProtectedRoute><PanelVerification /></ProtectedRoute>} />
+        <Route path="/vendedor/editar/:id" element={<ProtectedRoute><EditListingPanel /></ProtectedRoute>} />
+
+        {/* Redirects from old panel routes */}
+        <Route path="/painel" element={<Navigate to="/vendedor" replace />} />
+        <Route path="/painel/anuncios" element={<Navigate to="/vendedor" state={{ tab: "anuncios" }} replace />} />
+        <Route path="/painel/anuncios/novo" element={<Navigate to="/vendedor/novo" replace />} />
+        <Route path="/painel/anuncios/editar/:id" element={<Navigate to="/vendedor/editar/:id" replace />} />
+        <Route path="/painel/transacoes" element={<Navigate to="/vendedor" state={{ tab: "transacoes" }} replace />} />
+        <Route path="/painel/carteira" element={<Navigate to="/vendedor" state={{ tab: "carteira" }} replace />} />
+        <Route path="/painel/perfil" element={<Navigate to="/vendedor" state={{ tab: "perfil" }} replace />} />
+        <Route path="/painel/verificacao" element={<Navigate to="/vendedor/verificacao" replace />} />
+        <Route path="/painel/notificacoes" element={<Navigate to="/notificacoes" replace />} />
+
         {/* Admin */}
         <Route path="/admin" element={<Dashboard />} />
-
-        {/* User panel (protected) */}
-        <Route path="/painel" element={<ProtectedRoute><PanelLayout /></ProtectedRoute>}>
-          <Route index element={<PanelOverview />} />
-          <Route path="anuncios" element={<PanelListings />} />
-          <Route path="anuncios/novo" element={<CreateListingPanel />} />
-          <Route path="anuncios/editar/:id" element={<EditListingPanel />} />
-          <Route path="transacoes" element={<PanelTransactions />} />
-          <Route path="carteira" element={<PanelWallet />} />
-          <Route path="notificacoes" element={<PanelNotifications />} />
-          <Route path="perfil" element={<PanelProfile />} />
-          <Route path="verificacao" element={<PanelVerification />} />
-        </Route>
 
         <Route path="*" element={<NotFound />} />
       </Routes>
