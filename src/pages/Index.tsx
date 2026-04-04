@@ -475,7 +475,7 @@ export default function Index() {
 
         {/* === TRUST BANNER === */}
         <section className="py-8">
-          <div className="container mx-auto max-w-3xl">
+          <div className="container mx-auto">
             <div className="rounded-xl bg-gradient-to-br from-primary to-primary-dark p-6 sm:p-8 text-white">
               <h2 className="text-center text-[15px] sm:text-lg font-bold mb-6">Por que escolher a Froiv?</h2>
               <div className="grid grid-cols-3 gap-4 sm:gap-6">
