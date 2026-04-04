@@ -613,7 +613,7 @@ export default function CreateListing() {
             onClick={handlePublish}
             disabled={!title || !price || loading}
           >
-            {loading ? "Publicando..." : "Publicar Anúncio 🚀"}
+            {loading ? "Publicando..." : "Publicar Anúncio"}
           </Button>
         </div>
       </div>

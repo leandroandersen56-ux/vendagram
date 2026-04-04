@@ -603,7 +603,7 @@ export default function EditListingPanel() {
             disabled={!title || !price || saving}
           >
             <Save className="h-4 w-4 mr-2" />
-            {saving ? "Salvando..." : "Salvar Alterações ✅"}
+            {saving ? "Salvando..." : "Salvar Alterações"}
           </Button>
         </div>
       </div>
