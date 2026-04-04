@@ -146,11 +146,11 @@ export default function Index() {
                 <div key={i} className={`absolute inset-0 transition-opacity duration-500 ${i === bannerIdx ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
                   <img src={b.img} alt={b.title} className="w-full h-full object-cover" {...(i === 0 ? {} : { loading: "lazy" as const })} />
                   <div className="absolute inset-0 bg-gradient-to-r from-[#0F1B3D]/80 via-[#0F1B3D]/40 to-transparent flex items-center">
-                    <div className="px-5 sm:px-8 max-w-sm">
-                      <h2 className="text-white text-base sm:text-xl md:text-2xl font-bold leading-tight">{b.title}</h2>
-                      <p className="text-white/70 text-[11px] sm:text-sm mt-1">{b.subtitle}</p>
+                    <div className="px-5 sm:px-8 md:px-12 max-w-sm md:max-w-lg">
+                      <h2 className="text-white text-base sm:text-xl md:text-3xl lg:text-4xl font-bold leading-tight">{b.title}</h2>
+                      <p className="text-white/70 text-[11px] sm:text-sm md:text-base lg:text-lg mt-1 md:mt-2">{b.subtitle}</p>
                       <Link to={b.link}>
-                        <button className="mt-3 text-[11px] sm:text-xs font-semibold text-white border border-white/40 rounded-lg px-3 py-1.5 hover:bg-white/10 transition-colors">
+                        <button className="mt-3 md:mt-4 text-[11px] sm:text-xs md:text-sm font-semibold text-white border border-white/40 rounded-lg px-3 md:px-5 py-1.5 md:py-2 hover:bg-white/10 transition-colors">
                           {b.cta} →
                         </button>
                       </Link>
