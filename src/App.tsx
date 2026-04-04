@@ -37,6 +37,8 @@ import Affiliates from "./pages/Affiliates.tsx";
 import SettingsPage from "./pages/SettingsPage.tsx";
 import HelpPage from "./pages/HelpPage.tsx";
 import SearchResults from "./pages/SearchResults.tsx";
+import SellerProfile from "./pages/SellerProfile.tsx";
+import ViewHistory from "./pages/ViewHistory.tsx";
 
 const queryClient = new QueryClient();
 
@@ -76,6 +78,7 @@ function AppRoutes() {
         <Route path="/transaction/:listingId" element={<TransactionFlow />} />
         <Route path="/ajuda" element={<HelpPage />} />
         <Route path="/busca" element={<SearchResults />} />
+        <Route path="/perfil/:username" element={<SellerProfile />} />
 
         {/* User pages (protected) */}
         <Route path="/compras" element={<ProtectedRoute><Purchases /></ProtectedRoute>} />
@@ -87,6 +90,7 @@ function AppRoutes() {
         <Route path="/carteira" element={<ProtectedRoute><WalletPage /></ProtectedRoute>} />
         <Route path="/afiliados" element={<ProtectedRoute><Affiliates /></ProtectedRoute>} />
         <Route path="/configuracoes" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
+        <Route path="/historico" element={<ProtectedRoute><ViewHistory /></ProtectedRoute>} />
 
         {/* Admin */}
         <Route path="/admin" element={<Dashboard />} />

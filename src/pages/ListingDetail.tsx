@@ -270,6 +270,7 @@ export default function ListingDetail() {
                     name={sellerName}
                     rating={sellerRating}
                     sales={sellerSales}
+                    onViewProfile={() => seller?.username ? navigate(`/perfil/${seller.username}`) : undefined}
                   />
                 </div>
 
@@ -396,6 +397,7 @@ export default function ListingDetail() {
                     name={sellerName}
                     rating={sellerRating}
                     sales={sellerSales}
+                    onViewProfile={() => seller?.username ? navigate(`/perfil/${seller.username}`) : undefined}
                   />
                   {/* Share (desktop) */}
                   <div className="grid grid-cols-2 gap-2">
