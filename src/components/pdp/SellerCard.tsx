@@ -11,7 +11,7 @@ interface SellerCardProps {
   onViewProfile?: () => void;
 }
 
-export default function SellerCard({ name, rating, sales, avatarUrl, onMessage, onViewProfile }: SellerCardProps) {
+export default function SellerCard({ name, rating, sales, avatarUrl, isVerified, onMessage, onViewProfile }: SellerCardProps) {
   const initial = name?.[0]?.toUpperCase() || "V";
   const level = sales >= 20 ? "Platinum" : sales >= 10 ? "Gold" : sales >= 5 ? "Silver" : null;
   const levelColors: Record<string, string> = {
