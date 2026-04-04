@@ -273,7 +273,7 @@ export default function EditListingPanel() {
     if (error) {
       toast({ title: "Erro ao salvar", description: error.message, variant: "destructive" });
     } else {
-      toast({ title: "Anúncio atualizado! ✅" });
+      toast({ title: "Anúncio atualizado!" });
       navigate("/painel/anuncios");
     }
   };
