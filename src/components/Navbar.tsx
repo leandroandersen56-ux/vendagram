@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFavorites } from "@/hooks/useFavorites";
-import { formatBRL } from "@/lib/mock-data";
+import { formatBRL, PLATFORM_COVERS } from "@/lib/mock-data";
 import logoFroiv from "@/assets/logo-froiv.png";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem,
