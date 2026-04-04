@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ShoppingCart, MessageCircle, Shield, Zap, Clock } from "lucide-react";
+import { ShoppingCart, MessageCircle, Shield, Zap, Clock, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatBRL } from "@/lib/mock-data";
 
