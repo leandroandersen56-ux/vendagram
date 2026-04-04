@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Search, Bell, User, LogOut, LayoutDashboard, Store, ShoppingBag, Loader2 } from "lucide-react";
+import { Search, Bell, User, LogOut, LayoutDashboard, ShoppingBag, ShoppingCart, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
