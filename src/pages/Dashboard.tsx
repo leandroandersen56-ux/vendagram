@@ -61,6 +61,7 @@ export default function Dashboard() {
   const [transactions, setTransactions] = useState<any[]>([]);
   const [disputes, setDisputes] = useState<any[]>([]);
   const [withdrawals, setWithdrawals] = useState<any[]>([]);
+  const [verifications, setVerifications] = useState<any[]>([]);
   const [searchUser, setSearchUser] = useState("");
   const [chartData, setChartData] = useState<any[]>([]);
 
@@ -78,12 +79,13 @@ export default function Dashboard() {
 
   const loadAll = async () => {
     setLoading(true);
-    const [profilesRes, txRes, disputesRes, walletsRes, withdrawalsRes] = await Promise.all([
+    const [profilesRes, txRes, disputesRes, walletsRes, withdrawalsRes, verificationsRes] = await Promise.all([
       supabase.from("profiles").select("*").order("created_at", { ascending: false }),
       supabase.from("transactions").select("*, listings(title)").order("created_at", { ascending: false }).limit(100),
       supabase.from("disputes").select("*, transactions(amount, listings(title)), profiles!disputes_opened_by_fkey(name)").order("created_at", { ascending: false }),
       supabase.from("wallets").select("pending"),
       supabase.from("withdrawals").select("*, profiles!withdrawals_user_id_fkey(name, email)").order("created_at", { ascending: false }),
+      supabase.from("verification_requests").select("*").order("created_at", { ascending: false }),
     ]);
 
     const allUsers = profilesRes.data || [];
@@ -103,6 +105,7 @@ export default function Dashboard() {
     setTransactions(allTx);
     setDisputes(allDisputes);
     setWithdrawals(allWithdrawals);
+    setVerifications(verificationsRes.data || []);
 
     // Chart: group transactions by month
     const monthMap: Record<string, { transactions: number; revenue: number }> = {};
@@ -126,6 +129,43 @@ export default function Dashboard() {
     const { error } = await supabase.functions.invoke("process-withdrawal", { body: { withdrawal_id: wId } });
     if (error) toast.error("Erro ao processar saque");
     else { toast.success("Saque processado!"); loadAll(); }
+  };
+
+  const handleVerification = async (vId: string, action: "approved" | "rejected", reason?: string) => {
+    const { error } = await supabase.from("verification_requests").update({
+      status: action,
+      rejection_reason: action === "rejected" ? (reason || "Documentos não atenderam os requisitos") : null,
+      reviewed_by: user!.id,
+      reviewed_at: new Date().toISOString(),
+    }).eq("id", vId);
+
+    if (error) { toast.error("Erro ao processar verificação"); return; }
+
+    if (action === "approved") {
+      const vr = verifications.find((v: any) => v.id === vId);
+      if (vr) {
+        await supabase.from("profiles").update({ is_verified: true }).eq("user_id", vr.user_id);
+        await supabase.from("notifications").insert({
+          user_id: vr.user_id,
+          title: "Conta verificada!",
+          body: "Parabéns! Sua conta foi verificada. O selo de vendedor verificado já aparece no seu perfil.",
+          link: "/painel/perfil",
+        });
+      }
+    } else {
+      const vr = verifications.find((v: any) => v.id === vId);
+      if (vr) {
+        await supabase.from("notifications").insert({
+          user_id: vr.user_id,
+          title: "Verificação recusada",
+          body: reason || "Seus documentos não atenderam aos requisitos. Envie novamente.",
+          link: "/painel/verificacao",
+        });
+      }
+    }
+
+    toast.success(action === "approved" ? "Conta verificada!" : "Verificação recusada");
+    loadAll();
   };
 
   const filteredUsers = users.filter((u: any) =>
@@ -181,6 +221,14 @@ export default function Dashboard() {
               <TabsTrigger value="transactions">Transações</TabsTrigger>
               <TabsTrigger value="disputes">Disputas {kpis.disputes > 0 && <Badge className="bg-destructive text-white ml-1 text-[10px] h-4 px-1">{kpis.disputes}</Badge>}</TabsTrigger>
               <TabsTrigger value="withdrawals">Saques</TabsTrigger>
+              <TabsTrigger value="verifications">
+                Verificações
+                {verifications.filter((v: any) => v.status === "pending").length > 0 && (
+                  <Badge className="bg-primary text-white ml-1 text-[10px] h-4 px-1">
+                    {verifications.filter((v: any) => v.status === "pending").length}
+                  </Badge>
+                )}
+              </TabsTrigger>
             </TabsList>
 
             {/* Overview */}
@@ -364,6 +412,62 @@ export default function Dashboard() {
                           </td>
                         </tr>
                       ))}
+                    </tbody>
+                  </table>
+                </div>
+              </Card>
+            </TabsContent>
+
+            {/* Verifications */}
+            <TabsContent value="verifications">
+              <Card className="bg-card border-border overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-border bg-muted/30">
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">ID</th>
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">Usuário</th>
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">Tipo</th>
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">Documentos</th>
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">Status</th>
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">Data</th>
+                        <th className="text-left p-3 text-xs text-muted-foreground font-medium">Ações</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {verifications.length === 0 ? (
+                        <tr><td colSpan={7} className="p-8 text-center text-muted-foreground text-sm">Nenhuma verificação encontrada</td></tr>
+                      ) : verifications.map((v: any) => {
+                        const vUser = users.find((u: any) => u.user_id === v.user_id);
+                        return (
+                          <tr key={v.id} className="border-b border-border/50 hover:bg-muted/20">
+                            <td className="p-3 text-xs text-primary font-mono">{v.id.slice(0, 8)}</td>
+                            <td className="p-3 text-sm text-foreground">{vUser?.name || vUser?.email || v.user_id.slice(0, 8)}</td>
+                            <td className="p-3 text-sm text-foreground">{v.doc_type === "cnpj" ? "PJ (CNPJ)" : "PF (CPF)"}</td>
+                            <td className="p-3 text-xs text-muted-foreground">
+                              {(v.documents?.length || 0) + (v.selfie_path ? 1 : 0)} arquivo(s)
+                            </td>
+                            <td className="p-3">
+                              <Badge className={`${statusColors[v.status] || ""} border-0 text-xs`}>
+                                {statusLabels[v.status] || v.status}
+                              </Badge>
+                            </td>
+                            <td className="p-3 text-xs text-muted-foreground">{new Date(v.created_at).toLocaleDateString("pt-BR")}</td>
+                            <td className="p-3">
+                              {v.status === "pending" && (
+                                <div className="flex gap-1">
+                                  <Button size="sm" variant="hero" className="text-xs h-7" onClick={() => handleVerification(v.id, "approved")}>
+                                    <CheckCircle2 className="h-3 w-3 mr-1" /> Aprovar
+                                  </Button>
+                                  <Button size="sm" variant="outline" className="text-xs h-7 text-destructive border-destructive/30" onClick={() => handleVerification(v.id, "rejected")}>
+                                    <XCircle className="h-3 w-3 mr-1" /> Recusar
+                                  </Button>
+                                </div>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })}
                     </tbody>
                   </table>
                 </div>
