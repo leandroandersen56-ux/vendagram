@@ -48,7 +48,7 @@ export default function Favorites() {
               {favorites.map((fav) => {
                 const listing = fav.listing;
                 if (!listing) return null;
-                const thumb = listing.screenshots?.[0];
+                const thumb = listing.screenshots?.[0] || PLATFORM_COVERS[listing.category as keyof typeof PLATFORM_COVERS];
                 return (
                   <div
                     key={fav.id}
