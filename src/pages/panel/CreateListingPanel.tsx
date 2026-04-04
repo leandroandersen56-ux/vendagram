@@ -184,6 +184,10 @@ export default function CreateListing() {
       toast({ title: "Preencha plataforma, título e preço", variant: "destructive" });
       return;
     }
+    if (!credLogin.trim() || !credPassword.trim()) {
+      toast({ title: "Preencha login e senha da conta para entrega automática", variant: "destructive" });
+      return;
+    }
     if (!user) {
       toast({ title: "Faça login para publicar", variant: "destructive" });
       return;
@@ -202,6 +206,16 @@ export default function CreateListing() {
     if (items.length > 0) highlights["Itens"] = items;
     feats.forEach((f) => (highlights[f] = true));
 
+    // Encode credentials (base64 for now, decrypted server-side)
+    const credentialsData = JSON.stringify({
+      login: credLogin.trim(),
+      password: credPassword.trim(),
+      ...(credEmail.trim() && { email: credEmail.trim() }),
+      ...(cred2fa.trim() && { twofa: cred2fa.trim() }),
+      ...(credNotes.trim() && { notes: credNotes.trim() }),
+    });
+    const encoded = btoa(unescape(encodeURIComponent(credentialsData)));
+
     const { error } = await supabase.from("listings").insert({
       title,
       description: description || null,
@@ -211,7 +225,8 @@ export default function CreateListing() {
       highlights,
       includes: items.length > 0 ? items.join(", ") : null,
       status: "active",
-    });
+      prefilled_credentials: encoded,
+    } as any);
 
     setLoading(false);
     if (error) {
