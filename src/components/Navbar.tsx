@@ -136,7 +136,7 @@ export default function Navbar() {
               >
                 <Bell className="h-5 w-5" />
                 {unreadCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 h-4 min-w-4 px-1 rounded-full bg-[hsl(var(--danger))] text-white text-[9px] font-bold flex items-center justify-center">
+                  <span className="absolute -top-0.5 -right-0.5 h-4 min-w-4 px-1 rounded-full bg-[hsl(var(--danger))] text-white text-[9px] font-semibold flex items-center justify-center">
                     {unreadCount > 9 ? "9+" : unreadCount}
                   </span>
                 )}
@@ -159,7 +159,7 @@ export default function Navbar() {
             {isAuthenticated ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center text-white text-xs font-bold hover:bg-white/30 transition-colors">
+                  <button className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center text-white text-xs font-semibold hover:bg-white/30 transition-colors">
                     {user?.name?.[0]?.toUpperCase() || <User className="h-4 w-4" />}
                   </button>
                 </DropdownMenuTrigger>
@@ -193,7 +193,7 @@ export default function Navbar() {
                 <Button
                   size="sm"
                   onClick={() => openAuth()}
-                  className="bg-white text-primary hover:bg-white/90 rounded-lg text-[13px] font-bold px-4 shadow-sm"
+                  className="bg-white text-primary hover:bg-white/90 rounded-lg text-[13px] font-semibold px-4 shadow-sm"
                 >
                   Cadastrar
                 </Button>
@@ -215,7 +215,7 @@ export default function Navbar() {
               >
                 <Bell className="h-5 w-5" />
                 {unreadCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 h-4 min-w-4 px-1 rounded-full bg-[hsl(var(--danger))] text-white text-[9px] font-bold flex items-center justify-center">
+                  <span className="absolute -top-0.5 -right-0.5 h-4 min-w-4 px-1 rounded-full bg-[hsl(var(--danger))] text-white text-[9px] font-semibold flex items-center justify-center">
                     {unreadCount > 9 ? "9+" : unreadCount}
                   </span>
                 )}
@@ -247,7 +247,7 @@ export default function Navbar() {
             ) : (
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center text-white text-xs font-bold"
+                className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center text-white text-xs font-semibold"
               >
                 {user?.name?.[0]?.toUpperCase() || "U"}
               </button>
@@ -343,7 +343,7 @@ function NotifDropdown({
     >
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-[hsl(var(--border))]">
-        <h3 className="text-sm font-bold text-[hsl(var(--txt-primary))]">Notificações</h3>
+        <h3 className="text-sm font-semibold text-[hsl(var(--txt-primary))]">Notificações</h3>
         {notifications.some((n) => !n.read) && (
           <button
             onClick={onMarkAllRead}

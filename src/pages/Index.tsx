@@ -147,7 +147,7 @@ export default function Index() {
                   <img src={b.img} alt={b.title} className="w-full h-full object-cover" {...(i === 0 ? {} : { loading: "lazy" as const })} />
                   <div className="absolute inset-0 bg-gradient-to-r from-[#0F1B3D]/80 via-[#0F1B3D]/40 to-transparent flex items-center">
                     <div className="px-5 sm:px-8 md:px-12 max-w-sm md:max-w-lg">
-                      <h2 className="text-white text-base sm:text-xl md:text-3xl lg:text-4xl font-bold leading-tight">{b.title}</h2>
+                      <h2 className="text-white text-base sm:text-xl md:text-3xl lg:text-4xl font-semibold leading-tight">{b.title}</h2>
                       <p className="text-white/70 text-[11px] sm:text-sm md:text-base lg:text-lg mt-1 md:mt-2">{b.subtitle}</p>
                       <Link to={b.link}>
                         <button className="mt-3 md:mt-4 text-[11px] sm:text-xs md:text-sm font-semibold text-white border border-white/40 rounded-lg px-3 md:px-5 py-1.5 md:py-2 hover:bg-white/10 transition-colors">
@@ -294,7 +294,7 @@ export default function Index() {
                   Limpar
                 </button>
                 <button
-                  className="h-9 flex-1 text-[12px] font-bold rounded-lg bg-primary text-white hover:bg-primary-dark transition-colors"
+                  className="h-9 flex-1 text-[12px] font-semibold rounded-lg bg-primary text-white hover:bg-primary-dark transition-colors"
                   onClick={() => setShowFilterMenu(false)}
                 >
                   Aplicar
@@ -340,10 +340,10 @@ export default function Index() {
         <section className="py-4">
           <div className="container mx-auto">
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-[15px] font-bold text-txt-primary flex items-center gap-1.5">
+              <h2 className="text-[15px] font-semibold text-txt-primary flex items-center gap-1.5">
                 <Flame className="h-4 w-4 text-hot" /> Destaques do Dia
               </h2>
-              <span className="text-[11px] font-bold bg-hot text-white px-2.5 py-1 rounded-full">
+              <span className="text-[11px] font-semibold bg-hot text-white px-2.5 py-1 rounded-full">
                 🔥 HOT
               </span>
             </div>
@@ -371,7 +371,7 @@ export default function Index() {
                 {social.length > 0 && (
                   <div>
                     <div className="flex items-center justify-between mb-3">
-                      <h3 className="text-[15px] font-bold text-txt-primary flex items-center gap-2">
+                      <h3 className="text-[15px] font-semibold text-txt-primary flex items-center gap-2">
                         <Smartphone className="h-4 w-4 text-primary" /> Redes Sociais
                       </h3>
                       <Link to="/marketplace?type=social" className="text-[12px] text-primary font-semibold hover:underline flex items-center gap-1">
@@ -387,7 +387,7 @@ export default function Index() {
                 {games.length > 0 && (
                   <div>
                     <div className="flex items-center justify-between mb-3">
-                      <h3 className="text-[15px] font-bold text-txt-primary flex items-center gap-2">
+                      <h3 className="text-[15px] font-semibold text-txt-primary flex items-center gap-2">
                         <Gamepad2 className="h-4 w-4 text-primary" /> Contas de Jogos
                       </h3>
                       <Link to="/marketplace?type=games" className="text-[12px] text-primary font-semibold hover:underline flex items-center gap-1">
@@ -405,7 +405,7 @@ export default function Index() {
                 <Search className="h-8 w-8 text-txt-hint mb-3 mx-auto" />
                 <p className="text-sm font-semibold text-txt-primary mb-1">Nenhum anúncio encontrado</p>
                 <p className="text-txt-hint text-xs mb-5">Seja o primeiro a anunciar!</p>
-                <button onClick={handleSell} className="bg-primary text-white font-bold text-sm px-6 py-2.5 rounded-lg hover:bg-primary-dark transition-colors">
+                <button onClick={handleSell} className="bg-primary text-white font-semibold text-sm px-6 py-2.5 rounded-lg hover:bg-primary-dark transition-colors">
                   Criar Anúncio
                 </button>
               </div>
@@ -416,7 +416,7 @@ export default function Index() {
         {/* === HOW IT WORKS === */}
         <section className="py-8 bg-muted">
           <div className="container mx-auto">
-            <h2 className="text-[16px] font-bold text-txt-primary text-center mb-6">Como funciona</h2>
+            <h2 className="text-[16px] font-semibold text-txt-primary text-center mb-6">Como funciona</h2>
             <div className="grid grid-cols-4 gap-3 sm:gap-6">
               {[
                 { icon: <Search className="h-5 w-5" />, title: "Encontre", desc: "Busque a conta ideal", num: "1" },
@@ -435,7 +435,7 @@ export default function Index() {
                   <div className="h-12 w-12 rounded-full bg-primary flex items-center justify-center text-white mb-2 shadow-sm">
                     {step.icon}
                   </div>
-                  <h3 className="text-[12px] font-bold text-txt-primary">{step.title}</h3>
+                  <h3 className="text-[12px] font-semibold text-txt-primary">{step.title}</h3>
                   <p className="text-[10px] text-txt-hint mt-0.5 leading-tight">{step.desc}</p>
                 </motion.div>
               ))}
@@ -447,7 +447,7 @@ export default function Index() {
         <section className="py-8">
           <div className="container mx-auto">
             <div className="rounded-xl bg-muted/60 border border-border p-6 sm:p-8">
-              <h2 className="text-center text-[15px] sm:text-lg font-bold text-txt-primary mb-6">Por que escolher a Froiv?</h2>
+              <h2 className="text-center text-[15px] sm:text-lg font-semibold text-txt-primary mb-6">Por que escolher a Froiv?</h2>
               <div className="grid grid-cols-3 gap-4 sm:gap-6">
                 {[
                   { icon: <Shield className="h-5 w-5" />, value: "100%", label: "Escrow Seguro" },
@@ -456,7 +456,7 @@ export default function Index() {
                 ].map((stat) => (
                   <div key={stat.label} className="flex flex-col items-center gap-2 text-center">
                     <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">{stat.icon}</div>
-                    <p className="text-[28px] font-black leading-none text-txt-primary">{stat.value}</p>
+                    <p className="text-[28px] font-semibold leading-none text-txt-primary">{stat.value}</p>
                     <p className="text-[11px] text-txt-hint font-medium">{stat.label}</p>
                   </div>
                 ))}
