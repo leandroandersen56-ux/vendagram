@@ -95,7 +95,7 @@ export default function Navbar() {
           </Link>
 
           {/* Search bar */}
-          <div className="flex-1 max-w-md md:max-w-2xl">
+          <div className="flex-1">
             <div className="relative w-full">
               <Input
                 placeholder="Buscar contas, jogos, redes sociais..."
