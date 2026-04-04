@@ -94,6 +94,7 @@ export default function SellerDashboard() {
           >
             {activeTab === "overview" && <PanelOverview />}
             {activeTab === "anuncios" && <PanelListings />}
+            {activeTab === "ofertas" && <PanelOffers />}
             {activeTab === "transacoes" && <PanelTransactions />}
             {activeTab === "carteira" && <PanelWallet />}
             {activeTab === "perfil" && <PanelProfile />}
