@@ -242,20 +242,6 @@ export default function ListingDetail() {
                         </motion.button>
                       </div>
                     </div>
-                      <span className={`text-[10px] font-semibold px-2 py-0.5 rounded ${PLATFORM_BADGE_COLORS[listing.category] || "bg-[hsl(var(--muted))] text-[hsl(var(--txt-primary))]"}`}>
-                        {platform.name.toUpperCase()}
-                      </span>
-                      {sellerSales >= 5 && (
-                        <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-[hsl(var(--success-light))] text-[hsl(var(--success))]">
-                          VERIFICADO
-                        </span>
-                      )}
-                      {sellerSales >= 15 && (
-                        <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-[hsl(var(--hot-light))] text-[hsl(var(--hot))]">
-                          MAIS VENDIDO
-                        </span>
-                      )}
-                    </div>
                     <h1 className="text-lg font-semibold text-[hsl(var(--txt-primary))] leading-snug">{listing.title}</h1>
                     <div className="flex items-center flex-wrap gap-x-2 gap-y-1 mt-2 text-[13px]">
                       <div className="flex items-center gap-1">
