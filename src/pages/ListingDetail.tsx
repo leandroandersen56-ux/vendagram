@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { toast } from "sonner";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
@@ -270,7 +271,9 @@ export default function ListingDetail() {
                     name={sellerName}
                     rating={sellerRating}
                     sales={sellerSales}
-                    onViewProfile={() => seller?.username ? navigate(`/perfil/${seller.username}`) : undefined}
+                    avatarUrl={seller?.avatar_url || undefined}
+                    onViewProfile={() => seller?.username ? navigate(`/perfil/${seller.username}`) : toast.info("Vendedor sem perfil público")}
+                    onMessage={() => toast.info("Inicie uma compra para conversar com o vendedor")}
                   />
                 </div>
 
@@ -397,7 +400,9 @@ export default function ListingDetail() {
                     name={sellerName}
                     rating={sellerRating}
                     sales={sellerSales}
-                    onViewProfile={() => seller?.username ? navigate(`/perfil/${seller.username}`) : undefined}
+                    avatarUrl={seller?.avatar_url || undefined}
+                    onViewProfile={() => seller?.username ? navigate(`/perfil/${seller.username}`) : toast.info("Vendedor sem perfil público")}
+                    onMessage={() => toast.info("Inicie uma compra para conversar com o vendedor")}
                   />
                   {/* Share (desktop) */}
                   <div className="grid grid-cols-2 gap-2">
