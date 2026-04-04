@@ -12,6 +12,7 @@ import { formatBRL, getPlatform, PLATFORM_COVERS, MOCK_LISTINGS } from "@/lib/mo
 import PlatformIcon from "@/components/PlatformIcon";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useFavorites } from "@/hooks/useFavorites";
 
 import ProductGallery from "@/components/pdp/ProductGallery";
 import BuyBox from "@/components/pdp/BuyBox";
