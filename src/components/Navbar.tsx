@@ -238,10 +238,42 @@ export default function Navbar() {
           </div>
 
           {/* Mobile right icons */}
-          <div className="flex items-center gap-0.5 md:hidden shrink-0">
+          <div className="flex items-center gap-0 md:hidden shrink-0">
+            {/* Favorites (mobile) */}
             <div className="relative">
               <button
-                className="h-9 w-9 flex items-center justify-center text-white/80"
+                className="h-8 w-8 flex items-center justify-center text-white/80"
+                aria-label="Favoritos"
+                onClick={() => {
+                  if (!isAuthenticated) { openAuth(); return; }
+                  setFavOpen(!favOpen);
+                  if (!favOpen) fetchFavs();
+                }}
+              >
+                <Heart className="h-[18px] w-[18px]" />
+                {favorites.length > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 h-3.5 min-w-3.5 px-0.5 rounded-full bg-[hsl(var(--danger))] text-white text-[8px] font-semibold flex items-center justify-center">
+                    {favorites.length > 9 ? "9+" : favorites.length}
+                  </span>
+                )}
+              </button>
+
+              <AnimatePresence>
+                {favOpen && (
+                  <FavDropdown
+                    favorites={favorites}
+                    loading={favLoading}
+                    onClose={() => setFavOpen(false)}
+                    navigate={navigate}
+                  />
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Notifications (mobile) */}
+            <div className="relative">
+              <button
+                className="h-8 w-8 flex items-center justify-center text-white/80"
                 aria-label="Notificações"
                 onClick={() => {
                   if (!isAuthenticated) { openAuth(); return; }
@@ -249,9 +281,9 @@ export default function Navbar() {
                   if (!notifOpen) fetchNotifications();
                 }}
               >
-                <Bell className="h-5 w-5" />
+                <Bell className="h-[18px] w-[18px]" />
                 {unreadCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 h-4 min-w-4 px-1 rounded-full bg-[hsl(var(--danger))] text-white text-[9px] font-semibold flex items-center justify-center">
+                  <span className="absolute -top-0.5 -right-0.5 h-3.5 min-w-3.5 px-0.5 rounded-full bg-[hsl(var(--danger))] text-white text-[8px] font-semibold flex items-center justify-center">
                     {unreadCount > 9 ? "9+" : unreadCount}
                   </span>
                 )}
@@ -272,18 +304,23 @@ export default function Navbar() {
               </AnimatePresence>
             </div>
 
+            {/* Cart (mobile) */}
+            <Link to="/cart" className="relative h-8 w-8 flex items-center justify-center text-white/80">
+              <ShoppingCart className="h-[18px] w-[18px]" />
+            </Link>
+
             {!isAuthenticated ? (
               <button
                 onClick={() => openAuth()}
-                className="h-9 w-9 flex items-center justify-center text-white/80"
+                className="h-8 w-8 flex items-center justify-center text-white/80"
                 aria-label="Entrar"
               >
-                <User className="h-5 w-5" />
+                <User className="h-[18px] w-[18px]" />
               </button>
             ) : (
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center text-white text-xs font-semibold"
+                className="h-7 w-7 rounded-full bg-white/20 flex items-center justify-center text-white text-[10px] font-semibold ml-0.5"
               >
                 {user?.name?.[0]?.toUpperCase() || "U"}
               </button>
