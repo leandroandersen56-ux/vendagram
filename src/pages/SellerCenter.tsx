@@ -14,6 +14,7 @@ export default function SellerCenter() {
   const { user } = useAuth();
   const [metrics, setMetrics] = useState({ revenue: 0, sales: 0, rating: 0, views: 0, listingCount: 0 });
   const [wallet, setWallet] = useState({ balance: 0, pending: 0 });
+  const [isVerified, setIsVerified] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
