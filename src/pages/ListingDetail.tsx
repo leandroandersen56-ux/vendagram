@@ -270,7 +270,9 @@ export default function ListingDetail() {
                     name={sellerName}
                     rating={sellerRating}
                     sales={sellerSales}
-                    onViewProfile={() => seller?.username ? navigate(`/perfil/${seller.username}`) : undefined}
+                    avatarUrl={seller?.avatar_url || undefined}
+                    onViewProfile={() => seller?.username ? navigate(`/perfil/${seller.username}`) : toast.info("Vendedor sem perfil público")}
+                    onMessage={() => toast.info("Inicie uma compra para conversar com o vendedor")}
                   />
                 </div>
 
