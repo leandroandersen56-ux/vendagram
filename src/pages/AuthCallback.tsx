@@ -34,7 +34,7 @@ export default function AuthCallback() {
             <div className="h-16 w-16 rounded-full bg-success/10 flex items-center justify-center mx-auto mb-4">
               <CheckCircle2 className="h-8 w-8 text-success" />
             </div>
-            <h1 className="text-xl font-bold text-foreground mb-2">Email verificado com sucesso!</h1>
+            <h1 className="text-xl font-semibold text-foreground mb-2">Email verificado com sucesso!</h1>
             <p className="text-muted-foreground text-sm">Redirecionando para a página inicial...</p>
           </>
         )}
