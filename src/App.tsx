@@ -48,6 +48,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 function AppRoutes() {
   return (
     <>
+      <PWAInstallBanner />
       <ScrollToTop />
       <AuthModal />
       <BottomNav />
