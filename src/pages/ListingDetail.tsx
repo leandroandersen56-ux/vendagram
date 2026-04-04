@@ -74,7 +74,7 @@ export default function ListingDetail() {
     const trackView = async () => {
       const { data: { user: authUser } } = await supabase.auth.getUser();
       if (authUser) {
-        supabase.from("listing_views").insert({
+        (supabase.from as any)("listing_views").insert({
           listing_id: listing.id,
           user_id: authUser.id,
           session_id: sessionStorage.getItem("froiv_session") || crypto.randomUUID(),
