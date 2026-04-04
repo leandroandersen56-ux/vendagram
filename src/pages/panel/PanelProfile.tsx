@@ -163,10 +163,19 @@ export default function PanelProfile() {
             <span className="text-sm font-medium text-foreground">{profile?.avg_rating?.toFixed(1) || "5.0"}</span>
             <span className="text-xs text-muted-foreground">· {profile?.total_reviews || 0} avaliações</span>
           </div>
-          {profile?.is_verified && (
+          {profile?.is_verified ? (
             <Badge className="bg-primary/10 text-primary border-0">
               <CheckCircle2 className="h-3 w-3 mr-1" /> Vendedor Verificado
             </Badge>
+          ) : (
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-xs border-primary text-primary hover:bg-primary/5"
+              onClick={() => navigate("/painel/verificacao")}
+            >
+              <ShieldCheck className="h-3.5 w-3.5 mr-1" /> Verificar conta
+            </Button>
           )}
           <div className="mt-4 pt-4 border-t border-border space-y-2 text-xs text-muted-foreground">
             <div className="flex justify-between"><span>Membro desde</span><span className="text-foreground">{new Date(profile?.created_at).toLocaleDateString("pt-BR", { month: "short", year: "numeric" })}</span></div>
