@@ -422,7 +422,7 @@ function NotifDropdown({
       {/* Footer */}
       {notifications.length > 0 && (
         <Link
-          to="/painel/notificacoes"
+          to="/notificacoes"
           onClick={onClose}
           className="block text-center py-2.5 text-[12px] text-primary font-semibold hover:bg-[hsl(var(--muted))] transition-colors border-t border-[hsl(var(--border))]"
         >
