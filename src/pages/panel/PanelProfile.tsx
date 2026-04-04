@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,17 +8,21 @@ import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { CheckCircle2, Star, Loader2 } from "lucide-react";
+import { CheckCircle2, Star, Loader2, Camera } from "lucide-react";
 
 export default function PanelProfile() {
   const { user } = useAuth();
   const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
+  const [docType, setDocType] = useState<"cpf" | "cnpj">("cpf");
   const [cpf, setCpf] = useState("");
+  const [cnpj, setCnpj] = useState("");
   const [phone, setPhone] = useState("");
   const [pixKey, setPixKey] = useState("");
   const [bio, setBio] = useState("");
@@ -34,6 +38,8 @@ export default function PanelProfile() {
       setName(data.name || "");
       setUsername(data.username || "");
       setCpf(data.cpf || "");
+      setCnpj((data as any).cnpj || "");
+      setDocType((data as any).cnpj ? "cnpj" : "cpf");
       setPhone(data.phone || "");
       setPixKey(data.pix_key || "");
       setBio(data.bio || "");
@@ -41,12 +47,51 @@ export default function PanelProfile() {
     setLoading(false);
   };
 
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user?.id) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      toast({ title: "Arquivo muito grande", description: "Máximo 2MB", variant: "destructive" });
+      return;
+    }
+
+    setUploadingAvatar(true);
+    const ext = file.name.split(".").pop();
+    const path = `${user.id}/avatar.${ext}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("avatars")
+      .upload(path, file, { upsert: true });
+
+    if (uploadError) {
+      toast({ title: "Erro no upload", description: uploadError.message, variant: "destructive" });
+      setUploadingAvatar(false);
+      return;
+    }
+
+    const { data: urlData } = supabase.storage.from("avatars").getPublicUrl(path);
+    const avatar_url = `${urlData.publicUrl}?t=${Date.now()}`;
+
+    await supabase.from("profiles").update({ avatar_url }).eq("user_id", user.id);
+    setProfile((p: any) => ({ ...p, avatar_url }));
+    toast({ title: "Foto atualizada!" });
+    setUploadingAvatar(false);
+  };
+
   const handleSave = async () => {
     setSaving(true);
-    const { error } = await supabase.from("profiles").update({
-      name, username: username || null, cpf: cpf || null,
-      phone: phone || null, pix_key: pixKey || null, bio: bio || null,
-    }).eq("user_id", user!.id);
+    const updateData: any = {
+      name,
+      username: username || null,
+      cpf: docType === "cpf" ? (cpf || null) : null,
+      cnpj: docType === "cnpj" ? (cnpj || null) : null,
+      phone: phone || null,
+      pix_key: pixKey || null,
+      bio: bio || null,
+    };
+
+    const { error } = await supabase.from("profiles").update(updateData).eq("user_id", user!.id);
 
     if (error) {
       toast({ title: "Erro ao salvar", description: error.message, variant: "destructive" });
@@ -54,6 +99,23 @@ export default function PanelProfile() {
       toast({ title: "Perfil atualizado!" });
     }
     setSaving(false);
+  };
+
+  const formatCpf = (value: string) => {
+    const digits = value.replace(/\D/g, "").slice(0, 11);
+    return digits
+      .replace(/(\d{3})(\d)/, "$1.$2")
+      .replace(/(\d{3})(\d)/, "$1.$2")
+      .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+  };
+
+  const formatCnpj = (value: string) => {
+    const digits = value.replace(/\D/g, "").slice(0, 14);
+    return digits
+      .replace(/(\d{2})(\d)/, "$1.$2")
+      .replace(/(\d{3})(\d)/, "$1.$2")
+      .replace(/(\d{3})(\d)/, "$1/$2")
+      .replace(/(\d{4})(\d{1,2})$/, "$1-$2");
   };
 
   if (loading) {
@@ -67,11 +129,30 @@ export default function PanelProfile() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Profile card */}
         <Card className="bg-card border-border p-6 text-center">
-          <div className="h-20 w-20 rounded-full bg-primary/20 flex items-center justify-center text-primary font-semibold text-2xl mx-auto mb-4">
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleAvatarUpload}
+          />
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploadingAvatar}
+            className="relative h-20 w-20 rounded-full bg-primary/20 flex items-center justify-center text-primary font-semibold text-2xl mx-auto mb-4 group overflow-hidden"
+          >
             {profile?.avatar_url ? (
               <img src={profile.avatar_url} alt="" className="h-full w-full rounded-full object-cover" />
             ) : name?.[0]?.toUpperCase() || "?"}
-          </div>
+            <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-full">
+              {uploadingAvatar ? (
+                <Loader2 className="h-5 w-5 text-white animate-spin" />
+              ) : (
+                <Camera className="h-5 w-5 text-white" />
+              )}
+            </div>
+          </button>
+          <p className="text-[11px] text-muted-foreground mb-2">Clique para alterar a foto</p>
           <h3 className="font-semibold text-foreground">{name}</h3>
           <p className="text-xs text-muted-foreground mb-1">@{username || "usuario"}</p>
           <p className="text-xs text-muted-foreground mb-3">{profile?.email}</p>
@@ -108,10 +189,51 @@ export default function PanelProfile() {
               <Label className="text-sm text-muted-foreground">Email</Label>
               <Input value={profile?.email || ""} disabled className="bg-muted/30 border-border opacity-50" />
             </div>
+
+            {/* CPF / CNPJ selector */}
             <div className="space-y-1.5">
-              <Label className="text-sm text-muted-foreground">CPF</Label>
-              <Input value={cpf} onChange={(e) => setCpf(e.target.value)} placeholder="000.000.000-00" className="bg-muted/30 border-border" />
+              <Label className="text-sm text-muted-foreground">Documento</Label>
+              <div className="flex gap-2 mb-2">
+                <button
+                  onClick={() => setDocType("cpf")}
+                  className={`flex-1 text-xs py-1.5 rounded-md border transition-colors ${
+                    docType === "cpf"
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-muted/30 text-muted-foreground border-border hover:bg-muted/50"
+                  }`}
+                >
+                  CPF (Pessoa Física)
+                </button>
+                <button
+                  onClick={() => setDocType("cnpj")}
+                  className={`flex-1 text-xs py-1.5 rounded-md border transition-colors ${
+                    docType === "cnpj"
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-muted/30 text-muted-foreground border-border hover:bg-muted/50"
+                  }`}
+                >
+                  CNPJ (Empresa)
+                </button>
+              </div>
+              {docType === "cpf" ? (
+                <Input
+                  value={cpf}
+                  onChange={(e) => setCpf(formatCpf(e.target.value))}
+                  placeholder="000.000.000-00"
+                  maxLength={14}
+                  className="bg-muted/30 border-border"
+                />
+              ) : (
+                <Input
+                  value={cnpj}
+                  onChange={(e) => setCnpj(formatCnpj(e.target.value))}
+                  placeholder="00.000.000/0000-00"
+                  maxLength={18}
+                  className="bg-muted/30 border-border"
+                />
+              )}
             </div>
+
             <div className="space-y-1.5">
               <Label className="text-sm text-muted-foreground">Telefone (WhatsApp)</Label>
               <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="(00) 00000-0000" className="bg-muted/30 border-border" />
