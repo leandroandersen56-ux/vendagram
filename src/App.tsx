@@ -26,6 +26,16 @@ import PanelProfile from "./pages/panel/PanelProfile.tsx";
 import CreateListingPanel from "./pages/panel/CreateListingPanel.tsx";
 import EditListingPanel from "./pages/panel/EditListingPanel.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import Purchases from "./pages/Purchases.tsx";
+import OrderDetail from "./pages/OrderDetail.tsx";
+import Notifications from "./pages/Notifications.tsx";
+import Questions from "./pages/Questions.tsx";
+import Reviews from "./pages/Reviews.tsx";
+import SellerCenter from "./pages/SellerCenter.tsx";
+import WalletPage from "./pages/WalletPage.tsx";
+import Affiliates from "./pages/Affiliates.tsx";
+import SettingsPage from "./pages/SettingsPage.tsx";
+import HelpPage from "./pages/HelpPage.tsx";
 
 const queryClient = new QueryClient();
 
@@ -63,8 +73,20 @@ function AppRoutes() {
         <Route path="/favoritos" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
         <Route path="/checkout/:listingId" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
         <Route path="/transaction/:listingId" element={<TransactionFlow />} />
+        <Route path="/ajuda" element={<HelpPage />} />
 
-        {/* Admin (will be protected later with role check) */}
+        {/* User pages (protected) */}
+        <Route path="/compras" element={<ProtectedRoute><Purchases /></ProtectedRoute>} />
+        <Route path="/compras/:id" element={<ProtectedRoute><OrderDetail /></ProtectedRoute>} />
+        <Route path="/notificacoes" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
+        <Route path="/perguntas" element={<ProtectedRoute><Questions /></ProtectedRoute>} />
+        <Route path="/avaliacoes" element={<ProtectedRoute><Reviews /></ProtectedRoute>} />
+        <Route path="/vendedor" element={<ProtectedRoute><SellerCenter /></ProtectedRoute>} />
+        <Route path="/carteira" element={<ProtectedRoute><WalletPage /></ProtectedRoute>} />
+        <Route path="/afiliados" element={<ProtectedRoute><Affiliates /></ProtectedRoute>} />
+        <Route path="/configuracoes" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
+
+        {/* Admin */}
         <Route path="/admin" element={<Dashboard />} />
 
         {/* User panel (protected) */}
