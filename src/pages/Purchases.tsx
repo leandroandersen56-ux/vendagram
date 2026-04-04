@@ -7,14 +7,14 @@ import PageHeader from "@/components/menu/PageHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
-const STATUS_MAP: Record<string, { label: string; color: string; icon: string }> = {
-  pending_payment: { label: "Aguardando pagamento", color: "text-[#FF6900] bg-[#FF6900]/10", icon: "⏳" },
-  paid: { label: "Pagamento confirmado", color: "text-success bg-success/10", icon: "✅" },
-  transfer_in_progress: { label: "Em verificação", color: "text-primary bg-primary/10", icon: "🔍" },
-  completed: { label: "Conta Liberada", color: "text-success bg-success/10 font-semibold", icon: "✅" },
-  disputed: { label: "Disputa aberta", color: "text-[#FF6900] bg-[#FF6900]/10", icon: "⚠️" },
-  refunded: { label: "Reembolsado", color: "text-[#888] bg-[#888]/10", icon: "↩️" },
-  cancelled: { label: "Cancelado", color: "text-[#888] bg-[#888]/10", icon: "✖️" },
+const STATUS_MAP: Record<string, { label: string; color: string; Icon: React.ElementType }> = {
+  pending_payment: { label: "Aguardando pagamento", color: "text-[#FF6900] bg-[#FF6900]/10", Icon: Clock },
+  paid: { label: "Pagamento confirmado", color: "text-success bg-success/10", Icon: CheckCircle2 },
+  transfer_in_progress: { label: "Em verificação", color: "text-primary bg-primary/10", Icon: Eye },
+  completed: { label: "Conta Liberada", color: "text-success bg-success/10 font-semibold", Icon: CheckCircle2 },
+  disputed: { label: "Disputa aberta", color: "text-[#FF6900] bg-[#FF6900]/10", Icon: AlertTriangle },
+  refunded: { label: "Reembolsado", color: "text-[#888] bg-[#888]/10", Icon: RotateCcw },
+  cancelled: { label: "Cancelado", color: "text-[#888] bg-[#888]/10", Icon: XCircle },
 };
 
 const FILTERS = ["Todos", "Em andamento", "Concluídos", "Disputas"];
