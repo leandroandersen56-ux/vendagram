@@ -93,9 +93,9 @@ export default function Footer() {
                 A plataforma mais segura para comprar e vender contas digitais com escrow automático.
               </p>
               <div className="flex items-center gap-3">
-                <a href="#" className="text-primary hover:text-primary/80 transition-colors" aria-label="Instagram"><SocialIcon type="instagram" size={18} /></a>
-                <a href="#" className="text-primary hover:text-primary/80 transition-colors" aria-label="TikTok"><SocialIcon type="tiktok" size={18} /></a>
-                <a href="#" className="text-primary hover:text-primary/80 transition-colors" aria-label="YouTube"><SocialIcon type="youtube" size={18} /></a>
+                <a href="#" className="text-primary hover:text-primary/80 transition-colors" aria-label="Instagram"><SocialIcon type="instagram" size={24} /></a>
+                <a href="#" className="text-primary hover:text-primary/80 transition-colors" aria-label="TikTok"><SocialIcon type="tiktok" size={24} /></a>
+                <a href="#" className="text-primary hover:text-primary/80 transition-colors" aria-label="YouTube"><SocialIcon type="youtube" size={24} /></a>
               </div>
             </div>
             <div>
