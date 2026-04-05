@@ -337,7 +337,7 @@ export default function CreateListing() {
         </div>
 
         {/* Content */}
-        <div className="pb-[120px]">
+        <div className="pb-[180px]">
           <div className="px-5 pt-5 pb-2">
             <h2 className="text-[22px] font-extrabold text-[#111]" style={{ letterSpacing: '-0.5px' }}>
               O que você quer vender?
