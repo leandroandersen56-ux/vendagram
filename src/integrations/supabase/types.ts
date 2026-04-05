@@ -881,6 +881,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      increment_wallet: {
+        Args: { amount: number; field: string; user_uuid: string }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
