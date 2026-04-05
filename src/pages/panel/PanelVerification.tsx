@@ -11,6 +11,7 @@ import {
   ShieldCheck, Upload, Camera, FileText, CreditCard,
   Loader2, CheckCircle2, XCircle, Clock, AlertCircle, User, Building2
 } from "lucide-react";
+import PageHeader from "@/components/menu/PageHeader";
 
 type DocType = "cpf" | "cnpj";
 
@@ -138,15 +139,16 @@ export default function PanelVerification() {
   };
 
   if (loading) {
-    return <div className="flex justify-center pt-20"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>;
+    return <div className="min-h-screen bg-[#F5F5F5]"><PageHeader title="Verificação de Conta" /><div className="flex justify-center pt-20"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div></div>;
   }
 
   // Show existing request status
   if (existing && existing.status !== "rejected") {
     const statusInfo = STATUS_CONFIG[existing.status] || STATUS_CONFIG.pending;
     return (
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-        <h1 className="text-xl font-semibold text-foreground mb-6">Verificação de Conta</h1>
+      <div className="min-h-screen bg-[#F5F5F5] pb-20">
+        <PageHeader title="Verificação de Conta" />
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="p-4">
         <Card className="bg-card border-border p-6 max-w-lg">
           <div className="text-center">
             <div className={`inline-flex items-center justify-center h-16 w-16 rounded-full ${statusInfo.color} mb-4`}>
@@ -182,6 +184,7 @@ export default function PanelVerification() {
           </div>
         </Card>
       </motion.div>
+      </div>
     );
   }
 
@@ -189,9 +192,10 @@ export default function PanelVerification() {
   const rejected = existing?.status === "rejected";
 
   return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-      <h1 className="text-xl font-semibold text-foreground mb-2">Verificação de Conta</h1>
-      <p className="text-sm text-muted-foreground mb-6">
+    <div className="min-h-screen bg-[#F5F5F5] pb-20">
+      <PageHeader title="Verificação de Conta" />
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="p-4">
+      <p className="text-sm text-[#888] mb-4">
         Verifique sua identidade para receber o selo de vendedor verificado e aumentar a confiança dos compradores.
       </p>
 
@@ -329,5 +333,6 @@ export default function PanelVerification() {
         )}
       </Button>
     </motion.div>
+    </div>
   );
 }
