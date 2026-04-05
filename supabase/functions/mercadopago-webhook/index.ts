@@ -86,23 +86,13 @@ Deno.serve(async (req) => {
 
         const sellerReceives = Number(tx.seller_receives);
 
-        const { data: wallet } = await supabase
-          .from("wallets")
-          .select("*")
-          .eq("user_id", tx.seller_id)
-          .single();
-
-        if (wallet) {
-          await supabase
-            .from("wallets")
-            .update({
-              pending: Number(wallet.pending) + sellerReceives,
-              updated_at: new Date().toISOString(),
-            })
-            .eq("user_id", tx.seller_id);
-
-          console.log(`Seller ${tx.seller_id} pending +${sellerReceives}`);
-        }
+        // Atomic wallet update using RPC
+        await supabase.rpc("increment_wallet", {
+          user_uuid: tx.seller_id,
+          field: "pending",
+          amount: sellerReceives,
+        });
+        console.log(`Seller ${tx.seller_id} pending +${sellerReceives} (atomic)`);
 
         // Fetch listing and profiles for emails
         const { data: listing } = await supabase

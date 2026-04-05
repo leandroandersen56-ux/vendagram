@@ -13,11 +13,18 @@ const CATEGORIES = [
 ];
 
 const FAQS = [
-  { q: "Como funciona o Escrow?", a: "O sistema de Escrow retém o pagamento até que o comprador confirme que recebeu e verificou a conta. Após a confirmação, o valor é liberado ao vendedor." },
-  { q: "Em quanto tempo recebo os dados?", a: "A maioria das contas é entregue imediatamente após a confirmação do pagamento. O prazo máximo é de 24 horas." },
-  { q: "O que fazer se a conta estiver errada?", a: "Você pode abrir uma disputa dentro de 24 horas após receber os dados. Nossa equipe irá mediar a situação." },
-  { q: "Como solicitar reembolso?", a: "Caso a disputa seja resolvida a seu favor, o reembolso é creditado automaticamente na sua carteira Froiv." },
-  { q: "Como me tornar vendedor?", a: "Basta criar um anúncio pela Central do Vendedor. Todos os usuários verificados podem vender na plataforma." },
+  { q: "Como funciona o Escrow?", a: "O sistema de Escrow retém o pagamento até que o comprador confirme que recebeu e verificou a conta. Após a confirmação (ou após 24h automaticamente), o valor é liberado ao vendedor." },
+  { q: "Em quanto tempo recebo os dados de acesso?", a: "A maioria das contas é entregue imediatamente após a confirmação do pagamento via credenciais pré-cadastradas. O prazo máximo é de 24 horas." },
+  { q: "O que fazer se a conta estiver errada?", a: "Você pode abrir uma disputa dentro de 24 horas após receber os dados. Nossa equipe irá mediar a situação em até 48h." },
+  { q: "Como solicitar reembolso?", a: "Caso a disputa seja resolvida a seu favor, o reembolso é creditado automaticamente na sua carteira Froiv. De lá você pode sacar via Pix." },
+  { q: "Como me tornar vendedor?", a: "Basta criar um anúncio pela Central do Vendedor. Todos os usuários podem vender na plataforma." },
+  { q: "Qual a taxa da Froiv?", a: "A Froiv cobra uma taxa fixa de 10% sobre cada venda. Não há mensalidade ou taxa de cadastro." },
+  { q: "Quais métodos de pagamento são aceitos?", a: "Aceitamos Pix (aprovação instantânea) e Cartão de Crédito em até 12x (Visa, Mastercard, Elo, Amex, Hipercard)." },
+  { q: "Como funciona o sistema de ofertas?", a: "Você pode fazer uma oferta abaixo do preço anunciado. O vendedor tem 24h para aceitar, recusar ou fazer uma contraproposta." },
+  { q: "Posso baixar as credenciais em PDF?", a: "Sim! Após a compra, você pode baixar um PDF com todos os dados de acesso pela página de detalhes da compra." },
+  { q: "Como faço para sacar meus ganhos?", a: "Acesse sua Carteira, clique em 'Sacar', informe sua chave Pix e o valor. O processamento leva até 1 dia útil." },
+  { q: "A Froiv é segura?", a: "Sim! Todo pagamento é protegido pelo Escrow. O vendedor só recebe após o comprador verificar a conta. Além disso, usamos criptografia para proteger credenciais." },
+  { q: "Como verificar minha conta?", a: "Acesse a Central do Vendedor → Verificação. Envie um documento (CPF/RG) e uma selfie. A análise leva até 24h." },
 ];
 
 export default function HelpPage() {
