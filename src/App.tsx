@@ -43,6 +43,12 @@ import ChangePassword from "./pages/settings/ChangePassword.tsx";
 import PixKeys from "./pages/settings/PixKeys.tsx";
 import DeleteAccount from "./pages/settings/DeleteAccount.tsx";
 import AccessHistory from "./pages/settings/AccessHistory.tsx";
+import PurchaseProblems from "./pages/help/PurchaseProblems.tsx";
+import DataNotReceived from "./pages/help/DataNotReceived.tsx";
+import OpenDispute from "./pages/help/OpenDispute.tsx";
+import HowEscrowWorks from "./pages/help/HowEscrowWorks.tsx";
+import WithdrawalsPayments from "./pages/help/WithdrawalsPayments.tsx";
+import HowToList from "./pages/help/HowToList.tsx";
 const queryClient = new QueryClient();
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -80,6 +86,12 @@ function AppRoutes() {
         <Route path="/checkout/:listingId" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
         <Route path="/transaction/:listingId" element={<TransactionFlow />} />
         <Route path="/ajuda" element={<HelpPage />} />
+        <Route path="/ajuda/problemas-compra" element={<PurchaseProblems />} />
+        <Route path="/ajuda/dados-nao-recebidos" element={<DataNotReceived />} />
+        <Route path="/ajuda/abrir-disputa" element={<OpenDispute />} />
+        <Route path="/ajuda/escrow" element={<HowEscrowWorks />} />
+        <Route path="/ajuda/saques-pagamentos" element={<WithdrawalsPayments />} />
+        <Route path="/ajuda/como-anunciar" element={<HowToList />} />
         <Route path="/busca" element={<SearchResults />} />
         <Route path="/perfil/:username" element={<SellerProfile />} />
         <Route path="/auth/callback" element={<AuthCallback />} />

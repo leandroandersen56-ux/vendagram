@@ -2,14 +2,15 @@ import { useState } from "react";
 import { Search, ShoppingCart, Package, Scale, Lock, Wallet, FileText, MessageCircle, ChevronDown } from "lucide-react";
 import PageHeader from "@/components/menu/PageHeader";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const CATEGORIES = [
-  { icon: ShoppingCart, label: "Problemas com compra", color: "bg-[#E8F0FF]" },
-  { icon: Package, label: "Não recebi os dados", color: "bg-[#FFF3E0]" },
-  { icon: Scale, label: "Abrir disputa", color: "bg-[#FFF0F0]" },
-  { icon: Lock, label: "Como funciona o Escrow", color: "bg-[#E8F8EF]" },
-  { icon: Wallet, label: "Saque e pagamentos", color: "bg-[#F3F0FF]" },
-  { icon: FileText, label: "Como anunciar", color: "bg-[#FFF8E0]" },
+  { icon: ShoppingCart, label: "Problemas com compra", color: "bg-[#E8F0FF]", path: "/ajuda/problemas-compra" },
+  { icon: Package, label: "Não recebi os dados", color: "bg-[#FFF3E0]", path: "/ajuda/dados-nao-recebidos" },
+  { icon: Scale, label: "Abrir disputa", color: "bg-[#FFF0F0]", path: "/ajuda/abrir-disputa" },
+  { icon: Lock, label: "Como funciona o Escrow", color: "bg-[#E8F8EF]", path: "/ajuda/escrow" },
+  { icon: Wallet, label: "Saque e pagamentos", color: "bg-[#F3F0FF]", path: "/ajuda/saques-pagamentos" },
+  { icon: FileText, label: "Como anunciar", color: "bg-[#FFF8E0]", path: "/ajuda/como-anunciar" },
 ];
 
 const FAQS = [
@@ -30,6 +31,7 @@ const FAQS = [
 export default function HelpPage() {
   const [search, setSearch] = useState("");
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const navigate = useNavigate();
 
   const filteredFaqs = FAQS.filter(
     (f) => !search || f.q.toLowerCase().includes(search.toLowerCase()) || f.a.toLowerCase().includes(search.toLowerCase())
@@ -56,6 +58,7 @@ export default function HelpPage() {
           {CATEGORIES.map((cat) => (
             <button
               key={cat.label}
+              onClick={() => navigate(cat.path)}
               className="bg-white rounded-xl border border-[#E8E8E8] p-4 flex flex-col items-center gap-2 hover:bg-[#F8F8F8] transition-colors"
             >
               <div className={`h-10 w-10 rounded-full ${cat.color} flex items-center justify-center`}>
