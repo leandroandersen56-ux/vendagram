@@ -1,5 +1,20 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.100.0";
 
+async function sendEmailNotification(supabaseUrl: string, supabaseKey: string, type: string, to: string, data: Record<string, any>) {
+  try {
+    await fetch(`${supabaseUrl}/functions/v1/send-email`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${supabaseKey}`,
+      },
+      body: JSON.stringify({ type, to, data }),
+    });
+  } catch (e) {
+    console.error("Failed to send email notification:", e);
+  }
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { status: 200 });
