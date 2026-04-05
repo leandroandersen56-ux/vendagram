@@ -38,7 +38,11 @@ import TermsPage from "./pages/TermsPage.tsx";
 import PrivacyPage from "./pages/PrivacyPage.tsx";
 import AboutPage from "./pages/AboutPage.tsx";
 import ContactPage from "./pages/ContactPage.tsx";
-
+import EditProfile from "./pages/settings/EditProfile.tsx";
+import ChangePassword from "./pages/settings/ChangePassword.tsx";
+import PixKeys from "./pages/settings/PixKeys.tsx";
+import DeleteAccount from "./pages/settings/DeleteAccount.tsx";
+import AccessHistory from "./pages/settings/AccessHistory.tsx";
 const queryClient = new QueryClient();
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -93,6 +97,11 @@ function AppRoutes() {
         <Route path="/carteira" element={<ProtectedRoute><WalletPage /></ProtectedRoute>} />
         <Route path="/afiliados" element={<ProtectedRoute><Affiliates /></ProtectedRoute>} />
         <Route path="/configuracoes" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
+        <Route path="/configuracoes/perfil" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
+        <Route path="/configuracoes/senha" element={<ProtectedRoute><ChangePassword /></ProtectedRoute>} />
+        <Route path="/configuracoes/pix" element={<ProtectedRoute><PixKeys /></ProtectedRoute>} />
+        <Route path="/configuracoes/acessos" element={<ProtectedRoute><AccessHistory /></ProtectedRoute>} />
+        <Route path="/configuracoes/excluir" element={<ProtectedRoute><DeleteAccount /></ProtectedRoute>} />
         <Route path="/historico" element={<ProtectedRoute><ViewHistory /></ProtectedRoute>} />
 
         {/* Seller Dashboard - unified */}

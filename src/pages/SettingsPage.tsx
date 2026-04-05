@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   User, Lock, Mail, Smartphone, ShieldCheck,
@@ -52,13 +53,14 @@ function SettingRow({ icon: Icon, label, toggle, enabled, onToggle, danger, onCl
       {toggle && onToggle ? (
         <AnimatedToggle enabled={!!enabled} onToggle={onToggle} />
       ) : (
-        !danger && <ChevronRight className="h-4 w-4 text-[#CCC]" />
+        !danger && !toggle && <ChevronRight className="h-4 w-4 text-[#CCC]" />
       )}
     </button>
   );
 }
 
 export default function SettingsPage() {
+  const navigate = useNavigate();
   const [toggles, setToggles] = useState({
     twoFactor: false,
     newMessages: true,
@@ -74,9 +76,9 @@ export default function SettingsPage() {
     {
       label: "Conta",
       items: [
-        { icon: User, label: "Editar perfil" },
-        { icon: Lock, label: "Alterar senha" },
-        { icon: Mail, label: "Verificar email / telefone" },
+        { icon: User, label: "Editar perfil", onClick: () => navigate("/configuracoes/perfil") },
+        { icon: Lock, label: "Alterar senha", onClick: () => navigate("/configuracoes/senha") },
+        { icon: Mail, label: "Verificar email / telefone", onClick: () => navigate("/vendedor/verificacao") },
         { icon: ShieldCheck, label: "Autenticação em 2 fatores", toggle: true, key: "twoFactor" as const },
       ],
     },
@@ -93,16 +95,16 @@ export default function SettingsPage() {
     {
       label: "Pagamento",
       items: [
-        { icon: CreditCard, label: "Chaves Pix salvas" },
-        { icon: Receipt, label: "Histórico de faturas" },
+        { icon: CreditCard, label: "Chaves Pix salvas", onClick: () => navigate("/configuracoes/pix") },
+        { icon: Receipt, label: "Histórico de faturas", onClick: () => navigate("/compras") },
       ],
     },
     {
       label: "Privacidade e segurança",
       items: [
-        { icon: Clock, label: "Histórico de acessos" },
-        { icon: Monitor, label: "Dispositivos conectados" },
-        { icon: Trash2, label: "Excluir conta", danger: true },
+        { icon: Clock, label: "Histórico de acessos", onClick: () => navigate("/configuracoes/acessos") },
+        { icon: Monitor, label: "Dispositivos conectados", onClick: () => navigate("/configuracoes/acessos") },
+        { icon: Trash2, label: "Excluir conta", danger: true, onClick: () => navigate("/configuracoes/excluir") },
       ],
     },
   ];
@@ -125,6 +127,7 @@ export default function SettingsPage() {
                   enabled={item.key ? toggles[item.key] : undefined}
                   onToggle={item.key ? () => toggle(item.key!) : undefined}
                   danger={"danger" in item ? item.danger : false}
+                  onClick={"onClick" in item ? item.onClick : undefined}
                 />
               ))}
             </div>
