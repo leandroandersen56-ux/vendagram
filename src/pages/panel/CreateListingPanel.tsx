@@ -365,7 +365,7 @@ export default function CreateListing() {
         </div>
 
         {/* Sticky bottom button */}
-        <div className="fixed bottom-0 left-0 right-0 z-40 pointer-events-none">
+        <div className="fixed bottom-[60px] left-0 right-0 z-40 pointer-events-none">
           <AnimatePresence>
             {preSelected && selectedPlatformData && (
               <motion.div
