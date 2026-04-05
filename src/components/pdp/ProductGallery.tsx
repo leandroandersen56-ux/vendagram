@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, CheckCircle2, X } from "lucide-react";
 import PlatformIcon from "@/components/PlatformIcon";
@@ -128,8 +129,8 @@ export default function ProductGallery({ images, title, category, verified }: Pr
       </div>
 
       {/* Lightbox */}
-      <AnimatePresence>
-        {lightbox && (
+      {lightbox && createPortal(
+        <AnimatePresence>
           <motion.div
             className="fixed inset-0 z-[9999] flex flex-col bg-black"
             initial={{ opacity: 0 }}
@@ -205,8 +206,9 @@ export default function ProductGallery({ images, title, category, verified }: Pr
               </div>
             )}
           </motion.div>
-        )}
-      </AnimatePresence>
+        </AnimatePresence>,
+        document.body
+      )}
     </>
   );
 }
