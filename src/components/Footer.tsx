@@ -74,10 +74,10 @@ export default function Footer() {
             <a href="#" className="text-primary hover:text-primary/80 transition-colors" aria-label="YouTube"><SocialIcon type="youtube" size={26} /></a>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[11px] text-txt-hint">
-            <span className="hover:text-primary transition-colors cursor-pointer">Termos</span>
-            <span className="hover:text-primary transition-colors cursor-pointer">Privacidade</span>
-            <span className="hover:text-primary transition-colors cursor-pointer">Ajuda</span>
-            <a href="mailto:contato@froiv.com" className="hover:text-primary transition-colors">Contato</a>
+            <Link to="/termos" className="hover:text-primary transition-colors">Termos</Link>
+            <Link to="/privacidade" className="hover:text-primary transition-colors">Privacidade</Link>
+            <Link to="/ajuda" className="hover:text-primary transition-colors">Ajuda</Link>
+            <Link to="/contato" className="hover:text-primary transition-colors">Contato</Link>
           </div>
           <div className="flex flex-col items-center gap-1.5">
             <p className="text-[10px] text-txt-hint uppercase tracking-wider">Métodos de pagamento</p>
