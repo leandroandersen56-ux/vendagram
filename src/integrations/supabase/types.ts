@@ -186,6 +186,13 @@ export type Database = {
             referencedRelation: "listings"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "favorites_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "public_listings"
+            referencedColumns: ["id"]
+          },
         ]
       }
       internal_transfers: {
@@ -243,6 +250,13 @@ export type Database = {
             columns: ["listing_id"]
             isOneToOne: false
             referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "listing_views_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "public_listings"
             referencedColumns: ["id"]
           },
         ]
@@ -398,6 +412,13 @@ export type Database = {
             columns: ["listing_id"]
             isOneToOne: false
             referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "offers_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "public_listings"
             referencedColumns: ["id"]
           },
         ]
@@ -740,6 +761,13 @@ export type Database = {
             referencedRelation: "listings"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "transactions_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "public_listings"
+            referencedColumns: ["id"]
+          },
         ]
       }
       user_roles: {
@@ -870,7 +898,117 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      public_listings: {
+        Row: {
+          accepts_offers: boolean | null
+          category: Database["public"]["Enums"]["listing_category"] | null
+          created_at: string | null
+          description: string | null
+          followers_count: number | null
+          highlights: Json | null
+          id: string | null
+          includes: string | null
+          level: number | null
+          min_price: number | null
+          platform_username: string | null
+          price: number | null
+          screenshots: string[] | null
+          seller_id: string | null
+          status: Database["public"]["Enums"]["listing_status"] | null
+          title: string | null
+          updated_at: string | null
+          views_count: number | null
+        }
+        Insert: {
+          accepts_offers?: boolean | null
+          category?: Database["public"]["Enums"]["listing_category"] | null
+          created_at?: string | null
+          description?: string | null
+          followers_count?: number | null
+          highlights?: Json | null
+          id?: string | null
+          includes?: string | null
+          level?: number | null
+          min_price?: number | null
+          platform_username?: string | null
+          price?: number | null
+          screenshots?: string[] | null
+          seller_id?: string | null
+          status?: Database["public"]["Enums"]["listing_status"] | null
+          title?: string | null
+          updated_at?: string | null
+          views_count?: number | null
+        }
+        Update: {
+          accepts_offers?: boolean | null
+          category?: Database["public"]["Enums"]["listing_category"] | null
+          created_at?: string | null
+          description?: string | null
+          followers_count?: number | null
+          highlights?: Json | null
+          id?: string | null
+          includes?: string | null
+          level?: number | null
+          min_price?: number | null
+          platform_username?: string | null
+          price?: number | null
+          screenshots?: string[] | null
+          seller_id?: string | null
+          status?: Database["public"]["Enums"]["listing_status"] | null
+          title?: string | null
+          updated_at?: string | null
+          views_count?: number | null
+        }
+        Relationships: []
+      }
+      public_profiles: {
+        Row: {
+          avatar_url: string | null
+          avg_rating: number | null
+          bio: string | null
+          created_at: string | null
+          id: string | null
+          is_verified: boolean | null
+          name: string | null
+          referral_code: string | null
+          total_purchases: number | null
+          total_reviews: number | null
+          total_sales: number | null
+          user_id: string | null
+          username: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          avg_rating?: number | null
+          bio?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_verified?: boolean | null
+          name?: string | null
+          referral_code?: string | null
+          total_purchases?: number | null
+          total_reviews?: number | null
+          total_sales?: number | null
+          user_id?: string | null
+          username?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          avg_rating?: number | null
+          bio?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_verified?: boolean | null
+          name?: string | null
+          referral_code?: string | null
+          total_purchases?: number | null
+          total_reviews?: number | null
+          total_sales?: number | null
+          user_id?: string | null
+          username?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       auto_release_escrow: { Args: never; Returns: undefined }

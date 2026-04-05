@@ -36,19 +36,27 @@ export default function SellerProfile() {
   useEffect(() => {
     async function load() {
       setLoading(true);
-      const { data: profile } = await supabase
-        .from("profiles")
+      const { data: profile } = await (supabase
+        .from("public_profiles" as any)
         .select("*")
         .eq("username", username)
-        .maybeSingle();
+        .maybeSingle() as any);
 
       if (!profile) { setLoading(false); return; }
       setSeller(profile);
 
       const [listingsRes, reviewsRes] = await Promise.all([
         supabase.from("listings").select("*").eq("seller_id", profile.user_id).eq("status", "active").order("created_at", { ascending: false }),
-        supabase.from("reviews").select("*, profiles!reviews_reviewer_id_fkey(name, avatar_url, username)").eq("reviewed_id", profile.user_id).order("created_at", { ascending: false }).limit(20),
+        supabase.from("reviews").select("*").eq("reviewed_id", profile.user_id).order("created_at", { ascending: false }).limit(20),
       ]);
+      
+      // Fetch reviewer profiles from public view
+      const reviewerIds = [...new Set((reviewsRes.data || []).map((r: any) => r.reviewer_id))];
+      const reviewerProfiles: Record<string, any> = {};
+      if (reviewerIds.length > 0) {
+        const { data: rProfiles } = await (supabase.from("public_profiles" as any).select("*").in("user_id", reviewerIds) as any);
+        (rProfiles || []).forEach((p: any) => { reviewerProfiles[p.user_id] = p; });
+      }
 
       if (listingsRes.data) {
         setListings(listingsRes.data.map((row: any) => ({
