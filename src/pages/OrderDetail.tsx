@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import CredentialsPanel from "@/components/CredentialsPanel";
 import TransactionChat from "@/components/TransactionChat";
+import { getListingImage, handleListingImageError } from "@/lib/utils";
 
 const DISPUTE_REASONS = [
   "Credenciais incorretas",
@@ -18,204 +19,15 @@ const DISPUTE_REASONS = [
   "Conta banida/suspensa",
   "Outro",
 ];
-
-export default function OrderDetail() {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const { user } = useAuth();
-  const [confirmOpen, setConfirmOpen] = useState(false);
-  const [disputeOpen, setDisputeOpen] = useState(false);
-  const [copiedField, setCopiedField] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [releasing, setReleasing] = useState(false);
-  const [openingDispute, setOpeningDispute] = useState(false);
-
-  // Transaction data
-  const [transaction, setTransaction] = useState<any>(null);
-  const [listing, setListing] = useState<any>(null);
-  const [credentials, setCredentials] = useState<any>(null);
-  const [credentialsDeliveredAt, setCredentialsDeliveredAt] = useState<string | null>(null);
-
-  // Dispute form
-  const [disputeReason, setDisputeReason] = useState("");
-  const [disputeDescription, setDisputeDescription] = useState("");
-
-  useEffect(() => {
-    if (id) loadTransaction();
-  }, [id]);
-
-  const loadTransaction = async () => {
-    setLoading(true);
-    try {
-      const { data: tx, error } = await supabase
-        .from("transactions")
-        .select("*, listings(*)")
-        .eq("id", id)
-        .single();
-
-      if (error || !tx) {
-        toast.error("Pedido não encontrado");
-        navigate("/compras");
-        return;
-      }
-
-      setTransaction(tx);
-      setListing(tx.listings);
-
-      // Load credentials
-      try {
-        const credRes = await supabase.functions.invoke("manage-credentials", {
-          body: { transaction_id: id, action: "get" },
-        });
-        if (credRes.data?.credentials) {
-          setCredentials(credRes.data.credentials);
-          setCredentialsDeliveredAt(credRes.data.delivered_at);
-        }
-      } catch {}
-
-    } catch {
-      toast.error("Erro ao carregar pedido");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleCopy = (value: string, label: string) => {
-    navigator.clipboard.writeText(value);
-    setCopiedField(label);
-    toast.success("Copiado!");
-    setTimeout(() => setCopiedField(null), 2000);
-  };
-
-  const handleReleaseEscrow = async () => {
-    if (!transaction) return;
-    setReleasing(true);
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      const res = await supabase.functions.invoke("release-escrow", {
-        body: { transaction_id: transaction.id },
-      });
-
-      if (res.error) throw new Error(res.error.message);
-
-      toast.success("Pagamento liberado ao vendedor!");
-      setConfirmOpen(false);
-      loadTransaction();
-    } catch (err: any) {
-      toast.error(err.message || "Erro ao liberar escrow");
-    } finally {
-      setReleasing(false);
-    }
-  };
-
-  const handleOpenDispute = async () => {
-    if (!transaction || disputeDescription.length < 20) {
-      toast.error("Descreva o problema com pelo menos 20 caracteres");
-      return;
-    }
-    setOpeningDispute(true);
-    try {
-      const fullDescription = `${disputeReason}: ${disputeDescription}`;
-      const res = await supabase.functions.invoke("open-dispute", {
-        body: {
-          transaction_id: transaction.id,
-          description: fullDescription,
-        },
-      });
-
-      if (res.error) throw new Error(res.error.message);
-
-      toast.success("Disputa aberta. Admin entrará em contato em até 24h.");
-      setDisputeOpen(false);
-      loadTransaction();
-    } catch (err: any) {
-      toast.error(err.message || "Erro ao abrir disputa");
-    } finally {
-      setOpeningDispute(false);
-    }
-  };
-
-  const getSteps = () => {
-    if (!transaction) return [];
-    const steps = [
-      { label: "Pedido realizado", time: formatDate(transaction.created_at), done: true },
-      { label: "Pagamento confirmado", time: transaction.paid_at ? formatDate(transaction.paid_at) : null, done: !!transaction.paid_at },
-      { label: "Verificando conta", time: null, done: ["transfer_in_progress", "completed"].includes(transaction.status) },
-      { label: "Escrow liberado", time: transaction.completed_at ? formatDate(transaction.completed_at) : null, done: transaction.status === "completed" },
-    ];
-    if (transaction.status === "disputed") {
-      steps.push({ label: "Disputa aberta", time: null, done: true });
-    }
-    return steps;
-  };
-
-  const formatDate = (dateStr: string) => {
-    const d = new Date(dateStr);
-    return `${d.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" })} ${d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}`;
-  };
-
-  const canRelease = transaction && transaction.buyer_id === user?.id && ["paid", "transfer_in_progress"].includes(transaction.status);
-  const canDispute = transaction && ["paid", "transfer_in_progress"].includes(transaction.status);
-  const isCompleted = transaction?.status === "completed";
-  const isDisputed = transaction?.status === "disputed";
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-[#F5F5F5] pb-20">
-        <PageHeader title="Carregando..." />
-        <div className="flex items-center justify-center pt-20">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        </div>
-      </div>
-    );
-  }
-
-  const steps = getSteps();
-
-  return (
-    <div className="min-h-screen bg-[#F5F5F5] pb-20">
-      <PageHeader title={`Pedido #${transaction?.id?.slice(0, 8) || id}`} />
-
-      <div className="px-4 pt-4 space-y-4">
-        {/* Completed banner */}
-        {isCompleted && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-success/10 border border-success rounded-xl p-4 flex items-center gap-3"
-          >
-            <CheckCircle2 className="h-6 w-6 text-success shrink-0" />
-            <div>
-              <p className="text-[14px] font-semibold text-success">Transação concluída</p>
-              <p className="text-[12px] text-[#666]">
-                Pagamento de R$ {Number(transaction.seller_receives).toFixed(2).replace(".", ",")} liberado ao vendedor.
-              </p>
-            </div>
-          </motion.div>
-        )}
-
-        {/* Disputed banner */}
-        {isDisputed && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-[#FF6900]/10 border border-[#FF6900] rounded-xl p-4 flex items-center gap-3"
-          >
-            <AlertTriangle className="h-6 w-6 text-[#FF6900] shrink-0" />
-            <div>
-              <p className="text-[14px] font-semibold text-[#FF6900]">Disputa em andamento</p>
-              <p className="text-[12px] text-[#666]">Admin está analisando o caso. Aguarde até 24h.</p>
-            </div>
-          </motion.div>
-        )}
-
-        {/* Product info */}
+...
         {listing && (
           <div className="bg-white rounded-xl border border-[#E8E8E8] p-4 flex gap-3">
             <img
-              src={listing.screenshots?.[0] || "/placeholder.svg"}
+              src={getListingImage(listing.category, listing.screenshots)}
               alt={listing.title}
               className="h-16 w-16 rounded-lg object-cover shrink-0"
+              loading="lazy"
+              onError={(event) => handleListingImageError(event, listing.category)}
             />
             <div className="flex-1 min-w-0">
               <p className="text-[14px] font-semibold text-[#111] truncate">{listing.title}</p>
