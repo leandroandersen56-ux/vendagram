@@ -104,12 +104,26 @@ Deno.serve(async (req) => {
           console.log(`Seller ${tx.seller_id} pending +${sellerReceives}`);
         }
 
-        // Auto-deliver prefilled credentials
+        // Fetch listing and profiles for emails
         const { data: listing } = await supabase
           .from("listings")
-          .select("prefilled_credentials")
+          .select("prefilled_credentials, title, category")
           .eq("id", tx.listing_id)
           .single();
+
+        const { data: buyerProfile } = await supabase
+          .from("profiles")
+          .select("email")
+          .eq("user_id", tx.buyer_id)
+          .single();
+
+        const { data: sellerProfile } = await supabase
+          .from("profiles")
+          .select("email")
+          .eq("user_id", tx.seller_id)
+          .single();
+
+        const anonKey = Deno.env.get("SUPABASE_ANON_KEY") || supabaseServiceKey;
 
         if (listing?.prefilled_credentials) {
           console.log("Auto-delivering prefilled credentials");
