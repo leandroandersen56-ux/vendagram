@@ -356,8 +356,8 @@ export default function CreateListing() {
 
           <div className="px-4">
             {/* Redes Sociais */}
-            <p className="text-[11px] font-semibold text-[#999] uppercase tracking-[0.8px] mt-4 mb-[10px]">
-              📱 Redes Sociais
+            <p className="text-[11px] font-semibold text-[#999] uppercase tracking-[0.8px] mt-4 mb-[10px] flex items-center gap-1.5">
+              <Smartphone className="h-3.5 w-3.5 text-primary" /> Redes Sociais
             </p>
             <div className="grid grid-cols-2 gap-3">
               {socialPlatforms.map(p => <PlatformCard key={p.id} p={p} />)}
