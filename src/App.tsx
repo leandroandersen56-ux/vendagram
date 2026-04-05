@@ -42,6 +42,7 @@ import EditProfile from "./pages/settings/EditProfile.tsx";
 import ChangePassword from "./pages/settings/ChangePassword.tsx";
 import PixKeys from "./pages/settings/PixKeys.tsx";
 import DeleteAccount from "./pages/settings/DeleteAccount.tsx";
+import TwoFactorSetup from "./pages/settings/TwoFactorSetup.tsx";
 import AccessHistory from "./pages/settings/AccessHistory.tsx";
 import PurchaseProblems from "./pages/help/PurchaseProblems.tsx";
 import DataNotReceived from "./pages/help/DataNotReceived.tsx";

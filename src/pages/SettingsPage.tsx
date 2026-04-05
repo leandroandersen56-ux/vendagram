@@ -79,7 +79,7 @@ export default function SettingsPage() {
         { icon: User, label: "Editar perfil", onClick: () => navigate("/configuracoes/perfil") },
         { icon: Lock, label: "Alterar senha", onClick: () => navigate("/configuracoes/senha") },
         { icon: Mail, label: "Verificar email / telefone", onClick: () => navigate("/vendedor/verificacao") },
-        { icon: ShieldCheck, label: "Autenticação em 2 fatores", toggle: true, key: "twoFactor" as const },
+        { icon: ShieldCheck, label: "Autenticação em 2 fatores", onClick: () => navigate("/configuracoes/2fa") },
       ],
     },
     {
