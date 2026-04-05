@@ -364,8 +364,8 @@ export default function CreateListing() {
             </div>
 
             {/* Jogos */}
-            <p className="text-[11px] font-semibold text-[#999] uppercase tracking-[0.8px] mt-4 mb-[10px]">
-              🎮 Contas de Jogos
+            <p className="text-[11px] font-semibold text-[#999] uppercase tracking-[0.8px] mt-4 mb-[10px] flex items-center gap-1.5">
+              <Gamepad2 className="h-3.5 w-3.5 text-primary" /> Contas de Jogos
             </p>
             <div className="grid grid-cols-2 gap-3">
               {gamePlatforms.map(p => <PlatformCard key={p.id} p={p} />)}
