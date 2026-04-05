@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Search, ShoppingCart, Package, Scale, Lock, Wallet, FileText, MessageCircle, ChevronDown } from "lucide-react";
 import PageHeader from "@/components/menu/PageHeader";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const CATEGORIES = [
   { icon: ShoppingCart, label: "Problemas com compra", color: "bg-[#E8F0FF]" },
