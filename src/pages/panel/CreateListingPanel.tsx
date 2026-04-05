@@ -315,7 +315,9 @@ export default function CreateListing() {
             {p.id === 'other' ? (
               <Globe className="w-7 h-7 text-white" />
             ) : (
-              <PlatformIcon platformId={p.id} size={28} className="[&_svg]:!text-white [&_path]:!fill-white [&_rect]:!stroke-white [&_circle]:!stroke-white" />
+              <div className="flex items-center justify-center [&_svg_path]:!fill-white [&_svg_rect]:!stroke-white [&_svg_circle]:!stroke-white [&_svg_circle]:!fill-none">
+                <PlatformIcon platformId={p.id} size={28} />
+              </div>
             )}
           </div>
 
