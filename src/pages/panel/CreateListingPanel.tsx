@@ -249,28 +249,156 @@ export default function CreateListing() {
     }
   };
 
+  // ── Platform selection data with gradients ──
+  const PLATFORM_VISUAL: Record<string, { gradient: string; color: string; group: 'social' | 'game' }> = {
+    instagram: { gradient: 'linear-gradient(135deg, #833AB4 0%, #E1306C 50%, #F77737 100%)', color: '#E1306C', group: 'social' },
+    tiktok: { gradient: 'linear-gradient(135deg, #010101 0%, #2D2D2D 50%, #69C9D0 100%)', color: '#010101', group: 'social' },
+    youtube: { gradient: 'linear-gradient(135deg, #CC0000 0%, #FF0000 100%)', color: '#FF0000', group: 'social' },
+    facebook: { gradient: 'linear-gradient(135deg, #0D5FBF 0%, #1877F2 100%)', color: '#1877F2', group: 'social' },
+    free_fire: { gradient: 'linear-gradient(135deg, #992200 0%, #FF6B00 100%)', color: '#FF6B00', group: 'game' },
+    valorant: { gradient: 'linear-gradient(135deg, #7B1F2A 0%, #FF4655 100%)', color: '#FF4655', group: 'game' },
+    fortnite: { gradient: 'linear-gradient(135deg, #0A2EA4 0%, #1F69FF 100%)', color: '#1F69FF', group: 'game' },
+    roblox: { gradient: 'linear-gradient(135deg, #8B0000 0%, #E2231A 100%)', color: '#E2231A', group: 'game' },
+    clash_royale: { gradient: 'linear-gradient(135deg, #005F8A 0%, #00ADEF 100%)', color: '#00ADEF', group: 'game' },
+    other: { gradient: 'linear-gradient(135deg, #374151 0%, #6B7280 100%)', color: '#6B7280', group: 'game' },
+  };
+
+  const [preSelected, setPreSelected] = useState("");
+
+  const socialPlatforms = PLATFORMS.filter(p => PLATFORM_VISUAL[p.id]?.group === 'social');
+  const gamePlatforms = PLATFORMS.filter(p => PLATFORM_VISUAL[p.id]?.group === 'game');
+  const selectedVisual = preSelected ? PLATFORM_VISUAL[preSelected] : null;
+  const selectedPlatformData = PLATFORMS.find(p => p.id === preSelected);
+
   // ── STEP 1: Escolher plataforma ──
   if (!platform) {
+    const PlatformCard = ({ p }: { p: typeof PLATFORMS[0] }) => {
+      const vis = PLATFORM_VISUAL[p.id] || PLATFORM_VISUAL.other;
+      const isSelected = preSelected === p.id;
+      return (
+        <motion.button
+          key={p.id}
+          onClick={() => setPreSelected(p.id)}
+          whileTap={{ scale: 0.97 }}
+          className="relative flex flex-col items-center justify-center gap-[10px] h-[100px] rounded-2xl cursor-pointer"
+          style={{
+            background: isSelected ? `${vis.color}14` : '#FFFFFF',
+            border: isSelected ? `2px solid ${vis.color}` : '1.5px solid #E8E8E8',
+            boxShadow: isSelected
+              ? `0 4px 20px ${vis.color}38`
+              : '0 2px 8px rgba(0,0,0,0.05)',
+            padding: '16px 12px',
+            transition: 'all 0.18s ease',
+            transform: isSelected ? 'scale(1.03)' : undefined,
+          }}
+        >
+          {/* Checkmark */}
+          <AnimatePresence>
+            {isSelected && (
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                exit={{ scale: 0 }}
+                transition={{ type: 'spring', stiffness: 500, damping: 25 }}
+                className="absolute top-2 right-2 w-[22px] h-[22px] rounded-full flex items-center justify-center"
+                style={{ background: vis.color }}
+              >
+                <Check className="w-3 h-3 text-white" />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Icon container */}
+          <div
+            className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
+            style={{ background: vis.gradient }}
+          >
+            {p.id === 'other' ? (
+              <Globe className="w-7 h-7 text-white" />
+            ) : (
+              <PlatformIcon platformId={p.id} size={28} className="[&_svg]:!text-white [&_path]:!fill-white [&_rect]:!stroke-white [&_circle]:!stroke-white" />
+            )}
+          </div>
+
+          {/* Name */}
+          <span className="text-[13px] font-bold text-[#111] whitespace-nowrap text-center">{p.name}</span>
+        </motion.button>
+      );
+    };
+
     return (
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-        <h1 className="text-xl font-semibold text-foreground mb-1">O que você quer vender?</h1>
-        <p className="text-muted-foreground text-sm mb-5">Toque na plataforma pra começar</p>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          {PLATFORMS.map((p) => (
-            <button
-              key={p.id}
-              onClick={() => selectPlatform(p.id)}
-              className="flex items-center gap-3 p-4 rounded-xl border border-border bg-card hover:border-primary/50 hover:bg-primary/5 transition-all text-left group"
-            >
-              <PlatformIcon platformId={p.id} size={28} />
-              <div>
-                <p className="font-medium text-foreground text-sm group-hover:text-primary transition-colors">{p.name}</p>
-              </div>
-              <ChevronRight className="h-4 w-4 text-muted-foreground ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
-            </button>
-          ))}
+      <div className="min-h-screen" style={{ background: '#F5F5F5' }}>
+        {/* Header azul Froiv */}
+        <div className="sticky top-0 z-30 flex items-center h-14 px-5" style={{ background: '#2D6FF0' }}>
+          <button onClick={() => navigate(-1)} className="p-1 -ml-1 hover:bg-white/10 rounded-full transition-colors">
+            <ChevronLeft className="w-6 h-6 text-white" />
+          </button>
+          <h1 className="flex-1 text-center text-[17px] font-bold text-white">Criar Anúncio</h1>
+          <div className="w-6" />
         </div>
-      </motion.div>
+
+        {/* Content */}
+        <div className="pb-[120px]">
+          <div className="px-5 pt-5 pb-2">
+            <h2 className="text-[22px] font-extrabold text-[#111]" style={{ letterSpacing: '-0.5px' }}>
+              O que você quer vender?
+            </h2>
+            <p className="text-sm text-[#888] mt-1">Escolha a plataforma para começar</p>
+          </div>
+
+          <div className="px-4">
+            {/* Redes Sociais */}
+            <p className="text-[11px] font-bold text-[#999] uppercase tracking-[0.8px] mt-4 mb-[10px]">
+              📱 Redes Sociais
+            </p>
+            <div className="grid grid-cols-2 gap-3">
+              {socialPlatforms.map(p => <PlatformCard key={p.id} p={p} />)}
+            </div>
+
+            {/* Jogos */}
+            <p className="text-[11px] font-bold text-[#999] uppercase tracking-[0.8px] mt-4 mb-[10px]">
+              🎮 Contas de Jogos
+            </p>
+            <div className="grid grid-cols-2 gap-3">
+              {gamePlatforms.map(p => <PlatformCard key={p.id} p={p} />)}
+            </div>
+          </div>
+        </div>
+
+        {/* Sticky bottom button */}
+        <div className="fixed bottom-0 left-0 right-0 z-40 pointer-events-none">
+          <AnimatePresence>
+            {preSelected && selectedPlatformData && (
+              <motion.div
+                initial={{ y: 80, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: 80, opacity: 0 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                className="pointer-events-auto"
+                style={{ background: 'linear-gradient(to top, #FFFFFF 60%, transparent)', padding: '16px 20px 32px' }}
+              >
+                <button
+                  onClick={() => selectPlatform(preSelected)}
+                  className="w-full h-[52px] rounded-[14px] flex items-center justify-center gap-[10px] text-white text-base font-bold border-none cursor-pointer active:opacity-85 transition-opacity"
+                  style={{ background: '#2D6FF0', boxShadow: '0 4px 16px rgba(45,111,240,0.40)' }}
+                >
+                  <div
+                    className="w-7 h-7 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0"
+                    style={{ background: selectedVisual?.gradient }}
+                  >
+                    {preSelected === 'other' ? (
+                      <Globe className="w-4 h-4 text-white" />
+                    ) : (
+                      <PlatformIcon platformId={preSelected} size={18} className="[&_svg]:!text-white [&_path]:!fill-white" />
+                    )}
+                  </div>
+                  Continuar com {selectedPlatformData.name} →
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
     );
   }
 
