@@ -320,7 +320,7 @@ export default function CreateListing() {
           </div>
 
           {/* Name */}
-          <span className="text-[13px] font-bold text-[#111] whitespace-nowrap text-center">{p.name}</span>
+          <span className="text-[13px] font-semibold text-[#111] whitespace-nowrap text-center">{p.name}</span>
         </motion.button>
       );
     };
