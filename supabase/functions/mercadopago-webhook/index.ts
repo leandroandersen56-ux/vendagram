@@ -1,5 +1,20 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.100.0";
 
+async function sendEmailNotification(supabaseUrl: string, supabaseKey: string, type: string, to: string, data: Record<string, any>) {
+  try {
+    await fetch(`${supabaseUrl}/functions/v1/send-email`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${supabaseKey}`,
+      },
+      body: JSON.stringify({ type, to, data }),
+    });
+  } catch (e) {
+    console.error("Failed to send email notification:", e);
+  }
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { status: 200 });
@@ -89,12 +104,26 @@ Deno.serve(async (req) => {
           console.log(`Seller ${tx.seller_id} pending +${sellerReceives}`);
         }
 
-        // Auto-deliver prefilled credentials
+        // Fetch listing and profiles for emails
         const { data: listing } = await supabase
           .from("listings")
-          .select("prefilled_credentials")
+          .select("prefilled_credentials, title, category")
           .eq("id", tx.listing_id)
           .single();
+
+        const { data: buyerProfile } = await supabase
+          .from("profiles")
+          .select("email")
+          .eq("user_id", tx.buyer_id)
+          .single();
+
+        const { data: sellerProfile } = await supabase
+          .from("profiles")
+          .select("email")
+          .eq("user_id", tx.seller_id)
+          .single();
+
+        const anonKey = Deno.env.get("SUPABASE_ANON_KEY") || supabaseServiceKey;
 
         if (listing?.prefilled_credentials) {
           console.log("Auto-delivering prefilled credentials");
@@ -129,6 +158,19 @@ Deno.serve(async (req) => {
             body: `Compra de R$ ${Number(tx.amount).toFixed(2)} confirmada. Credenciais entregues automaticamente.`,
             link: `/transaction/${tx.listing_id}`,
           });
+
+          // Send emails
+          if (buyerProfile?.email) {
+            await sendEmailNotification(supabaseUrl, anonKey, "purchase_confirmed", buyerProfile.email, {
+              amount: Number(tx.amount), title: listing?.title || "Conta Digital", transaction_id: transactionId,
+            });
+          }
+          if (sellerProfile?.email) {
+            await sendEmailNotification(supabaseUrl, anonKey, "sale_completed", sellerProfile.email, {
+              amount: Number(tx.amount), fee: Number(tx.platform_fee), net: sellerReceives,
+              title: listing?.title || "Conta Digital", transaction_id: transactionId,
+            });
+          }
         } else {
           await supabase.from("notifications").insert({
             user_id: tx.seller_id,
@@ -143,6 +185,19 @@ Deno.serve(async (req) => {
             body: "Seu pagamento foi aprovado. Aguarde o vendedor enviar as credenciais.",
             link: `/compras/${transactionId}`,
           });
+
+          // Send emails
+          if (buyerProfile?.email) {
+            await sendEmailNotification(supabaseUrl, anonKey, "purchase_confirmed", buyerProfile.email, {
+              amount: Number(tx.amount), title: listing?.title || "Conta Digital", transaction_id: transactionId,
+            });
+          }
+          if (sellerProfile?.email) {
+            await sendEmailNotification(supabaseUrl, anonKey, "sale_completed", sellerProfile.email, {
+              amount: Number(tx.amount), fee: Number(tx.platform_fee), net: sellerReceives,
+              title: listing?.title || "Conta Digital", transaction_id: transactionId,
+            });
+          }
         }
 
       } else if (payment.status === "cancelled" || payment.status === "rejected") {
