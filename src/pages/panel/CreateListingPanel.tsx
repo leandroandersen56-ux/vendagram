@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import freefireLogo from "@/assets/freefire-logo.png";
 import { motion, AnimatePresence } from "framer-motion";
 import { Eye, Plus, X, Upload, ChevronLeft, ChevronRight, Gamepad2, Image as ImageIcon, Lock, ShieldCheck, Check, Globe } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -309,13 +310,21 @@ export default function CreateListing() {
 
           {/* Icon container */}
           <div
-            className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
+            className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden"
             style={{ background: vis.gradient }}
           >
             {p.id === 'other' ? (
               <Globe className="w-7 h-7 text-white" />
+            ) : p.id === 'youtube' ? (
+              <svg width={28} height={28} viewBox="0 0 24 24" fill="none">
+                <path d="M9.75 15.5V8.5l6.25 3.5-6.25 3.5z" fill="#fff"/>
+              </svg>
+            ) : p.id === 'free_fire' ? (
+              <img src={freefireLogo} width={36} height={36} alt="Free Fire" className="object-contain brightness-0 invert" />
             ) : (
-              <PlatformIcon platformId={p.id} size={28} className="[&_svg]:!text-white [&_path]:!fill-white [&_rect]:!stroke-white [&_circle]:!stroke-white" />
+              <div className="[&_svg_path]:!fill-white [&_svg_rect]:!stroke-white [&_svg_circle]:!stroke-white [&_svg_circle]:!fill-none">
+                <PlatformIcon platformId={p.id} size={28} />
+              </div>
             )}
           </div>
 
