@@ -146,8 +146,9 @@ export default function PanelVerification() {
   if (existing && existing.status !== "rejected") {
     const statusInfo = STATUS_CONFIG[existing.status] || STATUS_CONFIG.pending;
     return (
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-        <h1 className="text-xl font-semibold text-foreground mb-6">Verificação de Conta</h1>
+      <div className="min-h-screen bg-[#F5F5F5] pb-20">
+        <PageHeader title="Verificação de Conta" />
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="p-4">
         <Card className="bg-card border-border p-6 max-w-lg">
           <div className="text-center">
             <div className={`inline-flex items-center justify-center h-16 w-16 rounded-full ${statusInfo.color} mb-4`}>
