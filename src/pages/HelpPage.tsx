@@ -5,12 +5,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
 const CATEGORIES = [
-  { icon: ShoppingCart, label: "Problemas com compra", color: "bg-[#E8F0FF]" },
-  { icon: Package, label: "Não recebi os dados", color: "bg-[#FFF3E0]" },
-  { icon: Scale, label: "Abrir disputa", color: "bg-[#FFF0F0]" },
-  { icon: Lock, label: "Como funciona o Escrow", color: "bg-[#E8F8EF]" },
-  { icon: Wallet, label: "Saque e pagamentos", color: "bg-[#F3F0FF]" },
-  { icon: FileText, label: "Como anunciar", color: "bg-[#FFF8E0]" },
+  { icon: ShoppingCart, label: "Problemas com compra", color: "bg-[#E8F0FF]", path: "/ajuda/problemas-compra" },
+  { icon: Package, label: "Não recebi os dados", color: "bg-[#FFF3E0]", path: "/ajuda/dados-nao-recebidos" },
+  { icon: Scale, label: "Abrir disputa", color: "bg-[#FFF0F0]", path: "/ajuda/abrir-disputa" },
+  { icon: Lock, label: "Como funciona o Escrow", color: "bg-[#E8F8EF]", path: "/ajuda/escrow" },
+  { icon: Wallet, label: "Saque e pagamentos", color: "bg-[#F3F0FF]", path: "/ajuda/saques-pagamentos" },
+  { icon: FileText, label: "Como anunciar", color: "bg-[#FFF8E0]", path: "/ajuda/como-anunciar" },
 ];
 
 const FAQS = [
