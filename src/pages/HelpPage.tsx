@@ -31,6 +31,7 @@ const FAQS = [
 export default function HelpPage() {
   const [search, setSearch] = useState("");
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const navigate = useNavigate();
 
   const filteredFaqs = FAQS.filter(
     (f) => !search || f.q.toLowerCase().includes(search.toLowerCase()) || f.a.toLowerCase().includes(search.toLowerCase())
