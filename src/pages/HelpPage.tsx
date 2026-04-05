@@ -58,6 +58,7 @@ export default function HelpPage() {
           {CATEGORIES.map((cat) => (
             <button
               key={cat.label}
+              onClick={() => navigate(cat.path)}
               className="bg-white rounded-xl border border-[#E8E8E8] p-4 flex flex-col items-center gap-2 hover:bg-[#F8F8F8] transition-colors"
             >
               <div className={`h-10 w-10 rounded-full ${cat.color} flex items-center justify-center`}>
