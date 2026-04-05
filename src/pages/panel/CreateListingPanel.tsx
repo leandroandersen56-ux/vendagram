@@ -320,7 +320,7 @@ export default function CreateListing() {
                 <path d="M9.75 15.5V8.5l6.25 3.5-6.25 3.5z" fill="#fff"/>
               </svg>
             ) : p.id === 'free_fire' ? (
-              <img src={(await import("@/assets/freefire-logo.png")).default} width={36} height={36} alt="Free Fire" className="object-contain brightness-0 invert" />
+              <img src={freefireLogo} width={36} height={36} alt="Free Fire" className="object-contain brightness-0 invert" />
             ) : (
               <div className="[&_svg_path]:!fill-white [&_svg_rect]:!stroke-white [&_svg_circle]:!stroke-white [&_svg_circle]:!fill-none">
                 <PlatformIcon platformId={p.id} size={28} />
