@@ -25,6 +25,11 @@ interface CredentialsPanelProps {
   } | null;
   deliveredAt?: string | null;
   onCredentialsSent?: () => void;
+  orderId?: string;
+  orderCreatedAt?: string;
+  orderAmount?: number;
+  listingTitle?: string;
+  listingPlatform?: string;
 }
 
 export default function CredentialsPanel({
