@@ -120,9 +120,9 @@ export default function Footer() {
             <div>
               <h4 className="font-semibold text-[12px] text-txt-primary mb-4 uppercase tracking-wider">Políticas</h4>
               <div className="flex flex-col gap-2.5 text-[12px] text-txt-secondary">
-                <span className="hover:text-primary transition-colors cursor-pointer">Termos e Condições</span>
-                <span className="hover:text-primary transition-colors cursor-pointer">Política de Privacidade</span>
-                <span className="hover:text-primary transition-colors cursor-pointer">Perguntas Frequentes</span>
+                <Link to="/termos" className="hover:text-primary transition-colors">Termos e Condições</Link>
+                <Link to="/privacidade" className="hover:text-primary transition-colors">Política de Privacidade</Link>
+                <Link to="/ajuda" className="hover:text-primary transition-colors">Perguntas Frequentes</Link>
               </div>
             </div>
             <div>
