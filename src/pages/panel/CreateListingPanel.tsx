@@ -309,13 +309,19 @@ export default function CreateListing() {
 
           {/* Icon container */}
           <div
-            className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
+            className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden"
             style={{ background: vis.gradient }}
           >
             {p.id === 'other' ? (
               <Globe className="w-7 h-7 text-white" />
+            ) : p.id === 'youtube' ? (
+              <svg width={28} height={28} viewBox="0 0 24 24" fill="none">
+                <path d="M9.75 15.5V8.5l6.25 3.5-6.25 3.5z" fill="#fff"/>
+              </svg>
+            ) : p.id === 'free_fire' ? (
+              <img src={(await import("@/assets/freefire-logo.png")).default} width={36} height={36} alt="Free Fire" className="object-contain brightness-0 invert" />
             ) : (
-              <div className="flex items-center justify-center [&_svg_path]:!fill-white [&_svg_rect]:!stroke-white [&_svg_circle]:!stroke-white [&_svg_circle]:!fill-none">
+              <div className="[&_svg_path]:!fill-white [&_svg_rect]:!stroke-white [&_svg_circle]:!stroke-white [&_svg_circle]:!fill-none">
                 <PlatformIcon platformId={p.id} size={28} />
               </div>
             )}
