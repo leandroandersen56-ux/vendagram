@@ -415,375 +415,345 @@ export default function CreateListing() {
   const featureList = FEATURES[platform] || [];
   const itemSuggestions = GAME_ITEMS[platform] || [];
   const loginOptions = LOGIN_TYPES[platform] || [];
+  const platformVisual = PLATFORM_VISUAL[platform] || PLATFORM_VISUAL.other;
 
   return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-2xl">
-      {/* Header com plataforma selecionada */}
-      <div className="flex items-center gap-3 mb-5">
-        <button
-          onClick={() => setPlatform("")}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium hover:bg-primary/20 transition-colors"
-        >
-          <PlatformIcon platformId={platformData.id} size={18} className="mr-1" /> {platformData.name} ✕
+    <div className="min-h-screen" style={{ background: '#F5F5F5' }}>
+      {/* Header azul Froiv */}
+      <div className="sticky top-0 z-30 flex items-center h-14 px-5" style={{ background: '#2D6FF0' }}>
+        <button onClick={() => setPlatform("")} className="p-1 -ml-1 hover:bg-white/10 rounded-full transition-colors">
+          <ChevronLeft className="w-6 h-6 text-white" />
         </button>
-        <span className="text-muted-foreground text-sm">Criar anúncio</span>
+        <h1 className="flex-1 text-center text-[17px] font-semibold text-white">Criar Anúncio</h1>
+        <div className="w-6" />
       </div>
 
-      {/* Verification banner */}
-      {isVerified === false && (
-        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
-          <ShieldCheck className="h-5 w-5 text-amber-600 mt-0.5 flex-shrink-0" />
-          <div className="flex-1">
-            <p className="text-sm font-semibold text-amber-800">Conta não verificada</p>
-            <p className="text-xs text-amber-700 mt-0.5">
-              Você pode vender, mas contas verificadas transmitem mais confiança e vendem mais rápido.
-            </p>
-            <button
-              onClick={() => navigate("/vendedor/verificacao")}
-              className="text-xs font-semibold text-primary mt-2 hover:underline"
-            >
-              Verificar minha conta →
-            </button>
+      <div className="pb-[100px]">
+        {/* Platform badge */}
+        <div className="px-4 pt-4 pb-2 flex items-center gap-2">
+          <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: platformVisual.gradient }}>
+            <PlatformIcon platformId={platform} size={16} />
           </div>
-        </div>
-      )}
-
-      <div className="space-y-4">
-        {/* ── Título + Preço (os únicos obrigatórios) ── */}
-        <div className="space-y-1.5">
-          <Label className="text-foreground text-xs uppercase tracking-wide">Título do anúncio *</Label>
-          <Input
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder={isGame ? "Ex: BBZONA A VENDA! PROMOÇÃO" : "Ex: VENDO CONTA TIKTOK BR 2K SEGUIDORES"}
-            className="bg-card border-border text-base font-medium h-12"
-            autoFocus
-          />
+          <span className="text-sm font-semibold text-[#111]">{platformData.name}</span>
+          <button onClick={() => setPlatform("")} className="ml-1 text-xs text-primary hover:underline">Trocar</button>
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
-          <div className="space-y-1.5">
-            <Label className="text-foreground text-xs uppercase tracking-wide">Valor (R$) *</Label>
-            <Input
-              type="number"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              placeholder="130"
-              className="bg-card border-border h-12 text-lg font-semibold"
-            />
-          </div>
-          {isGame ? (
-            <div className="space-y-1.5">
-              <Label className="text-muted-foreground text-xs uppercase tracking-wide">De (riscado)</Label>
-              <Input
-                type="number"
-                value={originalPrice}
-                onChange={(e) => setOriginalPrice(e.target.value)}
-                placeholder="530 (opcional)"
-                className="bg-card border-border h-12"
-              />
-            </div>
-          ) : (
-            <div className="space-y-1.5">
-              <Label className="text-foreground text-xs uppercase tracking-wide">Seguidores</Label>
-              <Input
-                value={followers}
-                onChange={(e) => setFollowers(e.target.value)}
-                placeholder="Ex: 5,500K"
-                className="bg-card border-border h-12"
-              />
-            </div>
-          )}
-        </div>
-
-        {/* ── Features: toque pra marcar ── */}
-        {featureList.length > 0 && (
-          <div className="space-y-2">
-            <Label className="text-foreground text-xs uppercase tracking-wide">Marque o que se aplica</Label>
-            <div className="flex flex-wrap gap-2">
-              {featureList.map((f) => {
-                const on = feats.includes(f);
-                return (
-                  <button
-                    key={f}
-                    type="button"
-                    onClick={() => toggleFeat(f)}
-                    className={`px-3 py-1.5 rounded-full text-sm border transition-all ${
-                      on
-                        ? "bg-primary/20 border-primary text-primary font-medium"
-                        : "bg-card border-border text-muted-foreground hover:border-primary/30"
-                    }`}
-                  >
-                    {on ? "●" : "○"} {f}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* ── Login (games) ── */}
-        {loginOptions.length > 0 && (
-          <div className="space-y-2">
-            <Label className="text-foreground text-xs uppercase tracking-wide">Login da conta</Label>
-            <div className="flex flex-wrap gap-2">
-              {loginOptions.map((l) => (
-                <button
-                  key={l}
-                  type="button"
-                  onClick={() => setLoginType(loginType === l ? "" : l)}
-                  className={`px-3 py-1.5 rounded-full text-sm border transition-all ${
-                    loginType === l
-                      ? "bg-primary/20 border-primary text-primary font-medium"
-                      : "bg-card border-border text-muted-foreground hover:border-primary/30"
-                  }`}
-                >
-                  {loginType === l ? "●" : "○"} {l}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* ── Rank (games com rank) ── */}
-        {(GAME_RANKS[platform] || []).length > 0 && (
-          <div className="space-y-2">
-            <Label className="text-foreground text-xs uppercase tracking-wide">Rank / Elo</Label>
-            <div className="flex flex-wrap gap-2">
-              {GAME_RANKS[platform].map((r) => (
-                <button
-                  key={r}
-                  type="button"
-                  onClick={() => setRank(rank === r ? "" : r)}
-                  className={`px-3 py-1.5 rounded-full text-sm border transition-all ${
-                    rank === r
-                      ? "bg-primary/20 border-primary text-primary font-medium"
-                      : "bg-card border-border text-muted-foreground hover:border-primary/30"
-                  }`}
-                >
-                  {rank === r ? "●" : "○"} {r}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* ── Nicho (social) ── */}
-        {isSocial && (
-          <div className="space-y-2">
-            <Label className="text-foreground text-xs uppercase tracking-wide">Nicho</Label>
-            <div className="flex flex-wrap gap-1.5">
-              {NICHES.map((n) => (
-                <button
-                  key={n}
-                  type="button"
-                  onClick={() => setNicho(nicho === n ? "" : n)}
-                  className={`px-2.5 py-1 rounded-full text-xs border transition-all ${
-                    nicho === n
-                      ? "bg-primary/20 border-primary text-primary font-medium"
-                      : "bg-card border-border text-muted-foreground hover:border-primary/30"
-                  }`}
-                >
-                  {n}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* ── Região (social) ── */}
-        {isSocial && (
-          <div className="space-y-2">
-            <Label className="text-foreground text-xs uppercase tracking-wide">Região dos seguidores</Label>
-            <div className="flex flex-wrap gap-2">
-              {REGIONS.map((r) => (
-                <button
-                  key={r}
-                  type="button"
-                  onClick={() => setRegion(region === r ? "" : r)}
-                  className={`px-3 py-1.5 rounded-full text-sm border transition-all ${
-                    region === r
-                      ? "bg-primary/20 border-primary text-primary font-medium"
-                      : "bg-card border-border text-muted-foreground hover:border-primary/30"
-                  }`}
-                >
-                  {r}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* ── Alcance + Gênero (instagram) ── */}
-        {platform === "instagram" && (
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-1.5">
-              <Label className="text-muted-foreground text-xs uppercase tracking-wide">Alcance</Label>
-              <Input value={alcance} onChange={(e) => setAlcance(e.target.value)} placeholder="4,1 milhões" className="bg-card border-border" />
-            </div>
-            <div className="space-y-1.5">
-              <Label className="text-muted-foreground text-xs uppercase tracking-wide">Gênero do público</Label>
-              <Input value={genero} onChange={(e) => setGenero(e.target.value)} placeholder="M: 93% / F: 7%" className="bg-card border-border" />
-            </div>
-          </div>
-        )}
-
-        {/* ── Itens da conta (games) ── */}
-        {isGame && (
-          <div className="space-y-2">
-            <Label className="text-foreground text-xs uppercase tracking-wide flex items-center gap-1.5"><Gamepad2 className="h-3.5 w-3.5 text-primary" /> Itens da conta</Label>
-
-            {/* Sugestões rápidas */}
-            <div className="flex flex-wrap gap-1.5">
-              {itemSuggestions.filter((s) => !items.some((i) => i.toLowerCase().includes(s.toLowerCase()))).map((s) => (
-                <button
-                  key={s}
-                  type="button"
-                  onClick={() => addItem(s)}
-                  className="px-2.5 py-1 rounded-full text-xs border border-dashed border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-primary transition-all"
-                >
-                  + {s}
-                </button>
-              ))}
-            </div>
-
-            {/* Itens adicionados */}
-            <AnimatePresence>
-              {items.map((item) => (
-                <motion.div
-                  key={item}
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="flex items-center gap-2 bg-primary/5 border border-primary/20 rounded-lg px-3 py-1.5"
-                >
-                  <span className="text-sm text-foreground flex-1">▸ {item}</span>
-                  <button type="button" onClick={() => setItems((p) => p.filter((i) => i !== item))} className="text-muted-foreground hover:text-destructive">
-                    <X className="h-3.5 w-3.5" />
-                  </button>
-                </motion.div>
-              ))}
-            </AnimatePresence>
-
-            {/* Input customizado */}
-            <div className="flex gap-2">
-              <Input
-                value={newItem}
-                onChange={(e) => setNewItem(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addItem())}
-                placeholder="Ex: 654 Peitorais, Calça Angelical..."
-                className="bg-card border-border flex-1"
-              />
-              <Button type="button" variant="glass" size="sm" onClick={() => addItem()} disabled={!newItem.trim()}>
-                <Plus className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        )}
-
-        {/* ── Screenshots ── */}
-        <div className="space-y-2">
-          <Label className="text-muted-foreground text-xs uppercase tracking-wide">Screenshots (até 6)</Label>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            multiple
-            className="hidden"
-            onChange={handleFileSelect}
-          />
-          
-          <div className="grid grid-cols-3 gap-2">
-            {screenshots.map((s, i) => (
-              <div key={i} className="relative aspect-square rounded-xl overflow-hidden border border-border bg-muted">
-                <img src={s.preview} alt="" className="w-full h-full object-cover" />
-                <button
-                  type="button"
-                  onClick={() => removeScreenshot(i)}
-                  className="absolute top-1 right-1 h-6 w-6 rounded-full bg-foreground/70 text-background flex items-center justify-center"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </div>
-            ))}
-            {screenshots.length < 6 && (
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="aspect-square rounded-xl border-2 border-dashed border-border flex flex-col items-center justify-center gap-1 hover:border-primary/40 transition-colors active:scale-95"
-              >
-                <Upload className="h-5 w-5 text-muted-foreground" />
-                <span className="text-[10px] text-muted-foreground">Adicionar</span>
+        {/* Verification banner */}
+        {isVerified === false && (
+          <div className="mx-4 mb-3 bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-start gap-3">
+            <ShieldCheck className="h-5 w-5 text-amber-600 mt-0.5 flex-shrink-0" />
+            <div className="flex-1">
+              <p className="text-sm font-semibold text-amber-800">Conta não verificada</p>
+              <p className="text-xs text-amber-700 mt-0.5">
+                Contas verificadas transmitem mais confiança e vendem mais rápido.
+              </p>
+              <button onClick={() => navigate("/vendedor/verificacao")} className="text-xs font-semibold text-primary mt-1.5 hover:underline">
+                Verificar minha conta →
               </button>
+            </div>
+          </div>
+        )}
+
+        {/* ── SECTION: Dados do anúncio ── */}
+        <div className="mx-4 mb-3">
+          <p className="text-[12px] text-[#999] uppercase font-semibold px-1 pb-2">Dados do anúncio</p>
+          <div className="bg-white rounded-2xl border border-[#F0F0F0] overflow-hidden divide-y divide-[#F0F0F0]">
+            {/* Título */}
+            <div className="p-4">
+              <label className="text-[12px] text-[#999] font-medium block mb-1.5">Título *</label>
+              <Input
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder={isGame ? "Ex: Conta Free Fire Nível 75 Full Skin" : "Ex: Instagram 50K Seguidores Nicho Fitness"}
+                className="bg-transparent border-[#E8E8E8] text-[15px] h-11 rounded-xl"
+                autoFocus
+              />
+            </div>
+
+            {/* Preço */}
+            <div className="p-4">
+              <label className="text-[12px] text-[#999] font-medium block mb-1.5">Preço *</label>
+              <div className="flex items-center gap-3">
+                <div className="flex-1 relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#999] text-sm font-medium">R$</span>
+                  <Input
+                    type="number"
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    placeholder="0,00"
+                    className="bg-transparent border-[#E8E8E8] h-11 rounded-xl pl-10 text-[16px] font-semibold"
+                  />
+                </div>
+                {isGame && (
+                  <div className="flex-1 relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#CCC] text-xs">De</span>
+                    <Input
+                      type="number"
+                      value={originalPrice}
+                      onChange={(e) => setOriginalPrice(e.target.value)}
+                      placeholder="opcional"
+                      className="bg-transparent border-[#E8E8E8] h-11 rounded-xl pl-9 text-sm text-[#999]"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Seguidores (social) */}
+            {isSocial && (
+              <div className="p-4">
+                <label className="text-[12px] text-[#999] font-medium block mb-1.5">Seguidores</label>
+                <Input
+                  value={followers}
+                  onChange={(e) => setFollowers(e.target.value)}
+                  placeholder="Ex: 50K"
+                  className="bg-transparent border-[#E8E8E8] h-11 rounded-xl"
+                />
+              </div>
             )}
+
+            {/* Nicho (social) */}
+            {isSocial && (
+              <div className="p-4">
+                <label className="text-[12px] text-[#999] font-medium block mb-1.5">Nicho</label>
+                <div className="flex flex-wrap gap-1.5">
+                  {NICHES.map((n) => (
+                    <button
+                      key={n}
+                      type="button"
+                      onClick={() => setNicho(nicho === n ? "" : n)}
+                      className={`px-2.5 py-1 rounded-full text-xs border transition-all ${
+                        nicho === n ? "bg-primary/10 border-primary text-primary font-medium" : "bg-[#F5F5F5] border-[#E8E8E8] text-[#666]"
+                      }`}
+                    >
+                      {n}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Região (social) */}
+            {isSocial && (
+              <div className="p-4">
+                <label className="text-[12px] text-[#999] font-medium block mb-1.5">Região dos seguidores</label>
+                <div className="flex flex-wrap gap-2">
+                  {REGIONS.map((r) => (
+                    <button
+                      key={r}
+                      type="button"
+                      onClick={() => setRegion(region === r ? "" : r)}
+                      className={`px-3 py-1.5 rounded-full text-sm border transition-all ${
+                        region === r ? "bg-primary/10 border-primary text-primary font-medium" : "bg-[#F5F5F5] border-[#E8E8E8] text-[#666]"
+                      }`}
+                    >
+                      {r}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Alcance + Gênero (instagram) */}
+            {platform === "instagram" && (
+              <div className="p-4 grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[12px] text-[#999] font-medium block mb-1.5">Alcance</label>
+                  <Input value={alcance} onChange={(e) => setAlcance(e.target.value)} placeholder="4,1 milhões" className="bg-transparent border-[#E8E8E8] h-11 rounded-xl" />
+                </div>
+                <div>
+                  <label className="text-[12px] text-[#999] font-medium block mb-1.5">Gênero público</label>
+                  <Input value={genero} onChange={(e) => setGenero(e.target.value)} placeholder="M: 93% / F: 7%" className="bg-transparent border-[#E8E8E8] h-11 rounded-xl" />
+                </div>
+              </div>
+            )}
+
+            {/* Login type (games) */}
+            {loginOptions.length > 0 && (
+              <div className="p-4">
+                <label className="text-[12px] text-[#999] font-medium block mb-1.5">Login da conta</label>
+                <div className="flex flex-wrap gap-2">
+                  {loginOptions.map((l) => (
+                    <button
+                      key={l}
+                      type="button"
+                      onClick={() => setLoginType(loginType === l ? "" : l)}
+                      className={`px-3 py-1.5 rounded-full text-sm border transition-all ${
+                        loginType === l ? "bg-primary/10 border-primary text-primary font-medium" : "bg-[#F5F5F5] border-[#E8E8E8] text-[#666]"
+                      }`}
+                    >
+                      {l}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Rank (games) */}
+            {(GAME_RANKS[platform] || []).length > 0 && (
+              <div className="p-4">
+                <label className="text-[12px] text-[#999] font-medium block mb-1.5">Rank / Elo</label>
+                <div className="flex flex-wrap gap-2">
+                  {GAME_RANKS[platform].map((r) => (
+                    <button
+                      key={r}
+                      type="button"
+                      onClick={() => setRank(rank === r ? "" : r)}
+                      className={`px-3 py-1.5 rounded-full text-sm border transition-all ${
+                        rank === r ? "bg-primary/10 border-primary text-primary font-medium" : "bg-[#F5F5F5] border-[#E8E8E8] text-[#666]"
+                      }`}
+                    >
+                      {r}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Descrição */}
+            <div className="p-4">
+              <label className="text-[12px] text-[#999] font-medium block mb-1.5">Descrição (opcional)</label>
+              <Textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Descreva o que está incluído na conta, diferenciais, etc."
+                className="bg-transparent border-[#E8E8E8] min-h-[70px] rounded-xl"
+              />
+            </div>
           </div>
         </div>
 
-        {/* ── Credenciais para entrega automática ── */}
-        <div className="space-y-3 bg-primary/5 border border-primary/20 rounded-xl p-4">
-          <div className="flex items-center gap-2 mb-1">
-            <Lock className="h-4 w-4 text-primary" />
-            <Label className="text-foreground text-xs uppercase tracking-wide font-semibold">Dados de acesso da conta *</Label>
-          </div>
-          <p className="text-[12px] text-muted-foreground -mt-1">
-            Preencha os acessos. Serão entregues automaticamente ao comprador após o pagamento.
-          </p>
-
-          <div className="grid grid-cols-1 gap-3">
-            <div className="space-y-1">
-              <label className="text-[11px] text-muted-foreground uppercase font-medium">Login / Usuário *</label>
-              <Input value={credLogin} onChange={(e) => setCredLogin(e.target.value)} placeholder="ex: @usuario_conta" className="bg-card border-border" />
-            </div>
-            <div className="space-y-1">
-              <label className="text-[11px] text-muted-foreground uppercase font-medium">Senha *</label>
-              <Input type="password" value={credPassword} onChange={(e) => setCredPassword(e.target.value)} placeholder="Senha da conta" className="bg-card border-border" />
-            </div>
-            <div className="space-y-1">
-              <label className="text-[11px] text-muted-foreground uppercase font-medium">Email vinculado</label>
-              <Input value={credEmail} onChange={(e) => setCredEmail(e.target.value)} placeholder="email@exemplo.com (opcional)" className="bg-card border-border" />
-            </div>
-            <div className="space-y-1">
-              <label className="text-[11px] text-muted-foreground uppercase font-medium">Código 2FA</label>
-              <Input value={cred2fa} onChange={(e) => setCred2fa(e.target.value)} placeholder="JBSWY3DPEHPK3PXP (opcional)" className="bg-card border-border font-mono" />
-            </div>
-            <div className="space-y-1">
-              <label className="text-[11px] text-muted-foreground uppercase font-medium">Observações</label>
-              <Textarea value={credNotes} onChange={(e) => setCredNotes(e.target.value)} placeholder="Ex: Troque a senha imediatamente" className="bg-card border-border min-h-[50px]" />
+        {/* ── SECTION: Características ── */}
+        {featureList.length > 0 && (
+          <div className="mx-4 mb-3">
+            <p className="text-[12px] text-[#999] uppercase font-semibold px-1 pb-2">Características</p>
+            <div className="bg-white rounded-2xl border border-[#F0F0F0] p-4">
+              <div className="flex flex-wrap gap-2">
+                {featureList.map((f) => {
+                  const on = feats.includes(f);
+                  return (
+                    <button
+                      key={f}
+                      type="button"
+                      onClick={() => toggleFeat(f)}
+                      className={`px-3 py-1.5 rounded-full text-sm border transition-all ${
+                        on ? "bg-primary/10 border-primary text-primary font-medium" : "bg-[#F5F5F5] border-[#E8E8E8] text-[#666]"
+                      }`}
+                    >
+                      {on ? "✓" : "+"} {f}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
+        )}
 
-          <div className="flex items-start gap-2 bg-[#FFF8E0] rounded-lg p-3">
-            <ShieldCheck className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-            <p className="text-[11px] text-muted-foreground">
-              Os dados são criptografados e só serão revelados ao comprador após a confirmação do pagamento. 
-              O valor é liberado em <strong>24h</strong> automaticamente ou quando o comprador confirmar.
-            </p>
+        {/* ── SECTION: Itens (games) ── */}
+        {isGame && (
+          <div className="mx-4 mb-3">
+            <p className="text-[12px] text-[#999] uppercase font-semibold px-1 pb-2">Itens da conta</p>
+            <div className="bg-white rounded-2xl border border-[#F0F0F0] p-4 space-y-3">
+              <div className="flex flex-wrap gap-1.5">
+                {itemSuggestions.filter((s) => !items.some((i) => i.toLowerCase().includes(s.toLowerCase()))).map((s) => (
+                  <button key={s} type="button" onClick={() => addItem(s)} className="px-2.5 py-1 rounded-full text-xs border border-dashed border-[#DDD] bg-[#F9F9F9] text-[#888] hover:border-primary/40 hover:text-primary transition-all">
+                    + {s}
+                  </button>
+                ))}
+              </div>
+              <AnimatePresence>
+                {items.map((item) => (
+                  <motion.div key={item} initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="flex items-center gap-2 bg-primary/5 border border-primary/20 rounded-lg px-3 py-1.5">
+                    <span className="text-sm text-[#111] flex-1">▸ {item}</span>
+                    <button type="button" onClick={() => setItems((p) => p.filter((i) => i !== item))} className="text-[#CCC] hover:text-destructive"><X className="h-3.5 w-3.5" /></button>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+              <div className="flex gap-2">
+                <Input value={newItem} onChange={(e) => setNewItem(e.target.value)} onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addItem())} placeholder="Ex: 654 Peitorais, Calça Angelical..." className="bg-transparent border-[#E8E8E8] flex-1 rounded-xl" />
+                <Button type="button" variant="glass" size="sm" onClick={() => addItem()} disabled={!newItem.trim()}><Plus className="h-4 w-4" /></Button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── SECTION: Fotos ── */}
+        <div className="mx-4 mb-3">
+          <p className="text-[12px] text-[#999] uppercase font-semibold px-1 pb-2">Fotos</p>
+          <div className="bg-white rounded-2xl border border-[#F0F0F0] p-4">
+            <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden" onChange={handleFileSelect} />
+            <div className="grid grid-cols-3 gap-2">
+              {screenshots.map((s, i) => (
+                <div key={i} className="relative aspect-square rounded-xl overflow-hidden border border-[#E8E8E8] bg-[#F5F5F5]">
+                  <img src={s.preview} alt="" className="w-full h-full object-cover" />
+                  <button type="button" onClick={() => removeScreenshot(i)} className="absolute top-1 right-1 h-6 w-6 rounded-full bg-black/60 text-white flex items-center justify-center"><X className="h-3 w-3" /></button>
+                </div>
+              ))}
+              {screenshots.length < 6 && (
+                <button type="button" onClick={() => fileInputRef.current?.click()} className="aspect-square rounded-xl border-2 border-dashed border-[#DDD] flex flex-col items-center justify-center gap-1 hover:border-primary/40 transition-colors active:scale-95">
+                  <Upload className="h-5 w-5 text-[#BBB]" />
+                  <span className="text-[10px] text-[#BBB]">Adicionar</span>
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
-        {/* ── Descrição extra ── */}
-        <div className="space-y-1.5">
-          <Label className="text-muted-foreground text-xs uppercase tracking-wide">Observações públicas (opcional)</Label>
-          <Textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Algo mais que queira dizer? Ex: tenho 4 contas assim, aceito parcelado..."
-            className="bg-card border-border min-h-[60px]"
-          />
+        {/* ── SECTION: Dados de acesso ── */}
+        <div className="mx-4 mb-3">
+          <p className="text-[12px] text-[#999] uppercase font-semibold px-1 pb-2">Dados de acesso da conta *</p>
+          <div className="bg-white rounded-2xl border border-[#F0F0F0] overflow-hidden">
+            <div className="p-4 bg-primary/5 border-b border-primary/10 flex items-start gap-2">
+              <Lock className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+              <p className="text-[12px] text-[#666]">
+                Preencha os acessos. Serão entregues automaticamente ao comprador após o pagamento.
+              </p>
+            </div>
+            <div className="divide-y divide-[#F0F0F0]">
+              <div className="p-4">
+                <label className="text-[12px] text-[#999] font-medium block mb-1.5">Login / Usuário *</label>
+                <Input value={credLogin} onChange={(e) => setCredLogin(e.target.value)} placeholder="ex: @usuario_conta" className="bg-transparent border-[#E8E8E8] h-11 rounded-xl" />
+              </div>
+              <div className="p-4">
+                <label className="text-[12px] text-[#999] font-medium block mb-1.5">Senha *</label>
+                <Input type="password" value={credPassword} onChange={(e) => setCredPassword(e.target.value)} placeholder="Senha da conta" className="bg-transparent border-[#E8E8E8] h-11 rounded-xl" />
+              </div>
+              <div className="p-4">
+                <label className="text-[12px] text-[#999] font-medium block mb-1.5">Email vinculado</label>
+                <Input value={credEmail} onChange={(e) => setCredEmail(e.target.value)} placeholder="email@exemplo.com (opcional)" className="bg-transparent border-[#E8E8E8] h-11 rounded-xl" />
+              </div>
+              <div className="p-4">
+                <label className="text-[12px] text-[#999] font-medium block mb-1.5">Código 2FA</label>
+                <Input value={cred2fa} onChange={(e) => setCred2fa(e.target.value)} placeholder="JBSWY3DPEHPK3PXP (opcional)" className="bg-transparent border-[#E8E8E8] h-11 rounded-xl font-mono" />
+              </div>
+              <div className="p-4">
+                <label className="text-[12px] text-[#999] font-medium block mb-1.5">Observações</label>
+                <Textarea value={credNotes} onChange={(e) => setCredNotes(e.target.value)} placeholder="Ex: Troque a senha imediatamente" className="bg-transparent border-[#E8E8E8] min-h-[50px] rounded-xl" />
+              </div>
+            </div>
+            <div className="p-4 bg-[#FFFDE7] border-t border-[#F0F0F0] flex items-start gap-2">
+              <ShieldCheck className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+              <p className="text-[11px] text-[#888]">
+                Os dados são criptografados e só serão revelados ao comprador após a confirmação do pagamento.
+              </p>
+            </div>
+          </div>
         </div>
+      </div>
 
-        {/* ── Botão de publicar ── */}
-        <div className="flex gap-3 pt-2 pb-6">
-          <Button
-            variant="hero"
-            className="flex-1 h-12 text-base"
+      {/* Sticky bottom publish button */}
+      <div className="fixed bottom-[60px] left-0 right-0 z-40" style={{ background: 'linear-gradient(to top, #F5F5F5 60%, transparent)' }}>
+        <div className="px-4 pb-4 pt-3">
+          <button
             onClick={handlePublish}
-            disabled={!title || !price || loading}
+            disabled={!title || !price || !credLogin || !credPassword || loading}
+            className="w-full h-[52px] rounded-[14px] flex items-center justify-center text-white text-base font-semibold border-none cursor-pointer transition-opacity disabled:opacity-40"
+            style={{ background: '#2D6FF0', boxShadow: '0 4px 16px rgba(45,111,240,0.40)' }}
           >
             {loading ? "Publicando..." : "Publicar Anúncio"}
-          </Button>
+          </button>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
