@@ -139,7 +139,7 @@ export default function PanelVerification() {
   };
 
   if (loading) {
-    return <div className="flex justify-center pt-20"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>;
+    return <div className="min-h-screen bg-[#F5F5F5]"><PageHeader title="Verificação de Conta" /><div className="flex justify-center pt-20"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div></div>;
   }
 
   // Show existing request status
