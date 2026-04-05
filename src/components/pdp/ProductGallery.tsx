@@ -131,7 +131,7 @@ export default function ProductGallery({ images, title, category, verified }: Pr
       <AnimatePresence>
         {lightbox && (
           <motion.div
-            className="fixed inset-0 z-[200] flex flex-col bg-black"
+            className="fixed inset-0 z-[9999] flex flex-col bg-black"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
