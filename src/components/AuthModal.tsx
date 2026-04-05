@@ -88,9 +88,30 @@ export default function AuthModal() {
     setEmail("");
     setPassword("");
     setSelectedRole(authRole || null);
+    setMfaFactorId(null);
   };
 
-  if (!showAuthModal) return null;
+  const handleMfaSuccess = () => {
+    setMfaFactorId(null);
+    closeAuth();
+    resetForm();
+    if (authRedirect) navigate(authRedirect);
+  };
+
+  if (!showAuthModal && !mfaFactorId) return null;
+
+  if (mfaFactorId) {
+    return (
+      <MfaChallengeModal
+        factorId={mfaFactorId}
+        onSuccess={handleMfaSuccess}
+        onCancel={() => {
+          setMfaFactorId(null);
+          supabase.auth.signOut();
+        }}
+      />
+    );
+  }
 
   return (
     <AnimatePresence>
