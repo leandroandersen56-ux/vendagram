@@ -38,7 +38,11 @@ import TermsPage from "./pages/TermsPage.tsx";
 import PrivacyPage from "./pages/PrivacyPage.tsx";
 import AboutPage from "./pages/AboutPage.tsx";
 import ContactPage from "./pages/ContactPage.tsx";
-
+import EditProfile from "./pages/settings/EditProfile.tsx";
+import ChangePassword from "./pages/settings/ChangePassword.tsx";
+import PixKeys from "./pages/settings/PixKeys.tsx";
+import DeleteAccount from "./pages/settings/DeleteAccount.tsx";
+import AccessHistory from "./pages/settings/AccessHistory.tsx";
 const queryClient = new QueryClient();
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
