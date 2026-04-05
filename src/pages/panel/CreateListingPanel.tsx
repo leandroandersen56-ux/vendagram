@@ -320,7 +320,7 @@ export default function CreateListing() {
           </div>
 
           {/* Name */}
-          <span className="text-[13px] font-bold text-[#111] whitespace-nowrap text-center">{p.name}</span>
+          <span className="text-[13px] font-semibold text-[#111] whitespace-nowrap text-center">{p.name}</span>
         </motion.button>
       );
     };
@@ -332,14 +332,14 @@ export default function CreateListing() {
           <button onClick={() => navigate(-1)} className="p-1 -ml-1 hover:bg-white/10 rounded-full transition-colors">
             <ChevronLeft className="w-6 h-6 text-white" />
           </button>
-          <h1 className="flex-1 text-center text-[17px] font-bold text-white">Criar Anúncio</h1>
+          <h1 className="flex-1 text-center text-[17px] font-semibold text-white">Criar Anúncio</h1>
           <div className="w-6" />
         </div>
 
         {/* Content */}
-        <div className="pb-[120px]">
+        <div className="pb-[180px]">
           <div className="px-5 pt-5 pb-2">
-            <h2 className="text-[22px] font-extrabold text-[#111]" style={{ letterSpacing: '-0.5px' }}>
+            <h2 className="text-[22px] font-semibold text-[#111]" style={{ letterSpacing: '-0.5px' }}>
               O que você quer vender?
             </h2>
             <p className="text-sm text-[#888] mt-1">Escolha a plataforma para começar</p>
@@ -347,7 +347,7 @@ export default function CreateListing() {
 
           <div className="px-4">
             {/* Redes Sociais */}
-            <p className="text-[11px] font-bold text-[#999] uppercase tracking-[0.8px] mt-4 mb-[10px]">
+            <p className="text-[11px] font-semibold text-[#999] uppercase tracking-[0.8px] mt-4 mb-[10px]">
               📱 Redes Sociais
             </p>
             <div className="grid grid-cols-2 gap-3">
@@ -355,7 +355,7 @@ export default function CreateListing() {
             </div>
 
             {/* Jogos */}
-            <p className="text-[11px] font-bold text-[#999] uppercase tracking-[0.8px] mt-4 mb-[10px]">
+            <p className="text-[11px] font-semibold text-[#999] uppercase tracking-[0.8px] mt-4 mb-[10px]">
               🎮 Contas de Jogos
             </p>
             <div className="grid grid-cols-2 gap-3">
@@ -365,7 +365,7 @@ export default function CreateListing() {
         </div>
 
         {/* Sticky bottom button */}
-        <div className="fixed bottom-0 left-0 right-0 z-40 pointer-events-none">
+        <div className="fixed bottom-[60px] left-0 right-0 z-40 pointer-events-none">
           <AnimatePresence>
             {preSelected && selectedPlatformData && (
               <motion.div
@@ -378,7 +378,7 @@ export default function CreateListing() {
               >
                 <button
                   onClick={() => selectPlatform(preSelected)}
-                  className="w-full h-[52px] rounded-[14px] flex items-center justify-center gap-[10px] text-white text-base font-bold border-none cursor-pointer active:opacity-85 transition-opacity"
+                  className="w-full h-[52px] rounded-[14px] flex items-center justify-center gap-[10px] text-white text-base font-semibold border-none cursor-pointer active:opacity-85 transition-opacity"
                   style={{ background: '#2D6FF0', boxShadow: '0 4px 16px rgba(45,111,240,0.40)' }}
                 >
                   <div
