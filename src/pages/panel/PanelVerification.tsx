@@ -184,6 +184,7 @@ export default function PanelVerification() {
           </div>
         </Card>
       </motion.div>
+      </div>
     );
   }
 
