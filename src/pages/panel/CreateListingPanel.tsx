@@ -263,9 +263,8 @@ export default function CreateListing() {
     other: { gradient: 'linear-gradient(135deg, #374151 0%, #6B7280 100%)', color: '#6B7280', group: 'game' },
   };
 
-  const [preSelected, setPreSelected] = useState("");
-
   const socialPlatforms = PLATFORMS.filter(p => PLATFORM_VISUAL[p.id]?.group === 'social');
+  const gamePlatforms = PLATFORMS.filter(p => PLATFORM_VISUAL[p.id]?.group === 'game');
   const gamePlatforms = PLATFORMS.filter(p => PLATFORM_VISUAL[p.id]?.group === 'game');
   const selectedVisual = preSelected ? PLATFORM_VISUAL[preSelected] : null;
   const selectedPlatformData = PLATFORMS.find(p => p.id === preSelected);
