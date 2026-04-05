@@ -141,6 +141,7 @@ export default function CreateListing() {
   const [items, setItems] = useState<string[]>([]);
   const [newItem, setNewItem] = useState("");
   const [loading, setLoading] = useState(false);
+  const [preSelected, setPreSelected] = useState("");
   const [screenshots, setScreenshots] = useState<{ file: File; preview: string }[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
