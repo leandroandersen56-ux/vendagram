@@ -97,6 +97,11 @@ function AppRoutes() {
         <Route path="/carteira" element={<ProtectedRoute><WalletPage /></ProtectedRoute>} />
         <Route path="/afiliados" element={<ProtectedRoute><Affiliates /></ProtectedRoute>} />
         <Route path="/configuracoes" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
+        <Route path="/configuracoes/perfil" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
+        <Route path="/configuracoes/senha" element={<ProtectedRoute><ChangePassword /></ProtectedRoute>} />
+        <Route path="/configuracoes/pix" element={<ProtectedRoute><PixKeys /></ProtectedRoute>} />
+        <Route path="/configuracoes/acessos" element={<ProtectedRoute><AccessHistory /></ProtectedRoute>} />
+        <Route path="/configuracoes/excluir" element={<ProtectedRoute><DeleteAccount /></ProtectedRoute>} />
         <Route path="/historico" element={<ProtectedRoute><ViewHistory /></ProtectedRoute>} />
 
         {/* Seller Dashboard - unified */}
