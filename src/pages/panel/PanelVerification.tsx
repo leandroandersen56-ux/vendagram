@@ -11,6 +11,7 @@ import {
   ShieldCheck, Upload, Camera, FileText, CreditCard,
   Loader2, CheckCircle2, XCircle, Clock, AlertCircle, User, Building2
 } from "lucide-react";
+import PageHeader from "@/components/menu/PageHeader";
 
 type DocType = "cpf" | "cnpj";
 
