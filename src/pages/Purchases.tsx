@@ -6,6 +6,7 @@ import { Search, Star, ShoppingCart, ArrowRight, Loader2, Clock, CheckCircle2, E
 import PageHeader from "@/components/menu/PageHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { getListingImage, handleListingImageError } from "@/lib/utils";
 
 const STATUS_MAP: Record<string, { label: string; color: string; Icon: React.ElementType }> = {
   pending_payment: { label: "Aguardando pagamento", color: "text-[#FF6900] bg-[#FF6900]/10", Icon: Clock },
@@ -93,14 +94,12 @@ export default function Purchases() {
         </div>
       </div>
 
-      {/* Incentive banner */}
       <div className="mx-4 mb-3 bg-gradient-to-r from-[#FF6900] to-[#FFB800] rounded-xl p-4 flex items-center gap-3 cursor-pointer">
         <Star className="h-6 w-6 text-white shrink-0" fill="white" />
         <p className="text-white text-[13px] font-semibold flex-1">Avalie suas compras e ajude a comunidade!</p>
         <ArrowRight className="h-4 w-4 text-white/80 shrink-0" />
       </div>
 
-      {/* Purchase cards */}
       <div className="px-4 space-y-3">
         {loading ? (
           <div className="flex items-center justify-center py-16">
@@ -122,7 +121,7 @@ export default function Purchases() {
           filtered.map((purchase, i) => {
             const status = STATUS_MAP[purchase.status] || STATUS_MAP.pending_payment;
             const listing = purchase.listings;
-            const thumb = listing?.screenshots?.[0] || "/placeholder.svg";
+            const thumb = getListingImage(listing?.category, listing?.screenshots);
             const title = listing?.title || "Conta";
 
             return (
@@ -142,6 +141,8 @@ export default function Purchases() {
                     src={thumb}
                     alt={title}
                     className="h-16 w-16 rounded-lg object-cover shrink-0"
+                    loading="lazy"
+                    onError={(event) => handleListingImageError(event, listing?.category)}
                   />
                   <div className="flex-1 min-w-0">
                     <span className={`inline-flex items-center gap-1 text-[12px] px-2 py-0.5 rounded-full ${status.color}`}>

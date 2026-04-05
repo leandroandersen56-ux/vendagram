@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -10,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import CredentialsPanel from "@/components/CredentialsPanel";
 import TransactionChat from "@/components/TransactionChat";
+import { getListingImage, handleListingImageError } from "@/lib/utils";
 
 const DISPUTE_REASONS = [
   "Credenciais incorretas",
@@ -25,18 +25,15 @@ export default function OrderDetail() {
   const { user } = useAuth();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [disputeOpen, setDisputeOpen] = useState(false);
-  const [copiedField, setCopiedField] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [releasing, setReleasing] = useState(false);
   const [openingDispute, setOpeningDispute] = useState(false);
 
-  // Transaction data
   const [transaction, setTransaction] = useState<any>(null);
   const [listing, setListing] = useState<any>(null);
   const [credentials, setCredentials] = useState<any>(null);
   const [credentialsDeliveredAt, setCredentialsDeliveredAt] = useState<string | null>(null);
 
-  // Dispute form
   const [disputeReason, setDisputeReason] = useState("");
   const [disputeDescription, setDisputeDescription] = useState("");
 
@@ -62,17 +59,22 @@ export default function OrderDetail() {
       setTransaction(tx);
       setListing(tx.listings);
 
-      // Load credentials
       try {
         const credRes = await supabase.functions.invoke("manage-credentials", {
           body: { transaction_id: id, action: "get" },
         });
+
         if (credRes.data?.credentials) {
           setCredentials(credRes.data.credentials);
           setCredentialsDeliveredAt(credRes.data.delivered_at);
+        } else {
+          setCredentials(null);
+          setCredentialsDeliveredAt(null);
         }
-      } catch {}
-
+      } catch {
+        setCredentials(null);
+        setCredentialsDeliveredAt(null);
+      }
     } catch {
       toast.error("Erro ao carregar pedido");
     } finally {
@@ -80,18 +82,11 @@ export default function OrderDetail() {
     }
   };
 
-  const handleCopy = (value: string, label: string) => {
-    navigator.clipboard.writeText(value);
-    setCopiedField(label);
-    toast.success("Copiado!");
-    setTimeout(() => setCopiedField(null), 2000);
-  };
-
   const handleReleaseEscrow = async () => {
     if (!transaction) return;
     setReleasing(true);
+
     try {
-      const { data: { session } } = await supabase.auth.getSession();
       const res = await supabase.functions.invoke("release-escrow", {
         body: { transaction_id: transaction.id },
       });
@@ -113,6 +108,7 @@ export default function OrderDetail() {
       toast.error("Descreva o problema com pelo menos 20 caracteres");
       return;
     }
+
     setOpeningDispute(true);
     try {
       const fullDescription = `${disputeReason}: ${disputeDescription}`;
@@ -137,15 +133,18 @@ export default function OrderDetail() {
 
   const getSteps = () => {
     if (!transaction) return [];
+
     const steps = [
       { label: "Pedido realizado", time: formatDate(transaction.created_at), done: true },
       { label: "Pagamento confirmado", time: transaction.paid_at ? formatDate(transaction.paid_at) : null, done: !!transaction.paid_at },
       { label: "Verificando conta", time: null, done: ["transfer_in_progress", "completed"].includes(transaction.status) },
       { label: "Escrow liberado", time: transaction.completed_at ? formatDate(transaction.completed_at) : null, done: transaction.status === "completed" },
     ];
+
     if (transaction.status === "disputed") {
       steps.push({ label: "Disputa aberta", time: null, done: true });
     }
+
     return steps;
   };
 
@@ -158,6 +157,7 @@ export default function OrderDetail() {
   const canDispute = transaction && ["paid", "transfer_in_progress"].includes(transaction.status);
   const isCompleted = transaction?.status === "completed";
   const isDisputed = transaction?.status === "disputed";
+  const steps = getSteps();
 
   if (loading) {
     return (
@@ -170,14 +170,11 @@ export default function OrderDetail() {
     );
   }
 
-  const steps = getSteps();
-
   return (
     <div className="min-h-screen bg-[#F5F5F5] pb-20">
       <PageHeader title={`Pedido #${transaction?.id?.slice(0, 8) || id}`} />
 
       <div className="px-4 pt-4 space-y-4">
-        {/* Completed banner */}
         {isCompleted && (
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -194,7 +191,6 @@ export default function OrderDetail() {
           </motion.div>
         )}
 
-        {/* Disputed banner */}
         {isDisputed && (
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -209,13 +205,14 @@ export default function OrderDetail() {
           </motion.div>
         )}
 
-        {/* Product info */}
         {listing && (
           <div className="bg-white rounded-xl border border-[#E8E8E8] p-4 flex gap-3">
             <img
-              src={listing.screenshots?.[0] || "/placeholder.svg"}
+              src={getListingImage(listing.category, listing.screenshots)}
               alt={listing.title}
               className="h-16 w-16 rounded-lg object-cover shrink-0"
+              loading="lazy"
+              onError={(event) => handleListingImageError(event, listing.category)}
             />
             <div className="flex-1 min-w-0">
               <p className="text-[14px] font-semibold text-[#111] truncate">{listing.title}</p>
@@ -227,7 +224,6 @@ export default function OrderDetail() {
           </div>
         )}
 
-        {/* Status Timeline */}
         <div className="bg-white rounded-xl border border-[#E8E8E8] p-5">
           <h3 className="text-sm font-semibold text-[#111] mb-4">Status do pedido</h3>
           <div className="relative">
@@ -262,7 +258,6 @@ export default function OrderDetail() {
           </div>
         </div>
 
-        {/* Credentials Panel */}
         {transaction && (
           <CredentialsPanel
             transactionId={transaction.id}
@@ -279,7 +274,6 @@ export default function OrderDetail() {
           />
         )}
 
-        {/* Transaction Chat */}
         {transaction && ["paid", "transfer_in_progress", "disputed"].includes(transaction.status) && (
           <TransactionChat transactionId={transaction.id} />
         )}
@@ -307,7 +301,6 @@ export default function OrderDetail() {
         </div>
       </div>
 
-      {/* Confirm Release Dialog */}
       <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <DialogContent className="max-w-sm mx-auto">
           <DialogHeader>
@@ -341,7 +334,6 @@ export default function OrderDetail() {
         </DialogContent>
       </Dialog>
 
-      {/* Dispute Dialog */}
       <Dialog open={disputeOpen} onOpenChange={setDisputeOpen}>
         <DialogContent className="max-w-sm mx-auto max-h-[80vh] overflow-y-auto">
           <DialogHeader>
