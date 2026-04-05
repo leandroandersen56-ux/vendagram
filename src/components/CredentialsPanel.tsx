@@ -1,9 +1,10 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Copy, Check, Lock, Loader2, AlertTriangle, Send, Package } from "lucide-react";
+import { Copy, Check, Lock, Loader2, AlertTriangle, Send, Package, FileDown, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { generateCredentialsPDF } from "@/lib/generate-credentials-pdf";
 
 interface CredentialField {
   label: string;
