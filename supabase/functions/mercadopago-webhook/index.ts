@@ -158,6 +158,19 @@ Deno.serve(async (req) => {
             body: `Compra de R$ ${Number(tx.amount).toFixed(2)} confirmada. Credenciais entregues automaticamente.`,
             link: `/transaction/${tx.listing_id}`,
           });
+
+          // Send emails
+          if (buyerProfile?.email) {
+            await sendEmailNotification(supabaseUrl, anonKey, "purchase_confirmed", buyerProfile.email, {
+              amount: Number(tx.amount), title: listing?.title || "Conta Digital", transaction_id: transactionId,
+            });
+          }
+          if (sellerProfile?.email) {
+            await sendEmailNotification(supabaseUrl, anonKey, "sale_completed", sellerProfile.email, {
+              amount: Number(tx.amount), fee: Number(tx.platform_fee), net: sellerReceives,
+              title: listing?.title || "Conta Digital", transaction_id: transactionId,
+            });
+          }
         } else {
           await supabase.from("notifications").insert({
             user_id: tx.seller_id,
@@ -172,6 +185,19 @@ Deno.serve(async (req) => {
             body: "Seu pagamento foi aprovado. Aguarde o vendedor enviar as credenciais.",
             link: `/compras/${transactionId}`,
           });
+
+          // Send emails
+          if (buyerProfile?.email) {
+            await sendEmailNotification(supabaseUrl, anonKey, "purchase_confirmed", buyerProfile.email, {
+              amount: Number(tx.amount), title: listing?.title || "Conta Digital", transaction_id: transactionId,
+            });
+          }
+          if (sellerProfile?.email) {
+            await sendEmailNotification(supabaseUrl, anonKey, "sale_completed", sellerProfile.email, {
+              amount: Number(tx.amount), fee: Number(tx.platform_fee), net: sellerReceives,
+              title: listing?.title || "Conta Digital", transaction_id: transactionId,
+            });
+          }
         }
 
       } else if (payment.status === "cancelled" || payment.status === "rejected") {
