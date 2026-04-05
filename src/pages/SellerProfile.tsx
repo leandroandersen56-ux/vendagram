@@ -37,7 +37,7 @@ export default function SellerProfile() {
     async function load() {
       setLoading(true);
       const { data: profile } = await supabase
-        .from("profiles")
+        .from("public_profiles" as any)
         .select("*")
         .eq("username", username)
         .maybeSingle();

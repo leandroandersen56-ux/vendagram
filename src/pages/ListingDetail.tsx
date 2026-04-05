@@ -52,7 +52,7 @@ export default function ListingDetail() {
       if (!error && data) {
         setListing(data);
         const { data: profile } = await supabase
-          .from("profiles")
+          .from("public_profiles" as any)
           .select("*")
           .eq("user_id", data.seller_id)
           .maybeSingle();

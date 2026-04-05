@@ -28,9 +28,9 @@ export default function TransferModal({ open, onClose, balance }: TransferModalP
     setFoundUser(null);
 
     const { data } = await supabase
-      .from("profiles")
+      .from("public_profiles" as any)
       .select("*")
-      .or(`email.ilike.%${query}%,username.ilike.%${query}%,name.ilike.%${query}%`)
+      .or(`username.ilike.%${query}%,name.ilike.%${query}%`)
       .limit(1)
       .single();
 

@@ -134,7 +134,7 @@ export default function Checkout() {
       if (error || !data) { setLoading(false); return; }
       setListing(data);
       const { data: profile } = await supabase
-        .from("profiles")
+        .from("public_profiles" as any)
         .select("*")
         .eq("user_id", data.seller_id)
         .single();
