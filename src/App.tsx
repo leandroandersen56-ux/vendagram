@@ -86,6 +86,12 @@ function AppRoutes() {
         <Route path="/checkout/:listingId" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
         <Route path="/transaction/:listingId" element={<TransactionFlow />} />
         <Route path="/ajuda" element={<HelpPage />} />
+        <Route path="/ajuda/problemas-compra" element={<PurchaseProblems />} />
+        <Route path="/ajuda/dados-nao-recebidos" element={<DataNotReceived />} />
+        <Route path="/ajuda/abrir-disputa" element={<OpenDispute />} />
+        <Route path="/ajuda/escrow" element={<HowEscrowWorks />} />
+        <Route path="/ajuda/saques-pagamentos" element={<WithdrawalsPayments />} />
+        <Route path="/ajuda/como-anunciar" element={<HowToList />} />
         <Route path="/busca" element={<SearchResults />} />
         <Route path="/perfil/:username" element={<SellerProfile />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
