@@ -206,8 +206,9 @@ export default function ProductGallery({ images, title, category, verified }: Pr
               </div>
             )}
           </motion.div>
-        )}
-      </AnimatePresence>
+        </AnimatePresence>,
+        document.body
+      )}
     </>
   );
 }
