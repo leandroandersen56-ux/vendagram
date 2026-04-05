@@ -34,6 +34,10 @@ import SearchResults from "./pages/SearchResults.tsx";
 import SellerProfile from "./pages/SellerProfile.tsx";
 import ViewHistory from "./pages/ViewHistory.tsx";
 import AuthCallback from "./pages/AuthCallback.tsx";
+import TermsPage from "./pages/TermsPage.tsx";
+import PrivacyPage from "./pages/PrivacyPage.tsx";
+import AboutPage from "./pages/AboutPage.tsx";
+import ContactPage from "./pages/ContactPage.tsx";
 
 const queryClient = new QueryClient();
 
