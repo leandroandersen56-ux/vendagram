@@ -266,7 +266,6 @@ export default function CreateListing() {
 
   const socialPlatforms = PLATFORMS.filter(p => PLATFORM_VISUAL[p.id]?.group === 'social');
   const gamePlatforms = PLATFORMS.filter(p => PLATFORM_VISUAL[p.id]?.group === 'game');
-  const gamePlatforms = PLATFORMS.filter(p => PLATFORM_VISUAL[p.id]?.group === 'game');
   const selectedVisual = preSelected ? PLATFORM_VISUAL[preSelected] : null;
   const selectedPlatformData = PLATFORMS.find(p => p.id === preSelected);
 
