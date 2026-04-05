@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import freefireLogo from "@/assets/freefire-logo.png";
 import { motion, AnimatePresence } from "framer-motion";
 import { Eye, Plus, X, Upload, ChevronLeft, ChevronRight, Gamepad2, Image as ImageIcon, Lock, ShieldCheck, Check, Globe } from "lucide-react";
 import { useNavigate } from "react-router-dom";
