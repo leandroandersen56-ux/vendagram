@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import freefireLogo from "@/assets/freefire-logo.png";
 import { motion, AnimatePresence } from "framer-motion";
-import { Eye, Plus, X, Upload, ChevronLeft, ChevronRight, Gamepad2, Image as ImageIcon, Lock, ShieldCheck, Check, Globe } from "lucide-react";
+import { Eye, Plus, X, Upload, ChevronLeft, ChevronRight, Gamepad2, Image as ImageIcon, Lock, ShieldCheck, Check, Globe, Smartphone } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -356,16 +356,16 @@ export default function CreateListing() {
 
           <div className="px-4">
             {/* Redes Sociais */}
-            <p className="text-[11px] font-semibold text-[#999] uppercase tracking-[0.8px] mt-4 mb-[10px]">
-              📱 Redes Sociais
+            <p className="text-[11px] font-semibold text-[#999] uppercase tracking-[0.8px] mt-4 mb-[10px] flex items-center gap-1.5">
+              <Smartphone className="h-3.5 w-3.5 text-primary" /> Redes Sociais
             </p>
             <div className="grid grid-cols-2 gap-3">
               {socialPlatforms.map(p => <PlatformCard key={p.id} p={p} />)}
             </div>
 
             {/* Jogos */}
-            <p className="text-[11px] font-semibold text-[#999] uppercase tracking-[0.8px] mt-4 mb-[10px]">
-              🎮 Contas de Jogos
+            <p className="text-[11px] font-semibold text-[#999] uppercase tracking-[0.8px] mt-4 mb-[10px] flex items-center gap-1.5">
+              <Gamepad2 className="h-3.5 w-3.5 text-primary" /> Contas de Jogos
             </p>
             <div className="grid grid-cols-2 gap-3">
               {gamePlatforms.map(p => <PlatformCard key={p.id} p={p} />)}
