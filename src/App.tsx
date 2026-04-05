@@ -114,6 +114,7 @@ function AppRoutes() {
         <Route path="/configuracoes/senha" element={<ProtectedRoute><ChangePassword /></ProtectedRoute>} />
         <Route path="/configuracoes/pix" element={<ProtectedRoute><PixKeys /></ProtectedRoute>} />
         <Route path="/configuracoes/acessos" element={<ProtectedRoute><AccessHistory /></ProtectedRoute>} />
+        <Route path="/configuracoes/2fa" element={<ProtectedRoute><TwoFactorSetup /></ProtectedRoute>} />
         <Route path="/configuracoes/excluir" element={<ProtectedRoute><DeleteAccount /></ProtectedRoute>} />
         <Route path="/historico" element={<ProtectedRoute><ViewHistory /></ProtectedRoute>} />
 
