@@ -332,7 +332,7 @@ export default function CreateListing() {
           <button onClick={() => navigate(-1)} className="p-1 -ml-1 hover:bg-white/10 rounded-full transition-colors">
             <ChevronLeft className="w-6 h-6 text-white" />
           </button>
-          <h1 className="flex-1 text-center text-[17px] font-bold text-white">Criar Anúncio</h1>
+          <h1 className="flex-1 text-center text-[17px] font-semibold text-white">Criar Anúncio</h1>
           <div className="w-6" />
         </div>
 
