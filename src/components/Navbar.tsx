@@ -307,51 +307,6 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile menu overlay */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/30 z-40"
-              onClick={() => setMobileMenuOpen(false)}
-            />
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="fixed top-14 right-4 z-50 bg-card rounded-lg shadow-card-hover border border-border w-56"
-            >
-              <div className="flex flex-col p-2">
-                <Link to="/vendedor" onClick={() => setMobileMenuOpen(false)}>
-                  <button className="w-full flex items-center gap-2 px-3 py-2.5 text-[13px] text-txt-primary hover:bg-muted rounded-md transition-colors">
-                    <LayoutDashboard className="h-4 w-4" /> Meu Painel
-                  </button>
-                </Link>
-                <Link to="/favoritos" onClick={() => setMobileMenuOpen(false)}>
-                  <button className="w-full flex items-center gap-2 px-3 py-2.5 text-[13px] text-txt-primary hover:bg-muted rounded-md transition-colors">
-                    <Heart className="h-4 w-4" /> Favoritos
-                  </button>
-                </Link>
-                <Link to="/vendedor" onClick={() => setMobileMenuOpen(false)}>
-                  <button className="w-full flex items-center gap-2 px-3 py-2.5 text-[13px] text-txt-primary hover:bg-muted rounded-md transition-colors">
-                    <User className="h-4 w-4" /> Meu Perfil
-                  </button>
-                </Link>
-                <div className="h-px bg-border my-1" />
-                <button
-                  className="w-full flex items-center gap-2 px-3 py-2.5 text-[13px] text-danger hover:bg-danger-light rounded-md transition-colors"
-                  onClick={() => { logout(); setMobileMenuOpen(false); }}
-                >
-                  <LogOut className="h-4 w-4" /> Sair
-                </button>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
 
       {/* Overlay backdrop for dropdowns */}
       <AnimatePresence>
