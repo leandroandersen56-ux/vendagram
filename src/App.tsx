@@ -42,6 +42,7 @@ import EditProfile from "./pages/settings/EditProfile.tsx";
 import ChangePassword from "./pages/settings/ChangePassword.tsx";
 import PixKeys from "./pages/settings/PixKeys.tsx";
 import DeleteAccount from "./pages/settings/DeleteAccount.tsx";
+import TwoFactorSetup from "./pages/settings/TwoFactorSetup.tsx";
 import AccessHistory from "./pages/settings/AccessHistory.tsx";
 import PurchaseProblems from "./pages/help/PurchaseProblems.tsx";
 import DataNotReceived from "./pages/help/DataNotReceived.tsx";
@@ -113,6 +114,7 @@ function AppRoutes() {
         <Route path="/configuracoes/senha" element={<ProtectedRoute><ChangePassword /></ProtectedRoute>} />
         <Route path="/configuracoes/pix" element={<ProtectedRoute><PixKeys /></ProtectedRoute>} />
         <Route path="/configuracoes/acessos" element={<ProtectedRoute><AccessHistory /></ProtectedRoute>} />
+        <Route path="/configuracoes/2fa" element={<ProtectedRoute><TwoFactorSetup /></ProtectedRoute>} />
         <Route path="/configuracoes/excluir" element={<ProtectedRoute><DeleteAccount /></ProtectedRoute>} />
         <Route path="/historico" element={<ProtectedRoute><ViewHistory /></ProtectedRoute>} />
 

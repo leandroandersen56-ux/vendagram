@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { toast } from "sonner";
+import MfaChallengeModal from "@/components/MfaChallengeModal";
 
 export default function AuthModal() {
   const { showAuthModal, closeAuth, login, authRedirect, authRole } = useAuth();
@@ -20,8 +21,8 @@ export default function AuthModal() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [selectedRole, setSelectedRole] = useState<"buyer" | "seller" | null>(null);
-
   const [loading, setLoading] = useState(false);
+  const [mfaFactorId, setMfaFactorId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!showAuthModal) return;
@@ -46,8 +47,18 @@ export default function AuthModal() {
         if (error) throw error;
         toast.success("Conta criada! Verifique seu e-mail para confirmar.");
       } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
+
+        // Check if MFA is required
+        const { data: factors } = await supabase.auth.mfa.listFactors();
+        const verifiedFactor = factors?.totp?.find((f) => f.status === "verified");
+        if (verifiedFactor) {
+          setMfaFactorId(verifiedFactor.id);
+          setLoading(false);
+          return; // Don't close modal yet - show MFA challenge
+        }
+
         if (authRedirect) navigate(authRedirect);
       }
       closeAuth();
@@ -77,9 +88,30 @@ export default function AuthModal() {
     setEmail("");
     setPassword("");
     setSelectedRole(authRole || null);
+    setMfaFactorId(null);
   };
 
-  if (!showAuthModal) return null;
+  const handleMfaSuccess = () => {
+    setMfaFactorId(null);
+    closeAuth();
+    resetForm();
+    if (authRedirect) navigate(authRedirect);
+  };
+
+  if (!showAuthModal && !mfaFactorId) return null;
+
+  if (mfaFactorId) {
+    return (
+      <MfaChallengeModal
+        factorId={mfaFactorId}
+        onSuccess={handleMfaSuccess}
+        onCancel={() => {
+          setMfaFactorId(null);
+          supabase.auth.signOut();
+        }}
+      />
+    );
+  }
 
   return (
     <AnimatePresence>
