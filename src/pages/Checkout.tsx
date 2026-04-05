@@ -133,11 +133,11 @@ export default function Checkout() {
         .single();
       if (error || !data) { setLoading(false); return; }
       setListing(data);
-      const { data: profile } = await supabase
+      const { data: profile } = await (supabase
         .from("public_profiles" as any)
         .select("*")
         .eq("user_id", data.seller_id)
-        .single();
+        .single() as any);
       if (profile) setSeller(profile);
       setLoading(false);
     }

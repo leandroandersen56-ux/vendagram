@@ -36,11 +36,11 @@ export default function SellerProfile() {
   useEffect(() => {
     async function load() {
       setLoading(true);
-      const { data: profile } = await supabase
+      const { data: profile } = await (supabase
         .from("public_profiles" as any)
         .select("*")
         .eq("username", username)
-        .maybeSingle();
+        .maybeSingle() as any);
 
       if (!profile) { setLoading(false); return; }
       setSeller(profile);

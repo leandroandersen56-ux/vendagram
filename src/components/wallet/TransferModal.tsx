@@ -27,12 +27,12 @@ export default function TransferModal({ open, onClose, balance }: TransferModalP
     setSearching(true);
     setFoundUser(null);
 
-    const { data } = await supabase
+    const { data } = await (supabase
       .from("public_profiles" as any)
       .select("*")
       .or(`username.ilike.%${query}%,name.ilike.%${query}%`)
       .limit(1)
-      .single();
+      .single() as any);
 
     if (data) setFoundUser(data);
     else toast({ title: "Usuário não encontrado", variant: "destructive" });

@@ -51,11 +51,11 @@ export default function ListingDetail() {
 
       if (!error && data) {
         setListing(data);
-        const { data: profile } = await supabase
+        const { data: profile } = await (supabase
           .from("public_profiles" as any)
           .select("*")
           .eq("user_id", data.seller_id)
-          .maybeSingle();
+          .maybeSingle() as any);
         if (profile) setSeller(profile);
       } else {
         const mock = MOCK_LISTINGS.find((m) => m.id === id);
