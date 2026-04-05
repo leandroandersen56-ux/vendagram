@@ -347,7 +347,7 @@ export default function CreateListing() {
 
           <div className="px-4">
             {/* Redes Sociais */}
-            <p className="text-[11px] font-bold text-[#999] uppercase tracking-[0.8px] mt-4 mb-[10px]">
+            <p className="text-[11px] font-semibold text-[#999] uppercase tracking-[0.8px] mt-4 mb-[10px]">
               📱 Redes Sociais
             </p>
             <div className="grid grid-cols-2 gap-3">
