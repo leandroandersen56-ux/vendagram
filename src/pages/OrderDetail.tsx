@@ -271,6 +271,11 @@ export default function OrderDetail() {
             credentials={credentials}
             deliveredAt={credentialsDeliveredAt}
             onCredentialsSent={loadTransaction}
+            orderId={transaction.id}
+            orderCreatedAt={transaction.created_at}
+            orderAmount={Number(transaction.amount)}
+            listingTitle={listing?.title}
+            listingPlatform={listing?.category}
           />
         )}
 

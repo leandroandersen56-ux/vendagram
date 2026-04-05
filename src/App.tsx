@@ -79,6 +79,10 @@ function AppRoutes() {
         <Route path="/busca" element={<SearchResults />} />
         <Route path="/perfil/:username" element={<SellerProfile />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
+        <Route path="/termos" element={<TermsPage />} />
+        <Route path="/privacidade" element={<PrivacyPage />} />
+        <Route path="/sobre" element={<AboutPage />} />
+        <Route path="/contato" element={<ContactPage />} />
 
         {/* User pages (protected) */}
         <Route path="/compras" element={<ProtectedRoute><Purchases /></ProtectedRoute>} />

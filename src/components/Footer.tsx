@@ -128,7 +128,7 @@ export default function Footer() {
             <div>
               <h4 className="font-semibold text-[12px] text-txt-primary mb-4 uppercase tracking-wider">Suporte</h4>
               <div className="flex flex-col gap-2.5 text-[12px] text-txt-secondary">
-                <span className="hover:text-primary transition-colors cursor-pointer">Central de Ajuda</span>
+                <Link to="/ajuda" className="hover:text-primary transition-colors">Central de Ajuda</Link>
                 <a href="mailto:contato@froiv.com" className="hover:text-primary transition-colors">contato@froiv.com</a>
               </div>
             </div>

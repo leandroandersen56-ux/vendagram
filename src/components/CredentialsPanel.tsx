@@ -185,49 +185,121 @@ export default function CredentialsPanel({
 
   // Buyer: view credentials
   if (!isSeller && credentials && deliveredAt) {
-    const fields: CredentialField[] = [
-      { label: "Login", key: "login", value: credentials.login || "" },
-      { label: "Senha", key: "password", value: credentials.password || "" },
-      ...(credentials.email ? [{ label: "Email vinculado", key: "email", value: credentials.email }] : []),
-      ...(credentials.twofa ? [{ label: "Código 2FA", key: "twofa", value: credentials.twofa }] : []),
-      ...(credentials.notes ? [{ label: "Observações", key: "notes", value: credentials.notes }] : []),
-    ];
+    const handleDownloadPDF = () => {
+      generateCredentialsPDF({
+        orderId: orderId || transactionId,
+        createdAt: orderCreatedAt || new Date().toISOString(),
+        amount: orderAmount || 0,
+        platform: listingPlatform || "Digital",
+        listingTitle: listingTitle || "Conta Digital",
+        credentials,
+      });
+      toast.success("PDF baixado!");
+    };
 
     return (
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-[#F0F8FF] border border-primary rounded-xl p-4"
+        className="bg-gradient-to-br from-[#E8F0FF] to-[#F0F8FF] border border-primary rounded-2xl p-5"
       >
-        <h3 className="text-sm font-semibold text-[#111] mb-3 flex items-center gap-2">
-          🔐 Dados de acesso da conta
-        </h3>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-sm font-semibold text-[#111] flex items-center gap-2">
+            🔐 Dados de Acesso
+          </h3>
+          <span className="text-[10px] font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full capitalize">
+            {listingPlatform?.replace("_", " ") || "Digital"}
+          </span>
+        </div>
+
         <div className="space-y-3">
-          {fields.map((field) => (
-            <div key={field.key} className="flex items-center justify-between">
-              <div>
-                <p className="text-[11px] text-[#999] uppercase font-medium">{field.label}</p>
-                <p className="text-[14px] text-[#111] font-mono">{field.value}</p>
-              </div>
-              <button
-                onClick={() => handleCopy(field.value, field.key)}
-                className="h-8 w-8 rounded-lg flex items-center justify-center hover:bg-primary/10 transition-colors"
-              >
-                {copiedField === field.key ? (
-                  <Check className="h-4 w-4 text-success" />
-                ) : (
-                  <Copy className="h-4 w-4 text-primary" />
-                )}
+          {/* Login */}
+          <div className="bg-white rounded-lg border border-[#E8E8E8] p-3">
+            <p className="text-[11px] text-[#888] uppercase font-bold mb-1">Login / Usuário</p>
+            <div className="flex items-center justify-between">
+              <p className="text-[15px] font-semibold text-[#111] font-mono">{credentials.login || "—"}</p>
+              <button onClick={() => handleCopy(credentials.login || "", "login")} className="flex items-center gap-1 text-xs text-primary font-medium hover:bg-primary/10 px-2 py-1 rounded-md transition-colors">
+                {copiedField === "login" ? <Check className="h-3.5 w-3.5 text-success" /> : <Copy className="h-3.5 w-3.5" />}
+                {copiedField === "login" ? "Copiado" : "Copiar"}
               </button>
             </div>
-          ))}
+          </div>
+
+          {/* Password */}
+          <div className="bg-white rounded-lg border border-[#E8E8E8] p-3">
+            <p className="text-[11px] text-[#888] uppercase font-bold mb-1">Senha</p>
+            <div className="flex items-center justify-between">
+              <p className="text-[15px] font-semibold text-[#111] font-mono">
+                {showPassword ? (credentials.password || "—") : "••••••••"}
+              </p>
+              <div className="flex items-center gap-1">
+                <button onClick={() => setShowPassword(!showPassword)} className="h-7 w-7 flex items-center justify-center rounded-md hover:bg-muted transition-colors">
+                  {showPassword ? <EyeOff className="h-3.5 w-3.5 text-[#888]" /> : <Eye className="h-3.5 w-3.5 text-[#888]" />}
+                </button>
+                <button onClick={() => handleCopy(credentials.password || "", "password")} className="flex items-center gap-1 text-xs text-primary font-medium hover:bg-primary/10 px-2 py-1 rounded-md transition-colors">
+                  {copiedField === "password" ? <Check className="h-3.5 w-3.5 text-success" /> : <Copy className="h-3.5 w-3.5" />}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Email */}
+          {credentials.email && (
+            <div className="bg-white rounded-lg border border-[#E8E8E8] p-3">
+              <p className="text-[11px] text-[#888] uppercase font-bold mb-1">Email vinculado</p>
+              <div className="flex items-center justify-between">
+                <p className="text-[15px] font-semibold text-[#111]">{credentials.email}</p>
+                <button onClick={() => handleCopy(credentials.email || "", "email")} className="flex items-center gap-1 text-xs text-primary font-medium hover:bg-primary/10 px-2 py-1 rounded-md transition-colors">
+                  {copiedField === "email" ? <Check className="h-3.5 w-3.5 text-success" /> : <Copy className="h-3.5 w-3.5" />}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* 2FA */}
+          {credentials.twofa && (
+            <div className="bg-white rounded-lg border border-[#E8E8E8] p-3">
+              <p className="text-[11px] text-[#888] uppercase font-bold mb-1">Código 2FA</p>
+              <div className="flex items-center justify-between">
+                <p className="text-[15px] font-semibold text-[#111] font-mono">
+                  {showTwofa ? credentials.twofa : "••••••••"}
+                </p>
+                <div className="flex items-center gap-1">
+                  <button onClick={() => setShowTwofa(!showTwofa)} className="h-7 w-7 flex items-center justify-center rounded-md hover:bg-muted transition-colors">
+                    {showTwofa ? <EyeOff className="h-3.5 w-3.5 text-[#888]" /> : <Eye className="h-3.5 w-3.5 text-[#888]" />}
+                  </button>
+                  <button onClick={() => handleCopy(credentials.twofa || "", "twofa")} className="flex items-center gap-1 text-xs text-primary font-medium hover:bg-primary/10 px-2 py-1 rounded-md transition-colors">
+                    {copiedField === "twofa" ? <Check className="h-3.5 w-3.5 text-success" /> : <Copy className="h-3.5 w-3.5" />}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Notes */}
+          {credentials.notes && (
+            <div className="bg-white rounded-lg border border-[#E8E8E8] p-3">
+              <p className="text-[11px] text-[#888] uppercase font-bold mb-1">Observações</p>
+              <p className="text-[13px] text-[#555]">{credentials.notes}</p>
+            </div>
+          )}
         </div>
-        <div className="mt-3 flex items-start gap-2 bg-[#FFF8E0] rounded-lg p-3">
+
+        {/* Security warning */}
+        <div className="mt-4 flex items-start gap-2 bg-[#FFF8E0] border border-[#FFD700] rounded-lg p-3">
           <AlertTriangle className="h-4 w-4 text-[#FF6900] shrink-0 mt-0.5" />
           <p className="text-[12px] text-[#666]">
-            Altere a senha após o acesso. Você tem <strong>24h para verificar</strong> a conta antes da liberação automática.
+            ⚠️ Troque a senha imediatamente após o primeiro acesso. Você tem <strong>24h para verificar</strong> a conta antes da liberação automática.
           </p>
         </div>
+
+        {/* Download PDF button */}
+        <button
+          onClick={handleDownloadPDF}
+          className="mt-4 w-full flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-primary text-primary text-[14px] font-semibold hover:bg-primary/5 transition-colors"
+        >
+          <FileDown className="h-4 w-4" /> Baixar credenciais em PDF
+        </button>
       </motion.div>
     );
   }
