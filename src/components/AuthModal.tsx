@@ -47,8 +47,18 @@ export default function AuthModal() {
         if (error) throw error;
         toast.success("Conta criada! Verifique seu e-mail para confirmar.");
       } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
+
+        // Check if MFA is required
+        const { data: factors } = await supabase.auth.mfa.listFactors();
+        const verifiedFactor = factors?.totp?.find((f) => f.status === "verified");
+        if (verifiedFactor) {
+          setMfaFactorId(verifiedFactor.id);
+          setLoading(false);
+          return; // Don't close modal yet - show MFA challenge
+        }
+
         if (authRedirect) navigate(authRedirect);
       }
       closeAuth();
