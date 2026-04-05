@@ -39,9 +39,16 @@ export default function CredentialsPanel({
   credentials,
   deliveredAt,
   onCredentialsSent,
+  orderId,
+  orderCreatedAt,
+  orderAmount,
+  listingTitle,
+  listingPlatform,
 }: CredentialsPanelProps) {
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showTwofa, setShowTwofa] = useState(false);
 
   // Seller form
   const [login, setLogin] = useState("");
