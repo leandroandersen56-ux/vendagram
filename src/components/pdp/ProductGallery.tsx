@@ -129,8 +129,8 @@ export default function ProductGallery({ images, title, category, verified }: Pr
       </div>
 
       {/* Lightbox */}
-      <AnimatePresence>
-        {lightbox && (
+      {lightbox && createPortal(
+        <AnimatePresence>
           <motion.div
             className="fixed inset-0 z-[9999] flex flex-col bg-black"
             initial={{ opacity: 0 }}
