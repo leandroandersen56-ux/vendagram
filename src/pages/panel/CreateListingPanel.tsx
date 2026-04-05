@@ -378,7 +378,7 @@ export default function CreateListing() {
               >
                 <button
                   onClick={() => selectPlatform(preSelected)}
-                  className="w-full h-[52px] rounded-[14px] flex items-center justify-center gap-[10px] text-white text-base font-bold border-none cursor-pointer active:opacity-85 transition-opacity"
+                  className="w-full h-[52px] rounded-[14px] flex items-center justify-center gap-[10px] text-white text-base font-semibold border-none cursor-pointer active:opacity-85 transition-opacity"
                   style={{ background: '#2D6FF0', boxShadow: '0 4px 16px rgba(45,111,240,0.40)' }}
                 >
                   <div
