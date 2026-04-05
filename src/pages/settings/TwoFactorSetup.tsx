@@ -44,7 +44,7 @@ export default function TwoFactorSetup() {
     // Unenroll any unverified factors first
     const { data: existing } = await supabase.auth.mfa.listFactors();
     if (existing?.totp) {
-      for (const f of existing.totp.filter((t) => t.status === "unverified")) {
+      for (const f of existing.totp.filter((t) => (t.status as string) === "unverified")) {
         await supabase.auth.mfa.unenroll({ factorId: f.id });
       }
     }
