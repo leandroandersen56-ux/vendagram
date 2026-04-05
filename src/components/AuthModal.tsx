@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { toast } from "sonner";
+import MfaChallengeModal from "@/components/MfaChallengeModal";
 
 export default function AuthModal() {
   const { showAuthModal, closeAuth, login, authRedirect, authRole } = useAuth();
