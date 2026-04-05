@@ -43,6 +43,12 @@ import ChangePassword from "./pages/settings/ChangePassword.tsx";
 import PixKeys from "./pages/settings/PixKeys.tsx";
 import DeleteAccount from "./pages/settings/DeleteAccount.tsx";
 import AccessHistory from "./pages/settings/AccessHistory.tsx";
+import PurchaseProblems from "./pages/help/PurchaseProblems.tsx";
+import DataNotReceived from "./pages/help/DataNotReceived.tsx";
+import OpenDispute from "./pages/help/OpenDispute.tsx";
+import HowEscrowWorks from "./pages/help/HowEscrowWorks.tsx";
+import WithdrawalsPayments from "./pages/help/WithdrawalsPayments.tsx";
+import HowToList from "./pages/help/HowToList.tsx";
 const queryClient = new QueryClient();
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
