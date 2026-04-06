@@ -175,7 +175,7 @@ export default function Index() {
               {BANNERS.map((b, i) => (
                 <div key={i} className={`absolute inset-0 transition-opacity duration-500 ${i === bannerIdx ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
                   <img src={b.img} alt={b.title} className="w-full h-full object-cover" style={b.objectPosition ? { objectPosition: b.objectPosition } : undefined} {...(i === 0 ? {} : { loading: "lazy" as const })} />
-                  <div className="absolute inset-y-0 left-0 w-3/5 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
+                  <div className="absolute inset-y-0 left-0 w-3/5 bg-gradient-to-r from-black/70 via-black/40 to-transparent pointer-events-none" />
                   <div className="absolute inset-0 flex items-center">
                     <div className="px-5 sm:px-8 md:px-12 max-w-sm md:max-w-lg">
                       <h2 className="text-white text-base sm:text-xl md:text-3xl lg:text-4xl font-semibold leading-tight">{b.title}</h2>
@@ -430,7 +430,7 @@ export default function Index() {
                           {socialBanners.map((sb, i) => (
                             <Link key={i} to={sb.link} className={`block ${i === socialSlide ? '' : 'hidden'}`}>
                               <img src={sb.img} alt={sb.alt} className="w-full h-[180px] md:h-[340px] object-cover" loading="lazy" />
-                              <div className="absolute inset-y-0 left-0 w-3/5 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
+                              <div className="absolute inset-y-0 left-0 w-3/5 bg-gradient-to-r from-black/70 via-black/40 to-transparent pointer-events-none" />
                               <div className="absolute inset-0 flex items-center">
                                 <div className="px-5 sm:px-8 md:px-12 max-w-sm md:max-w-lg">
                                   <h2 className="text-white text-base sm:text-xl md:text-3xl lg:text-4xl font-semibold leading-tight">{sb.title}</h2>
@@ -473,7 +473,7 @@ export default function Index() {
                     className="w-full h-[180px] md:h-[340px] object-cover object-[center_35%]"
                     loading="lazy"
                   />
-                  <div className="absolute inset-y-0 left-0 w-3/5 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
+                  <div className="absolute inset-y-0 left-0 w-3/5 bg-gradient-to-r from-black/70 via-black/40 to-transparent pointer-events-none" />
                   <div className="absolute inset-0 flex items-center">
                     <div className="px-5 sm:px-8 md:px-12 max-w-sm md:max-w-lg">
                       <h2 className="text-white text-base sm:text-xl md:text-3xl lg:text-4xl font-semibold leading-tight">Contas Free Fire</h2>
