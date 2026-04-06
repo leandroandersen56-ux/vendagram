@@ -154,6 +154,21 @@ function AppRoutes() {
         {/* Admin */}
         <Route path="/admin" element={<Dashboard />} />
 
+        {/* Super Admin */}
+        <Route path="/trynda" element={<SuperAdminGuard><SuperAdminLayout /></SuperAdminGuard>}>
+          <Route index element={<SuperAdminDashboard />} />
+          <Route path="usuarios" element={<SuperAdminUsers />} />
+          <Route path="anuncios" element={<SuperAdminListings />} />
+          <Route path="financeiro" element={<SuperAdminFinancial />} />
+          <Route path="disputas" element={<SuperAdminDisputes />} />
+          <Route path="saques" element={<SuperAdminWithdrawals />} />
+          <Route path="notificacoes" element={<SuperAdminNotifications />} />
+          <Route path="emails" element={<SuperAdminEmails />} />
+          <Route path="storage" element={<SuperAdminStorage />} />
+          <Route path="config" element={<SuperAdminConfig />} />
+          <Route path="seguranca" element={<SuperAdminSecurity />} />
+        </Route>
+
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>
