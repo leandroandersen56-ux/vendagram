@@ -817,6 +817,8 @@ export default function CreateListing() {
             </div>
           </div>
         </div>
+        {/* Spacer to prevent sticky button from covering content */}
+        <div className="h-[120px]" />
       </div>
 
       {/* Sticky bottom publish button */}
