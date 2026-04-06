@@ -509,8 +509,8 @@ export default function CreateListing() {
       <div className="pb-[100px]">
         {/* Platform badge */}
         <div className="px-4 pt-4 pb-2 flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: platformVisual.gradient }}>
-            <PlatformIcon platformId={platform} size={16} />
+          <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: platformVisual.bg }}>
+            <WhiteIcon id={platform} />
           </div>
           <span className="text-sm font-semibold text-[#111]">{platformData.name}</span>
           <button onClick={() => setPlatform("")} className="ml-1 text-xs text-primary hover:underline">Trocar</button>
