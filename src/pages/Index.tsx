@@ -401,6 +401,16 @@ export default function Index() {
                   </div>
                 )}
 
+                {/* Mobile Legends Banner */}
+                <Link to="/marketplace?type=games" className="block rounded-2xl overflow-hidden">
+                  <img
+                    src={bannerMobileLegends}
+                    alt="Mobile Legends Bang Bang"
+                    className="w-full h-[140px] md:h-[200px] object-cover"
+                    loading="lazy"
+                  />
+                </Link>
+
                 {/* Game Categories Slider */}
                 <div>
                   <div className="flex items-center justify-between mb-3">
