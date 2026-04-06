@@ -6,9 +6,11 @@ import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianG
 import { useQuery } from "@tanstack/react-query";
 import { format, subDays } from "date-fns";
 
+type EventType = "sale" | "signup" | "listing" | "dispute";
+
 interface LiveEvent {
   id: string;
-  type: "sale" | "signup" | "listing" | "dispute";
+  type: EventType;
   message: string;
   time: Date;
 }
