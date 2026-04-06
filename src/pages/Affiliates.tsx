@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Copy, Share2, Loader2 } from "lucide-react";
+import { Copy, Share2, Loader2, Link2, Users, TrendingUp, DollarSign, Megaphone, Gift } from "lucide-react";
 import DesktopPageShell from "@/components/DesktopPageShell";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -63,17 +63,29 @@ export default function Affiliates() {
     <DesktopPageShell title="Afiliados">
       <div className="space-y-4">
         {/* Hero */}
-        <div className="bg-gradient-to-br from-[#064E3B] to-[#065F46] rounded-2xl p-6 text-white">
-          <p className="text-2xl font-semibold">💰 Ganhe 10% de comissão</p>
-          <p className="text-sm text-white/80 mt-1">Por cada venda indicada pelo seu link</p>
-          <div className="mt-4 bg-white/10 rounded-xl px-4 py-3 flex items-center gap-2">
-            <p className="text-sm font-mono flex-1 truncate text-white/90">{link}</p>
-            <button onClick={handleCopy} className="h-8 w-8 rounded-lg bg-white/20 flex items-center justify-center">
-              <Copy className="h-4 w-4 text-white" />
-            </button>
-            <button onClick={handleShare} className="h-8 w-8 rounded-lg bg-white/20 flex items-center justify-center">
-              <Share2 className="h-4 w-4 text-white" />
-            </button>
+        <div className="relative overflow-hidden rounded-2xl p-6" style={{ background: 'linear-gradient(135deg, #2D6FF0 0%, #1B4FBF 50%, #1340A0 100%)' }}>
+          <div className="absolute top-0 right-0 w-32 h-32 rounded-full opacity-10" style={{ background: 'radial-gradient(circle, #fff 0%, transparent 70%)', transform: 'translate(30%, -30%)' }} />
+          <div className="absolute bottom-0 left-0 w-24 h-24 rounded-full opacity-[0.07]" style={{ background: 'radial-gradient(circle, #fff 0%, transparent 70%)', transform: 'translate(-30%, 30%)' }} />
+          
+          <div className="relative z-10">
+            <div className="flex items-center gap-2.5 mb-1.5">
+              <div className="w-9 h-9 rounded-xl bg-white/15 flex items-center justify-center backdrop-blur-sm">
+                <Gift className="h-5 w-5 text-white" />
+              </div>
+              <p className="text-xl font-bold text-white tracking-tight">Ganhe 10% de comissão</p>
+            </div>
+            <p className="text-sm text-white/70 ml-[46px]">Por cada venda indicada pelo seu link</p>
+            
+            <div className="mt-5 bg-white/10 backdrop-blur-sm rounded-xl px-4 py-3 flex items-center gap-2 border border-white/10">
+              <Link2 className="h-4 w-4 text-white/50 shrink-0" />
+              <p className="text-sm font-mono flex-1 truncate text-white/90">{link}</p>
+              <button onClick={handleCopy} className="h-8 w-8 rounded-lg bg-white/15 hover:bg-white/25 flex items-center justify-center transition-colors">
+                <Copy className="h-4 w-4 text-white" />
+              </button>
+              <button onClick={handleShare} className="h-8 w-8 rounded-lg bg-white/15 hover:bg-white/25 flex items-center justify-center transition-colors">
+                <Share2 className="h-4 w-4 text-white" />
+              </button>
+            </div>
           </div>
         </div>
 
@@ -83,50 +95,62 @@ export default function Affiliates() {
         ) : (
           <div className="grid grid-cols-3 gap-3">
             {[
-              { label: "Indicações", value: String(stats.total) },
-              { label: "Conversões", value: String(stats.conversions) },
-              { label: "Ganho total", value: `R$ ${stats.earned.toFixed(0)}` },
+              { label: "Indicações", value: String(stats.total), icon: Users, color: "#2D6FF0" },
+              { label: "Conversões", value: String(stats.conversions), icon: TrendingUp, color: "#00A650" },
+              { label: "Ganho total", value: `R$ ${stats.earned.toFixed(0)}`, icon: DollarSign, color: "#7C3AED" },
             ].map((m) => (
-              <div key={m.label} className="bg-white rounded-xl border border-[#E8E8E8] p-3 text-center">
-                <p className="text-lg font-semibold text-primary">{m.value}</p>
-                <p className="text-[11px] text-[#666]">{m.label}</p>
+              <div key={m.label} className="bg-card rounded-xl border border-border p-3.5 text-center">
+                <div className="w-8 h-8 rounded-lg mx-auto mb-2 flex items-center justify-center" style={{ background: `${m.color}12` }}>
+                  <m.icon className="h-4 w-4" style={{ color: m.color }} />
+                </div>
+                <p className="text-lg font-bold" style={{ color: m.color }}>{m.value}</p>
+                <p className="text-[11px] text-muted-foreground mt-0.5">{m.label}</p>
               </div>
             ))}
           </div>
         )}
 
         {/* How it works */}
-        <div className="bg-white rounded-xl border border-[#E8E8E8] p-4">
-          <h3 className="text-sm font-semibold text-[#111] mb-3">Como funciona</h3>
-          {["Copie seu link de afiliado", "Compartilhe em redes sociais, grupos, Discord", "Ganhe 10% de cada venda realizada"].map((step, i) => (
-            <div key={i} className="flex gap-3 items-start mb-2.5 last:mb-0">
-              <div className="h-6 w-6 rounded-full bg-primary text-white text-xs font-semibold flex items-center justify-center shrink-0">{i + 1}</div>
-              <p className="text-[13px] text-[#333] pt-0.5">{step}</p>
+        <div className="bg-card rounded-xl border border-border p-5">
+          <h3 className="text-sm font-semibold text-foreground mb-4">Como funciona</h3>
+          {[
+            { text: "Copie seu link de afiliado", icon: Link2, color: "#2D6FF0" },
+            { text: "Compartilhe em redes sociais, grupos, Discord", icon: Megaphone, color: "#7C3AED" },
+            { text: "Ganhe 10% de cada venda realizada", icon: DollarSign, color: "#00A650" },
+          ].map((step, i) => (
+            <div key={i} className="flex gap-3 items-center mb-3 last:mb-0">
+              <div className="h-9 w-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: `${step.color}12` }}>
+                <step.icon className="h-4 w-4" style={{ color: step.color }} />
+              </div>
+              <div>
+                <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wide">Passo {i + 1}</p>
+                <p className="text-[13px] text-foreground font-medium">{step.text}</p>
+              </div>
             </div>
           ))}
         </div>
 
         {/* History */}
         {history.length > 0 && (
-          <div className="bg-white rounded-xl border border-[#E8E8E8] overflow-hidden">
-            <h3 className="text-sm font-semibold text-[#111] px-4 pt-4 pb-2">Histórico de comissões</h3>
+          <div className="bg-card rounded-xl border border-border overflow-hidden">
+            <h3 className="text-sm font-semibold text-foreground px-5 pt-4 pb-2">Histórico de comissões</h3>
             <div className="overflow-x-auto">
               <table className="w-full text-[13px]">
                 <thead>
-                  <tr className="border-b border-[#F0F0F0]">
-                    <th className="text-left px-4 py-2 text-[11px] text-[#999] font-medium">Data</th>
-                    <th className="text-right px-4 py-2 text-[11px] text-[#999] font-medium">Comissão</th>
-                    <th className="text-right px-4 py-2 text-[11px] text-[#999] font-medium">Status</th>
+                  <tr className="border-b border-border">
+                    <th className="text-left px-5 py-2.5 text-[11px] text-muted-foreground font-medium">Data</th>
+                    <th className="text-right px-5 py-2.5 text-[11px] text-muted-foreground font-medium">Comissão</th>
+                    <th className="text-right px-5 py-2.5 text-[11px] text-muted-foreground font-medium">Status</th>
                   </tr>
                 </thead>
                 <tbody>
                   {history.map((h: any) => (
-                    <tr key={h.id} className="border-b border-[#F5F5F5] last:border-b-0">
-                      <td className="px-4 py-2.5 text-[#666]">{new Date(h.created_at).toLocaleDateString("pt-BR")}</td>
-                      <td className="px-4 py-2.5 text-right text-success font-semibold">R$ {Number(h.commission_amount || 0).toFixed(2)}</td>
-                      <td className="px-4 py-2.5 text-right">
-                        <span className={`text-[11px] px-2 py-0.5 rounded-full font-medium ${
-                          h.status === "paid" ? "bg-success/10 text-success" : "bg-[#FF6900]/10 text-[#FF6900]"
+                    <tr key={h.id} className="border-b border-border/50 last:border-b-0">
+                      <td className="px-5 py-3 text-muted-foreground">{new Date(h.created_at).toLocaleDateString("pt-BR")}</td>
+                      <td className="px-5 py-3 text-right text-success font-semibold">R$ {Number(h.commission_amount || 0).toFixed(2)}</td>
+                      <td className="px-5 py-3 text-right">
+                        <span className={`text-[11px] px-2.5 py-1 rounded-full font-medium ${
+                          h.status === "paid" ? "bg-success/10 text-success" : "bg-warning/10 text-warning"
                         }`}>
                           {h.status === "paid" ? "Pago" : "Pendente"}
                         </span>
