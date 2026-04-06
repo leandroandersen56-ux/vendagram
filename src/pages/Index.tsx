@@ -407,7 +407,7 @@ export default function Index() {
                   <img
                     src={bannerGamesSection}
                     alt="Free Fire"
-                    className="w-full h-[140px] md:h-[200px] object-cover"
+                    className="w-full h-[180px] md:h-[260px] object-cover"
                     loading="lazy"
                   />
                   <div className="absolute inset-y-0 left-0 w-3/5 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
