@@ -473,14 +473,10 @@ export default function CreateListing() {
                   style={{ background: '#2D6FF0', boxShadow: '0 4px 16px rgba(45,111,240,0.40)' }}
                 >
                   <div
-                    className="w-7 h-7 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0"
-                    style={{ background: selectedVisual?.gradient }}
+                    className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
+                    style={{ background: selectedVisual?.bg }}
                   >
-                    {preSelected === 'other' ? (
-                      <Globe className="w-4 h-4 text-white" />
-                    ) : (
-                      <PlatformIcon platformId={preSelected} size={18} className="[&_svg]:!text-white [&_path]:!fill-white" />
-                    )}
+                    <WhiteIcon id={preSelected} />
                   </div>
                   Continuar com {selectedPlatformData.name} →
                 </button>
