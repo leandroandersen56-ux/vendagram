@@ -311,7 +311,7 @@ export default function Index() {
                   </div>
                 </div>
               </div>
-              <div className="mt-4 flex gap-2 sm:justify-end">
+              <div className="mt-4 flex gap-2 sm:justify-start">
                 <button
                   className="h-9 flex-1 sm:flex-none sm:px-6 text-[12px] font-medium rounded-lg border border-border bg-card text-txt-primary hover:bg-muted transition-colors"
                   onClick={() => { setSortBy("recent"); setPriceRange([0, 10000]); setMinFollowers(0); }}
