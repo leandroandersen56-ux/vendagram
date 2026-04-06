@@ -131,6 +131,8 @@ export default function Navbar() {
   useEffect(() => {
     setNotifOpen(false);
     setFavOpen(false);
+    setSearchOpen(false);
+    setSearchQuery("");
   }, [location.pathname]);
 
   return (
