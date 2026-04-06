@@ -18,7 +18,7 @@ import { supabase } from "@/integrations/supabase/client";
 import bannerHero1 from "@/assets/banners/banner-hero-1.jpg";
 import bannerHero2 from "@/assets/banners/banner-hero-2-notext.jpg";
 import bannerHero3 from "@/assets/banners/banner-hero-3.jpg";
-import bannerMobileLegends from "@/assets/banners/banner-mobile-legends.jpg";
+import bannerGamesSection from "@/assets/banners/banner-games-section.jpg";
 
 import catMinecraft from "@/assets/categories/minecraft.jpg";
 import catFreefire from "@/assets/categories/freefire.jpg";
