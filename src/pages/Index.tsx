@@ -311,15 +311,15 @@ export default function Index() {
                   </div>
                 </div>
               </div>
-              <div className="mt-4 flex gap-2">
+              <div className="mt-4 flex gap-2 sm:justify-end">
                 <button
-                  className="h-9 flex-1 text-[12px] font-medium rounded-lg border border-border bg-card text-txt-primary hover:bg-muted transition-colors"
+                  className="h-9 flex-1 sm:flex-none sm:px-6 text-[12px] font-medium rounded-lg border border-border bg-card text-txt-primary hover:bg-muted transition-colors"
                   onClick={() => { setSortBy("recent"); setPriceRange([0, 10000]); setMinFollowers(0); }}
                 >
                   Limpar
                 </button>
                 <button
-                  className="h-9 flex-1 text-[12px] font-semibold rounded-lg bg-primary text-white hover:bg-primary-dark transition-colors"
+                  className="h-9 flex-1 sm:flex-none sm:px-8 text-[12px] font-semibold rounded-lg bg-primary text-white hover:bg-primary-dark transition-colors"
                   onClick={() => setShowFilterMenu(false)}
                 >
                   Aplicar
