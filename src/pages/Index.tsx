@@ -36,9 +36,9 @@ const GAME_CATEGORIES = [
 ];
 
 const BANNERS = [
-  { img: bannerHero1, title: "Compra 100% Segura", subtitle: "Pagamento protegido com escrow automático", cta: "Saiba mais", link: "/marketplace" },
-  { img: bannerHero2, title: "Contas de Jogos", subtitle: "Free Fire, Valorant, Fortnite e mais", cta: "Ver contas", link: "/marketplace?type=games" },
-  { img: bannerHero3, title: "Entrega Imediata", subtitle: "Receba sua conta em minutos", cta: "Explorar", link: "/marketplace?type=social" },
+  { img: bannerHero1, title: "Contas de Instagram", subtitle: "Perfis verificados, engajados e prontos para monetizar", cta: "Ver contas", link: "/marketplace" },
+  { img: bannerHero2, title: "Contas Free Fire", subtitle: "Skins raras, ranks altos e contas completas", cta: "Ver contas", link: "/marketplace?type=games" },
+  { img: bannerHero3, title: "Contas TikTok", subtitle: "Perfis com seguidores reais e lives liberadas", cta: "Explorar", link: "/marketplace?type=social" },
 ];
 
 const QUICK_CATEGORIES = [
