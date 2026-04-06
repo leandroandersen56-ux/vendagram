@@ -1,5 +1,8 @@
 import PageHeader from "@/components/menu/PageHeader";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import { ShoppingCart, Lock, CheckCircle, Wallet } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const STEPS = [
   { icon: ShoppingCart, color: "bg-[#E8F0FF]", iconColor: "text-primary", title: "Compra realizada", desc: "O comprador escolhe a conta e realiza o pagamento via Pix ou Cartão de Crédito." },
@@ -10,9 +13,21 @@ const STEPS = [
 
 export default function HowEscrowWorks() {
   return (
-    <div className="min-h-screen bg-[#F5F5F5] pb-20">
+    <div className="min-h-screen bg-[#F5F5F5] pb-20 sm:pb-0">
+      <Navbar />
       <PageHeader title="Como funciona o Escrow" />
-      <div className="px-4 pt-4 space-y-4">
+      <div className="container mx-auto px-4 pt-4 sm:pt-24 pb-16 space-y-4 max-w-3xl">
+        <div className="hidden sm:block mb-2">
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-2">
+            <Link to="/" className="hover:text-foreground transition-colors">Início</Link>
+            <span>/</span>
+            <Link to="/ajuda" className="hover:text-foreground transition-colors">Ajuda</Link>
+            <span>/</span>
+            <span className="text-foreground font-medium">Como funciona o Escrow</span>
+          </div>
+          <h1 className="text-2xl font-semibold text-foreground">Como funciona o Escrow</h1>
+        </div>
+
         <div className="bg-white rounded-2xl border border-[#E8E8E8] p-4">
           <h2 className="text-[15px] font-semibold text-[#111] mb-2">Proteção para comprador e vendedor</h2>
           <p className="text-[13px] text-[#666] leading-relaxed">
@@ -23,7 +38,6 @@ export default function HowEscrowWorks() {
         <div className="relative space-y-0">
           {STEPS.map((step, i) => (
             <div key={i} className="flex gap-3 relative">
-              {/* Vertical line */}
               {i < STEPS.length - 1 && (
                 <div className="absolute left-5 top-10 w-0.5 h-[calc(100%)] bg-[#E0E0E0]" />
               )}
@@ -44,6 +58,7 @@ export default function HowEscrowWorks() {
           </p>
         </div>
       </div>
+      <div className="hidden sm:block"><Footer /></div>
     </div>
   );
 }

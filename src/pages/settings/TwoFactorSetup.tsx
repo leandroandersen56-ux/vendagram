@@ -4,7 +4,7 @@ import { ShieldCheck, Copy, Check, AlertTriangle, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import PageHeader from "@/components/menu/PageHeader";
+import DesktopPageShell from "@/components/DesktopPageShell";
 import { toast } from "sonner";
 import QRCode from "react-qr-code";
 
@@ -108,22 +108,21 @@ export default function TwoFactorSetup() {
     setTimeout(() => setCopied(false), 2000);
   }
 
+  const breadcrumbs = [{ label: "Início", to: "/" }, { label: "Configurações", to: "/configuracoes" }, { label: "Autenticação 2FA" }];
+
   if (step === "loading") {
     return (
-      <div className="min-h-screen bg-[#F5F5F5] pb-20">
-        <PageHeader title="Autenticação 2FA" />
+      <DesktopPageShell title="Autenticação 2FA" breadcrumbs={breadcrumbs}>
         <div className="flex items-center justify-center pt-20">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
-      </div>
+      </DesktopPageShell>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#F5F5F5] pb-20">
-      <PageHeader title="Autenticação 2FA" />
-
-      <div className="p-4 space-y-4">
+    <DesktopPageShell title="Autenticação 2FA" breadcrumbs={breadcrumbs}>
+      <div className="space-y-4">
         <AnimatePresence mode="wait">
           {step === "already_active" && (
             <motion.div
@@ -253,6 +252,6 @@ export default function TwoFactorSetup() {
           )}
         </AnimatePresence>
       </div>
-    </div>
+    </DesktopPageShell>
   );
 }

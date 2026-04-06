@@ -10,7 +10,7 @@ export default function PageHeader({ title, rightAction }: PageHeaderProps) {
   const navigate = useNavigate();
 
   return (
-    <div className="sticky top-0 z-30 bg-primary px-4 h-14 flex items-center gap-3">
+    <div className="sticky top-0 z-30 bg-primary px-4 h-14 flex items-center gap-3 sm:hidden">
       <button
         onClick={() => navigate(-1)}
         className="h-9 w-9 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors"

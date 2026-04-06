@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Search, ShoppingCart, Package, Scale, Lock, Wallet, FileText, MessageCircle, ChevronDown } from "lucide-react";
 import PageHeader from "@/components/menu/PageHeader";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import { motion, AnimatePresence } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const CATEGORIES = [
   { icon: ShoppingCart, label: "Problemas com compra", color: "bg-[#E8F0FF]", path: "/ajuda/problemas-compra" },
@@ -38,10 +40,21 @@ export default function HelpPage() {
   );
 
   return (
-    <div className="min-h-screen bg-[#F5F5F5] pb-20">
+    <div className="min-h-screen bg-[#F5F5F5] pb-20 sm:pb-0">
+      <Navbar />
       <PageHeader title="Ajuda" />
 
-      <div className="px-4 pt-3 space-y-4">
+      <div className="container mx-auto px-4 pt-3 sm:pt-24 pb-16 space-y-4 max-w-3xl">
+        {/* Desktop breadcrumb & title */}
+        <div className="hidden sm:block mb-2">
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-2">
+            <Link to="/" className="hover:text-foreground transition-colors">Início</Link>
+            <span>/</span>
+            <span className="text-foreground font-medium">Ajuda</span>
+          </div>
+          <h1 className="text-2xl font-semibold text-foreground">Central de Ajuda</h1>
+        </div>
+
         {/* Search */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#999]" />
@@ -54,7 +67,7 @@ export default function HelpPage() {
         </div>
 
         {/* Categories */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {CATEGORIES.map((cat) => (
             <button
               key={cat.label}
@@ -103,9 +116,16 @@ export default function HelpPage() {
         </div>
 
         {/* Contact */}
-        <button className="w-full flex items-center justify-center gap-2 bg-primary text-white py-3.5 rounded-xl text-[14px] font-semibold">
+        <button
+          onClick={() => navigate("/contato")}
+          className="w-full flex items-center justify-center gap-2 bg-primary text-white py-3.5 rounded-xl text-[14px] font-semibold"
+        >
           <MessageCircle className="h-5 w-5" /> Falar com suporte
         </button>
+      </div>
+
+      <div className="hidden sm:block">
+        <Footer />
       </div>
     </div>
   );

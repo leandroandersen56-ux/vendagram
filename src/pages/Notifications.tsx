@@ -4,8 +4,8 @@ import {
   ShoppingBag, CheckCircle, MessageCircle, Star, Package,
   AlertTriangle, Wallet, Tag
 } from "lucide-react";
-import PageHeader from "@/components/menu/PageHeader";
 import { Bell } from "lucide-react";
+import DesktopPageShell from "@/components/DesktopPageShell";
 
 const NOTIF_TYPES: Record<string, { icon: React.ElementType; bg: string }> = {
   purchase: { icon: ShoppingBag, bg: "bg-[#E8F0FF]" },
@@ -31,30 +31,31 @@ export default function Notifications() {
   const [notifs, setNotifs] = useState(MOCK);
 
   const markAllRead = () => setNotifs(notifs.map((n) => ({ ...n, read: true })));
-  const removeNotif = (id: number) => setNotifs(notifs.filter((n) => n.id !== id));
-
   const groups = ["Hoje", "Esta semana", "Anteriores"].filter((g) => notifs.some((n) => n.group === g));
 
   return (
-    <div className="min-h-screen bg-[#F5F5F5] pb-20">
-      <PageHeader
-        title="Notificações"
-        rightAction={
-          <button onClick={markAllRead} className="text-[13px] text-white/80 hover:text-white">
-            Marcar todas como lidas
-          </button>
-        }
-      />
-
-      {notifs.length === 0 ? (
-        <div className="text-center py-16 px-4">
-          <Bell className="h-16 w-16 text-[#DDD] mx-auto mb-3" strokeWidth={1} />
-          <p className="text-[#333] font-semibold">Sem notificações</p>
-          <p className="text-[#999] text-sm mt-1">Quando algo acontecer, você verá aqui</p>
+    <DesktopPageShell
+      title="Notificações"
+      rightAction={
+        <button onClick={markAllRead} className="text-[13px] text-white/80 hover:text-white sm:hidden">
+          Marcar todas como lidas
+        </button>
+      }
+    >
+      <div className="space-y-2">
+        {/* Desktop mark all read */}
+        <div className="hidden sm:flex justify-end mb-2">
+          <button onClick={markAllRead} className="text-xs text-primary hover:underline">Marcar todas como lidas</button>
         </div>
-      ) : (
-        <div className="px-4 pt-2">
-          {groups.map((group) => (
+
+        {notifs.length === 0 ? (
+          <div className="text-center py-16 px-4">
+            <Bell className="h-16 w-16 text-[#DDD] mx-auto mb-3" strokeWidth={1} />
+            <p className="text-[#333] font-semibold">Sem notificações</p>
+            <p className="text-[#999] text-sm mt-1">Quando algo acontecer, você verá aqui</p>
+          </div>
+        ) : (
+          groups.map((group) => (
             <div key={group}>
               <p className="text-[12px] text-[#999] uppercase font-semibold pt-4 pb-2">{group}</p>
               <AnimatePresence>
@@ -85,9 +86,9 @@ export default function Notifications() {
                   })}
               </AnimatePresence>
             </div>
-          ))}
-        </div>
-      )}
-    </div>
+          ))
+        )}
+      </div>
+    </DesktopPageShell>
   );
 }

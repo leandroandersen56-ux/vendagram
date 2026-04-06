@@ -1,6 +1,8 @@
 import PageHeader from "@/components/menu/PageHeader";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import { ShieldCheck, AlertTriangle, MessageCircle, Clock } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const STEPS = [
   { icon: Clock, title: "Aguarde o prazo", desc: "Após o pagamento, o vendedor tem até 24 horas para entregar os dados de acesso. Se o prazo não for cumprido, você pode abrir uma disputa." },
@@ -13,9 +15,21 @@ export default function PurchaseProblems() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-[#F5F5F5] pb-20">
+    <div className="min-h-screen bg-[#F5F5F5] pb-20 sm:pb-0">
+      <Navbar />
       <PageHeader title="Problemas com compra" />
-      <div className="px-4 pt-4 space-y-4">
+      <div className="container mx-auto px-4 pt-4 sm:pt-24 pb-16 space-y-4 max-w-3xl">
+        <div className="hidden sm:block mb-2">
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-2">
+            <Link to="/" className="hover:text-foreground transition-colors">Início</Link>
+            <span>/</span>
+            <Link to="/ajuda" className="hover:text-foreground transition-colors">Ajuda</Link>
+            <span>/</span>
+            <span className="text-foreground font-medium">Problemas com compra</span>
+          </div>
+          <h1 className="text-2xl font-semibold text-foreground">Problemas com compra</h1>
+        </div>
+
         <div className="bg-white rounded-2xl border border-[#E8E8E8] p-4">
           <h2 className="text-[15px] font-semibold text-[#111] mb-2">O que fazer se algo deu errado?</h2>
           <p className="text-[13px] text-[#666] leading-relaxed">
@@ -44,6 +58,7 @@ export default function PurchaseProblems() {
           <MessageCircle className="h-5 w-5" /> Falar com suporte
         </button>
       </div>
+      <div className="hidden sm:block"><Footer /></div>
     </div>
   );
 }
