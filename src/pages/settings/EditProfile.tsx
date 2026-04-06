@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Camera } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import PageHeader from "@/components/menu/PageHeader";
+import DesktopPageShell from "@/components/DesktopPageShell";
 
 export default function EditProfile() {
   const { user } = useAuth();
@@ -35,9 +34,8 @@ export default function EditProfile() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F5F5] pb-24">
-      <PageHeader title="Editar perfil" />
-      <div className="p-4 space-y-3">
+    <DesktopPageShell title="Editar perfil" breadcrumbs={[{ label: "Início", to: "/" }, { label: "Configurações", to: "/configuracoes" }, { label: "Editar perfil" }]}>
+      <div className="space-y-3">
         <div className="bg-white rounded-2xl border border-[#F0F0F0] overflow-hidden divide-y divide-[#F0F0F0]">
           <div className="p-4">
             <label className="text-[12px] text-[#999] font-medium block mb-1.5">Nome</label>
@@ -60,12 +58,10 @@ export default function EditProfile() {
             <Input value={form.whatsapp} onChange={(e) => setForm({ ...form, whatsapp: e.target.value })} placeholder="(11) 99999-9999" className="bg-transparent border-[#E8E8E8] h-11 rounded-xl" />
           </div>
         </div>
-      </div>
-      <div className="fixed bottom-[60px] left-0 right-0 z-40 px-4 pb-4 pt-3" style={{ background: 'linear-gradient(to top, #F5F5F5 60%, transparent)' }}>
-        <button onClick={handleSave} disabled={loading} className="w-full h-[52px] rounded-[14px] text-white text-base font-semibold disabled:opacity-40" style={{ background: '#2D6FF0', boxShadow: '0 4px 16px rgba(45,111,240,0.40)' }}>
+        <button onClick={handleSave} disabled={loading} className="w-full h-[52px] rounded-[14px] text-white text-base font-semibold disabled:opacity-40 bg-primary">
           {loading ? "Salvando..." : "Salvar"}
         </button>
       </div>
-    </div>
+    </DesktopPageShell>
   );
 }
