@@ -253,15 +253,17 @@ export default function CreateListing() {
     if (items.length > 0) highlights["Itens"] = items;
     feats.forEach((f) => (highlights[f] = true));
 
-    // Encode credentials (base64 for now, decrypted server-side)
-    const credentialsData = JSON.stringify({
-      login: credLogin.trim(),
-      password: credPassword.trim(),
-      ...(credEmail.trim() && { email: credEmail.trim() }),
-      ...(cred2fa.trim() && { twofa: cred2fa.trim() }),
-      ...(credNotes.trim() && { notes: credNotes.trim() }),
-    });
-    const encoded = btoa(unescape(encodeURIComponent(credentialsData)));
+    let encoded: string | null = null;
+    if (credDeliveryMode === "prefill") {
+      const credentialsData = JSON.stringify({
+        login: credLogin.trim(),
+        password: credPassword.trim(),
+        ...(credEmail.trim() && { email: credEmail.trim() }),
+        ...(cred2fa.trim() && { twofa: cred2fa.trim() }),
+        ...(credNotes.trim() && { notes: credNotes.trim() }),
+      });
+      encoded = btoa(unescape(encodeURIComponent(credentialsData)));
+    }
 
     const { error } = await supabase.from("listings").insert({
       title,
