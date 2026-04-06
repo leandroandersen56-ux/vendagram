@@ -384,7 +384,7 @@ export default function Index() {
                       <ListingCard listing={listing} />
                     </div>
                   ) : (
-                    <div key={i} className="flex-shrink-0 w-[140px] sm:w-[180px] md:w-[200px]">
+                    <div key={i} className="flex-shrink-0 w-[calc(50%-6px)] sm:w-[180px] md:w-[200px]">
                       <SkeletonCard />
                     </div>
                   )
