@@ -267,8 +267,7 @@ export default function Index() {
         </section>
 
         {/* Filter panel */}
-        {(showFilterMenu || window.innerWidth >= 640) && (
-          <section className="bg-card border-b border-border">
+        <section className={`bg-card border-b border-border ${showFilterMenu ? 'block' : 'hidden sm:block'}`}>
             <div className="container mx-auto py-4">
               <div className="grid gap-4 md:grid-cols-3">
                 <div>
