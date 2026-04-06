@@ -208,6 +208,15 @@ export default function CreateListing() {
       return;
     }
 
+    // Content moderation on title and description
+    const titleMod = moderateText(title);
+    const descMod = moderateText(description);
+    if (titleMod.blocked || descMod.blocked) {
+      const msg = titleMod.blocked ? getModerationMessage(titleMod) : getModerationMessage(descMod);
+      toast({ title: "Conteúdo bloqueado", description: msg, variant: "destructive" });
+      return;
+    }
+
     setLoading(true);
     const highlights: Record<string, string | boolean | string[]> = {};
     if (followers) highlights["Seguidores"] = followers;
