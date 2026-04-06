@@ -410,25 +410,42 @@ export default function Index() {
               <div className="space-y-6">
                 {social.length > 0 && (
                   <div>
-                    {/* Social Section Banner */}
-                    <Link to="/marketplace?type=social" className="block rounded-2xl overflow-hidden relative mb-4">
-                      <img
-                        src={bannerSocialSection}
-                        alt="YouTube"
-                        className="w-full h-[180px] md:h-[260px] object-cover"
-                        loading="lazy"
-                      />
-                      <div className="absolute inset-y-0 left-0 w-3/5 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
-                      <div className="absolute inset-0 flex items-center">
-                        <div className="px-5 sm:px-8 md:px-12 max-w-sm">
-                          <h2 className="text-white text-sm sm:text-lg md:text-2xl font-semibold leading-tight">Canais YouTube</h2>
-                          <p className="text-white/80 text-[10px] sm:text-xs md:text-sm mt-1 whitespace-pre-line">{"Canais monetizados, inscritos\ne audiência garantida"}</p>
-                          <span className="inline-block mt-2 md:mt-3 text-[10px] sm:text-xs font-semibold text-white border border-white/40 rounded-lg px-3 py-1 md:py-1.5 hover:bg-white/10 transition-colors">
-                            Explorar →
-                          </span>
+                    {/* Social Section Banner Carousel */}
+                    {(() => {
+                      const socialBanners = [
+                        { img: bannerSocialSection, alt: "YouTube", title: "Canais YouTube", subtitle: "Canais monetizados, inscritos\ne audiência garantida", link: "/marketplace?category=youtube" },
+                        { img: bannerSocialFacebook, alt: "Facebook", title: "Páginas Facebook", subtitle: "Páginas com seguidores,\nalcance e engajamento real", link: "/marketplace?category=facebook" },
+                      ];
+                      const [socialSlide, setSocialSlide] = React.useState(0);
+                      React.useEffect(() => {
+                        const t = setInterval(() => setSocialSlide(p => (p + 1) % socialBanners.length), 4000);
+                        return () => clearInterval(t);
+                      }, []);
+                      return (
+                        <div className="relative rounded-2xl overflow-hidden mb-4">
+                          {socialBanners.map((sb, i) => (
+                            <Link key={i} to={sb.link} className={`block ${i === socialSlide ? '' : 'hidden'}`}>
+                              <img src={sb.img} alt={sb.alt} className="w-full h-[180px] md:h-[260px] object-cover" loading="lazy" />
+                              <div className="absolute inset-y-0 left-0 w-3/5 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
+                              <div className="absolute inset-0 flex items-center">
+                                <div className="px-5 sm:px-8 md:px-12 max-w-sm">
+                                  <h2 className="text-white text-sm sm:text-lg md:text-2xl font-semibold leading-tight">{sb.title}</h2>
+                                  <p className="text-white/80 text-[10px] sm:text-xs md:text-sm mt-1 whitespace-pre-line">{sb.subtitle}</p>
+                                  <span className="inline-block mt-2 md:mt-3 text-[10px] sm:text-xs font-semibold text-white border border-white/40 rounded-lg px-3 py-1 md:py-1.5 hover:bg-white/10 transition-colors">
+                                    Explorar →
+                                  </span>
+                                </div>
+                              </div>
+                            </Link>
+                          ))}
+                          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+                            {socialBanners.map((_, i) => (
+                              <button key={i} onClick={(e) => { e.preventDefault(); setSocialSlide(i); }} className={`w-2 h-2 rounded-full transition-all ${i === socialSlide ? 'bg-white w-4' : 'bg-white/50'}`} />
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    </Link>
+                      );
+                    })()}
 
                     <div className="flex items-center justify-between mb-3">
                       <h3 className="text-[15px] font-semibold text-txt-primary flex items-center gap-2">
