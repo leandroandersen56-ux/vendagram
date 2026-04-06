@@ -407,7 +407,7 @@ export default function Index() {
         <section className="py-2">
           <div className="container mx-auto">
             {loading ? (
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
                 {Array(6).fill(null).map((_, i) => <SkeletonCard key={i} />)}
               </div>
             ) : filtered.length > 0 ? (
@@ -454,8 +454,8 @@ export default function Index() {
                         Ver todos <ArrowRight className="h-3 w-3" />
                       </Link>
                     </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-                      {social.slice(0, 4).map((listing) => <ListingCard key={listing.id} listing={listing} />)}
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                      {social.slice(0, 5).map((listing) => <ListingCard key={listing.id} listing={listing} />)}
                     </div>
                   </div>
                 )}
@@ -535,8 +535,8 @@ export default function Index() {
                         Ver todos <ArrowRight className="h-3 w-3" />
                       </Link>
                     </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-                      {games.slice(0, 4).map((listing) => <ListingCard key={listing.id} listing={listing} />)}
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                      {games.slice(0, 5).map((listing) => <ListingCard key={listing.id} listing={listing} />)}
                     </div>
                   </div>
                 )}
