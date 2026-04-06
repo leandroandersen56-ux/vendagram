@@ -88,6 +88,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 }
 
 function AppRoutes() {
+  useMessageToasts();
   return (
     <>
       <PWAInstallBanner />
