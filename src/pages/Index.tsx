@@ -452,22 +452,38 @@ export default function Index() {
                       Ver todos <ArrowRight className="h-3 w-3" />
                     </Link>
                   </div>
-                  <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 -mx-1 px-1 sm:grid sm:grid-cols-6 sm:overflow-visible sm:mx-0 sm:px-0">
-                    {GAME_CATEGORIES.map((cat) => (
-                      <button
-                        key={cat.id}
-                        onClick={() => setSelectedPlatform(selectedPlatform === cat.id ? null : cat.id)}
-                        className="flex-shrink-0 group w-[calc((100vw-2rem-36px)/4)] sm:w-auto"
-                      >
-                        <div className={`relative aspect-[3/4] rounded-2xl overflow-hidden transition-all ${selectedPlatform === cat.id ? 'ring-2 ring-primary ring-offset-2' : ''}`}>
-                          <img src={cat.img} alt={cat.label} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                          <span className="absolute bottom-2.5 left-0 right-0 text-center text-white text-[13px] font-semibold drop-shadow-lg">
-                            {cat.label}
-                          </span>
-                        </div>
-                      </button>
-                    ))}
+                  <div className="relative">
+                    <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 -mx-1 px-1 snap-x snap-mandatory fade-edges sm:grid sm:grid-cols-6 sm:overflow-visible sm:mx-0 sm:px-0" id="game-categories-scroll">
+                      {GAME_CATEGORIES.map((cat) => (
+                        <button
+                          key={cat.id}
+                          onClick={() => setSelectedPlatform(selectedPlatform === cat.id ? null : cat.id)}
+                          className="flex-shrink-0 group w-[calc((100vw-2rem-24px)/3)] sm:w-auto snap-start"
+                        >
+                          <div className={`relative aspect-[3/4] rounded-2xl overflow-hidden transition-all ${selectedPlatform === cat.id ? 'ring-2 ring-primary ring-offset-2' : ''}`}>
+                            <img src={cat.img} alt={cat.label} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                            <span className="absolute bottom-2.5 left-0 right-0 text-center text-white text-[13px] font-semibold drop-shadow-lg">
+                              {cat.label}
+                            </span>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                    <button
+                      onClick={() => document.getElementById('game-categories-scroll')?.scrollBy({ left: -300, behavior: 'smooth' })}
+                      className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition sm:hidden"
+                      aria-label="Anterior"
+                    >
+                      <ChevronLeft className="h-4 w-4 text-txt-primary" />
+                    </button>
+                    <button
+                      onClick={() => document.getElementById('game-categories-scroll')?.scrollBy({ left: 300, behavior: 'smooth' })}
+                      className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition sm:hidden"
+                      aria-label="Próximo"
+                    >
+                      <ChevronRight className="h-4 w-4 text-txt-primary" />
+                    </button>
                   </div>
                 </div>
 
