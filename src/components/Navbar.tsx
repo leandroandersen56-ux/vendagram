@@ -34,7 +34,47 @@ export default function Navbar() {
   const navigate = useNavigate();
   const { user, isAuthenticated, openAuth, logout } = useAuth();
   const { favorites, loading: favLoading, fetchFavorites: fetchFavs } = useFavorites();
-  const [favOpen, setFavOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<Array<{ id: string; title: string; price: number; category: string; screenshots: string[] | null }>>([]);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
+  const searchTimerRef = useRef<ReturnType<typeof setTimeout>>();
+
+  // Debounced search
+  useEffect(() => {
+    if (searchQuery.trim().length < 2) {
+      setSearchResults([]);
+      setSearchOpen(false);
+      return;
+    }
+    setSearchLoading(true);
+    setSearchOpen(true);
+    clearTimeout(searchTimerRef.current);
+    searchTimerRef.current = setTimeout(async () => {
+      const { data } = await supabase
+        .from("listings")
+        .select("id, title, price, category, screenshots")
+        .eq("status", "active")
+        .ilike("title", `%${searchQuery.trim()}%`)
+        .limit(6);
+      setSearchResults(data || []);
+      setSearchLoading(false);
+    }, 300);
+    return () => clearTimeout(searchTimerRef.current);
+  }, [searchQuery]);
+
+  // Close search dropdown on click outside
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+        setSearchOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
 
   const unreadCount = notifications.filter((n) => !n.read).length;
 
