@@ -373,7 +373,7 @@ export default function Index() {
                       <ListingCard listing={listing} />
                     </div>
                   ) : (
-                    <div key={i} className="flex-shrink-0 w-[160px] sm:w-[180px] md:w-[200px]">
+                    <div key={i} className="flex-shrink-0 w-[calc((100vw-2rem-24px)/3)] sm:w-[180px] md:w-[200px]">
                       <SkeletonCard />
                     </div>
                   )
