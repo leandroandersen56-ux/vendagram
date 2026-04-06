@@ -327,7 +327,6 @@ export default function Index() {
               </div>
             </div>
           </section>
-        )}
 
         {/* Active filter pills */}
         {(selectedPlatform || sortBy !== "recent" || priceRange[0] > 0 || priceRange[1] < 10000 || minFollowers > 0) && (
