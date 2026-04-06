@@ -369,11 +369,11 @@ export default function Index() {
               <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 -mx-1 px-1 snap-x snap-mandatory fade-edges" id="destaques-scroll">
                 {(loading ? Array(8).fill(null) : filtered.slice(0, 10)).map((listing, i) =>
                   listing ? (
-                    <div key={listing.id} className="flex-shrink-0 w-[160px] sm:w-[180px] md:w-[200px] snap-start">
+                    <div key={listing.id} className="flex-shrink-0 w-[calc((100vw-2rem-24px)/3)] sm:w-[180px] md:w-[200px] snap-start">
                       <ListingCard listing={listing} />
                     </div>
                   ) : (
-                    <div key={i} className="flex-shrink-0 w-[160px] sm:w-[180px] md:w-[200px]">
+                    <div key={i} className="flex-shrink-0 w-[calc((100vw-2rem-24px)/3)] sm:w-[180px] md:w-[200px]">
                       <SkeletonCard />
                     </div>
                   )
