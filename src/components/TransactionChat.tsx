@@ -170,6 +170,13 @@ export default function TransactionChat({ transactionId, otherUserName = "Usuár
         )}
       </div>
 
+      {moderationWarning && (
+        <div className="px-3 py-2 bg-red-50 border-t border-red-200 flex items-start gap-2">
+          <ShieldAlert className="h-4 w-4 text-red-500 shrink-0 mt-0.5" />
+          <p className="text-[11px] text-red-600 leading-tight">{moderationWarning}</p>
+        </div>
+      )}
+
       <div className="px-3 py-2 border-t border-[#E8E8E8] flex items-center gap-2">
         <input
           value={newMessage}
