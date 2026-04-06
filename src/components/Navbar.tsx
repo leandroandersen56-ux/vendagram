@@ -218,7 +218,7 @@ export default function Navbar() {
 
           {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-1 shrink-0">
-            <Link to="/">
+            <Link to="/marketplace">
               <Button variant="ghost" size="sm" className="text-white/80 hover:text-white hover:bg-white/10 gap-1.5 text-[13px]">
                 <ShoppingBag className="h-4 w-4" /> Explorar
               </Button>
