@@ -381,14 +381,14 @@ export default function Index() {
               </div>
               <button
                 onClick={() => document.getElementById('destaques-scroll')?.scrollBy({ left: -300, behavior: 'smooth' })}
-                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border items-center justify-center hover:bg-muted transition hidden md:flex"
+                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition"
                 aria-label="Anterior"
               >
                 <ChevronLeft className="h-4 w-4 text-txt-primary" />
               </button>
               <button
                 onClick={() => document.getElementById('destaques-scroll')?.scrollBy({ left: 300, behavior: 'smooth' })}
-                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border items-center justify-center hover:bg-muted transition hidden md:flex"
+                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition"
                 aria-label="Próximo"
               >
                 <ChevronRight className="h-4 w-4 text-txt-primary" />
