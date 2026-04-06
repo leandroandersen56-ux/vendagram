@@ -180,7 +180,7 @@ export default function TransactionChat({ transactionId, otherUserName = "Usuár
       <div className="px-3 py-2 border-t border-[#E8E8E8] flex items-center gap-2">
         <input
           value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
+          onChange={(e) => { setNewMessage(e.target.value); if (moderationWarning) setModerationWarning(""); }}
           onKeyDown={handleKeyDown}
           placeholder="Escreva uma mensagem..."
           className="flex-1 h-9 px-4 rounded-full border border-[#DDD] text-[13px] bg-[#F9F9F9] focus:outline-none focus:ring-2 focus:ring-primary/30"
