@@ -24,6 +24,7 @@ export default function TransactionChat({ transactionId, otherUserName = "Usuár
   const [newMessage, setNewMessage] = useState("");
   const [sending, setSending] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [moderationWarning, setModerationWarning] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
