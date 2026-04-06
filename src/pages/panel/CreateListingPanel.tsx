@@ -153,6 +153,7 @@ export default function CreateListing() {
   const [credEmail, setCredEmail] = useState("");
   const [cred2fa, setCred2fa] = useState("");
   const [credNotes, setCredNotes] = useState("");
+  const [credDeliveryMode, setCredDeliveryMode] = useState<"prefill" | "chat">("prefill");
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
