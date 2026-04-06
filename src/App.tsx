@@ -50,6 +50,22 @@ import OpenDispute from "./pages/help/OpenDispute.tsx";
 import HowEscrowWorks from "./pages/help/HowEscrowWorks.tsx";
 import WithdrawalsPayments from "./pages/help/WithdrawalsPayments.tsx";
 import HowToList from "./pages/help/HowToList.tsx";
+
+// Super Admin
+import SuperAdminGuard from "./pages/trynda/SuperAdminGuard.tsx";
+import SuperAdminLayout from "./pages/trynda/SuperAdminLayout.tsx";
+import SuperAdminDashboard from "./pages/trynda/SuperAdminDashboard.tsx";
+import SuperAdminUsers from "./pages/trynda/SuperAdminUsers.tsx";
+import SuperAdminListings from "./pages/trynda/SuperAdminListings.tsx";
+import SuperAdminFinancial from "./pages/trynda/SuperAdminFinancial.tsx";
+import SuperAdminDisputes from "./pages/trynda/SuperAdminDisputes.tsx";
+import SuperAdminWithdrawals from "./pages/trynda/SuperAdminWithdrawals.tsx";
+import SuperAdminNotifications from "./pages/trynda/SuperAdminNotifications.tsx";
+import SuperAdminEmails from "./pages/trynda/SuperAdminEmails.tsx";
+import SuperAdminStorage from "./pages/trynda/SuperAdminStorage.tsx";
+import SuperAdminConfig from "./pages/trynda/SuperAdminConfig.tsx";
+import SuperAdminSecurity from "./pages/trynda/SuperAdminSecurity.tsx";
+
 const queryClient = new QueryClient();
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
