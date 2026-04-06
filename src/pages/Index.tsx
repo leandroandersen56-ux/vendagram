@@ -267,8 +267,7 @@ export default function Index() {
         </section>
 
         {/* Filter panel */}
-        {showFilterMenu && (
-          <section className="bg-card border-b border-border">
+        <section className={`bg-card border-b border-border ${showFilterMenu ? 'block' : 'hidden sm:block'}`}>
             <div className="container mx-auto py-4">
               <div className="grid gap-4 md:grid-cols-3">
                 <div>
@@ -328,7 +327,6 @@ export default function Index() {
               </div>
             </div>
           </section>
-        )}
 
         {/* Active filter pills */}
         {(selectedPlatform || sortBy !== "recent" || priceRange[0] > 0 || priceRange[1] < 10000 || minFollowers > 0) && (
