@@ -19,6 +19,7 @@ import bannerHero1 from "@/assets/banners/banner-hero-1.jpg";
 import bannerHero2 from "@/assets/banners/banner-hero-2.jpg";
 import bannerHero3 from "@/assets/banners/banner-hero-3.jpg";
 import bannerGamesSection from "@/assets/banner-roblox.jpg";
+import bannerSocialSection from "@/assets/banners/banner-social-section.jpg";
 
 import catMinecraft from "@/assets/categories/minecraft.jpg";
 import catFreefire from "@/assets/categories/freefire.jpg";
