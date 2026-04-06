@@ -200,7 +200,7 @@ export default function CreateListing() {
       toast({ title: "Preencha plataforma, título e preço", variant: "destructive" });
       return;
     }
-    if (!credLogin.trim() || !credPassword.trim()) {
+    if (credDeliveryMode === "prefill" && (!credLogin.trim() || !credPassword.trim())) {
       toast({ title: "Preencha login e senha da conta para entrega automática", variant: "destructive" });
       return;
     }
