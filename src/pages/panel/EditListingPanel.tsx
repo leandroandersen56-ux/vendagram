@@ -243,6 +243,15 @@ export default function EditListingPanel() {
       return;
     }
 
+    // Content moderation
+    const titleMod = moderateText(title);
+    const descMod = moderateText(description);
+    if (titleMod.blocked || descMod.blocked) {
+      const msg = titleMod.blocked ? getModerationMessage(titleMod) : getModerationMessage(descMod);
+      toast({ title: "Conteúdo bloqueado", description: msg, variant: "destructive" });
+      return;
+    }
+
     setSaving(true);
     const highlights: Record<string, string | boolean | string[]> = {};
     if (followers) highlights["Seguidores"] = followers;
