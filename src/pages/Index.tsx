@@ -19,6 +19,22 @@ import bannerHero1 from "@/assets/banners/banner-hero-1.jpg";
 import bannerHero2 from "@/assets/banners/banner-hero-2.jpg";
 import bannerHero3 from "@/assets/banners/banner-hero-3.jpg";
 
+import catMinecraft from "@/assets/categories/minecraft.jpg";
+import catFreefire from "@/assets/categories/freefire.jpg";
+import catClash from "@/assets/categories/clash-of-clans.jpg";
+import catValorant from "@/assets/categories/valorant.jpg";
+import catFortnite from "@/assets/categories/fortnite.jpg";
+import catRoblox from "@/assets/categories/roblox.jpg";
+
+const GAME_CATEGORIES = [
+  { id: "free_fire", label: "Free Fire", img: catFreefire },
+  { id: "valorant", label: "Valorant", img: catValorant },
+  { id: "fortnite", label: "Fortnite", img: catFortnite },
+  { id: "roblox", label: "Roblox", img: catRoblox },
+  { id: "clash_royale", label: "Clash of Clans", img: catClash },
+  { id: "other", label: "Minecraft", img: catMinecraft },
+];
+
 const BANNERS = [
   { img: bannerHero1, title: "Compra 100% Segura", subtitle: "Pagamento protegido com escrow automático", cta: "Saiba mais", link: "/marketplace" },
   { img: bannerHero2, title: "Contas de Jogos", subtitle: "Free Fire, Valorant, Fortnite e mais", cta: "Ver contas", link: "/marketplace?type=games" },
