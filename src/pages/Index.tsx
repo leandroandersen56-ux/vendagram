@@ -37,9 +37,9 @@ const GAME_CATEGORIES = [
 ];
 
 const BANNERS = [
-  { img: bannerHero1, title: "Contas de Instagram", subtitle: "Perfis verificados, engajados\ne prontos para monetizar", cta: "Ver contas", link: "/marketplace" },
-  { img: bannerHero2, title: "Contas Free Fire", subtitle: "Skins raras, ranks altos\ne contas completas", cta: "Ver contas", link: "/marketplace?type=games" },
-  { img: bannerHero3, title: "Contas TikTok", subtitle: "Perfis com seguidores reais\ne lives liberadas", cta: "Explorar", link: "/marketplace?type=social" },
+  { img: bannerHero1, title: "Contas de Instagram", subtitle: "Perfis verificados, engajados\ne prontos para monetizar", cta: "Ver contas", link: "/marketplace", objectPosition: "" },
+  { img: bannerHero2, title: "Contas Free Fire", subtitle: "Skins raras, ranks altos\ne contas completas", cta: "Ver contas", link: "/marketplace?type=games", objectPosition: "center 20%" },
+  { img: bannerHero3, title: "Contas TikTok", subtitle: "Perfis com seguidores reais\ne lives liberadas", cta: "Explorar", link: "/marketplace?type=social", objectPosition: "" },
 ];
 
 const QUICK_CATEGORIES = [
@@ -161,7 +161,7 @@ export default function Index() {
             <div className="relative overflow-hidden rounded-xl aspect-[2.2/1] sm:aspect-[3/1] md:aspect-[3.5/1]">
               {BANNERS.map((b, i) => (
                 <div key={i} className={`absolute inset-0 transition-opacity duration-500 ${i === bannerIdx ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
-                  <img src={b.img} alt={b.title} className="w-full h-full object-cover" {...(i === 0 ? {} : { loading: "lazy" as const })} />
+                  <img src={b.img} alt={b.title} className="w-full h-full object-cover" style={b.objectPosition ? { objectPosition: b.objectPosition } : undefined} {...(i === 0 ? {} : { loading: "lazy" as const })} />
                   <div className="absolute inset-y-0 left-0 w-3/5 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
                   <div className="absolute inset-0 flex items-center">
                     <div className="px-5 sm:px-8 md:px-12 max-w-sm md:max-w-lg">
