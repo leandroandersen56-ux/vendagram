@@ -559,13 +559,14 @@ export default function Index() {
         {/* === HOW IT WORKS === */}
         <section className="py-8 bg-muted">
           <div className="container mx-auto">
-            <h2 className="text-[16px] font-semibold text-txt-primary text-center mb-6">Como funciona</h2>
-            <div className="grid grid-cols-4 gap-3 sm:gap-6">
+            <h2 className="text-[16px] font-semibold text-txt-primary text-center mb-1">Como funciona</h2>
+            <p className="text-[11px] text-txt-hint text-center mb-5">Compre contas digitais com segurança em 4 passos</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {[
-                { icon: <Search className="h-5 w-5" />, title: "Encontre", desc: "Busque a conta ideal", num: "1" },
-                { icon: <Shield className="h-5 w-5" />, title: "Compre", desc: "Pague com Escrow", num: "2" },
-                { icon: <CheckCircle2 className="h-5 w-5" />, title: "Verifique", desc: "Acesse antes de liberar", num: "3" },
-                { icon: <Zap className="h-5 w-5" />, title: "Pronto!", desc: "Pagamento liberado", num: "4" },
+                { icon: <Search className="h-5 w-5" />, title: "Encontre", desc: "Busque a conta ideal no marketplace com filtros avançados", num: "1", color: "bg-blue-500" },
+                { icon: <Shield className="h-5 w-5" />, title: "Compre", desc: "Pague com segurança via sistema Escrow protegido", num: "2", color: "bg-emerald-500" },
+                { icon: <CheckCircle2 className="h-5 w-5" />, title: "Verifique", desc: "Acesse e confira a conta antes de liberar o pagamento", num: "3", color: "bg-amber-500" },
+                { icon: <Zap className="h-5 w-5" />, title: "Pronto!", desc: "Pagamento liberado ao vendedor automaticamente", num: "4", color: "bg-purple-500" },
               ].map((step, i) => (
                 <motion.div
                   key={step.title}
@@ -573,13 +574,14 @@ export default function Index() {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.08, duration: 0.3 }}
                   viewport={{ once: true }}
-                  className="flex flex-col items-center text-center"
+                  className="relative bg-card rounded-2xl border border-border p-4 flex flex-col items-center text-center shadow-sm hover:shadow-md transition-shadow"
                 >
-                  <div className="h-12 w-12 rounded-full bg-primary flex items-center justify-center text-white mb-2 shadow-sm">
+                  <span className="absolute top-2.5 right-3 text-[10px] font-bold text-txt-hint/40">{step.num}</span>
+                  <div className={`h-11 w-11 rounded-xl ${step.color} flex items-center justify-center text-white mb-3 shadow-sm`}>
                     {step.icon}
                   </div>
-                  <h3 className="text-[12px] font-semibold text-txt-primary">{step.title}</h3>
-                  <p className="text-[10px] text-txt-hint mt-0.5 leading-tight">{step.desc}</p>
+                  <h3 className="text-[13px] font-semibold text-txt-primary mb-1">{step.title}</h3>
+                  <p className="text-[10px] text-txt-hint leading-relaxed">{step.desc}</p>
                 </motion.div>
               ))}
             </div>
