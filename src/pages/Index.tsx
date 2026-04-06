@@ -37,9 +37,9 @@ const GAME_CATEGORIES = [
 ];
 
 const BANNERS = [
-  { img: bannerHero1, title: "Contas de Instagram", subtitle: "Perfis verificados, engajados\ne prontos para monetizar", cta: "Ver contas", link: "/marketplace", objectPosition: "" },
+  { img: bannerHero1, title: "Contas de Instagram", subtitle: "Perfis verificados, engajados\ne prontos para monetizar", cta: "Ver contas", link: "/marketplace", objectPosition: "center 30%" },
   { img: bannerHero2, title: "Contas Free Fire", subtitle: "Skins raras, ranks altos\ne contas completas", cta: "Ver contas", link: "/marketplace?type=games", objectPosition: "center 20%" },
-  { img: bannerHero3, title: "Contas TikTok", subtitle: "Perfis com seguidores reais\ne lives liberadas", cta: "Explorar", link: "/marketplace?type=social", objectPosition: "" },
+  { img: bannerHero3, title: "Contas TikTok", subtitle: "Perfis com seguidores reais\ne lives liberadas", cta: "Explorar", link: "/marketplace?type=social", objectPosition: "center 35%" },
 ];
 
 const QUICK_CATEGORIES = [
