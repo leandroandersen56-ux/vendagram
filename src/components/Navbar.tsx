@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Search, Bell, User, LogOut, LayoutDashboard, ShoppingBag, ShoppingCart, Loader2, Heart, Wallet, Settings, HelpCircle } from "lucide-react";
@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFavorites } from "@/hooks/useFavorites";
 import { formatBRL, PLATFORM_COVERS } from "@/lib/mock-data";
+import { getListingImage } from "@/lib/utils";
 import logoFroiv from "@/assets/logo-froiv.png";
 import logoFroivWhite from "@/assets/logo-froiv-white.svg";
 import {
@@ -34,6 +35,47 @@ export default function Navbar() {
   const { user, isAuthenticated, openAuth, logout } = useAuth();
   const { favorites, loading: favLoading, fetchFavorites: fetchFavs } = useFavorites();
   const [favOpen, setFavOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<Array<{ id: string; title: string; price: number; category: string; screenshots: string[] | null }>>([]);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
+  const searchTimerRef = useRef<ReturnType<typeof setTimeout>>();
+
+  // Debounced search
+  useEffect(() => {
+    if (searchQuery.trim().length < 2) {
+      setSearchResults([]);
+      setSearchOpen(false);
+      return;
+    }
+    setSearchLoading(true);
+    setSearchOpen(true);
+    clearTimeout(searchTimerRef.current);
+    searchTimerRef.current = setTimeout(async () => {
+      const { data } = await supabase
+        .from("listings")
+        .select("id, title, price, category, screenshots")
+        .eq("status", "active")
+        .ilike("title", `%${searchQuery.trim()}%`)
+        .limit(6);
+      setSearchResults(data || []);
+      setSearchLoading(false);
+    }, 300);
+    return () => clearTimeout(searchTimerRef.current);
+  }, [searchQuery]);
+
+  // Close search dropdown on click outside
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+        setSearchOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
 
   const unreadCount = notifications.filter((n) => !n.read).length;
 
@@ -89,6 +131,8 @@ export default function Navbar() {
   useEffect(() => {
     setNotifOpen(false);
     setFavOpen(false);
+    setSearchOpen(false);
+    setSearchQuery("");
   }, [location.pathname]);
 
   return (
@@ -101,15 +145,74 @@ export default function Navbar() {
           </Link>
 
           {/* Search bar */}
-          <div className="flex-1">
+          <div className="flex-1" ref={searchRef}>
             <div className="relative w-full">
               <Input
                 placeholder="Buscar contas, jogos, redes sociais..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => { if (searchQuery.trim().length >= 2 && searchResults.length > 0) setSearchOpen(true); }}
+                onKeyDown={(e) => { if (e.key === "Enter" && searchQuery.trim()) { setSearchOpen(false); navigate(`/busca?q=${encodeURIComponent(searchQuery.trim())}`); } }}
                 className="w-full bg-white border-0 h-9 pl-3 pr-10 text-[13px] text-[#111] placeholder:text-txt-hint rounded-[24px] shadow-sm focus-visible:ring-0 focus-visible:ring-offset-0"
               />
-              <button className="absolute right-0.5 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-primary-light flex items-center justify-center hover:bg-primary/10 transition-colors">
+              <button
+                onClick={() => { if (searchQuery.trim()) { setSearchOpen(false); navigate(`/busca?q=${encodeURIComponent(searchQuery.trim())}`); } }}
+                className="absolute right-0.5 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-primary-light flex items-center justify-center hover:bg-primary/10 transition-colors"
+              >
                 <Search className="h-4 w-4 text-primary" />
               </button>
+
+              {/* Live search dropdown */}
+              <AnimatePresence>
+                {searchOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute top-full left-0 right-0 mt-1.5 bg-white rounded-xl shadow-xl border border-[hsl(var(--border))] overflow-hidden z-50"
+                  >
+                    {searchLoading ? (
+                      <div className="flex items-center justify-center py-6">
+                        <Loader2 className="h-5 w-5 animate-spin text-primary" />
+                      </div>
+                    ) : searchResults.length > 0 ? (
+                      <div className="max-h-[360px] overflow-y-auto">
+                        {searchResults.map((item) => (
+                          <Link
+                            key={item.id}
+                            to={`/anuncio/${item.id}`}
+                            onClick={() => { setSearchOpen(false); setSearchQuery(""); }}
+                            className="flex items-center gap-3 px-3 py-2.5 hover:bg-[hsl(var(--muted))] transition-colors border-b border-[hsl(var(--border))]/40 last:border-0"
+                          >
+                            <img
+                              src={getListingImage(item.category, item.screenshots)}
+                              alt={item.title}
+                              className="h-11 w-11 rounded-lg object-cover shrink-0 bg-muted"
+                              onError={(e) => { (e.target as HTMLImageElement).src = PLATFORM_COVERS[item.category] || "/placeholder.svg"; }}
+                            />
+                            <div className="flex-1 min-w-0">
+                              <p className="text-[13px] font-medium text-[hsl(var(--txt-primary))] truncate">{item.title}</p>
+                              <p className="text-[12px] font-semibold text-primary">{formatBRL(item.price)}</p>
+                            </div>
+                          </Link>
+                        ))}
+                        <Link
+                          to={`/busca?q=${encodeURIComponent(searchQuery.trim())}`}
+                          onClick={() => { setSearchOpen(false); setSearchQuery(""); }}
+                          className="block text-center py-2.5 text-[12px] font-semibold text-primary hover:bg-[hsl(var(--muted))] transition-colors"
+                        >
+                          Ver todos os resultados →
+                        </Link>
+                      </div>
+                    ) : (
+                      <div className="py-6 text-center">
+                        <p className="text-[13px] text-[hsl(var(--txt-hint))]">Nenhum resultado para "{searchQuery}"</p>
+                      </div>
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
 
