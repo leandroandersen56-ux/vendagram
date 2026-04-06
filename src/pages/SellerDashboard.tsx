@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Wallet } from "lucide-react";
 import logoWhite from "@/assets/logo-froiv-white.svg";
 import { useAuth } from "@/contexts/AuthContext";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import PanelOverview from "@/pages/panel/PanelOverview";
 import PanelListings from "@/pages/panel/PanelListings";
 import PanelOffers from "@/pages/panel/PanelOffers";
@@ -29,7 +31,6 @@ export default function SellerDashboard() {
   const initialTab = (location.state as any)?.tab ?? "overview";
   const [activeTab, setActiveTab] = useState<TabId>(initialTab);
 
-  // Respond to navigation state changes
   useEffect(() => {
     const tab = (location.state as any)?.tab;
     if (tab && TABS.some(t => t.id === tab)) {
@@ -39,14 +40,15 @@ export default function SellerDashboard() {
 
   const handleTabChange = (tab: TabId) => {
     setActiveTab(tab);
-    // Replace state so back button works properly
     navigate("/vendedor", { state: { tab }, replace: true });
   };
 
+  const activeLabel = TABS.find(t => t.id === activeTab)?.label || "Painel";
+
   return (
-    <div className="min-h-screen bg-[#F5F5F5] pb-20">
-      {/* Header */}
-      <div className="bg-primary px-4 py-3.5 flex items-center justify-between">
+    <div className="min-h-screen bg-[#F5F5F5] pb-20 sm:pb-0">
+      {/* Mobile header */}
+      <div className="sm:hidden bg-primary px-4 py-3.5 flex items-center justify-between">
         <img src={logoWhite} alt="Froiv" className="h-6" />
         <button
           onClick={() => handleTabChange("carteira")}
@@ -56,34 +58,41 @@ export default function SellerDashboard() {
         </button>
       </div>
 
-      {/* Tabs - sticky horizontal scroll */}
-      <div className="sticky top-0 z-30 bg-white border-b border-[#E8E8E8]">
-        <div className="flex overflow-x-auto scrollbar-hide">
-          {TABS.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => handleTabChange(tab.id)}
-              className="relative px-5 py-3.5 text-[14px] whitespace-nowrap transition-colors shrink-0"
-              style={{
-                fontWeight: activeTab === tab.id ? 700 : 500,
-                color: activeTab === tab.id ? "#2D6FF0" : "#888",
-              }}
-            >
-              {tab.label}
-              {activeTab === tab.id && (
-                <motion.div
-                  layoutId="tab-indicator"
-                  className="absolute bottom-0 left-0 right-0 h-[2px] bg-primary"
-                  transition={{ type: "spring", stiffness: 500, damping: 35 }}
-                />
-              )}
-            </button>
-          ))}
+      {/* Desktop navbar */}
+      <div className="hidden sm:block">
+        <Navbar />
+      </div>
+
+      {/* Tabs */}
+      <div className="sticky top-0 sm:top-14 z-30 bg-white border-b border-[#E8E8E8]">
+        <div className="sm:container sm:mx-auto">
+          <div className="flex overflow-x-auto scrollbar-hide">
+            {TABS.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => handleTabChange(tab.id)}
+                className="relative px-5 py-3.5 text-[14px] whitespace-nowrap transition-colors shrink-0"
+                style={{
+                  fontWeight: activeTab === tab.id ? 700 : 500,
+                  color: activeTab === tab.id ? "#2D6FF0" : "#888",
+                }}
+              >
+                {tab.label}
+                {activeTab === tab.id && (
+                  <motion.div
+                    layoutId="tab-indicator"
+                    className="absolute bottom-0 left-0 right-0 h-[2px] bg-primary"
+                    transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                  />
+                )}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Tab content */}
-      <div className="p-4">
+      {/* Content */}
+      <div className="p-4 sm:container sm:mx-auto sm:py-6">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
@@ -100,6 +109,11 @@ export default function SellerDashboard() {
             {activeTab === "perfil" && <PanelProfile />}
           </motion.div>
         </AnimatePresence>
+      </div>
+
+      {/* Desktop footer */}
+      <div className="hidden sm:block">
+        <Footer />
       </div>
     </div>
   );
