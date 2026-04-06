@@ -1,64 +1,40 @@
 
-## Plano de Implementação — Froiv para Produção
+# Plano: Chat de Credenciais Pós-Compra
 
-### 🔴 FASE 1 — Fluxo de Dinheiro (Prioridade Máxima)
-
-**1.1 Edge Function `release-escrow`**
-- Verificar buyer, calcular fee 10%, atualizar wallets/transactions/notifications
-- Botão "Confirmar recebimento" na OrderDetail com bottom sheet de confirmação
-
-**1.2 Disputas completas**  
-- Migration: adicionar campos `admin_notes`, `resolution`, `resolved_by`, `resolved_at` na tabela disputes
-- UI do comprador: bottom sheet com motivo + textarea + upload screenshot
-- Admin: tela de resolução com reembolso/liberação
-
-**1.3 Processamento de Saques**
-- Melhorar WithdrawModal com tipo de chave Pix e validações
-- Edge Function `process-withdrawal` (admin processa manualmente por ora)
+## Mapeamento para o schema existente
+- `orders` → tabela `transactions` (já existe)
+- `messages` → tabela `transaction_messages` (já existe)
+- Status `transfer_in_progress` → equivale a `awaiting_credentials`
+- Novo status necessário: `credentials_sent`
 
 ---
 
-### 🟡 FASE 2 — Core Features
+## Fase 1 — Banco de Dados (Migration)
+- Adicionar colunas em `transaction_messages`: `is_system`, `allow_sensitive_data`, `read_at`
+- Adicionar enum value `credentials_sent` ao `transaction_status`
+- Habilitar Realtime para `transaction_messages` (se não estiver)
 
-**2.1 Entrega de Credenciais criptografadas**
-- Edge Function para criptografar/descriptografar com AES-256
-- Vendedor envia credenciais → comprador visualiza com botão copiar
-- Timer de 72h para auto-release
+## Fase 2 — Webhook Mercado Pago
+- Após pagamento confirmado, inserir mensagem de sistema no chat
+- Criar notificações para comprador e vendedor
+- Enviar email ao vendedor via Edge Function `send-email`
 
-**2.2 Chat da Transação (Realtime)**
-- Usar tabela `transaction_messages` existente + Supabase Realtime
-- Componente de chat na OrderDetail
+## Fase 3 — Componente TransactionChat
+- Atualizar `TransactionChat.tsx` com novo visual (mensagens de sistema, banner vendedor, presença)
+- Desativar filtro de content moderation quando `allow_sensitive_data = true`
+- Adicionar Realtime presence para status online
+- Marcar mensagens como lidas automaticamente
 
-**2.3 Busca Full-Text + Filtros**
-- Migration: coluna `search_vector` tsvector
-- SearchResultsPage com filtros por plataforma/preço/rating
+## Fase 4 — Páginas de Transação
+- `OrderDetail.tsx` / `TransactionFlow.tsx`: substituir card de credenciais por chat
+- Adicionar botão "Confirmar recebimento" após vendedor enviar mensagem
+- Seller center: card de ação necessária com link para chat
 
-**2.4 Upload de Screenshots**
-- Bucket `listings` já existe (público)
-- Componente de upload com preview e compressão
+## Fase 5 — Desativar fluxo antigo
+- Ocultar formulário de credenciais e card de dados de acesso
+- Manter tabela `credentials` sem dropar
+- Remover/ocultar `CredentialsPanel.tsx` do fluxo ativo
 
----
-
-### 🟢 FASE 3 — Experiência do Usuário
-
-- Perfil público do vendedor (`/perfil/:username`)
-- Avaliações funcionais conectadas ao DB
-- Histórico de visualizações
-- Programa de afiliados funcional
-- Ofertas/destaques do dia
-
----
-
-### 🔵 FASE 4 — Segurança e Admin
-
-- Dashboard admin completo com KPIs e gráficos
-- 2FA com Supabase MFA
-- Verificação de email obrigatória
-- Header desktop com dropdown de perfil completo
-
----
-
-### ⚡ Abordagem
-Implemento fase por fase, começando pela **Fase 1** (fluxo de dinheiro) que é crítica para o negócio funcionar. Cada fase será entregue em 1-2 mensagens com migrations + edge functions + frontend.
-
-Preciso adicionar o secret `CREDENTIALS_SECRET` antes da Fase 2.
+## Fase 6 — Notificações e Toasts
+- Toast in-app para nova mensagem quando em outra página
+- Badge de notificação atualizado via Realtime

@@ -663,23 +663,32 @@ export type Database = {
       }
       transaction_messages: {
         Row: {
+          allow_sensitive_data: boolean
           created_at: string
           id: string
+          is_system: boolean
           message: string
+          read_at: string | null
           sender_id: string
           transaction_id: string
         }
         Insert: {
+          allow_sensitive_data?: boolean
           created_at?: string
           id?: string
+          is_system?: boolean
           message: string
+          read_at?: string | null
           sender_id: string
           transaction_id: string
         }
         Update: {
+          allow_sensitive_data?: boolean
           created_at?: string
           id?: string
+          is_system?: boolean
           message?: string
+          read_at?: string | null
           sender_id?: string
           transaction_id?: string
         }
@@ -1076,6 +1085,7 @@ export type Database = {
         | "pending_payment"
         | "paid"
         | "transfer_in_progress"
+        | "credentials_sent"
         | "completed"
         | "disputed"
         | "cancelled"
@@ -1227,6 +1237,7 @@ export const Constants = {
         "pending_payment",
         "paid",
         "transfer_in_progress",
+        "credentials_sent",
         "completed",
         "disputed",
         "cancelled",
