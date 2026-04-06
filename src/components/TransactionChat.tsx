@@ -73,6 +73,15 @@ export default function TransactionChat({ transactionId, otherUserName = "Usuár
 
   const sendMessage = async () => {
     if (!newMessage.trim() || !user) return;
+    
+    // Content moderation check
+    const modResult = moderateText(newMessage);
+    if (modResult.blocked) {
+      setModerationWarning(getModerationMessage(modResult));
+      return;
+    }
+    setModerationWarning("");
+    
     setSending(true);
     const msg = newMessage.trim();
     setNewMessage("");
