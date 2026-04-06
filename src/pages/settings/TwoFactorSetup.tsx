@@ -252,6 +252,6 @@ export default function TwoFactorSetup() {
           )}
         </AnimatePresence>
       </div>
-    </div>
+    </DesktopPageShell>
   );
 }
