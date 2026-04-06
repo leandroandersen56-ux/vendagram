@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -69,6 +70,7 @@ function SkeletonCard() {
 export default function Index() {
   const { isAuthenticated, openAuth } = useAuth();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(true);
   const [bannerIdx, setBannerIdx] = useState(0);
@@ -458,7 +460,7 @@ export default function Index() {
                       </Link>
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-                      {social.slice(0, 5).map((listing) => <ListingCard key={listing.id} listing={listing} />)}
+                      {social.slice(0, isMobile ? 4 : 5).map((listing) => <ListingCard key={listing.id} listing={listing} />)}
                     </div>
                   </div>
                 )}
@@ -539,7 +541,7 @@ export default function Index() {
                       </Link>
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-                      {games.slice(0, 5).map((listing) => <ListingCard key={listing.id} listing={listing} />)}
+                      {games.slice(0, isMobile ? 4 : 5).map((listing) => <ListingCard key={listing.id} listing={listing} />)}
                     </div>
                   </div>
                 )}
