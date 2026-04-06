@@ -254,6 +254,21 @@ export const MOCK_LISTINGS: Listing[] = [
     fields: { 'Inscritos': '50K', 'Views': '2M', 'Monetizado': true },
     createdAt: '2024-03-09',
   },
+  {
+    id: '13',
+    sellerId: 'u12',
+    sellerName: 'FFElite',
+    sellerRating: 4.8,
+    sellerSales: 19,
+    platform: 'free_fire',
+    title: 'Conta Free Fire Lv80 - Diamante Real',
+    description: 'Conta nível 80, rank Diamante Real, coleção completa de skins lendárias e emotes raros.',
+    price: 480,
+    status: 'active',
+    screenshots: [ssFreefire],
+    fields: { 'Nível': 80, 'Diamantes': 500, 'Skins': 62, 'Rank': 'Diamante Real', 'Facebook Vinculado': true },
+    createdAt: '2024-03-08',
+  },
 ];
 
 export const SOCIAL_MEDIA_STEPS = [
