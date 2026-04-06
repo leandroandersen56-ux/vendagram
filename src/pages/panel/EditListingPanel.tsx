@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { PLATFORMS } from "@/lib/mock-data";
+import { moderateText, getModerationMessage } from "@/lib/content-moderation";
 import PlatformIcon from "@/components/PlatformIcon";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
