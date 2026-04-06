@@ -102,10 +102,10 @@ export default function PanelWallet() {
           </Card>
           <Card className="bg-card border-border p-5">
             <div className="flex items-center gap-2 mb-2">
-              <Clock className="h-4 w-4 text-warning" />
+              <Clock className="h-4 w-4 text-amber-600" />
               <p className="text-xs text-muted-foreground">Pendente (escrow)</p>
             </div>
-            <p className="text-2xl font-semibold text-warning">{formatBRL(pending)}</p>
+            <p className="text-2xl font-semibold text-amber-600">{formatBRL(pending)}</p>
           </Card>
           <Card className="bg-card border-border p-5">
             <div className="flex items-center gap-2 mb-2">
