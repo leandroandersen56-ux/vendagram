@@ -61,6 +61,21 @@ export default function Marketplace() {
     fetchListings();
   }, []);
 
+  // Dynamic SEO title
+  useEffect(() => {
+    const platformName = platform === "all" ? "" : activePlatform?.name || "";
+    document.title = platform === "all"
+      ? "Marketplace de Contas Digitais | Froiv"
+      : `Comprar Conta ${platformName} — Preços e Ofertas | Froiv`;
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute("content", platform === "all"
+        ? "Explore contas de Instagram, TikTok, Free Fire, Valorant e mais. Compra segura com Escrow, pagamento via Pix e entrega imediata."
+        : `Compre contas de ${platformName} com proteção Escrow. Melhores preços e entrega imediata no Froiv.`
+      );
+    }
+  }, [platform, activePlatform]);
+
   const handlePlatformChange = (p: string) => {
     setPlatform(p);
     if (p === "all") {
