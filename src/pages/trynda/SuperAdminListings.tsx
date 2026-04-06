@@ -21,7 +21,7 @@ export default function SuperAdminListings() {
     queryFn: async () => {
       let q = supabase.from("listings").select("*, profiles!listings_seller_id_fkey(name, username)")
         .order("created_at", { ascending: false }).limit(100);
-      if (statusFilter !== "all") q = q.eq("status", statusFilter);
+      if (statusFilter !== "all") q = q.eq("status", statusFilter as any);
       if (search) q = q.ilike("title", `%${search}%`);
       const { data } = await q;
       return data ?? [];

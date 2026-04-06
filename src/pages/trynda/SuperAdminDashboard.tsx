@@ -69,32 +69,20 @@ export default function SuperAdminDashboard() {
   useEffect(() => {
     const channel = supabase.channel("admin-live-feed")
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "transactions" }, (p) => {
-        setLiveEvents(prev => [{
-          id: crypto.randomUUID(), type: "sale",
-          message: `Nova venda — ${formatBRL(Number(p.new.amount))}`,
-          time: new Date(),
-        }, ...prev].slice(0, 20));
+        const evt: LiveEvent = { id: crypto.randomUUID(), type: "sale" as EventType, message: `Nova venda — ${formatBRL(Number(p.new.amount))}`, time: new Date() };
+        setLiveEvents(prev => [evt, ...prev].slice(0, 20));
       })
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "profiles" }, (p) => {
-        setLiveEvents(prev => [{
-          id: crypto.randomUUID(), type: "signup",
-          message: `Novo usuário — ${p.new.email || p.new.name || "Anônimo"}`,
-          time: new Date(),
-        }, ...prev].slice(0, 20));
+        const evt: LiveEvent = { id: crypto.randomUUID(), type: "signup" as EventType, message: `Novo usuário — ${p.new.email || p.new.name || "Anônimo"}`, time: new Date() };
+        setLiveEvents(prev => [evt, ...prev].slice(0, 20));
       })
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "listings" }, (p) => {
-        setLiveEvents(prev => [{
-          id: crypto.randomUUID(), type: "listing",
-          message: `Novo anúncio — ${p.new.title} · ${formatBRL(Number(p.new.price))}`,
-          time: new Date(),
-        }, ...prev].slice(0, 20));
+        const evt: LiveEvent = { id: crypto.randomUUID(), type: "listing" as EventType, message: `Novo anúncio — ${p.new.title} · ${formatBRL(Number(p.new.price))}`, time: new Date() };
+        setLiveEvents(prev => [evt, ...prev].slice(0, 20));
       })
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "disputes" }, () => {
-        setLiveEvents(prev => [{
-          id: crypto.randomUUID(), type: "dispute",
-          message: `Disputa aberta — URGENTE`,
-          time: new Date(),
-        }, ...prev].slice(0, 20));
+        const evt: LiveEvent = { id: crypto.randomUUID(), type: "dispute" as EventType, message: `Disputa aberta — URGENTE`, time: new Date() };
+        setLiveEvents(prev => [evt, ...prev].slice(0, 20));
       })
       .subscribe();
     return () => { supabase.removeChannel(channel); };

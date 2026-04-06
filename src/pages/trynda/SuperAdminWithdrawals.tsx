@@ -22,7 +22,7 @@ export default function SuperAdminWithdrawals() {
       let q = supabase.from("withdrawals")
         .select("*, profiles!withdrawals_user_id_fkey(name, email)")
         .order("created_at", { ascending: false });
-      if (filter !== "all") q = q.eq("status", filter);
+      if (filter !== "all") q = q.eq("status", filter as any);
       const { data } = await q;
       return data ?? [];
     },
