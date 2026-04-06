@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import freefireLogo from "@/assets/freefire-logo.png";
 import { motion, AnimatePresence } from "framer-motion";
-import { Eye, Plus, X, Upload, ChevronLeft, ChevronRight, Gamepad2, Image as ImageIcon, Lock, ShieldCheck, Check, Globe, Smartphone } from "lucide-react";
+import { Eye, Plus, X, Upload, ChevronLeft, ChevronRight, Gamepad2, Image as ImageIcon, Lock, ShieldCheck, Check, Globe, Smartphone, MessageCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -153,6 +153,7 @@ export default function CreateListing() {
   const [credEmail, setCredEmail] = useState("");
   const [cred2fa, setCred2fa] = useState("");
   const [credNotes, setCredNotes] = useState("");
+  const [credDeliveryMode, setCredDeliveryMode] = useState<"prefill" | "chat">("prefill");
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -199,7 +200,7 @@ export default function CreateListing() {
       toast({ title: "Preencha plataforma, título e preço", variant: "destructive" });
       return;
     }
-    if (!credLogin.trim() || !credPassword.trim()) {
+    if (credDeliveryMode === "prefill" && (!credLogin.trim() || !credPassword.trim())) {
       toast({ title: "Preencha login e senha da conta para entrega automática", variant: "destructive" });
       return;
     }
@@ -252,15 +253,17 @@ export default function CreateListing() {
     if (items.length > 0) highlights["Itens"] = items;
     feats.forEach((f) => (highlights[f] = true));
 
-    // Encode credentials (base64 for now, decrypted server-side)
-    const credentialsData = JSON.stringify({
-      login: credLogin.trim(),
-      password: credPassword.trim(),
-      ...(credEmail.trim() && { email: credEmail.trim() }),
-      ...(cred2fa.trim() && { twofa: cred2fa.trim() }),
-      ...(credNotes.trim() && { notes: credNotes.trim() }),
-    });
-    const encoded = btoa(unescape(encodeURIComponent(credentialsData)));
+    let encoded: string | null = null;
+    if (credDeliveryMode === "prefill") {
+      const credentialsData = JSON.stringify({
+        login: credLogin.trim(),
+        password: credPassword.trim(),
+        ...(credEmail.trim() && { email: credEmail.trim() }),
+        ...(cred2fa.trim() && { twofa: cred2fa.trim() }),
+        ...(credNotes.trim() && { notes: credNotes.trim() }),
+      });
+      encoded = btoa(unescape(encodeURIComponent(credentialsData)));
+    }
 
     const { error } = await supabase.from("listings").insert({
       title,
@@ -779,42 +782,81 @@ export default function CreateListing() {
 
         {/* ── SECTION: Dados de acesso ── */}
         <div className="mx-4 mb-3">
-          <p className="text-[12px] text-[#999] uppercase font-semibold px-1 pb-2">Dados de acesso da conta *</p>
+          <p className="text-[12px] text-[#999] uppercase font-semibold px-1 pb-2">Entrega dos dados de acesso *</p>
           <div className="bg-white rounded-2xl border border-[#F0F0F0] overflow-hidden">
-            <div className="p-4 bg-primary/5 border-b border-primary/10 flex items-start gap-2">
-              <Lock className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-              <p className="text-[12px] text-[#666]">
-                Preencha os acessos. Serão entregues automaticamente ao comprador após o pagamento.
-              </p>
+            {/* Toggle: Preencher agora vs Enviar via chat */}
+            <div className="p-3 flex gap-2">
+              <button
+                type="button"
+                onClick={() => setCredDeliveryMode("prefill")}
+                className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[13px] font-medium transition-all ${
+                  credDeliveryMode === "prefill"
+                    ? "bg-primary/10 text-primary border-2 border-primary"
+                    : "bg-[#F5F5F5] text-[#888] border-2 border-transparent"
+                }`}
+              >
+                <Lock className="h-3.5 w-3.5" />
+                Preencher agora
+              </button>
+              <button
+                type="button"
+                onClick={() => setCredDeliveryMode("chat")}
+                className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[13px] font-medium transition-all ${
+                  credDeliveryMode === "chat"
+                    ? "bg-primary/10 text-primary border-2 border-primary"
+                    : "bg-[#F5F5F5] text-[#888] border-2 border-transparent"
+                }`}
+              >
+                <MessageCircle className="h-3.5 w-3.5" />
+                Enviar via chat
+              </button>
             </div>
-            <div className="divide-y divide-[#F0F0F0]">
-              <div className="p-4">
-                <label className="text-[12px] text-[#999] font-medium block mb-1.5">Login / Usuário *</label>
-                <Input value={credLogin} onChange={(e) => setCredLogin(e.target.value)} placeholder="ex: @usuario_conta" className="bg-transparent border-[#E8E8E8] h-11 rounded-xl" />
+
+            {credDeliveryMode === "prefill" ? (
+              <>
+                <div className="px-4 py-2.5 bg-primary/5 border-y border-primary/10 flex items-start gap-2">
+                  <Lock className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                  <p className="text-[12px] text-[#666]">
+                    Preencha os acessos. Serão entregues automaticamente ao comprador após o pagamento.
+                  </p>
+                </div>
+                <div className="divide-y divide-[#F0F0F0]">
+                  <div className="p-4">
+                    <label className="text-[12px] text-[#999] font-medium block mb-1.5">Login / Usuário *</label>
+                    <Input value={credLogin} onChange={(e) => setCredLogin(e.target.value)} placeholder="ex: @usuario_conta" className="bg-transparent border-[#E8E8E8] h-11 rounded-xl" />
+                  </div>
+                  <div className="p-4">
+                    <label className="text-[12px] text-[#999] font-medium block mb-1.5">Senha *</label>
+                    <Input type="password" value={credPassword} onChange={(e) => setCredPassword(e.target.value)} placeholder="Senha da conta" className="bg-transparent border-[#E8E8E8] h-11 rounded-xl" />
+                  </div>
+                  <div className="p-4">
+                    <label className="text-[12px] text-[#999] font-medium block mb-1.5">Email vinculado</label>
+                    <Input value={credEmail} onChange={(e) => setCredEmail(e.target.value)} placeholder="email@exemplo.com (opcional)" className="bg-transparent border-[#E8E8E8] h-11 rounded-xl" />
+                  </div>
+                  <div className="p-4">
+                    <label className="text-[12px] text-[#999] font-medium block mb-1.5">Código 2FA</label>
+                    <Input value={cred2fa} onChange={(e) => setCred2fa(e.target.value)} placeholder="JBSWY3DPEHPK3PXP (opcional)" className="bg-transparent border-[#E8E8E8] h-11 rounded-xl font-mono" />
+                  </div>
+                  <div className="p-4">
+                    <label className="text-[12px] text-[#999] font-medium block mb-1.5">Observações</label>
+                    <Textarea value={credNotes} onChange={(e) => setCredNotes(e.target.value)} placeholder="Ex: Troque a senha imediatamente" className="bg-transparent border-[#E8E8E8] min-h-[50px] rounded-xl" />
+                  </div>
+                </div>
+                <div className="p-4 bg-[#FFFDE7] border-t border-[#F0F0F0] flex items-start gap-2">
+                  <ShieldCheck className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                  <p className="text-[11px] text-[#888]">
+                    Os dados são criptografados e só serão revelados ao comprador após a confirmação do pagamento.
+                  </p>
+                </div>
+              </>
+            ) : (
+              <div className="p-4 flex items-start gap-2.5 bg-[#F0F8FF] border-t border-[#E8E8E8]">
+                <MessageCircle className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                <p className="text-[12px] text-[#555] leading-relaxed">
+                  Após o pagamento ser confirmado, um chat será aberto automaticamente entre você e o comprador. Envie os dados de acesso diretamente pela conversa.
+                </p>
               </div>
-              <div className="p-4">
-                <label className="text-[12px] text-[#999] font-medium block mb-1.5">Senha *</label>
-                <Input type="password" value={credPassword} onChange={(e) => setCredPassword(e.target.value)} placeholder="Senha da conta" className="bg-transparent border-[#E8E8E8] h-11 rounded-xl" />
-              </div>
-              <div className="p-4">
-                <label className="text-[12px] text-[#999] font-medium block mb-1.5">Email vinculado</label>
-                <Input value={credEmail} onChange={(e) => setCredEmail(e.target.value)} placeholder="email@exemplo.com (opcional)" className="bg-transparent border-[#E8E8E8] h-11 rounded-xl" />
-              </div>
-              <div className="p-4">
-                <label className="text-[12px] text-[#999] font-medium block mb-1.5">Código 2FA</label>
-                <Input value={cred2fa} onChange={(e) => setCred2fa(e.target.value)} placeholder="JBSWY3DPEHPK3PXP (opcional)" className="bg-transparent border-[#E8E8E8] h-11 rounded-xl font-mono" />
-              </div>
-              <div className="p-4">
-                <label className="text-[12px] text-[#999] font-medium block mb-1.5">Observações</label>
-                <Textarea value={credNotes} onChange={(e) => setCredNotes(e.target.value)} placeholder="Ex: Troque a senha imediatamente" className="bg-transparent border-[#E8E8E8] min-h-[50px] rounded-xl" />
-              </div>
-            </div>
-            <div className="p-4 bg-[#FFFDE7] border-t border-[#F0F0F0] flex items-start gap-2">
-              <ShieldCheck className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-              <p className="text-[11px] text-[#888]">
-                Os dados são criptografados e só serão revelados ao comprador após a confirmação do pagamento.
-              </p>
-            </div>
+            )}
           </div>
         </div>
         {/* Spacer to prevent sticky button from covering content */}
@@ -826,7 +868,7 @@ export default function CreateListing() {
         <div className="px-4 pb-4 pt-3">
           <button
             onClick={handlePublish}
-            disabled={!title || !price || !credLogin || !credPassword || loading}
+            disabled={!title || !price || (credDeliveryMode === "prefill" && (!credLogin || !credPassword)) || loading}
             className="w-full h-[52px] rounded-[14px] flex items-center justify-center text-white text-base font-semibold border-none cursor-pointer transition-opacity disabled:opacity-40"
             style={{ background: '#2D6FF0', boxShadow: '0 4px 16px rgba(45,111,240,0.40)' }}
           >
