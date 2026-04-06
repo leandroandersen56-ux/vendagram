@@ -16,7 +16,7 @@ import { PLATFORMS, MOCK_LISTINGS, type Listing } from "@/lib/mock-data";
 import { supabase } from "@/integrations/supabase/client";
 
 import bannerHero1 from "@/assets/banners/banner-hero-1.jpg";
-import bannerHero2 from "@/assets/banners/banner-hero-2-notext.jpg";
+import bannerHero2 from "@/assets/banners/banner-hero-2.jpg";
 import bannerHero3 from "@/assets/banners/banner-hero-3.jpg";
 import bannerGamesSection from "@/assets/banners/banner-games-section.jpg";
 
