@@ -162,6 +162,9 @@ export default function Index() {
     <div className="min-h-screen bg-background flex flex-col">
       <Navbar />
 
+      {/* SEO H1 — visually hidden */}
+      <h1 className="sr-only">Comprar Conta Instagram, TikTok, Free Fire, Valorant — Froiv Marketplace de Contas Digitais</h1>
+
       <div className="pt-14 pb-16 sm:pb-0">
         {/* === BANNER CAROUSEL === */}
         <section className="pt-3 md:pt-6">
