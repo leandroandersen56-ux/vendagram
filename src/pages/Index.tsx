@@ -405,8 +405,8 @@ export default function Index() {
                 {/* Mobile Legends Banner */}
                 <Link to="/marketplace?type=games" className="block rounded-2xl overflow-hidden">
                   <img
-                    src={bannerMobileLegends}
-                    alt="Mobile Legends Bang Bang"
+                    src={bannerGamesSection}
+                    alt="Free Fire"
                     className="w-full h-[140px] md:h-[200px] object-cover"
                     loading="lazy"
                   />
