@@ -303,7 +303,7 @@ export default function OrderDetail() {
         {showChat && transaction && (
           <TransactionChat
             transactionId={transaction.id}
-            otherUserName={otherUserName}
+            otherUserName={isSeller ? "Comprador" : "Vendedor"}
             isSeller={isSeller}
             transactionStatus={transaction.status}
             onCredentialsSent={loadTransaction}
