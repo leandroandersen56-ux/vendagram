@@ -400,6 +400,35 @@ export default function Index() {
                   </div>
                 )}
 
+                {/* Game Categories Slider */}
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-[15px] font-semibold text-txt-primary flex items-center gap-2">
+                      <Gamepad2 className="h-4 w-4 text-primary" /> Categorias de Jogos
+                    </h3>
+                    <Link to="/marketplace?type=games" className="text-[12px] text-primary font-semibold hover:underline flex items-center gap-1">
+                      Ver todos <ArrowRight className="h-3 w-3" />
+                    </Link>
+                  </div>
+                  <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 -mx-1 px-1">
+                    {GAME_CATEGORIES.map((cat) => (
+                      <button
+                        key={cat.id}
+                        onClick={() => setSelectedPlatform(selectedPlatform === cat.id ? null : cat.id)}
+                        className="flex-shrink-0 group"
+                      >
+                        <div className={`relative w-[140px] sm:w-[160px] aspect-[3/4] rounded-2xl overflow-hidden transition-all ${selectedPlatform === cat.id ? 'ring-2 ring-primary ring-offset-2' : ''}`}>
+                          <img src={cat.img} alt={cat.label} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                          <span className="absolute bottom-2.5 left-0 right-0 text-center text-white text-[13px] font-semibold drop-shadow-lg">
+                            {cat.label}
+                          </span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 {games.length > 0 && (
                   <div>
                     <div className="flex items-center justify-between mb-3">
