@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Copy, Check, MessageCircle, AlertTriangle, CheckCircle2, Loader2, Shield, Clock } from "lucide-react";
-import PageHeader from "@/components/menu/PageHeader";
+import DesktopPageShell from "@/components/DesktopPageShell";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -161,20 +161,26 @@ export default function OrderDetail() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F5F5F5] pb-20">
-        <PageHeader title="Carregando..." />
+      <DesktopPageShell title="Carregando...">
         <div className="flex items-center justify-center pt-20">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
-      </div>
+      </DesktopPageShell>
     );
   }
 
-  return (
-    <div className="min-h-screen bg-[#F5F5F5] pb-20">
-      <PageHeader title={`Pedido #${transaction?.id?.slice(0, 8) || id}`} />
+  const pageTitle = `Pedido #${transaction?.id?.slice(0, 8) || id}`;
 
-      <div className="px-4 pt-4 space-y-4">
+  return (
+    <DesktopPageShell
+      title={pageTitle}
+      breadcrumbs={[
+        { label: "Início", to: "/" },
+        { label: "Minhas Compras", to: "/compras" },
+        { label: pageTitle },
+      ]}
+    >
+      <div className="space-y-4">
         {isCompleted && (
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -393,6 +399,6 @@ export default function OrderDetail() {
           </div>
         </DialogContent>
       </Dialog>
-    </div>
+    </DesktopPageShell>
   );
 }
