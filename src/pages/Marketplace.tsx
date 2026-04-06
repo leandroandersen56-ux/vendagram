@@ -61,6 +61,8 @@ export default function Marketplace() {
     fetchListings();
   }, []);
 
+  const activePlatform = PLATFORMS.find((p) => p.id === platform);
+
   // Dynamic SEO title
   useEffect(() => {
     const platformName = platform === "all" ? "" : activePlatform?.name || "";
@@ -97,8 +99,6 @@ export default function Marketplace() {
       if (sortBy === "price-desc") return b.price - a.price;
       return 0;
     });
-
-  const activePlatform = PLATFORMS.find((p) => p.id === platform);
 
   return (
     <div className="min-h-screen bg-background flex flex-col pb-16 sm:pb-0">
