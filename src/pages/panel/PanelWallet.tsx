@@ -53,7 +53,7 @@ function getIconBg(type: string) {
   switch (type) {
     case "in": case "deposit": return "bg-success/10";
     case "out": return "bg-destructive/10";
-    case "escrow": return "bg-warning/10";
+    case "escrow": return "bg-amber-100";
     case "transfer": return "bg-info/10";
     default: return "bg-muted/10";
   }
@@ -62,7 +62,7 @@ function getIconBg(type: string) {
 function getStatusColor(status: string) {
   switch (status) {
     case "Concluído": case "Processado": return "bg-success/10 text-success";
-    case "Pendente": return "bg-warning/10 text-warning";
+    case "Pendente": return "bg-amber-100 text-amber-600";
     case "Falhou": return "bg-destructive/10 text-destructive";
     default: return "bg-muted text-muted-foreground";
   }
@@ -149,8 +149,8 @@ export default function PanelWallet() {
             onClick={() => setShowQR(true)}
             className="group flex flex-col items-center gap-2.5 p-4 bg-card border border-border rounded-xl hover:border-warning/40 hover:bg-warning/5 transition-all"
           >
-            <div className="h-11 w-11 rounded-full bg-warning/10 flex items-center justify-center group-hover:bg-warning/20 transition-colors">
-              <ScanLine className="h-5 w-5 text-warning" />
+            <div className="h-11 w-11 rounded-full bg-amber-100 flex items-center justify-center group-hover:bg-warning/20 transition-colors">
+              <ScanLine className="h-5 w-5 text-amber-600" />
             </div>
             <span className="text-sm font-medium text-foreground">Pagar com QR</span>
           </button>
