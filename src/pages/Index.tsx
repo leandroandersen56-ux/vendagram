@@ -70,6 +70,7 @@ function SkeletonCard() {
 export default function Index() {
   const { isAuthenticated, openAuth } = useAuth();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(true);
   const [bannerIdx, setBannerIdx] = useState(0);
