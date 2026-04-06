@@ -245,6 +245,8 @@ export default function PanelVerification() {
       <div className="space-y-3 mb-6">
         {docs.map((doc) => {
           const file = uploadedFiles[doc.key];
+          const isPdf = file?.type === "application/pdf";
+          const previewUrl = file && !isPdf ? URL.createObjectURL(file) : null;
           return (
             <Card
               key={doc.key}
@@ -255,17 +257,21 @@ export default function PanelVerification() {
             >
               <input
                 type="file"
-                accept="image/*,.pdf"
+                accept="image/jpeg,image/png,image/webp,.pdf"
                 className="hidden"
                 ref={(el) => { fileInputRefs.current[doc.key] = el; }}
                 onChange={(e) => handleFileSelect(doc.key, e.target.files?.[0] || null)}
               />
               <div className="flex items-center gap-3">
-                <div className={`h-10 w-10 rounded-lg flex items-center justify-center ${
-                  file ? "bg-success/10" : "bg-primary/10"
+                <div className={`h-10 w-10 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden ${
+                  file ? (previewUrl ? "" : "bg-success/10") : "bg-primary/10"
                 }`}>
                   {file ? (
-                    <CheckCircle2 className="h-5 w-5 text-success" />
+                    previewUrl ? (
+                      <img src={previewUrl} alt="preview" className="h-10 w-10 rounded-lg object-cover" />
+                    ) : (
+                      <FileText className="h-5 w-5 text-success" />
+                    )
                   ) : (
                     <doc.icon className="h-5 w-5 text-primary" />
                   )}
@@ -276,12 +282,16 @@ export default function PanelVerification() {
                     {doc.required && <span className="text-[10px] text-destructive font-medium">Obrigatório</span>}
                   </div>
                   {file ? (
-                    <p className="text-xs text-success truncate">{file.name}</p>
+                    <p className="text-xs text-success truncate">{isPdf ? `📄 ${file.name}` : file.name}</p>
                   ) : (
                     <p className="text-xs text-muted-foreground">{doc.description}</p>
                   )}
                 </div>
-                <Upload className={`h-4 w-4 ${file ? "text-success" : "text-muted-foreground"}`} />
+                {file ? (
+                  <CheckCircle2 className="h-5 w-5 text-success flex-shrink-0" />
+                ) : (
+                  <Upload className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                )}
               </div>
             </Card>
           );
