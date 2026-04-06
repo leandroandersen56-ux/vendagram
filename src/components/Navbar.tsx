@@ -34,6 +34,7 @@ export default function Navbar() {
   const navigate = useNavigate();
   const { user, isAuthenticated, openAuth, logout } = useAuth();
   const { favorites, loading: favLoading, fetchFavorites: fetchFavs } = useFavorites();
+  const [favOpen, setFavOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<Array<{ id: string; title: string; price: number; category: string; screenshots: string[] | null }>>([]);
   const [searchLoading, setSearchLoading] = useState(false);
