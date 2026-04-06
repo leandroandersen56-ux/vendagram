@@ -437,4 +437,4 @@ export default function OrderDetail() {
   );
 }
 
-const otherUserName = "Vendedor";
+
