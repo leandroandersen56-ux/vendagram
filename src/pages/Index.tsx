@@ -176,11 +176,11 @@ export default function Index() {
                 <div key={i} className={`absolute inset-0 transition-opacity duration-500 ${i === bannerIdx ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
                   <img src={b.img} alt={b.title} className="w-full h-full object-cover" style={b.objectPosition ? { objectPosition: b.objectPosition } : undefined} {...(i === 0 ? {} : { loading: "lazy" as const })} />
                   <div className="absolute inset-y-0 left-0 w-3/5 bg-gradient-to-r from-black/70 via-black/40 to-transparent pointer-events-none" />
-                  <div className="absolute inset-0 flex items-center">
+                  <div className="absolute inset-0 flex items-center pointer-events-none">
                     <div className="px-5 sm:px-8 md:px-12 max-w-sm md:max-w-lg">
                       <h2 className="text-white text-base sm:text-xl md:text-3xl lg:text-4xl font-semibold leading-tight">{b.title}</h2>
                       <p className="text-white/80 text-[11px] sm:text-sm md:text-base lg:text-lg mt-1 md:mt-2 whitespace-pre-line">{b.subtitle}</p>
-                      <Link to={b.link}>
+                      <Link to={b.link} className="pointer-events-auto">
                         <button className="mt-3 md:mt-4 text-[11px] sm:text-xs md:text-sm font-semibold text-white border border-white/40 rounded-lg px-3 md:px-5 py-1.5 md:py-2 hover:bg-white/10 transition-colors">
                           {b.cta} →
                         </button>
