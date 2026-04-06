@@ -269,7 +269,7 @@ export default function Index() {
         {/* Filter panel */}
         <section className={`bg-card border-b border-border ${showFilterMenu ? 'block' : 'hidden sm:block'}`}>
             <div className="container mx-auto py-4">
-              <div className="grid gap-4 md:grid-cols-3">
+              <div className="grid gap-4 md:grid-cols-[1fr_1fr_1fr_auto]">
                 <div>
                   <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-txt-hint">Ordenar por</p>
                   <div className="flex flex-wrap gap-1.5">
@@ -310,20 +310,20 @@ export default function Index() {
                     ))}
                   </div>
                 </div>
-              </div>
-              <div className="mt-4 flex gap-2 sm:justify-start">
-                <button
-                  className="h-9 flex-1 sm:flex-none sm:px-6 text-[12px] font-medium rounded-lg border border-border bg-card text-txt-primary hover:bg-muted transition-colors"
-                  onClick={() => { setSortBy("recent"); setPriceRange([0, 10000]); setMinFollowers(0); }}
-                >
-                  Limpar
-                </button>
-                <button
-                  className="h-9 flex-1 sm:flex-none sm:px-8 text-[12px] font-semibold rounded-lg bg-primary text-white hover:bg-primary-dark transition-colors"
-                  onClick={() => setShowFilterMenu(false)}
-                >
-                  Aplicar
-                </button>
+                <div className="flex items-end gap-2 md:pb-0 mt-4 md:mt-0">
+                  <button
+                    className="h-9 flex-1 md:flex-none md:px-5 text-[12px] font-medium rounded-lg border border-border bg-card text-txt-primary hover:bg-muted transition-colors"
+                    onClick={() => { setSortBy("recent"); setPriceRange([0, 10000]); setMinFollowers(0); }}
+                  >
+                    Limpar
+                  </button>
+                  <button
+                    className="h-9 flex-1 md:flex-none md:px-6 text-[12px] font-semibold rounded-lg bg-primary text-white hover:bg-primary-dark transition-colors"
+                    onClick={() => setShowFilterMenu(false)}
+                  >
+                    Aplicar
+                  </button>
+                </div>
               </div>
             </div>
           </section>
