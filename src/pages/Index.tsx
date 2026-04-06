@@ -402,14 +402,24 @@ export default function Index() {
                   </div>
                 )}
 
-                {/* Mobile Legends Banner */}
-                <Link to="/marketplace?type=games" className="block rounded-2xl overflow-hidden">
+                {/* Games Section Banner */}
+                <Link to="/marketplace?type=games" className="block rounded-2xl overflow-hidden relative">
                   <img
                     src={bannerGamesSection}
                     alt="Free Fire"
                     className="w-full h-[140px] md:h-[200px] object-cover"
                     loading="lazy"
                   />
+                  <div className="absolute inset-y-0 left-0 w-3/5 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="px-5 sm:px-8 md:px-12 max-w-sm">
+                      <h2 className="text-white text-sm sm:text-lg md:text-2xl font-semibold leading-tight">Contas Free Fire</h2>
+                      <p className="text-white/80 text-[10px] sm:text-xs md:text-sm mt-1 whitespace-pre-line">{"Contas ranqueadas, skins raras\ne itens exclusivos"}</p>
+                      <span className="inline-block mt-2 md:mt-3 text-[10px] sm:text-xs font-semibold text-white border border-white/40 rounded-lg px-3 py-1 md:py-1.5 hover:bg-white/10 transition-colors">
+                        Explorar →
+                      </span>
+                    </div>
+                  </div>
                 </Link>
 
                 {/* Game Categories Slider */}
