@@ -42,7 +42,7 @@ function getIcon(type: string) {
   switch (type) {
     case "in": return <ArrowDownRight className="h-4 w-4 text-success" />;
     case "out": return <ArrowUpRight className="h-4 w-4 text-destructive" />;
-    case "escrow": return <RefreshCcw className="h-4 w-4 text-warning" />;
+    case "escrow": return <RefreshCcw className="h-4 w-4 text-amber-600" />;
     case "transfer": return <Send className="h-4 w-4 text-info" />;
     case "deposit": return <ArrowDown className="h-4 w-4 text-success" />;
     default: return <Repeat className="h-4 w-4 text-muted-foreground" />;
