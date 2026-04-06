@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Copy, Check, MessageCircle, AlertTriangle, CheckCircle2, Loader2, Shield, Clock } from "lucide-react";
-import PageHeader from "@/components/menu/PageHeader";
+import DesktopPageShell from "@/components/DesktopPageShell";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
