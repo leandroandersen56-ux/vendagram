@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Copy, Check, MessageCircle, AlertTriangle, CheckCircle2, Loader2, Shield, Clock } from "lucide-react";
+import { MessageCircle, AlertTriangle, CheckCircle2, Loader2, Shield, Clock } from "lucide-react";
 import DesktopPageShell from "@/components/DesktopPageShell";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import CredentialsPanel from "@/components/CredentialsPanel";
 import TransactionChat from "@/components/TransactionChat";
 import { getListingImage, handleListingImageError } from "@/lib/utils";
 
@@ -31,14 +30,28 @@ export default function OrderDetail() {
 
   const [transaction, setTransaction] = useState<any>(null);
   const [listing, setListing] = useState<any>(null);
-  const [credentials, setCredentials] = useState<any>(null);
-  const [credentialsDeliveredAt, setCredentialsDeliveredAt] = useState<string | null>(null);
 
   const [disputeReason, setDisputeReason] = useState("");
   const [disputeDescription, setDisputeDescription] = useState("");
 
   useEffect(() => {
     if (id) loadTransaction();
+  }, [id]);
+
+  // Realtime subscription for transaction status changes
+  useEffect(() => {
+    if (!id) return;
+    const channel = supabase
+      .channel(`tx-status-${id}`)
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "transactions", filter: `id=eq.${id}` },
+        (payload) => {
+          setTransaction((prev: any) => prev ? { ...prev, ...payload.new } : prev);
+        }
+      )
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
   }, [id]);
 
   const loadTransaction = async () => {
@@ -58,23 +71,6 @@ export default function OrderDetail() {
 
       setTransaction(tx);
       setListing(tx.listings);
-
-      try {
-        const credRes = await supabase.functions.invoke("manage-credentials", {
-          body: { transaction_id: id, action: "get" },
-        });
-
-        if (credRes.data?.credentials) {
-          setCredentials(credRes.data.credentials);
-          setCredentialsDeliveredAt(credRes.data.delivered_at);
-        } else {
-          setCredentials(null);
-          setCredentialsDeliveredAt(null);
-        }
-      } catch {
-        setCredentials(null);
-        setCredentialsDeliveredAt(null);
-      }
     } catch {
       toast.error("Erro ao carregar pedido");
     } finally {
@@ -131,18 +127,51 @@ export default function OrderDetail() {
     }
   };
 
+  const isSeller = transaction?.seller_id === user?.id;
+  const isBuyer = transaction?.buyer_id === user?.id;
+
   const getSteps = () => {
     if (!transaction) return [];
 
+    const status = transaction.status;
     const steps = [
-      { label: "Pedido realizado", time: formatDate(transaction.created_at), done: true },
-      { label: "Pagamento confirmado", time: transaction.paid_at ? formatDate(transaction.paid_at) : null, done: !!transaction.paid_at },
-      { label: "Verificando conta", time: null, done: ["transfer_in_progress", "completed"].includes(transaction.status) },
-      { label: "Escrow liberado", time: transaction.completed_at ? formatDate(transaction.completed_at) : null, done: transaction.status === "completed" },
+      {
+        label: "Pedido realizado",
+        time: formatDate(transaction.created_at),
+        done: true,
+        active: false,
+      },
+      {
+        label: "Pagamento confirmado",
+        time: transaction.paid_at ? formatDate(transaction.paid_at) : null,
+        done: ["paid", "transfer_in_progress", "credentials_sent", "completed"].includes(status),
+        active: false,
+      },
+      {
+        label: "Aguardando credenciais",
+        time: null,
+        done: ["credentials_sent", "completed"].includes(status),
+        active: status === "transfer_in_progress",
+        pulse: status === "transfer_in_progress",
+        sublabel: status === "transfer_in_progress" ? "Vendedor enviando acesso..." : undefined,
+      },
+      {
+        label: "Credenciais recebidas",
+        time: null,
+        done: status === "completed",
+        active: status === "credentials_sent",
+        sublabel: status === "credentials_sent" ? "Verifique e confirme o recebimento" : undefined,
+      },
+      {
+        label: "Transação concluída",
+        time: transaction.completed_at ? formatDate(transaction.completed_at) : null,
+        done: status === "completed",
+        active: false,
+      },
     ];
 
-    if (transaction.status === "disputed") {
-      steps.push({ label: "Disputa aberta", time: null, done: true });
+    if (status === "disputed") {
+      steps.push({ label: "Disputa aberta", time: null, done: true, active: true, pulse: true, sublabel: "Admin analisando o caso" });
     }
 
     return steps;
@@ -153,8 +182,9 @@ export default function OrderDetail() {
     return `${d.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" })} ${d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}`;
   };
 
-  const canRelease = transaction && transaction.buyer_id === user?.id && ["paid", "transfer_in_progress"].includes(transaction.status);
-  const canDispute = transaction && ["paid", "transfer_in_progress"].includes(transaction.status);
+  const canRelease = transaction && isBuyer && ["credentials_sent", "transfer_in_progress"].includes(transaction.status);
+  const canDispute = transaction && ["paid", "transfer_in_progress", "credentials_sent"].includes(transaction.status);
+  const showChat = transaction && ["paid", "transfer_in_progress", "credentials_sent", "disputed"].includes(transaction.status);
   const isCompleted = transaction?.status === "completed";
   const isDisputed = transaction?.status === "disputed";
   const steps = getSteps();
@@ -230,6 +260,7 @@ export default function OrderDetail() {
           </div>
         )}
 
+        {/* Timeline */}
         <div className="bg-white rounded-xl border border-[#E8E8E8] p-5">
           <h3 className="text-sm font-semibold text-[#111] mb-4">Status do pedido</h3>
           <div className="relative">
@@ -245,17 +276,21 @@ export default function OrderDetail() {
                 <div className="relative z-10 shrink-0">
                   {step.done ? (
                     <div className="h-3 w-3 rounded-full bg-primary" />
+                  ) : step.active ? (
+                    <div className={`h-3 w-3 rounded-full bg-primary ${step.pulse ? "animate-pulse" : ""}`} />
                   ) : (
                     <div className="h-3 w-3 rounded-full border-2 border-[#DDD] bg-white" />
                   )}
                 </div>
                 <div className="pb-5 flex-1 -mt-0.5">
-                  <p className={`text-[13px] font-medium ${step.done ? "text-[#111]" : "text-[#999]"}`}>
+                  <p className={`text-[13px] font-medium ${step.done || step.active ? "text-[#111]" : "text-[#999]"}`}>
                     {step.label}
                   </p>
                   {step.time ? (
                     <p className="text-[11px] text-[#999]">{step.time}</p>
-                  ) : !step.done ? (
+                  ) : step.sublabel ? (
+                    <p className="text-[11px] text-primary">{step.sublabel}</p>
+                  ) : !step.done && !step.active ? (
                     <p className="text-[11px] text-[#CCC]">Pendente</p>
                   ) : null}
                 </div>
@@ -264,28 +299,28 @@ export default function OrderDetail() {
           </div>
         </div>
 
-        {transaction && (
-          <CredentialsPanel
+        {/* Chat — replaces old credentials panel */}
+        {showChat && transaction && (
+          <TransactionChat
             transactionId={transaction.id}
-            isSeller={transaction.seller_id === user?.id}
+            otherUserName={otherUserName}
+            isSeller={isSeller}
             transactionStatus={transaction.status}
-            credentials={credentials}
-            deliveredAt={credentialsDeliveredAt}
             onCredentialsSent={loadTransaction}
-            orderId={transaction.id}
-            orderCreatedAt={transaction.created_at}
-            orderAmount={Number(transaction.amount)}
-            listingTitle={listing?.title}
-            listingPlatform={listing?.category}
           />
         )}
 
-        {transaction && ["paid", "transfer_in_progress", "disputed"].includes(transaction.status) && (
-          <TransactionChat transactionId={transaction.id} />
-        )}
-
+        {/* Action buttons */}
         <div className="space-y-2.5">
-          {canRelease && (
+          {canRelease && transaction.status === "credentials_sent" && (
+            <button
+              onClick={() => setConfirmOpen(true)}
+              className="w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white py-3.5 rounded-xl text-[14px] font-semibold transition-colors"
+            >
+              <CheckCircle2 className="h-5 w-5" /> ✅ Recebi as credenciais — Liberar pagamento ao vendedor
+            </button>
+          )}
+          {canRelease && transaction.status === "transfer_in_progress" && (
             <button
               onClick={() => setConfirmOpen(true)}
               className="w-full flex items-center justify-center gap-2 bg-primary text-white py-3.5 rounded-xl text-[14px] font-semibold"
@@ -301,12 +336,10 @@ export default function OrderDetail() {
               <AlertTriangle className="h-4 w-4" /> Abrir disputa
             </button>
           )}
-          <button className="w-full flex items-center justify-center gap-2 border border-[#DDD] text-[#555] py-3 rounded-xl text-[14px] font-medium">
-            <MessageCircle className="h-4 w-4" /> Falar com vendedor
-          </button>
         </div>
       </div>
 
+      {/* Confirm release dialog */}
       <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <DialogContent className="max-w-sm mx-auto">
           <DialogHeader>
@@ -340,6 +373,7 @@ export default function OrderDetail() {
         </DialogContent>
       </Dialog>
 
+      {/* Dispute dialog */}
       <Dialog open={disputeOpen} onOpenChange={setDisputeOpen}>
         <DialogContent className="max-w-sm mx-auto max-h-[80vh] overflow-y-auto">
           <DialogHeader>
@@ -402,3 +436,5 @@ export default function OrderDetail() {
     </DesktopPageShell>
   );
 }
+
+const otherUserName = "Vendedor";

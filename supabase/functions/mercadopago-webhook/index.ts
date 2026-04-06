@@ -94,100 +94,76 @@ Deno.serve(async (req) => {
         });
         console.log(`Seller ${tx.seller_id} pending +${sellerReceives} (atomic)`);
 
-        // Fetch listing and profiles for emails
+        // Fetch listing and profiles for emails and chat
         const { data: listing } = await supabase
           .from("listings")
-          .select("prefilled_credentials, title, category")
+          .select("title, category")
           .eq("id", tx.listing_id)
           .single();
 
         const { data: buyerProfile } = await supabase
           .from("profiles")
-          .select("email")
+          .select("email, name")
           .eq("user_id", tx.buyer_id)
           .single();
 
         const { data: sellerProfile } = await supabase
           .from("profiles")
-          .select("email")
+          .select("email, name")
           .eq("user_id", tx.seller_id)
           .single();
 
         const anonKey = Deno.env.get("SUPABASE_ANON_KEY") || supabaseServiceKey;
+        const amount = Number(tx.amount);
+        const amountFormatted = `R$ ${amount.toFixed(2).replace(".", ",")}`;
+        const buyerName = buyerProfile?.name || "Comprador";
+        const listingTitle = listing?.title || "Conta Digital";
 
-        if (listing?.prefilled_credentials) {
-          console.log("Auto-delivering prefilled credentials");
+        // === NEW FLOW: Open credential delivery chat ===
 
-          await supabase.from("credentials").insert({
-            transaction_id: transactionId,
-            data_encrypted: listing.prefilled_credentials,
-            delivered_at: new Date().toISOString(),
+        // 1. Insert system message to open the chat
+        await supabase.from("transaction_messages").insert({
+          transaction_id: transactionId,
+          sender_id: tx.seller_id, // needs a valid sender for RLS
+          is_system: true,
+          allow_sensitive_data: true,
+          message: `✅ Pagamento confirmado! Olá, ${buyerName}.\n\nSeu pagamento de ${amountFormatted} foi processado com sucesso.\n\nAguarde enquanto o vendedor envia as credenciais de acesso da conta. Normalmente isso acontece em poucos minutos.\n\n🔒 Este chat é protegido pelo Escrow Froiv. Não libere o pagamento antes de verificar que as credenciais estão corretas.`,
+        });
+
+        // 2. Update transaction to transfer_in_progress (awaiting credentials)
+        await supabase.from("transactions").update({
+          status: "transfer_in_progress",
+          updated_at: new Date().toISOString(),
+        }).eq("id", transactionId);
+
+        // 3. Notify buyer
+        await supabase.from("notifications").insert({
+          user_id: tx.buyer_id,
+          title: "💬 Chat aberto com o vendedor",
+          body: "Seu chat com o vendedor foi aberto. Aguarde as credenciais de acesso.",
+          link: `/compras/${transactionId}`,
+        });
+
+        // 4. Notify seller
+        await supabase.from("notifications").insert({
+          user_id: tx.seller_id,
+          title: "🔑 Envie as credenciais pelo chat!",
+          body: `${buyerName} comprou "${listingTitle}". Acesse o chat e envie os dados de acesso agora.`,
+          link: `/compras/${transactionId}`,
+        });
+
+        // 5. Send emails
+        if (buyerProfile?.email) {
+          await sendEmailNotification(supabaseUrl, anonKey, "purchase_confirmed", buyerProfile.email, {
+            amount, title: listingTitle, transaction_id: transactionId,
           });
-
-          await supabase.from("transactions").update({
-            status: "transfer_in_progress",
-            updated_at: new Date().toISOString(),
-          }).eq("id", transactionId);
-
-          await supabase.from("transaction_messages").insert({
-            transaction_id: transactionId,
-            sender_id: tx.seller_id,
-            message: "📦 Credenciais da conta entregues automaticamente. Verifique os dados de acesso.",
+        }
+        if (sellerProfile?.email) {
+          await sendEmailNotification(supabaseUrl, anonKey, "credentials_needed", sellerProfile.email, {
+            amount, fee: Number(tx.platform_fee), net: sellerReceives,
+            title: listingTitle, transaction_id: transactionId,
+            buyer_name: buyerName,
           });
-
-          await supabase.from("notifications").insert({
-            user_id: tx.buyer_id,
-            title: "🔐 Credenciais disponíveis!",
-            body: "O pagamento foi aprovado e as credenciais já estão disponíveis. Verifique e confirme em até 24h.",
-            link: `/compras/${transactionId}`,
-          });
-
-          await supabase.from("notifications").insert({
-            user_id: tx.seller_id,
-            title: "Pagamento recebido! 💰",
-            body: `Compra de R$ ${Number(tx.amount).toFixed(2)} confirmada. Credenciais entregues automaticamente.`,
-            link: `/transaction/${tx.listing_id}`,
-          });
-
-          // Send emails
-          if (buyerProfile?.email) {
-            await sendEmailNotification(supabaseUrl, anonKey, "purchase_confirmed", buyerProfile.email, {
-              amount: Number(tx.amount), title: listing?.title || "Conta Digital", transaction_id: transactionId,
-            });
-          }
-          if (sellerProfile?.email) {
-            await sendEmailNotification(supabaseUrl, anonKey, "sale_completed", sellerProfile.email, {
-              amount: Number(tx.amount), fee: Number(tx.platform_fee), net: sellerReceives,
-              title: listing?.title || "Conta Digital", transaction_id: transactionId,
-            });
-          }
-        } else {
-          await supabase.from("notifications").insert({
-            user_id: tx.seller_id,
-            title: "Pagamento recebido! 💰",
-            body: `Compra confirmada no valor de R$ ${Number(tx.amount).toFixed(2)}. Envie as credenciais para liberar o pagamento.`,
-            link: `/transaction/${tx.listing_id}`,
-          });
-
-          await supabase.from("notifications").insert({
-            user_id: tx.buyer_id,
-            title: "Pagamento confirmado! ✅",
-            body: "Seu pagamento foi aprovado. Aguarde o vendedor enviar as credenciais.",
-            link: `/compras/${transactionId}`,
-          });
-
-          // Send emails
-          if (buyerProfile?.email) {
-            await sendEmailNotification(supabaseUrl, anonKey, "purchase_confirmed", buyerProfile.email, {
-              amount: Number(tx.amount), title: listing?.title || "Conta Digital", transaction_id: transactionId,
-            });
-          }
-          if (sellerProfile?.email) {
-            await sendEmailNotification(supabaseUrl, anonKey, "sale_completed", sellerProfile.email, {
-              amount: Number(tx.amount), fee: Number(tx.platform_fee), net: sellerReceives,
-              title: listing?.title || "Conta Digital", transaction_id: transactionId,
-            });
-          }
         }
 
       } else if (payment.status === "cancelled" || payment.status === "rejected") {
