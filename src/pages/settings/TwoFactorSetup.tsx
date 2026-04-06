@@ -4,7 +4,7 @@ import { ShieldCheck, Copy, Check, AlertTriangle, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import PageHeader from "@/components/menu/PageHeader";
+import DesktopPageShell from "@/components/DesktopPageShell";
 import { toast } from "sonner";
 import QRCode from "react-qr-code";
 

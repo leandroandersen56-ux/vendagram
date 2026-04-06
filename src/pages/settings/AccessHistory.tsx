@@ -1,5 +1,5 @@
-import { Monitor, Clock } from "lucide-react";
-import PageHeader from "@/components/menu/PageHeader";
+import { Monitor } from "lucide-react";
+import DesktopPageShell from "@/components/DesktopPageShell";
 
 export default function AccessHistory() {
   const mockSessions = [
@@ -9,9 +9,8 @@ export default function AccessHistory() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F5F5F5] pb-24">
-      <PageHeader title="Histórico de acessos" />
-      <div className="p-4">
+    <DesktopPageShell title="Histórico de acessos" breadcrumbs={[{ label: "Início", to: "/" }, { label: "Configurações", to: "/configuracoes" }, { label: "Histórico de acessos" }]}>
+      <div className="space-y-4">
         <div className="bg-white rounded-2xl border border-[#F0F0F0] overflow-hidden divide-y divide-[#F0F0F0]">
           {mockSessions.map((s, i) => (
             <div key={i} className="p-4 flex items-start gap-3">
@@ -25,10 +24,10 @@ export default function AccessHistory() {
             </div>
           ))}
         </div>
-        <p className="text-xs text-[#999] text-center mt-4 px-4">
+        <p className="text-xs text-[#999] text-center px-4">
           Os dados de acesso são mantidos por 30 dias para sua segurança.
         </p>
       </div>
-    </div>
+    </DesktopPageShell>
   );
 }
