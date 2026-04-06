@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Copy, Share2, Loader2 } from "lucide-react";
-import PageHeader from "@/components/menu/PageHeader";
+import DesktopPageShell from "@/components/DesktopPageShell";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -18,7 +18,6 @@ export default function Affiliates() {
 
   const loadData = async () => {
     setLoading(true);
-    // Get referral code
     const { data: profile } = await supabase
       .from("profiles")
       .select("referral_code")
@@ -27,7 +26,6 @@ export default function Affiliates() {
 
     if (profile?.referral_code) setReferralCode(profile.referral_code);
 
-    // Get referrals
     const { data: referrals } = await supabase
       .from("referrals")
       .select("*")
@@ -62,13 +60,8 @@ export default function Affiliates() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F5F5] pb-20">
-      <PageHeader
-        title="Afiliados"
-        rightAction={<span className="text-[10px] bg-success text-white font-semibold px-2 py-0.5 rounded-full">GANHA $</span>}
-      />
-
-      <div className="px-4 pt-4 space-y-4">
+    <DesktopPageShell title="Afiliados">
+      <div className="space-y-4">
         {/* Hero */}
         <div className="bg-gradient-to-br from-[#064E3B] to-[#065F46] rounded-2xl p-6 text-white">
           <p className="text-2xl font-semibold">💰 Ganhe 10% de comissão</p>
@@ -146,6 +139,6 @@ export default function Affiliates() {
           </div>
         )}
       </div>
-    </div>
+    </DesktopPageShell>
   );
 }

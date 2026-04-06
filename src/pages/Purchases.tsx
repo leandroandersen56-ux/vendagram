@@ -1,9 +1,8 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Search, Star, ShoppingCart, ArrowRight, Loader2, Clock, CheckCircle2, Eye, AlertTriangle, RotateCcw, XCircle } from "lucide-react";
-import PageHeader from "@/components/menu/PageHeader";
+import DesktopPageShell from "@/components/DesktopPageShell";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { getListingImage, handleListingImageError } from "@/lib/utils";
@@ -41,9 +40,7 @@ export default function Purchases() {
         .eq("buyer_id", user!.id)
         .order("created_at", { ascending: false });
 
-      if (!error && data) {
-        setPurchases(data);
-      }
+      if (!error && data) setPurchases(data);
     } catch (err) {
       console.error(err);
     } finally {
@@ -65,10 +62,8 @@ export default function Purchases() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F5F5] pb-20">
-      <PageHeader title="Minhas Compras" />
-
-      <div className="px-4 pt-3 pb-2">
+    <DesktopPageShell title="Minhas Compras">
+      <div className="space-y-3">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#999]" />
           <input
@@ -79,7 +74,7 @@ export default function Purchases() {
           />
         </div>
 
-        <div className="flex gap-2 mt-3 overflow-x-auto scrollbar-hide">
+        <div className="flex gap-2 overflow-x-auto scrollbar-hide">
           {FILTERS.map((f) => (
             <button
               key={f}
@@ -92,15 +87,13 @@ export default function Purchases() {
             </button>
           ))}
         </div>
-      </div>
 
-      <div className="mx-4 mb-3 bg-gradient-to-r from-[#FF6900] to-[#FFB800] rounded-xl p-4 flex items-center gap-3 cursor-pointer">
-        <Star className="h-6 w-6 text-white shrink-0" fill="white" />
-        <p className="text-white text-[13px] font-semibold flex-1">Avalie suas compras e ajude a comunidade!</p>
-        <ArrowRight className="h-4 w-4 text-white/80 shrink-0" />
-      </div>
+        <div className="bg-gradient-to-r from-[#FF6900] to-[#FFB800] rounded-xl p-4 flex items-center gap-3 cursor-pointer">
+          <Star className="h-6 w-6 text-white shrink-0" fill="white" />
+          <p className="text-white text-[13px] font-semibold flex-1">Avalie suas compras e ajude a comunidade!</p>
+          <ArrowRight className="h-4 w-4 text-white/80 shrink-0" />
+        </div>
 
-      <div className="px-4 space-y-3">
         {loading ? (
           <div className="flex items-center justify-center py-16">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -169,6 +162,6 @@ export default function Purchases() {
           })
         )}
       </div>
-    </div>
+    </DesktopPageShell>
   );
 }

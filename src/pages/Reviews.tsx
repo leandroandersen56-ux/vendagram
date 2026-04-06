@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Star, Loader2, CheckCircle2 } from "lucide-react";
-import PageHeader from "@/components/menu/PageHeader";
+import DesktopPageShell from "@/components/DesktopPageShell";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -22,23 +22,19 @@ export default function Reviews() {
 
   const loadReviews = async () => {
     setLoading(true);
-    // Get completed transactions where user is buyer
     const { data: transactions } = await supabase
       .from("transactions")
       .select("*, listings(title, screenshots, category)")
       .eq("buyer_id", user!.id)
       .eq("status", "completed");
 
-    // Get reviews already submitted by this user
     const { data: existingReviews } = await supabase
       .from("reviews")
       .select("*, transactions(listings(title, screenshots, category))")
       .eq("reviewer_id", user!.id);
 
     const reviewedTxIds = new Set((existingReviews || []).map((r: any) => r.transaction_id));
-
-    const pendingItems = (transactions || []).filter((t: any) => !reviewedTxIds.has(t.id));
-    setPending(pendingItems);
+    setPending((transactions || []).filter((t: any) => !reviewedTxIds.has(t.id)));
     setDone(existingReviews || []);
     setLoading(false);
   };
@@ -46,22 +42,13 @@ export default function Reviews() {
   const handlePublish = async (tx: any) => {
     const rating = selectedRating[tx.id];
     if (!rating) { toast.error("Selecione uma avaliação"); return; }
-
     setSubmitting(tx.id);
     const { error } = await supabase.from("reviews").insert({
-      transaction_id: tx.id,
-      reviewer_id: user!.id,
-      reviewed_id: tx.seller_id,
-      rating,
-      comment: comments[tx.id] || null,
+      transaction_id: tx.id, reviewer_id: user!.id, reviewed_id: tx.seller_id,
+      rating, comment: comments[tx.id] || null,
     });
-
-    if (error) {
-      toast.error("Erro ao publicar avaliação");
-    } else {
-      toast.success("Avaliação publicada! 🎉");
-      loadReviews();
-    }
+    if (error) toast.error("Erro ao publicar avaliação");
+    else { toast.success("Avaliação publicada! 🎉"); loadReviews(); }
     setSubmitting(null);
   };
 
@@ -70,15 +57,11 @@ export default function Reviews() {
     return listing?.screenshots?.[0] || "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=96&h=96&fit=crop";
   };
 
-  const getTitle = (item: any) => {
-    return item.listings?.title || item.transactions?.listings?.title || "Produto";
-  };
+  const getTitle = (item: any) => item.listings?.title || item.transactions?.listings?.title || "Produto";
 
   return (
-    <div className="min-h-screen bg-[#F5F5F5] pb-20">
-      <PageHeader title="Minhas Avaliações" />
-
-      <div className="px-4 pt-3">
+    <DesktopPageShell title="Minhas Avaliações">
+      <div>
         <div className="flex gap-0 bg-white rounded-xl border border-[#E8E8E8] overflow-hidden mb-4">
           <button onClick={() => setTab("pending")}
             className={`flex-1 py-2.5 text-[13px] font-medium transition-colors flex items-center justify-center gap-1.5 ${tab === "pending" ? "bg-primary text-white" : "text-[#666]"}`}>
@@ -168,6 +151,6 @@ export default function Reviews() {
           </div>
         )}
       </div>
-    </div>
+    </DesktopPageShell>
   );
 }

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import PageHeader from "@/components/menu/PageHeader";
 import { HelpCircle } from "lucide-react";
+import DesktopPageShell from "@/components/DesktopPageShell";
 
 const MOCK_QUESTIONS = [
   {
@@ -27,10 +27,8 @@ export default function Questions() {
   const [tab, setTab] = useState<"made" | "received">("made");
 
   return (
-    <div className="min-h-screen bg-[#F5F5F5] pb-20">
-      <PageHeader title="Minhas Perguntas" />
-
-      <div className="px-4 pt-3">
+    <DesktopPageShell title="Minhas Perguntas">
+      <div>
         <div className="flex gap-0 bg-white rounded-xl border border-[#E8E8E8] overflow-hidden mb-4">
           {[
             { key: "made" as const, label: "Perguntas feitas" },
@@ -77,6 +75,6 @@ export default function Questions() {
           </div>
         )}
       </div>
-    </div>
+    </DesktopPageShell>
   );
 }

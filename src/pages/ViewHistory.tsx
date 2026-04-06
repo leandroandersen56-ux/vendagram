@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import { Clock, Trash2, Loader2, Eye } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import PageHeader from "@/components/menu/PageHeader";
+import DesktopPageShell from "@/components/DesktopPageShell";
 import ListingCard from "@/components/ListingCard";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -29,7 +28,6 @@ export default function ViewHistory() {
       .limit(100);
 
     if (data) {
-      // Deduplicate by listing_id, keep most recent
       const seen = new Set<string>();
       const unique = data.filter((d: any) => {
         if (seen.has(d.listing_id)) return false;
@@ -59,18 +57,27 @@ export default function ViewHistory() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F5F5] pb-20">
-      <PageHeader
-        title="Histórico de visualizações"
-        rightAction={
-          items.length > 0 ? (
-            <button onClick={clearHistory} className="text-xs text-destructive font-medium flex items-center gap-1">
-              <Trash2 className="h-3.5 w-3.5" /> Limpar
+    <DesktopPageShell
+      title="Histórico de visualizações"
+      maxWidth="max-w-5xl"
+      rightAction={
+        items.length > 0 ? (
+          <button onClick={clearHistory} className="text-xs text-destructive font-medium flex items-center gap-1 sm:hidden">
+            <Trash2 className="h-3.5 w-3.5" /> Limpar
+          </button>
+        ) : undefined
+      }
+    >
+      <div>
+        {/* Desktop clear button */}
+        {items.length > 0 && (
+          <div className="hidden sm:flex justify-end mb-3">
+            <button onClick={clearHistory} className="text-xs text-destructive hover:underline flex items-center gap-1">
+              <Trash2 className="h-3.5 w-3.5" /> Limpar histórico
             </button>
-          ) : undefined
-        }
-      />
-      <div className="px-4 pt-4">
+          </div>
+        )}
+
         {loading ? (
           <div className="flex justify-center pt-20">
             <Loader2 className="h-6 w-6 animate-spin text-primary" />
@@ -95,6 +102,6 @@ export default function ViewHistory() {
           </div>
         )}
       </div>
-    </div>
+    </DesktopPageShell>
   );
 }

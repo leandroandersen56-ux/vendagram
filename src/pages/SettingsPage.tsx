@@ -6,7 +6,7 @@ import {
   Bell, MessageCircle, Star, Tag, Mail as MailIcon,
   CreditCard, Receipt, Clock, Monitor, Trash2, ChevronRight
 } from "lucide-react";
-import PageHeader from "@/components/menu/PageHeader";
+import DesktopPageShell from "@/components/DesktopPageShell";
 
 interface ToggleProps {
   enabled: boolean;
@@ -110,14 +110,12 @@ export default function SettingsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F5F5F5] pb-20">
-      <PageHeader title="Configurações" />
-
-      <div className="pt-2">
+    <DesktopPageShell title="Configurações">
+      <div className="space-y-0">
         {groups.map((group) => (
           <div key={group.label}>
-            <p className="text-[12px] text-[#999] uppercase font-semibold px-5 pt-4 pb-2">{group.label}</p>
-            <div className="bg-white border-y border-[#F0F0F0]">
+            <p className="text-[12px] text-[#999] uppercase font-semibold px-1 pt-4 pb-2">{group.label}</p>
+            <div className="bg-white rounded-xl sm:rounded-2xl border border-[#F0F0F0] overflow-hidden">
               {group.items.map((item, i) => (
                 <SettingRow
                   key={i}
@@ -134,6 +132,6 @@ export default function SettingsPage() {
           </div>
         ))}
       </div>
-    </div>
+    </DesktopPageShell>
   );
 }
