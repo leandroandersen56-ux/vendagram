@@ -349,13 +349,13 @@ export default function CreateListing() {
             {p.id === 'other' ? (
               <Globe className="w-7 h-7 text-white" />
             ) : p.id === 'youtube' ? (
-              <svg width={28} height={28} viewBox="0 0 24 24" fill="none">
-                <path d="M9.75 15.5V8.5l6.25 3.5-6.25 3.5z" fill="#fff"/>
+              <svg width={32} height={32} viewBox="0 0 24 24" fill="none">
+                <path d="M8 5.5v13l11-6.5L8 5.5z" fill="#fff"/>
               </svg>
             ) : p.id === 'free_fire' ? (
-              <img src={freefireLogo} width={36} height={36} alt="Free Fire" className="object-contain brightness-0 invert" />
+              <img src={freefireLogo} width={32} height={32} alt="Free Fire" className="object-contain brightness-0 invert" />
             ) : (
-              <div className="[&_svg_path]:!fill-white [&_svg_rect]:!stroke-white [&_svg_circle]:!stroke-white [&_svg_circle]:!fill-none">
+              <div className="[&_svg]:!w-7 [&_svg]:!h-7 [&_svg_path]:!fill-white [&_svg_rect]:!stroke-white [&_svg_rect]:!fill-none [&_svg_circle]:!stroke-white [&_svg_circle]:!fill-none [&_svg_line]:!stroke-white [&_svg_polyline]:!stroke-white [&_svg_polygon]:!fill-white">
                 <PlatformIcon platformId={p.id} size={28} />
               </div>
             )}
