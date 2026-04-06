@@ -1,9 +1,10 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, Loader2, MessageSquare } from "lucide-react";
+import { Send, Loader2, MessageSquare, ShieldAlert } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { moderateText, getModerationMessage } from "@/lib/content-moderation";
 
 interface Message {
   id: string;
@@ -23,6 +24,7 @@ export default function TransactionChat({ transactionId, otherUserName = "Usuár
   const [newMessage, setNewMessage] = useState("");
   const [sending, setSending] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [moderationWarning, setModerationWarning] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -71,6 +73,15 @@ export default function TransactionChat({ transactionId, otherUserName = "Usuár
 
   const sendMessage = async () => {
     if (!newMessage.trim() || !user) return;
+    
+    // Content moderation check
+    const modResult = moderateText(newMessage);
+    if (modResult.blocked) {
+      setModerationWarning(getModerationMessage(modResult));
+      return;
+    }
+    setModerationWarning("");
+    
     setSending(true);
     const msg = newMessage.trim();
     setNewMessage("");
@@ -159,10 +170,17 @@ export default function TransactionChat({ transactionId, otherUserName = "Usuár
         )}
       </div>
 
+      {moderationWarning && (
+        <div className="px-3 py-2 bg-red-50 border-t border-red-200 flex items-start gap-2">
+          <ShieldAlert className="h-4 w-4 text-red-500 shrink-0 mt-0.5" />
+          <p className="text-[11px] text-red-600 leading-tight">{moderationWarning}</p>
+        </div>
+      )}
+
       <div className="px-3 py-2 border-t border-[#E8E8E8] flex items-center gap-2">
         <input
           value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
+          onChange={(e) => { setNewMessage(e.target.value); if (moderationWarning) setModerationWarning(""); }}
           onKeyDown={handleKeyDown}
           placeholder="Escreva uma mensagem..."
           className="flex-1 h-9 px-4 rounded-full border border-[#DDD] text-[13px] bg-[#F9F9F9] focus:outline-none focus:ring-2 focus:ring-primary/30"

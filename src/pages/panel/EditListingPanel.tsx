@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { PLATFORMS } from "@/lib/mock-data";
+import { moderateText, getModerationMessage } from "@/lib/content-moderation";
 import PlatformIcon from "@/components/PlatformIcon";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -239,6 +240,15 @@ export default function EditListingPanel() {
   const handleSave = async () => {
     if (!title || !price) {
       toast({ title: "Preencha título e preço", variant: "destructive" });
+      return;
+    }
+
+    // Content moderation
+    const titleMod = moderateText(title);
+    const descMod = moderateText(description);
+    if (titleMod.blocked || descMod.blocked) {
+      const msg = titleMod.blocked ? getModerationMessage(titleMod) : getModerationMessage(descMod);
+      toast({ title: "Conteúdo bloqueado", description: msg, variant: "destructive" });
       return;
     }
 

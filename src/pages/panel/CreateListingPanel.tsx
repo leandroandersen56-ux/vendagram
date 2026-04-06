@@ -13,6 +13,7 @@ import PlatformIcon from "@/components/PlatformIcon";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { moderateText, getModerationMessage } from "@/lib/content-moderation";
 
 // ── Config por plataforma ──────────────────────────────────────
 const FEATURES: Record<string, string[]> = {
@@ -204,6 +205,15 @@ export default function CreateListing() {
     }
     if (!user) {
       toast({ title: "Faça login para publicar", variant: "destructive" });
+      return;
+    }
+
+    // Content moderation on title and description
+    const titleMod = moderateText(title);
+    const descMod = moderateText(description);
+    if (titleMod.blocked || descMod.blocked) {
+      const msg = titleMod.blocked ? getModerationMessage(titleMod) : getModerationMessage(descMod);
+      toast({ title: "Conteúdo bloqueado", description: msg, variant: "destructive" });
       return;
     }
 
