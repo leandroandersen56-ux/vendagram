@@ -422,11 +422,6 @@ export default function Index() {
                         { img: bannerSocialSection, alt: "YouTube", title: "Canais YouTube", subtitle: "Canais monetizados, inscritos\ne audiência garantida", link: "/marketplace?category=youtube" },
                         { img: bannerSocialFacebook, alt: "Facebook", title: "Páginas Facebook", subtitle: "Páginas com seguidores,\nalcance e engajamento real", link: "/marketplace?category=facebook" },
                       ];
-                      const [socialSlide, setSocialSlide] = useState(0);
-                      useEffect(() => {
-                        const t = setInterval(() => setSocialSlide(p => (p + 1) % socialBanners.length), 4000);
-                        return () => clearInterval(t);
-                      }, []);
                       return (
                         <div className="relative rounded-2xl overflow-hidden mb-4">
                           {socialBanners.map((sb, i) => (
