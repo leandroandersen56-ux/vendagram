@@ -162,6 +162,9 @@ export default function Index() {
     <div className="min-h-screen bg-background flex flex-col">
       <Navbar />
 
+      {/* SEO H1 — visually hidden */}
+      <h1 className="sr-only">Comprar Conta Instagram, TikTok, Free Fire, Valorant — Froiv Marketplace de Contas Digitais</h1>
+
       <div className="pt-14 pb-16 sm:pb-0">
         {/* === BANNER CAROUSEL === */}
         <section className="pt-3 md:pt-6">
@@ -604,6 +607,28 @@ export default function Index() {
                   </div>
                 ))}
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* SEO Content Block */}
+        <section className="bg-card border-t border-border">
+          <div className="container mx-auto px-4 py-10">
+            <h2 className="text-lg font-semibold text-foreground mb-4">Comprar Contas Digitais com Segurança</h2>
+            <div className="prose prose-sm max-w-none text-muted-foreground space-y-3">
+              <p>
+                O <strong>Froiv</strong> é o marketplace #1 do Brasil para <strong>comprar e vender contas digitais</strong> com total segurança. 
+                Oferecemos proteção <strong>Escrow</strong> em todas as transações — o pagamento só é liberado ao vendedor após o comprador confirmar o recebimento da conta.
+              </p>
+              <p>
+                Encontre as melhores ofertas para <strong>comprar conta Instagram</strong>, <strong>comprar conta TikTok</strong>, <strong>comprar conta Free Fire</strong>, 
+                <strong>comprar conta Valorant</strong>, <strong>comprar conta Fortnite</strong>, <strong>comprar conta Roblox</strong>, <strong>comprar conta YouTube</strong> e 
+                <strong>comprar conta Facebook</strong>. Contas verificadas, com seguidores reais, skins raras e itens exclusivos.
+              </p>
+              <p>
+                Aceite pagamentos via <strong>Pix</strong> e cartão de crédito. Processo simples: busque, pague, verifique e pronto. 
+                Suporte 24h, sistema de avaliações e disputa integrada para sua tranquilidade.
+              </p>
             </div>
           </div>
         </section>

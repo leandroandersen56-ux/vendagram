@@ -1,8 +1,18 @@
+User-agent: *
+Allow: /
+Disallow: /vendedor/
+Disallow: /configuracoes/
+Disallow: /cart
+Disallow: /checkout/
+Disallow: /auth/
+
 User-agent: Googlebot
 Allow: /
+Crawl-delay: 1
 
 User-agent: Bingbot
 Allow: /
+Crawl-delay: 2
 
 User-agent: Twitterbot
 Allow: /
@@ -10,5 +20,4 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
-User-agent: *
-Allow: /
+Sitemap: https://froiv.com/sitemap.xml

@@ -61,6 +61,23 @@ export default function Marketplace() {
     fetchListings();
   }, []);
 
+  const activePlatform = PLATFORMS.find((p) => p.id === platform);
+
+  // Dynamic SEO title
+  useEffect(() => {
+    const platformName = platform === "all" ? "" : activePlatform?.name || "";
+    document.title = platform === "all"
+      ? "Marketplace de Contas Digitais | Froiv"
+      : `Comprar Conta ${platformName} — Preços e Ofertas | Froiv`;
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute("content", platform === "all"
+        ? "Explore contas de Instagram, TikTok, Free Fire, Valorant e mais. Compra segura com Escrow, pagamento via Pix e entrega imediata."
+        : `Compre contas de ${platformName} com proteção Escrow. Melhores preços e entrega imediata no Froiv.`
+      );
+    }
+  }, [platform, activePlatform]);
+
   const handlePlatformChange = (p: string) => {
     setPlatform(p);
     if (p === "all") {
@@ -82,8 +99,6 @@ export default function Marketplace() {
       if (sortBy === "price-desc") return b.price - a.price;
       return 0;
     });
-
-  const activePlatform = PLATFORMS.find((p) => p.id === platform);
 
   return (
     <div className="min-h-screen bg-background flex flex-col pb-16 sm:pb-0">
