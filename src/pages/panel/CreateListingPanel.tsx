@@ -868,7 +868,7 @@ export default function CreateListing() {
         <div className="px-4 pb-4 pt-3">
           <button
             onClick={handlePublish}
-            disabled={!title || !price || !credLogin || !credPassword || loading}
+            disabled={!title || !price || (credDeliveryMode === "prefill" && (!credLogin || !credPassword)) || loading}
             className="w-full h-[52px] rounded-[14px] flex items-center justify-center text-white text-base font-semibold border-none cursor-pointer transition-opacity disabled:opacity-40"
             style={{ background: '#2D6FF0', boxShadow: '0 4px 16px rgba(45,111,240,0.40)' }}
           >
