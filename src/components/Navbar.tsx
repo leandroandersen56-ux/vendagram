@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Search, Bell, User, LogOut, LayoutDashboard, ShoppingBag, ShoppingCart, Loader2, Heart, Wallet, Settings, HelpCircle } from "lucide-react";
@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFavorites } from "@/hooks/useFavorites";
 import { formatBRL, PLATFORM_COVERS } from "@/lib/mock-data";
+import { getListingImage } from "@/lib/utils";
 import logoFroiv from "@/assets/logo-froiv.png";
 import logoFroivWhite from "@/assets/logo-froiv-white.svg";
 import {
