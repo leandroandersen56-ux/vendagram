@@ -399,6 +399,5 @@ export default function OrderDetail() {
           </div>
         </DialogContent>
       </Dialog>
-    </div>
-  );
+    </DesktopPageShell>
 }
