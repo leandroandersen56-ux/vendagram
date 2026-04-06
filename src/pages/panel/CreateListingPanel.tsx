@@ -218,6 +218,28 @@ export default function CreateListing() {
     }
 
     setLoading(true);
+
+    // Upload screenshots to ImgBB
+    let screenshotUrls: string[] = [];
+    if (screenshots.length > 0) {
+      try {
+        const uploadPromises = screenshots.map(async (s) => {
+          const formData = new FormData();
+          formData.append("image", s.file);
+          const { data, error } = await supabase.functions.invoke("upload-image", {
+            body: formData,
+          });
+          if (error) throw new Error(error.message || "Upload failed");
+          return data.url as string;
+        });
+        screenshotUrls = await Promise.all(uploadPromises);
+      } catch (uploadErr: any) {
+        setLoading(false);
+        toast({ title: "Erro ao enviar imagens", description: uploadErr.message, variant: "destructive" });
+        return;
+      }
+    }
+
     const highlights: Record<string, string | boolean | string[]> = {};
     if (followers) highlights["Seguidores"] = followers;
     if (nicho) highlights["Nicho"] = nicho;
@@ -250,6 +272,7 @@ export default function CreateListing() {
       includes: items.length > 0 ? items.join(", ") : null,
       status: "active",
       prefilled_credentials: encoded,
+      screenshots: screenshotUrls.length > 0 ? screenshotUrls : null,
     } as any);
 
     setLoading(false);
