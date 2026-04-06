@@ -430,7 +430,7 @@ export default function Index() {
                                 <div className="px-5 sm:px-8 md:px-12 max-w-sm md:max-w-lg">
                                   <h2 className="text-white text-base sm:text-xl md:text-3xl lg:text-4xl font-semibold leading-tight">{sb.title}</h2>
                                   <p className="text-white/80 text-[11px] sm:text-sm md:text-base lg:text-lg mt-1 md:mt-2 whitespace-pre-line">{sb.subtitle}</p>
-                                  <span className="inline-block mt-2 md:mt-3 text-[10px] sm:text-xs font-semibold text-white border border-white/40 rounded-lg px-3 py-1 md:py-1.5 hover:bg-white/10 transition-colors">
+                                  <span className="inline-block mt-2 md:mt-3 text-[11px] sm:text-xs md:text-sm font-semibold text-white border border-white/40 rounded-lg px-3 py-1 md:py-1.5 hover:bg-white/10 transition-colors">
                                     Explorar →
                                   </span>
                                 </div>
@@ -473,7 +473,7 @@ export default function Index() {
                     <div className="px-5 sm:px-8 md:px-12 max-w-sm md:max-w-lg">
                       <h2 className="text-white text-base sm:text-xl md:text-3xl lg:text-4xl font-semibold leading-tight">Contas Free Fire</h2>
                       <p className="text-white/80 text-[11px] sm:text-sm md:text-base lg:text-lg mt-1 md:mt-2 whitespace-pre-line">{"Contas ranqueadas, skins raras\ne itens exclusivos"}</p>
-                      <span className="inline-block mt-2 md:mt-3 text-[10px] sm:text-xs font-semibold text-white border border-white/40 rounded-lg px-3 py-1 md:py-1.5 hover:bg-white/10 transition-colors">
+                      <span className="inline-block mt-2 md:mt-3 text-[11px] sm:text-xs md:text-sm font-semibold text-white border border-white/40 rounded-lg px-3 py-1 md:py-1.5 hover:bg-white/10 transition-colors">
                         Explorar →
                       </span>
                     </div>
