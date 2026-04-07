@@ -319,9 +319,9 @@ function ListingCardML({
               </p>
               <button
                 onClick={() => onMenuOpen(listing)}
-                className="shrink-0 p-1 -mr-1 -mt-0.5 rounded-full hover:bg-[#F5F5F5]"
+                className="shrink-0 p-1.5 -mr-1 -mt-0.5 rounded-full hover:bg-[hsl(var(--muted))] transition-colors"
               >
-                <MoreVertical className="w-5 h-5 text-[#CCC]" />
+                <MoreVertical className="w-5 h-5 text-[hsl(var(--txt-secondary))]" />
               </button>
             </div>
 
