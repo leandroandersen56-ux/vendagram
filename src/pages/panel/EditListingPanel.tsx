@@ -364,6 +364,19 @@ export default function EditListingPanel() {
           )}
         </div>
 
+        {/* ── Stock ── */}
+        <div className="space-y-1.5">
+          <Label className="text-foreground text-xs uppercase tracking-wide">Estoque</Label>
+          <p className="text-[11px] text-muted-foreground">Para itens replicáveis. Deixe 1 para itens únicos.</p>
+          <Input
+            type="number"
+            min="1"
+            value={stock}
+            onChange={(e) => setStock(e.target.value)}
+            className="bg-card border-border h-12 w-32 text-center font-semibold"
+          />
+        </div>
+
         {/* ── Features ── */}
         {featureList.length > 0 && (
           <div className="space-y-2">
