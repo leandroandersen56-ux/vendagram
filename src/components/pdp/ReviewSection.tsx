@@ -55,7 +55,7 @@ export default function ReviewSection({ sellerId, sellerName, rating, totalSales
           rating: r.rating,
           comment: r.comment,
           created_at: r.created_at,
-          reviewer_name: nameMap[r.reviewer_id] || "Usuário",
+          reviewer_name: nameMap[r.reviewer_id] || DEMO_REVIEWER_NAMES[r.reviewer_id] || "Usuário",
         })));
       }
       setLoading(false);
