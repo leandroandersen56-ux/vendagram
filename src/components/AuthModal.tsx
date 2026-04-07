@@ -71,10 +71,11 @@ export default function AuthModal() {
   };
 
   const handleGoogle = async () => {
-    const host = window.location.hostname;
-    const redirectOrigin = host === "froiv.com" || host === "www.froiv.com"
-      ? "https://froiv.com"
-      : window.location.origin;
+    // froiv.com is on Vercel, so OAuth must go through the Lovable-hosted domain
+    const isOnLovable = window.location.hostname.includes("lovable.app");
+    const redirectOrigin = isOnLovable
+      ? window.location.origin
+      : "https://vendagram.lovable.app";
 
     const result = await lovable.auth.signInWithOAuth("google", {
       redirect_uri: redirectOrigin,
