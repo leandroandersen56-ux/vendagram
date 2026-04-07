@@ -8,88 +8,23 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable/index";
 import { toast } from "sonner";
 import MfaChallengeModal from "@/components/MfaChallengeModal";
-
-export default function AuthModal() {
-  const { showAuthModal, closeAuth, login, authRedirect, authRole } = useAuth();
-  const navigate = useNavigate();
-  const [mode, setMode] = useState<"login" | "register">("login");
-  const [showPassword, setShowPassword] = useState(false);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [selectedRole, setSelectedRole] = useState<"buyer" | "seller" | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [mfaFactorId, setMfaFactorId] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!showAuthModal) return;
-    setSelectedRole(authRole || null);
-    if (authRole) setMode("register");
-  }, [showAuthModal, authRole]);
-
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      if (mode === "register") {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: { name: name || email.split("@")[0], role: selectedRole || "buyer" },
-            emailRedirectTo: window.location.origin,
-          },
-        });
-        if (error) throw error;
-        toast.success("Conta criada! Verifique seu e-mail para confirmar.");
-      } else {
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-
-        // Check if MFA is required
-        const { data: factors } = await supabase.auth.mfa.listFactors();
-        const verifiedFactor = factors?.totp?.find((f) => f.status === "verified");
-        if (verifiedFactor) {
-          setMfaFactorId(verifiedFactor.id);
-          setLoading(false);
-          return; // Don't close modal yet - show MFA challenge
-        }
-
-        if (authRedirect) navigate(authRedirect);
-      }
-      closeAuth();
-      resetForm();
-    } catch (err: any) {
-      toast.error(err.message || "Erro ao autenticar");
-    } finally {
-      setLoading(false);
-    }
-  };
-
+...
   const handleGoogle = async () => {
-    const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: "https://www.froiv.com",
-      extraParams: {
-        prompt: "select_account",
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: "https://www.froiv.com/auth/callback",
+        queryParams: {
+          prompt: "select_account",
+        },
       },
     });
 
-    if (result.error) {
-      toast.error(String(result.error) || "Erro ao entrar com Google");
-      return;
+    if (error) {
+      toast.error(error.message || "Erro ao entrar com Google");
     }
-
-    if (result.redirected) {
-      return;
-    }
-
-    // Session set successfully
-    closeAuth();
-    if (authRedirect) navigate(authRedirect);
   };
 
   const resetForm = () => {
