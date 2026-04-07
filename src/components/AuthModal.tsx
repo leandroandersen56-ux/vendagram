@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { lovable } from "@/integrations/lovable/index";
 import { toast } from "sonner";
 import MfaChallengeModal from "@/components/MfaChallengeModal";
 
@@ -70,19 +71,25 @@ export default function AuthModal() {
   };
 
   const handleGoogle = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: window.location.origin,
-        queryParams: {
-          prompt: "select_account",
-        },
+    const result = await lovable.auth.signInWithOAuth("google", {
+      redirect_uri: "https://www.froiv.com",
+      extraParams: {
+        prompt: "select_account",
       },
     });
 
-    if (error) {
-      toast.error(error.message || "Erro ao entrar com Google");
+    if (result.error) {
+      toast.error(String(result.error) || "Erro ao entrar com Google");
+      return;
     }
+
+    if (result.redirected) {
+      return;
+    }
+
+    // Session set successfully
+    closeAuth();
+    if (authRedirect) navigate(authRedirect);
   };
 
   const resetForm = () => {
