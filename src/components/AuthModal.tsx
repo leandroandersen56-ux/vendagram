@@ -10,7 +10,63 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import MfaChallengeModal from "@/components/MfaChallengeModal";
-...
+
+export default function AuthModal() {
+  const { showAuthModal, closeAuth, login, authRedirect, authRole } = useAuth();
+  const navigate = useNavigate();
+  const [mode, setMode] = useState<"login" | "register">("login");
+  const [showPassword, setShowPassword] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [selectedRole, setSelectedRole] = useState<"buyer" | "seller" | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [mfaFactorId, setMfaFactorId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!showAuthModal) return;
+    setSelectedRole(authRole || null);
+    if (authRole) setMode("register");
+  }, [showAuthModal, authRole]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      if (mode === "register") {
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: { name: name || email.split("@")[0], role: selectedRole || "buyer" },
+            emailRedirectTo: window.location.origin,
+          },
+        });
+        if (error) throw error;
+        toast.success("Conta criada! Verifique seu e-mail para confirmar.");
+      } else {
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+
+        const { data: factors } = await supabase.auth.mfa.listFactors();
+        const verifiedFactor = factors?.totp?.find((f) => f.status === "verified");
+        if (verifiedFactor) {
+          setMfaFactorId(verifiedFactor.id);
+          setLoading(false);
+          return;
+        }
+
+        if (authRedirect) navigate(authRedirect);
+      }
+      closeAuth();
+      resetForm();
+    } catch (err: any) {
+      toast.error(err.message || "Erro ao autenticar");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleGoogle = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
