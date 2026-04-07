@@ -71,14 +71,11 @@ export default function AuthModal() {
   };
 
   const handleGoogle = async () => {
-    // froiv.com is on Vercel, so OAuth must go through the Lovable-hosted domain
-    const isOnLovable = window.location.hostname.includes("lovable.app");
-    const redirectOrigin = isOnLovable
-      ? window.location.origin
-      : "https://vendagram.lovable.app";
-
     const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: redirectOrigin,
+      redirect_uri: window.location.origin,
+      extraParams: {
+        prompt: "select_account",
+      },
     });
     if (result.error) {
       toast.error(result.error.message || "Erro ao entrar com Google");
