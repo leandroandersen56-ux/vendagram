@@ -12,7 +12,7 @@ interface ProductGalleryProps {
   isDemo?: boolean;
 }
 
-export default function ProductGallery({ images, title, category, verified }: ProductGalleryProps) {
+export default function ProductGallery({ images, title, category, verified, isDemo }: ProductGalleryProps) {
   const [selected, setSelected] = useState(0);
   const [direction, setDirection] = useState(0);
   const [lightbox, setLightbox] = useState(false);
