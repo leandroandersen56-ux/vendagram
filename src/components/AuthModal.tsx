@@ -71,11 +71,15 @@ export default function AuthModal() {
   };
 
   const handleGoogle = async () => {
-    // Use the Lovable published domain as redirect since froiv.com is on Vercel
-    // and not registered as allowed redirect in Lovable Cloud OAuth
-    const redirectOrigin = window.location.hostname.includes("lovable.app")
-      ? window.location.origin
-      : "https://vendagram.lovable.app";
+    // Save the origin so we can redirect back after OAuth on vendagram.lovable.app
+    const currentOrigin = window.location.origin;
+    const isOnLovable = window.location.hostname.includes("lovable.app");
+    const redirectOrigin = isOnLovable ? currentOrigin : "https://vendagram.lovable.app";
+
+    // Store origin for post-OAuth redirect back to froiv.com
+    if (!isOnLovable) {
+      localStorage.setItem("oauth_return_origin", currentOrigin);
+    }
 
     const result = await lovable.auth.signInWithOAuth("google", {
       redirect_uri: redirectOrigin,
