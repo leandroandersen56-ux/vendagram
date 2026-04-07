@@ -8,7 +8,6 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable/index";
 import { toast } from "sonner";
 import MfaChallengeModal from "@/components/MfaChallengeModal";
 
@@ -30,7 +29,6 @@ export default function AuthModal() {
     if (authRole) setMode("register");
   }, [showAuthModal, authRole]);
 
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -50,13 +48,12 @@ export default function AuthModal() {
         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
 
-        // Check if MFA is required
         const { data: factors } = await supabase.auth.mfa.listFactors();
         const verifiedFactor = factors?.totp?.find((f) => f.status === "verified");
         if (verifiedFactor) {
           setMfaFactorId(verifiedFactor.id);
           setLoading(false);
-          return; // Don't close modal yet - show MFA challenge
+          return;
         }
 
         if (authRedirect) navigate(authRedirect);
@@ -71,25 +68,19 @@ export default function AuthModal() {
   };
 
   const handleGoogle = async () => {
-    const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: "https://www.froiv.com",
-      extraParams: {
-        prompt: "select_account",
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: "https://www.froiv.com/auth/callback",
+        queryParams: {
+          prompt: "select_account",
+        },
       },
     });
 
-    if (result.error) {
-      toast.error(String(result.error) || "Erro ao entrar com Google");
-      return;
+    if (error) {
+      toast.error(error.message || "Erro ao entrar com Google");
     }
-
-    if (result.redirected) {
-      return;
-    }
-
-    // Session set successfully
-    closeAuth();
-    if (authRedirect) navigate(authRedirect);
   };
 
   const resetForm = () => {
