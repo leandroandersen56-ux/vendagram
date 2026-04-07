@@ -71,8 +71,13 @@ export default function AuthModal() {
   };
 
   const handleGoogle = async () => {
+    const host = window.location.hostname;
+    const redirectOrigin = host === "froiv.com" || host === "www.froiv.com"
+      ? "https://froiv.com"
+      : window.location.origin;
+
     const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
+      redirect_uri: redirectOrigin,
     });
     if (result.error) {
       toast.error(result.error.message || "Erro ao entrar com Google");
