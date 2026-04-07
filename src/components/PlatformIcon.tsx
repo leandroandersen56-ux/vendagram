@@ -41,9 +41,9 @@ const icons: Record<string, (s: number) => React.ReactNode> = {
   ),
 
   youtube: (s) => (
-    <svg width={s} height={s} viewBox="0 0 24 24" fill="none">
-      <path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2 31.3 31.3 0 000 12a31.3 31.3 0 00.5 5.8 3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1c.3-1.9.5-3.8.5-5.8a31.3 31.3 0 00-.5-5.8z" fill="#FF0000"/>
-      <path d="M9.75 15.5V8.5l6.25 3.5-6.25 3.5z" fill="#fff"/>
+    <svg width={s} height={s} viewBox="0 0 28 20" fill="none">
+      <rect width="28" height="20" rx="4" fill="#FF0000"/>
+      <path d="M11 5.5v9l7.5-4.5L11 5.5z" fill="#fff"/>
     </svg>
   ),
 
