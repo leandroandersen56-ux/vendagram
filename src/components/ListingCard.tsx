@@ -23,7 +23,8 @@ const PLATFORM_BADGE_COLORS: Record<string, { bg: string; text: string }> = {
 
 export default function ListingCard({ listing }: ListingCardProps) {
   const platform = getPlatform(listing.platform);
-  const coverImage = listing.screenshots?.[0] || PLATFORM_COVERS[listing.platform];
+  const firstScreenshot = listing.screenshots?.find((s) => typeof s === "string" && s.trim().length > 0);
+  const coverImage = firstScreenshot || null;
   const badge = PLATFORM_BADGE_COLORS[listing.platform] || PLATFORM_BADGE_COLORS.other;
 
   return (
