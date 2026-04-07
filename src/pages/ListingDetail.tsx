@@ -128,9 +128,8 @@ export default function ListingDetail() {
   const itemsList = highlights["Itens"] as string[] | undefined;
   const originalPrice = highlights["Preço original"] as string | undefined;
 
-  const coverImg = PLATFORM_COVERS[listing.category];
   const screenshots = (listing.screenshots || []).filter((s: string) => s);
-  const allImages = screenshots.length > 0 ? screenshots : (coverImg ? [coverImg] : []);
+  const allImages = screenshots;
 
   const handleShare = () => {
     const message = `🎮 ${listing.title} por ${formatBRL(listing.price)} 🔒 Compra segura: ${window.location.origin}/listing/${listing.id}`;
