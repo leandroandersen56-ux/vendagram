@@ -67,6 +67,12 @@ export default function ProductGallery({ images, title, category, verified, isDe
             </div>
           )}
 
+          {isDemo && (
+            <span className="absolute top-3 left-3 bg-black/70 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-lg z-10">
+              Anúncio Demo
+            </span>
+          )}
+
           {images.length > 1 && (
             <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-sm rounded-lg px-2.5 py-1 text-[11px] text-white font-medium">
               {selected + 1} / {images.length}
