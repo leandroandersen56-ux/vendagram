@@ -1,19 +1,30 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
-  ArrowDownRight, ArrowUpRight, Wallet, Clock,
+  ArrowDownRight, ArrowUpRight, Wallet, Clock, Loader2, Inbox,
   ArrowDown, ArrowRight, ArrowUp, ScanLine,
   RefreshCcw, Send, Repeat
 } from "lucide-react";
 import { formatBRL } from "@/lib/mock-data";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 import DepositModal from "@/components/wallet/DepositModal";
 import TransferModal from "@/components/wallet/TransferModal";
 import WithdrawModal from "@/components/wallet/WithdrawModal";
 import QRScannerModal from "@/components/wallet/QRScannerModal";
 import BalanceChart from "@/components/wallet/BalanceChart";
+
+type HistoryItem = {
+  type: string;
+  category: string;
+  desc: string;
+  counterpart: string | null;
+  amount: number;
+  date: string;
+  status: string;
+};
 
 type FilterTab = "all" | "in" | "out" | "escrow" | "transfer" | "deposit" | "withdraw";
 
@@ -25,17 +36,6 @@ const FILTER_TABS: { id: FilterTab; label: string }[] = [
   { id: "transfer", label: "Transferências" },
   { id: "deposit", label: "Depósitos" },
   { id: "withdraw", label: "Saques" },
-];
-
-const HISTORY = [
-  { type: "in", category: "in", desc: "Venda: Conta Free Fire", counterpart: "GameBuyer01", amount: 315, date: "20/03 14:32", status: "Concluído" },
-  { type: "deposit", category: "deposit", desc: "Depósito via Pix", counterpart: null, amount: 200, date: "19/03 10:15", status: "Concluído" },
-  { type: "in", category: "in", desc: "Venda: Facebook Marketplace", counterpart: "SocialBuyer", amount: 135, date: "18/03 09:41", status: "Concluído" },
-  { type: "transfer", category: "transfer", desc: "Transferência recebida", counterpart: "@joao_silva", amount: 50, date: "17/03 16:20", status: "Concluído" },
-  { type: "out", category: "withdraw", desc: "Saque Pix", counterpart: null, amount: -500, date: "15/03 11:00", status: "Processado" },
-  { type: "escrow", category: "escrow", desc: "Escrow: Conta Valorant", counterpart: "ValBuyer99", amount: 720, date: "14/03 08:50", status: "Pendente" },
-  { type: "in", category: "in", desc: "Venda: Valorant Imortal", counterpart: "ProGamer", amount: 720, date: "10/03 17:30", status: "Concluído" },
-  { type: "out", category: "transfer", desc: "Transferência enviada", counterpart: "@maria_game", amount: -80, date: "08/03 14:12", status: "Concluído" },
 ];
 
 function getIcon(type: string) {
@@ -63,28 +63,118 @@ function getStatusColor(status: string) {
   switch (status) {
     case "Concluído": case "Processado": return "bg-success/10 text-success";
     case "Pendente": return "bg-warning/10 text-warning";
-    case "Falhou": return "bg-destructive/10 text-destructive";
     default: return "bg-muted text-muted-foreground";
   }
 }
 
 export default function PanelWallet() {
+  const { user } = useAuth();
   const [showDeposit, setShowDeposit] = useState(false);
   const [showTransfer, setShowTransfer] = useState(false);
   const [showWithdraw, setShowWithdraw] = useState(false);
   const [showQR, setShowQR] = useState(false);
   const [activeFilter, setActiveFilter] = useState<FilterTab>("all");
+  const [loading, setLoading] = useState(true);
 
-  const balance = 890;
-  const pending = 1200;
-  const totalEarned = 4560;
+  const [balance, setBalance] = useState(0);
+  const [pending, setPending] = useState(0);
+  const [totalEarned, setTotalEarned] = useState(0);
+  const [history, setHistory] = useState<HistoryItem[]>([]);
+  const [pixKey, setPixKey] = useState("***.***.***-00");
 
-  const filteredHistory = HISTORY.filter((h) => {
+  useEffect(() => {
+    if (!user?.id) { setLoading(false); return; }
+    loadWalletData();
+  }, [user?.id]);
+
+  const loadWalletData = async () => {
+    const uid = user!.id;
+
+    const [walletRes, txRes, withdrawRes, depositRes, transfersInRes, transfersOutRes, profileRes] = await Promise.all([
+      supabase.from("wallets").select("balance, pending, total_earned").eq("user_id", uid).single(),
+      supabase.from("transactions").select("amount, status, created_at, listings(title)").or(`buyer_id.eq.${uid},seller_id.eq.${uid}`).order("created_at", { ascending: false }).limit(20),
+      supabase.from("withdrawals").select("amount, status, created_at").eq("user_id", uid).order("created_at", { ascending: false }).limit(10),
+      supabase.from("deposit_requests").select("amount, status, created_at").eq("user_id", uid).order("created_at", { ascending: false }).limit(10),
+      supabase.from("internal_transfers").select("amount, created_at, from_user_id").eq("to_user_id", uid).order("created_at", { ascending: false }).limit(10),
+      supabase.from("internal_transfers").select("amount, created_at, to_user_id").eq("from_user_id", uid).order("created_at", { ascending: false }).limit(10),
+      supabase.from("profiles").select("pix_key").eq("user_id", uid).single(),
+    ]);
+
+    if (walletRes.data) {
+      setBalance(Number(walletRes.data.balance));
+      setPending(Number(walletRes.data.pending));
+      setTotalEarned(Number(walletRes.data.total_earned));
+    }
+
+    if (profileRes.data?.pix_key) setPixKey(profileRes.data.pix_key);
+
+    const fmt = (d: string) => new Date(d).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
+    const items: HistoryItem[] = [];
+
+    (txRes.data || []).forEach((t: any) => {
+      const title = t.listings?.title || "Transação";
+      const isCompleted = t.status === "completed";
+      const isPending = ["pending_payment", "paid", "transfer_in_progress"].includes(t.status);
+      items.push({
+        type: isCompleted ? "in" : isPending ? "escrow" : "out",
+        category: isCompleted ? "in" : isPending ? "escrow" : "out",
+        desc: title,
+        counterpart: null,
+        amount: isCompleted ? Number(t.amount) : isPending ? Number(t.amount) : -Number(t.amount),
+        date: fmt(t.created_at),
+        status: isCompleted ? "Concluído" : isPending ? "Pendente" : "Cancelado",
+      });
+    });
+
+    (withdrawRes.data || []).forEach((w: any) => {
+      items.push({
+        type: "out", category: "withdraw", desc: "Saque Pix", counterpart: null,
+        amount: -Number(w.amount), date: fmt(w.created_at),
+        status: w.status === "processed" ? "Processado" : "Pendente",
+      });
+    });
+
+    (depositRes.data || []).forEach((d: any) => {
+      items.push({
+        type: "deposit", category: "deposit", desc: "Depósito via Pix", counterpart: null,
+        amount: Number(d.amount), date: fmt(d.created_at),
+        status: d.status === "completed" ? "Concluído" : "Pendente",
+      });
+    });
+
+    (transfersInRes.data || []).forEach((t: any) => {
+      items.push({
+        type: "transfer", category: "transfer", desc: "Transferência recebida", counterpart: null,
+        amount: Number(t.amount), date: fmt(t.created_at), status: "Concluído",
+      });
+    });
+
+    (transfersOutRes.data || []).forEach((t: any) => {
+      items.push({
+        type: "out", category: "transfer", desc: "Transferência enviada", counterpart: null,
+        amount: -Number(t.amount), date: fmt(t.created_at), status: "Concluído",
+      });
+    });
+
+    items.sort((a, b) => b.date.localeCompare(a.date));
+    setHistory(items);
+    setLoading(false);
+  };
+
+  const filteredHistory = history.filter((h) => {
     if (activeFilter === "all") return true;
     if (activeFilter === "in") return h.amount > 0 && h.category === "in";
     if (activeFilter === "out") return h.amount < 0 && h.category !== "transfer";
     return h.category === activeFilter;
   });
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="h-6 w-6 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -118,37 +208,25 @@ export default function PanelWallet() {
 
         {/* Quick Actions */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
-          <button
-            onClick={() => setShowDeposit(true)}
-            className="group flex flex-col items-center gap-2.5 p-4 bg-card border border-border rounded-xl hover:border-success/40 hover:bg-success/5 transition-all"
-          >
+          <button onClick={() => setShowDeposit(true)} className="group flex flex-col items-center gap-2.5 p-4 bg-card border border-border rounded-xl hover:border-success/40 hover:bg-success/5 transition-all">
             <div className="h-11 w-11 rounded-full bg-success/10 flex items-center justify-center group-hover:bg-success/20 transition-colors">
               <ArrowDown className="h-5 w-5 text-success" />
             </div>
             <span className="text-sm font-medium text-foreground">Depositar</span>
           </button>
-          <button
-            onClick={() => setShowTransfer(true)}
-            className="group flex flex-col items-center gap-2.5 p-4 bg-card border border-border rounded-xl hover:border-info/40 hover:bg-info/5 transition-all"
-          >
+          <button onClick={() => setShowTransfer(true)} className="group flex flex-col items-center gap-2.5 p-4 bg-card border border-border rounded-xl hover:border-info/40 hover:bg-info/5 transition-all">
             <div className="h-11 w-11 rounded-full bg-info/10 flex items-center justify-center group-hover:bg-info/20 transition-colors">
               <ArrowRight className="h-5 w-5 text-info" />
             </div>
             <span className="text-sm font-medium text-foreground">Transferir</span>
           </button>
-          <button
-            onClick={() => setShowWithdraw(true)}
-            className="group flex flex-col items-center gap-2.5 p-4 bg-card border border-border rounded-xl hover:border-primary/40 hover:bg-primary/5 transition-all"
-          >
+          <button onClick={() => setShowWithdraw(true)} className="group flex flex-col items-center gap-2.5 p-4 bg-card border border-border rounded-xl hover:border-primary/40 hover:bg-primary/5 transition-all">
             <div className="h-11 w-11 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
               <ArrowUp className="h-5 w-5 text-primary" />
             </div>
             <span className="text-sm font-medium text-foreground">Sacar</span>
           </button>
-          <button
-            onClick={() => setShowQR(true)}
-            className="group flex flex-col items-center gap-2.5 p-4 bg-card border border-border rounded-xl hover:border-warning/40 hover:bg-warning/5 transition-all"
-          >
+          <button onClick={() => setShowQR(true)} className="group flex flex-col items-center gap-2.5 p-4 bg-card border border-border rounded-xl hover:border-warning/40 hover:bg-warning/5 transition-all">
             <div className="h-11 w-11 rounded-full bg-warning/10 flex items-center justify-center group-hover:bg-warning/20 transition-colors">
               <ScanLine className="h-5 w-5 text-warning" />
             </div>
@@ -156,17 +234,10 @@ export default function PanelWallet() {
           </button>
         </div>
 
-        {/* Balance Chart */}
-        <Card className="bg-card border-border p-5 mb-6">
-          <h3 className="font-semibold text-foreground text-sm mb-3">Movimentação (últimos 7 dias)</h3>
-          <BalanceChart />
-        </Card>
-
         {/* Transaction History */}
         <Card className="bg-card border-border p-6">
           <h3 className="font-semibold text-foreground mb-4">Histórico</h3>
 
-          {/* Filter tabs */}
           <div className="flex flex-wrap gap-1.5 mb-5">
             {FILTER_TABS.map((tab) => (
               <button
@@ -183,10 +254,12 @@ export default function PanelWallet() {
             ))}
           </div>
 
-          {/* Transaction list */}
           <div className="space-y-3">
             {filteredHistory.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-6">Nenhuma transação encontrada</p>
+              <div className="text-center py-8">
+                <Inbox className="h-8 w-8 text-muted-foreground/40 mx-auto mb-2" />
+                <p className="text-sm text-muted-foreground">Nenhuma movimentação ainda</p>
+              </div>
             ) : (
               filteredHistory.map((h, i) => (
                 <div key={i} className="flex items-center gap-3 p-3 bg-muted/10 rounded-lg">
@@ -197,18 +270,14 @@ export default function PanelWallet() {
                     <p className="text-sm text-foreground">{h.desc}</p>
                     <div className="flex items-center gap-2">
                       <p className="text-xs text-muted-foreground">{h.date}</p>
-                      {h.counterpart && (
-                        <span className="text-xs text-muted-foreground">· {h.counterpart}</span>
-                      )}
+                      {h.counterpart && <span className="text-xs text-muted-foreground">· {h.counterpart}</span>}
                     </div>
                   </div>
                   <div className="text-right shrink-0">
                     <p className={`text-sm font-semibold ${h.amount > 0 ? "text-success" : "text-destructive"}`}>
                       {h.amount > 0 ? "+" : ""}{formatBRL(Math.abs(h.amount))}
                     </p>
-                    <Badge className={`border-0 text-[10px] ${getStatusColor(h.status)}`}>
-                      {h.status}
-                    </Badge>
+                    <Badge className={`border-0 text-[10px] ${getStatusColor(h.status)}`}>{h.status}</Badge>
                   </div>
                 </div>
               ))
@@ -217,10 +286,9 @@ export default function PanelWallet() {
         </Card>
       </motion.div>
 
-      {/* Modals */}
       <DepositModal open={showDeposit} onClose={() => setShowDeposit(false)} />
       <TransferModal open={showTransfer} onClose={() => setShowTransfer(false)} balance={balance} />
-      <WithdrawModal open={showWithdraw} onClose={() => setShowWithdraw(false)} balance={balance} pixKey="***.***.***-00" />
+      <WithdrawModal open={showWithdraw} onClose={() => setShowWithdraw(false)} balance={balance} pixKey={pixKey} />
       <QRScannerModal open={showQR} onClose={() => setShowQR(false)} balance={balance} />
     </>
   );
