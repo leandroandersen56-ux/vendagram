@@ -278,7 +278,8 @@ export default function EditListingPanel() {
         includes: items.length > 0 ? items.join(", ") : null,
         followers_count: followers ? parseInt(followers.replace(/\D/g, "")) || null : null,
         screenshots,
-      })
+        stock: Math.max(1, parseInt(stock) || 1),
+      } as any)
       .eq("id", id!);
 
     setSaving(false);
