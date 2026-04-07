@@ -192,6 +192,7 @@ export default function EditListingPanel() {
       if (h["Rank"]) setRank(String(h["Rank"]));
       if (h["Preço original"]) setOriginalPrice(String(h["Preço original"]));
       if (Array.isArray(h["Itens"])) setItems(h["Itens"]);
+      if ((data as any).stock) setStock(String((data as any).stock));
 
       // Extract feature flags (keys with value === true)
       const featFlags: string[] = [];
