@@ -68,7 +68,7 @@ export default function ProductGallery({ images, title, category, verified, isDe
           )}
 
           {isDemo && (
-            <span className="absolute top-3 left-3 bg-black/70 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-lg z-10">
+            <span className="absolute bottom-3 left-3 bg-black/70 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-lg z-10">
               Anúncio Demo
             </span>
           )}
