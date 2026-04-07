@@ -376,9 +376,14 @@ export default function ListingDetail() {
                         )}
                       </div>
                       <div className="flex items-start justify-between gap-2">
-                        <h1 className="text-[22px] font-semibold text-[hsl(var(--txt-primary))] leading-snug">
-                          {listing.title}
-                        </h1>
+                        <div>
+                          <h1 className="text-[22px] font-semibold text-[hsl(var(--txt-primary))] leading-snug">
+                            {listing.title}
+                          </h1>
+                          {listing.seller_id === "00000000-0000-0000-0000-000000000001" && (
+                            <span className="inline-block mt-1 bg-black/80 text-white text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">Anúncio Demo</span>
+                          )}
+                        </div>
                         <div className="flex items-center gap-2 shrink-0">
                           <motion.button
                             onClick={() => {
