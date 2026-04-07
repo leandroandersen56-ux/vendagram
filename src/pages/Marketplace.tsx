@@ -197,7 +197,7 @@ export default function Marketplace() {
               <Loader2 className="h-6 w-6 animate-spin text-primary" />
             </div>
           ) : filtered.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
               {filtered.map((listing) => (
                 <ListingCard key={listing.id} listing={listing} />
               ))}
