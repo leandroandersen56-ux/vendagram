@@ -277,6 +277,7 @@ export default function CreateListing() {
       status: "active",
       prefilled_credentials: encoded,
       screenshots: screenshotUrls.length > 0 ? screenshotUrls : null,
+      stock: Math.max(1, parseInt(stock) || 1),
     } as any);
 
     setLoading(false);

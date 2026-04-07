@@ -332,7 +332,7 @@ export default function ListingDetail() {
                 )}
 
                 {/* Reviews */}
-                <ReviewSection rating={sellerRating} totalSales={sellerSales} />
+                <ReviewSection sellerId={listing.seller_id} sellerName={sellerName} rating={sellerRating} totalSales={sellerSales} />
 
                 {/* Related Products */}
                 <RelatedProducts currentId={listing.id} category={listing.category} />

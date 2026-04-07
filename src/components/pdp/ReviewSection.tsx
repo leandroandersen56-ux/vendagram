@@ -1,34 +1,82 @@
-import { Star, ThumbsUp } from "lucide-react";
+import { Star, ThumbsUp, User } from "lucide-react";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface ReviewSectionProps {
+  sellerId: string;
+  sellerName: string;
   rating: number;
   totalSales: number;
 }
 
-export default function ReviewSection({ rating, totalSales }: ReviewSectionProps) {
-  // Mock review distribution
-  const distribution = [
-    { stars: 5, pct: 82 },
-    { stars: 4, pct: 10 },
-    { stars: 3, pct: 5 },
-    { stars: 2, pct: 2 },
-    { stars: 1, pct: 1 },
-  ];
+interface Review {
+  id: string;
+  rating: number;
+  comment: string | null;
+  created_at: string;
+  reviewer_name: string;
+}
 
-  const reviews = [
-    { name: "Lucas M.", stars: 5, date: "28 mar 2026", text: "Conta exatamente como descrito! Transferência rápida e segura.", verified: true },
-    { name: "Ana P.", stars: 5, date: "15 mar 2026", text: "Super recomendo, vendedor atencioso e processo pelo Escrow foi tranquilo.", verified: true },
-    { name: "Rafael S.", stars: 4, date: "02 mar 2026", text: "Tudo certo com a conta. Demorou um pouco mais que o esperado mas funcionou.", verified: true },
-  ];
+export default function ReviewSection({ sellerId, sellerName, rating, totalSales }: ReviewSectionProps) {
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!sellerId) return;
+    const fetchReviews = async () => {
+      const { data } = await supabase
+        .from("reviews")
+        .select("id, rating, comment, created_at, reviewer_id")
+        .eq("reviewed_id", sellerId)
+        .order("created_at", { ascending: false })
+        .limit(10);
+
+      if (data && data.length > 0) {
+        const reviewerIds = [...new Set(data.map((r) => r.reviewer_id))];
+        const { data: profiles } = await supabase
+          .from("profiles")
+          .select("user_id, name")
+          .in("user_id", reviewerIds);
+
+        const nameMap: Record<string, string> = {};
+        profiles?.forEach((p) => { nameMap[p.user_id] = p.name || "Usuário"; });
+
+        setReviews(data.map((r) => ({
+          id: r.id,
+          rating: r.rating,
+          comment: r.comment,
+          created_at: r.created_at,
+          reviewer_name: nameMap[r.reviewer_id] || "Usuário",
+        })));
+      }
+      setLoading(false);
+    };
+    fetchReviews();
+  }, [sellerId]);
+
+  // Calculate distribution from real reviews
+  const totalReviews = reviews.length;
+  const distribution = [5, 4, 3, 2, 1].map((stars) => {
+    const count = reviews.filter((r) => r.rating === stars).length;
+    return { stars, pct: totalReviews > 0 ? Math.round((count / totalReviews) * 100) : 0 };
+  });
+
+  const formatDate = (dateStr: string) => {
+    const d = new Date(dateStr);
+    return d.toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" });
+  };
 
   return (
     <div className="rounded-xl border border-[hsl(var(--border))] bg-white overflow-hidden">
       <div className="px-4 py-3.5">
-        <h3 className="text-sm font-semibold text-[hsl(var(--txt-primary))] flex items-center gap-1.5"><Star className="h-4 w-4 text-primary" /> Opiniões de compradores</h3>
+        <h3 className="text-sm font-semibold text-[hsl(var(--txt-primary))] flex items-center gap-1.5">
+          <User className="h-4 w-4 text-primary" /> Avaliações do vendedor
+        </h3>
+        <p className="text-[11px] text-[hsl(var(--txt-hint))] mt-0.5">Opiniões de compradores sobre {sellerName}</p>
       </div>
 
-      {/* Rating summary */}
       <div className="px-4 pb-4">
+        {/* Rating summary */}
         <div className="flex items-start gap-5 mb-4">
           <div className="text-center">
             <p className="text-4xl font-semibold text-[hsl(var(--txt-primary))]">{rating.toFixed(1)}</p>
@@ -40,7 +88,7 @@ export default function ReviewSection({ rating, totalSales }: ReviewSectionProps
                 />
               ))}
             </div>
-            <p className="text-[11px] text-[hsl(var(--txt-hint))] mt-1">{totalSales} avaliações</p>
+            <p className="text-[11px] text-[hsl(var(--txt-hint))] mt-1">{totalReviews || totalSales} avaliações</p>
           </div>
           <div className="flex-1 space-y-1.5">
             {distribution.map(({ stars, pct }) => (
@@ -58,41 +106,44 @@ export default function ReviewSection({ rating, totalSales }: ReviewSectionProps
           </div>
         </div>
 
-        {/* Reviews */}
-        <div className="space-y-3">
-          {reviews.map((review, i) => (
-            <div key={i} className="border border-[hsl(var(--border))]/60 rounded-lg p-3">
-              <div className="flex items-center justify-between mb-1.5">
-                <div className="flex items-center gap-2">
-                  <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold text-xs">
-                    {review.name[0]}
+        {/* Reviews list */}
+        {loading ? (
+          <p className="text-[13px] text-[hsl(var(--txt-hint))] text-center py-4">Carregando avaliações...</p>
+        ) : reviews.length === 0 ? (
+          <p className="text-[13px] text-[hsl(var(--txt-hint))] text-center py-4">Nenhuma avaliação ainda</p>
+        ) : (
+          <div className="space-y-3">
+            {reviews.map((review) => (
+              <div key={review.id} className="border border-[hsl(var(--border))]/60 rounded-lg p-3">
+                <div className="flex items-center justify-between mb-1.5">
+                  <div className="flex items-center gap-2">
+                    <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold text-xs">
+                      {review.reviewer_name[0]}
+                    </div>
+                    <div>
+                      <p className="text-[13px] font-semibold text-[hsl(var(--txt-primary))]">{review.reviewer_name}</p>
+                      <p className="text-[10px] text-[hsl(var(--txt-hint))]">{formatDate(review.created_at)}</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-[13px] font-semibold text-[hsl(var(--txt-primary))]">{review.name}</p>
-                    <p className="text-[10px] text-[hsl(var(--txt-hint))]">{review.date}</p>
+                  <div className="flex items-center gap-0.5">
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <Star
+                        key={s}
+                        className={`h-3 w-3 ${s <= review.rating ? "text-amber-400 fill-amber-400" : "text-[hsl(var(--border))]"}`}
+                      />
+                    ))}
                   </div>
                 </div>
-                <div className="flex items-center gap-0.5">
-                  {[1, 2, 3, 4, 5].map((s) => (
-                    <Star
-                      key={s}
-                      className={`h-3 w-3 ${s <= review.stars ? "text-amber-400 fill-amber-400" : "text-[hsl(var(--border))]"}`}
-                    />
-                  ))}
-                </div>
-              </div>
-              {review.verified && (
                 <span className="inline-block text-[10px] font-semibold text-[hsl(var(--success))] bg-[hsl(var(--success-light))] px-2 py-0.5 rounded mb-1.5">
                   Compra verificada
                 </span>
-              )}
-              <p className="text-[13px] text-[hsl(var(--txt-secondary))] leading-relaxed">{review.text}</p>
-              <button className="flex items-center gap-1 text-[11px] text-[hsl(var(--txt-hint))] mt-2 hover:text-primary">
-                <ThumbsUp className="h-3 w-3" /> Útil
-              </button>
-            </div>
-          ))}
-        </div>
+                {review.comment && (
+                  <p className="text-[13px] text-[hsl(var(--txt-secondary))] leading-relaxed">{review.comment}</p>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
