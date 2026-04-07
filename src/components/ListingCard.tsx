@@ -44,6 +44,11 @@ export default function ListingCard({ listing }: ListingCardProps) {
               <PlatformIcon platformId={listing.platform} size={48} />
             </div>
           )}
+          {listing.sellerId === "00000000-0000-0000-0000-000000000001" && (
+            <span className="absolute top-2 left-2 bg-black/70 text-white text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">
+              Anúncio Demo
+            </span>
+          )}
         </div>
 
         {/* Body */}
