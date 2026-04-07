@@ -305,7 +305,7 @@ export default function EditListingPanel() {
   const loginOptions = LOGIN_TYPES[platform] || [];
 
   return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-2xl px-4 pb-24">
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-2xl mx-auto px-4 pb-24">
       {/* Header */}
       <Button variant="ghost" onClick={() => navigate("/vendedor", { state: { tab: "anuncios" } })} className="mb-4 text-muted-foreground">
         <ArrowLeft className="h-4 w-4 mr-2" /> Voltar
