@@ -9,6 +9,7 @@ interface ProductGalleryProps {
   title: string;
   category: string;
   verified?: boolean;
+  isDemo?: boolean;
 }
 
 export default function ProductGallery({ images, title, category, verified }: ProductGalleryProps) {
