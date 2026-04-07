@@ -145,6 +145,7 @@ export default function CreateListing() {
   const [loading, setLoading] = useState(false);
   const [preSelected, setPreSelected] = useState("");
   const [screenshots, setScreenshots] = useState<{ file: File; preview: string }[]>([]);
+  const [stock, setStock] = useState("1");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Credential fields (pre-fill)
