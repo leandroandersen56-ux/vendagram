@@ -7,7 +7,6 @@ import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import AuthModal from "@/components/AuthModal";
 import ScrollToTop from "@/components/ScrollToTop";
 import { useMessageToasts } from "@/hooks/useMessageToasts";
-import { useOAuthReturn } from "@/hooks/useOAuthReturn";
 import PWAInstallBanner from "@/components/PWAInstallBanner";
 import BottomNav from "@/components/BottomNav";
 import Index from "./pages/Index.tsx";

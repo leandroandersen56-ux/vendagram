@@ -71,18 +71,8 @@ export default function AuthModal() {
   };
 
   const handleGoogle = async () => {
-    // Save the origin so we can redirect back after OAuth on vendagram.lovable.app
-    const currentOrigin = window.location.origin;
-    const isOnLovable = window.location.hostname.includes("lovable.app");
-    const redirectOrigin = isOnLovable ? currentOrigin : "https://vendagram.lovable.app";
-
-    // Store origin for post-OAuth redirect back to froiv.com
-    if (!isOnLovable) {
-      localStorage.setItem("oauth_return_origin", currentOrigin);
-    }
-
     const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: redirectOrigin,
+      redirect_uri: window.location.origin,
     });
     if (result.error) {
       toast.error(result.error.message || "Erro ao entrar com Google");
