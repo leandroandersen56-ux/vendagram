@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { formatBRL, getPlatform, PLATFORM_COVERS, MOCK_LISTINGS } from "@/lib/mock-data";
+import { formatBRL, getPlatform, MOCK_LISTINGS } from "@/lib/mock-data";
 import PlatformIcon from "@/components/PlatformIcon";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -128,9 +128,8 @@ export default function ListingDetail() {
   const itemsList = highlights["Itens"] as string[] | undefined;
   const originalPrice = highlights["Preço original"] as string | undefined;
 
-  const coverImg = PLATFORM_COVERS[listing.category];
   const screenshots = (listing.screenshots || []).filter((s: string) => s);
-  const allImages = screenshots.length > 0 ? screenshots : (coverImg ? [coverImg] : []);
+  const allImages = screenshots;
 
   const handleShare = () => {
     const message = `🎮 ${listing.title} por ${formatBRL(listing.price)} 🔒 Compra segura: ${window.location.origin}/listing/${listing.id}`;
@@ -150,7 +149,7 @@ export default function ListingDetail() {
         title: listing.title,
         price: Number(listing.price),
         category: listing.category,
-        screenshot: listing.screenshots?.[0] || PLATFORM_COVERS[listing.category] || undefined,
+        screenshot: listing.screenshots?.[0] || undefined,
       });
       toast.success("Adicionado ao carrinho!");
     }

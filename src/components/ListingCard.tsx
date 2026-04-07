@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Star, Shield, Zap } from "lucide-react";
 import type { Listing } from "@/lib/mock-data";
-import { formatBRL, getPlatform, PLATFORM_COVERS } from "@/lib/mock-data";
+import { formatBRL, getPlatform } from "@/lib/mock-data";
 import PlatformIcon from "@/components/PlatformIcon";
 
 interface ListingCardProps {
@@ -23,7 +23,8 @@ const PLATFORM_BADGE_COLORS: Record<string, { bg: string; text: string }> = {
 
 export default function ListingCard({ listing }: ListingCardProps) {
   const platform = getPlatform(listing.platform);
-  const coverImage = listing.screenshots?.[0] || PLATFORM_COVERS[listing.platform];
+  const firstScreenshot = listing.screenshots?.find((s) => typeof s === "string" && s.trim().length > 0);
+  const coverImage = firstScreenshot || null;
   const badge = PLATFORM_BADGE_COLORS[listing.platform] || PLATFORM_BADGE_COLORS.other;
 
   return (
