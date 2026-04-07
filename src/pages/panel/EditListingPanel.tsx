@@ -133,6 +133,7 @@ export default function EditListingPanel() {
   const [items, setItems] = useState<string[]>([]);
   const [newItem, setNewItem] = useState("");
   const [screenshots, setScreenshots] = useState<string[]>([]);
+  const [stock, setStock] = useState("1");
 
   const isGame = IS_GAME.includes(platform);
   const isSocial = IS_SOCIAL.includes(platform);
