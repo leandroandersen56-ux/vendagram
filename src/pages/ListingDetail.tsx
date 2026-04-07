@@ -130,7 +130,7 @@ export default function ListingDetail() {
 
   const coverImg = PLATFORM_COVERS[listing.category];
   const screenshots = (listing.screenshots || []).filter((s: string) => s);
-  const allImages = coverImg ? [coverImg, ...screenshots] : screenshots;
+  const allImages = screenshots.length > 0 ? screenshots : (coverImg ? [coverImg] : []);
 
   const handleShare = () => {
     const message = `🎮 ${listing.title} por ${formatBRL(listing.price)} 🔒 Compra segura: ${window.location.origin}/listing/${listing.id}`;
