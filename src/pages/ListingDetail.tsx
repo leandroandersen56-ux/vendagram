@@ -273,6 +273,7 @@ export default function ListingDetail() {
                     <BuyBox
                       price={listing.price}
                       originalPrice={originalPrice}
+                      stock={(listing as any).stock || 1}
                       onBuy={handleBuy}
                       inline
                     />
