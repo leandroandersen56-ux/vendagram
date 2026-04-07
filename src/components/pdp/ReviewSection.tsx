@@ -17,6 +17,15 @@ interface Review {
   reviewer_name: string;
 }
 
+const DEMO_REVIEWER_NAMES: Record<string, string> = {
+  "aaaaaaaa-0001-4000-8000-000000000001": "Lucas Silva",
+  "aaaaaaaa-0001-4000-8000-000000000002": "Maria Oliveira",
+  "aaaaaaaa-0001-4000-8000-000000000003": "Pedro Santos",
+  "aaaaaaaa-0001-4000-8000-000000000004": "Ana Costa",
+  "aaaaaaaa-0001-4000-8000-000000000005": "Rafael Mendes",
+  "aaaaaaaa-0001-4000-8000-000000000006": "Juliana Ferreira",
+};
+
 export default function ReviewSection({ sellerId, sellerName, rating, totalSales }: ReviewSectionProps) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
@@ -46,7 +55,7 @@ export default function ReviewSection({ sellerId, sellerName, rating, totalSales
           rating: r.rating,
           comment: r.comment,
           created_at: r.created_at,
-          reviewer_name: nameMap[r.reviewer_id] || "Usuário",
+          reviewer_name: nameMap[r.reviewer_id] || DEMO_REVIEWER_NAMES[r.reviewer_id] || "Usuário",
         })));
       }
       setLoading(false);
