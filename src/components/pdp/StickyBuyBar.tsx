@@ -7,7 +7,7 @@ import { formatBRL } from "@/lib/mock-data";
 interface StickyBuyBarProps {
   price: number;
   originalPrice?: string;
-  onBuy: () => void;
+  onBuy: (quantity: number) => void;
   triggerRef: React.RefObject<HTMLDivElement | null>;
 }
 
@@ -49,7 +49,7 @@ export default function StickyBuyBar({ price, originalPrice, onBuy, triggerRef }
             </div>
             <Button
               className="px-6 h-11 text-sm font-semibold rounded-xl bg-primary text-white shadow-[0_4px_14px_rgba(45,111,240,0.4)] active:scale-[0.97]"
-              onClick={onBuy}
+              onClick={() => onBuy(1)}
               aria-label="Comprar agora"
             >
               Comprar

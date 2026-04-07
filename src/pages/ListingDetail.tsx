@@ -142,12 +142,12 @@ export default function ListingDetail() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleBuy = () => {
+  const handleBuy = (quantity: number = 1) => {
     if (listing) {
       addToCart({
         listingId: listing.id,
         title: listing.title,
-        price: Number(listing.price),
+        price: Number(listing.price) * quantity,
         category: listing.category,
         screenshot: listing.screenshots?.[0] || undefined,
       });
@@ -273,6 +273,7 @@ export default function ListingDetail() {
                     <BuyBox
                       price={listing.price}
                       originalPrice={originalPrice}
+                      stock={(listing as any).stock || 1}
                       onBuy={handleBuy}
                       inline
                     />
@@ -332,7 +333,7 @@ export default function ListingDetail() {
                 )}
 
                 {/* Reviews */}
-                <ReviewSection rating={sellerRating} totalSales={sellerSales} />
+                <ReviewSection sellerId={listing.seller_id} sellerName={sellerName} rating={sellerRating} totalSales={sellerSales} />
 
                 {/* Related Products */}
                 <RelatedProducts currentId={listing.id} category={listing.category} />
@@ -418,6 +419,7 @@ export default function ListingDetail() {
                       <BuyBox
                         price={listing.price}
                         originalPrice={originalPrice}
+                        stock={(listing as any).stock || 1}
                         onBuy={handleBuy}
                         inline
                       />

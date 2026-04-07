@@ -145,6 +145,7 @@ export default function CreateListing() {
   const [loading, setLoading] = useState(false);
   const [preSelected, setPreSelected] = useState("");
   const [screenshots, setScreenshots] = useState<{ file: File; preview: string }[]>([]);
+  const [stock, setStock] = useState("1");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Credential fields (pre-fill)
@@ -276,6 +277,7 @@ export default function CreateListing() {
       status: "active",
       prefilled_credentials: encoded,
       screenshots: screenshotUrls.length > 0 ? screenshotUrls : null,
+      stock: Math.max(1, parseInt(stock) || 1),
     } as any);
 
     setLoading(false);
@@ -578,9 +580,21 @@ export default function CreateListing() {
                   </div>
                 )}
               </div>
-            </div>
+              </div>
 
-            {/* Seguidores (social) */}
+              {/* Estoque */}
+              <div className="p-4">
+                <label className="text-[12px] text-[#999] font-medium block mb-1.5">Quantidade em estoque</label>
+                <p className="text-[11px] text-[#BBB] mb-2">Para itens replicáveis (chaves, pacotes). Deixe 1 para itens únicos.</p>
+                <Input
+                  type="number"
+                  min="1"
+                  value={stock}
+                  onChange={(e) => setStock(e.target.value)}
+                  placeholder="1"
+                  className="bg-transparent border-[#E8E8E8] h-11 rounded-xl w-32 text-center text-[16px] font-semibold"
+                />
+              </div>
             {isSocial && (
               <div className="p-4">
                 <label className="text-[12px] text-[#999] font-medium block mb-1.5">Seguidores</label>

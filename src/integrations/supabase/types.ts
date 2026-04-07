@@ -312,6 +312,7 @@ export type Database = {
           screenshots: string[] | null
           seller_id: string
           status: Database["public"]["Enums"]["listing_status"]
+          stock: number
           title: string
           updated_at: string
           views_count: number
@@ -333,6 +334,7 @@ export type Database = {
           screenshots?: string[] | null
           seller_id: string
           status?: Database["public"]["Enums"]["listing_status"]
+          stock?: number
           title: string
           updated_at?: string
           views_count?: number
@@ -354,6 +356,7 @@ export type Database = {
           screenshots?: string[] | null
           seller_id?: string
           status?: Database["public"]["Enums"]["listing_status"]
+          stock?: number
           title?: string
           updated_at?: string
           views_count?: number

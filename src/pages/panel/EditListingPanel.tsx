@@ -133,6 +133,7 @@ export default function EditListingPanel() {
   const [items, setItems] = useState<string[]>([]);
   const [newItem, setNewItem] = useState("");
   const [screenshots, setScreenshots] = useState<string[]>([]);
+  const [stock, setStock] = useState("1");
 
   const isGame = IS_GAME.includes(platform);
   const isSocial = IS_SOCIAL.includes(platform);
@@ -191,6 +192,7 @@ export default function EditListingPanel() {
       if (h["Rank"]) setRank(String(h["Rank"]));
       if (h["Preço original"]) setOriginalPrice(String(h["Preço original"]));
       if (Array.isArray(h["Itens"])) setItems(h["Itens"]);
+      if ((data as any).stock) setStock(String((data as any).stock));
 
       // Extract feature flags (keys with value === true)
       const featFlags: string[] = [];
@@ -276,7 +278,8 @@ export default function EditListingPanel() {
         includes: items.length > 0 ? items.join(", ") : null,
         followers_count: followers ? parseInt(followers.replace(/\D/g, "")) || null : null,
         screenshots,
-      })
+        stock: Math.max(1, parseInt(stock) || 1),
+      } as any)
       .eq("id", id!);
 
     setSaving(false);
@@ -359,6 +362,19 @@ export default function EditListingPanel() {
               />
             </div>
           )}
+        </div>
+
+        {/* ── Stock ── */}
+        <div className="space-y-1.5">
+          <Label className="text-foreground text-xs uppercase tracking-wide">Estoque</Label>
+          <p className="text-[11px] text-muted-foreground">Para itens replicáveis. Deixe 1 para itens únicos.</p>
+          <Input
+            type="number"
+            min="1"
+            value={stock}
+            onChange={(e) => setStock(e.target.value)}
+            className="bg-card border-border h-12 w-32 text-center font-semibold"
+          />
         </div>
 
         {/* ── Features ── */}
