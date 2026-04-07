@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Star, Shield, Zap } from "lucide-react";
 import type { Listing } from "@/lib/mock-data";
-import { formatBRL, getPlatform, PLATFORM_COVERS } from "@/lib/mock-data";
+import { formatBRL, getPlatform } from "@/lib/mock-data";
 import PlatformIcon from "@/components/PlatformIcon";
 
 interface ListingCardProps {
