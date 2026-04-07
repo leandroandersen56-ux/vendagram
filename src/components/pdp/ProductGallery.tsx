@@ -9,9 +9,10 @@ interface ProductGalleryProps {
   title: string;
   category: string;
   verified?: boolean;
+  isDemo?: boolean;
 }
 
-export default function ProductGallery({ images, title, category, verified }: ProductGalleryProps) {
+export default function ProductGallery({ images, title, category, verified, isDemo }: ProductGalleryProps) {
   const [selected, setSelected] = useState(0);
   const [direction, setDirection] = useState(0);
   const [lightbox, setLightbox] = useState(false);
@@ -64,6 +65,12 @@ export default function ProductGallery({ images, title, category, verified }: Pr
             <div className="absolute top-3 right-3 flex items-center gap-1 bg-[hsl(var(--success-light))] text-[hsl(var(--success))] px-2.5 py-1 rounded-full text-[10px] font-semibold">
               <CheckCircle2 className="h-3 w-3" /> VERIFICADO
             </div>
+          )}
+
+          {isDemo && (
+            <span className="absolute bottom-3 left-3 bg-black/70 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-lg z-10">
+              Anúncio Demo
+            </span>
           )}
 
           {images.length > 1 && (
