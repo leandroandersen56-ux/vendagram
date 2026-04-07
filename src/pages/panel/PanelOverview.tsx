@@ -1,70 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import {
   ShoppingBag, Tag, Wallet, TrendingUp, ArrowUpRight, Plus, Star,
   Clock, ArrowDown, ArrowRight, ArrowUp, ScanLine,
-  ArrowDownRight, RefreshCcw, Send, Repeat, Activity
+  ArrowDownRight, RefreshCcw, Send, Repeat, Activity, Loader2, Inbox
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
 import { formatBRL } from "@/lib/mock-data";
+import { supabase } from "@/integrations/supabase/client";
 import DepositModal from "@/components/wallet/DepositModal";
 import TransferModal from "@/components/wallet/TransferModal";
 import WithdrawModal from "@/components/wallet/WithdrawModal";
 import QRScannerModal from "@/components/wallet/QRScannerModal";
 import BalanceChart from "@/components/wallet/BalanceChart";
-
-type FilterTab = "all" | "in" | "out" | "escrow" | "transfer" | "deposit" | "withdraw";
-
-const FILTER_TABS: { id: FilterTab; label: string }[] = [
-  { id: "all", label: "Todos" },
-  { id: "in", label: "Entradas" },
-  { id: "out", label: "Saídas" },
-  { id: "escrow", label: "Escrow" },
-  { id: "transfer", label: "Transf." },
-  { id: "deposit", label: "Depósitos" },
-  { id: "withdraw", label: "Saques" },
-];
-
-const HISTORY = [
-  { type: "in", category: "in", desc: "Venda: Conta Free Fire", counterpart: "GameBuyer01", amount: 315, date: "20/03 14:32", status: "Concluído" },
-  { type: "deposit", category: "deposit", desc: "Depósito via Pix", counterpart: null, amount: 200, date: "19/03 10:15", status: "Concluído" },
-  { type: "in", category: "in", desc: "Venda: Facebook Marketplace", counterpart: "SocialBuyer", amount: 135, date: "18/03 09:41", status: "Concluído" },
-  { type: "transfer", category: "transfer", desc: "Transferência recebida", counterpart: "@joao_silva", amount: 50, date: "17/03 16:20", status: "Concluído" },
-  { type: "out", category: "withdraw", desc: "Saque Pix", counterpart: null, amount: -500, date: "15/03 11:00", status: "Processado" },
-  { type: "escrow", category: "escrow", desc: "Escrow: Conta Valorant", counterpart: "ValBuyer99", amount: 720, date: "14/03 08:50", status: "Pendente" },
-];
-
-function getIcon(type: string) {
-  switch (type) {
-    case "in": return <ArrowDownRight className="h-3.5 w-3.5 text-success" />;
-    case "out": return <ArrowUpRight className="h-3.5 w-3.5 text-destructive" />;
-    case "escrow": return <RefreshCcw className="h-3.5 w-3.5 text-warning" />;
-    case "transfer": return <Send className="h-3.5 w-3.5 text-info" />;
-    case "deposit": return <ArrowDown className="h-3.5 w-3.5 text-success" />;
-    default: return <Repeat className="h-3.5 w-3.5 text-muted-foreground" />;
-  }
-}
-
-function getIconBg(type: string) {
-  switch (type) {
-    case "in": case "deposit": return "bg-success/10";
-    case "out": return "bg-destructive/10";
-    case "escrow": return "bg-warning/10";
-    case "transfer": return "bg-info/10";
-    default: return "bg-muted";
-  }
-}
-
-function getStatusColor(status: string) {
-  switch (status) {
-    case "Concluído": case "Processado": return "bg-success/10 text-success";
-    case "Pendente": return "bg-warning/10 text-warning";
-    default: return "bg-muted text-muted-foreground";
-  }
-}
 
 export default function PanelOverview() {
   const { user } = useAuth();
@@ -72,30 +23,77 @@ export default function PanelOverview() {
   const [showTransfer, setShowTransfer] = useState(false);
   const [showWithdraw, setShowWithdraw] = useState(false);
   const [showQR, setShowQR] = useState(false);
-  const [activeFilter, setActiveFilter] = useState<FilterTab>("all");
+  const [loading, setLoading] = useState(true);
 
-  const balance = 890;
-  const pending = 1200;
-  const totalEarned = 4560;
+  const [balance, setBalance] = useState(0);
+  const [pending, setPending] = useState(0);
+  const [totalEarned, setTotalEarned] = useState(0);
+  const [purchases, setPurchases] = useState(0);
+  const [activeListings, setActiveListings] = useState(0);
+  const [avgRating, setAvgRating] = useState(0);
+  const [totalReviews, setTotalReviews] = useState(0);
+  const [recentActivity, setRecentActivity] = useState<{ text: string; time: string; color: string }[]>([]);
+
+  useEffect(() => {
+    if (!user?.id) { setLoading(false); return; }
+    loadData();
+  }, [user?.id]);
+
+  const loadData = async () => {
+    const uid = user!.id;
+    const [walletRes, profileRes, listingsRes, txBuyerRes, txSellerRes] = await Promise.all([
+      supabase.from("wallets").select("balance, pending, total_earned").eq("user_id", uid).single(),
+      supabase.from("profiles").select("avg_rating, total_reviews, total_purchases").eq("user_id", uid).single(),
+      supabase.from("listings").select("id").eq("seller_id", uid).eq("status", "active"),
+      supabase.from("transactions").select("id").eq("buyer_id", uid),
+      supabase.from("transactions").select("id, amount, status, created_at, listings(title)").or(`buyer_id.eq.${uid},seller_id.eq.${uid}`).order("created_at", { ascending: false }).limit(5),
+    ]);
+
+    if (walletRes.data) {
+      setBalance(Number(walletRes.data.balance));
+      setPending(Number(walletRes.data.pending));
+      setTotalEarned(Number(walletRes.data.total_earned));
+    }
+    if (profileRes.data) {
+      setAvgRating(Number(profileRes.data.avg_rating));
+      setTotalReviews(profileRes.data.total_reviews);
+      setPurchases(profileRes.data.total_purchases);
+    }
+    setActiveListings((listingsRes.data || []).length);
+
+    // Build recent activity from real transactions
+    const activity = (txSellerRes.data || []).map((t: any) => {
+      const title = t.listings?.title || "Transação";
+      const date = new Date(t.created_at);
+      const diff = Date.now() - date.getTime();
+      const hours = Math.floor(diff / 3600000);
+      const time = hours < 1 ? "agora" : hours < 24 ? `${hours}h atrás` : `${Math.floor(hours / 24)}d atrás`;
+      const color = t.status === "completed" ? "bg-success" : t.status === "cancelled" ? "bg-destructive" : "bg-warning";
+      return { text: `${title} — ${t.status === "completed" ? "concluída" : t.status === "paid" ? "paga" : "em andamento"}`, time, color };
+    });
+    setRecentActivity(activity);
+    setLoading(false);
+  };
 
   const stats = [
-    { label: "COMPRAS", value: "2", icon: ShoppingBag, sub: "+1 este mês" },
-    { label: "ANÚNCIOS ATIVOS", value: "3", icon: Tag, sub: "1 vendido" },
-    { label: "AVALIAÇÃO", value: "4.8", icon: Star, sub: "12 reviews" },
+    { label: "COMPRAS", value: String(purchases), icon: ShoppingBag, sub: "" },
+    { label: "ANÚNCIOS ATIVOS", value: String(activeListings), icon: Tag, sub: "" },
+    { label: "AVALIAÇÃO", value: avgRating > 0 ? avgRating.toFixed(1) : "—", icon: Star, sub: totalReviews > 0 ? `${totalReviews} reviews` : "sem avaliações" },
   ];
-
-  const filteredHistory = HISTORY.filter((h) => {
-    if (activeFilter === "all") return true;
-    if (activeFilter === "in") return h.amount > 0 && h.category === "in";
-    if (activeFilter === "out") return h.amount < 0 && h.category !== "transfer";
-    return h.category === activeFilter;
-  });
 
   const walletActions = [
     { label: "Depositar", icon: ArrowDown, color: "text-success", bg: "bg-success/10", onClick: () => setShowDeposit(true) },
     { label: "Transferir", icon: ArrowRight, color: "text-info", bg: "bg-info/10", onClick: () => setShowTransfer(true) },
     { label: "Sacar", icon: ArrowUp, color: "text-primary", bg: "bg-primary/10", onClick: () => setShowWithdraw(true) },
   ];
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="h-6 w-6 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -135,7 +133,7 @@ export default function PanelOverview() {
               </div>
               <p className="text-[8px] font-semibold text-muted-foreground tracking-widest leading-none">{stat.label}</p>
               <p className="text-xl font-semibold text-foreground mt-1">{stat.value}</p>
-              <p className="text-[9px] text-muted-foreground mt-0.5">{stat.sub}</p>
+              {stat.sub && <p className="text-[9px] text-muted-foreground mt-0.5">{stat.sub}</p>}
             </motion.div>
           ))}
         </div>
@@ -186,85 +184,25 @@ export default function PanelOverview() {
           </div>
         </div>
 
-        {/* Gráfico */}
-        <div className="bg-background border border-border rounded-2xl p-4">
-          <h3 className="text-xs font-semibold text-foreground mb-3 flex items-center gap-1.5">
-            <Activity className="h-3.5 w-3.5 text-primary" />
-            Movimentação (7 dias)
-          </h3>
-          <BalanceChart />
-        </div>
-
-        {/* Histórico */}
-        <div className="bg-background border border-border rounded-2xl p-4">
-          <h3 className="text-xs font-semibold text-foreground mb-3">Histórico</h3>
-
-          {/* Filtros - wrap instead of scroll */}
-          <div className="flex flex-wrap gap-1.5 mb-3">
-            {FILTER_TABS.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveFilter(tab.id)}
-                className={`px-2.5 py-1 rounded-full text-[10px] font-medium transition-colors ${
-                  activeFilter === tab.id
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
-
-          <div className="space-y-1">
-            {filteredHistory.length === 0 ? (
-              <p className="text-xs text-muted-foreground text-center py-6">Nenhuma transação encontrada</p>
-            ) : (
-              filteredHistory.map((h, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: i * 0.03 }}
-                  className="flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-muted/60 transition-colors"
-                >
-                  <div className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 ${getIconBg(h.type)}`}>
-                    {getIcon(h.type)}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-medium text-foreground truncate">{h.desc}</p>
-                    <p className="text-[10px] text-muted-foreground mt-0.5 truncate">
-                      {h.date}{h.counterpart ? ` · ${h.counterpart}` : ""}
-                    </p>
-                  </div>
-                  <div className="text-right shrink-0 pl-1">
-                    <p className={`text-xs font-semibold tabular-nums ${h.amount > 0 ? "text-success" : "text-destructive"}`}>
-                      {h.amount > 0 ? "+" : ""}{formatBRL(Math.abs(h.amount))}
-                    </p>
-                    <Badge className={`border-0 text-[9px] px-1.5 py-0 mt-0.5 ${getStatusColor(h.status)}`}>{h.status}</Badge>
-                  </div>
-                </motion.div>
-              ))
-            )}
-          </div>
-        </div>
-
         {/* Atividade Recente */}
         <div className="bg-background border border-border rounded-2xl p-4">
           <h3 className="text-xs font-semibold text-foreground mb-3">Atividade Recente</h3>
-          <div className="space-y-1">
-            {[
-              { text: "Conta Free Fire vendida por R$ 350", time: "2h atrás", color: "bg-success" },
-              { text: "Compra de conta Instagram em andamento", time: "5h atrás", color: "bg-warning" },
-              { text: "Novo anúncio publicado: TikTok 50K", time: "1d atrás", color: "bg-info" },
-            ].map((a, i) => (
-              <div key={i} className="flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-muted/60 transition-colors">
-                <div className={`h-1.5 w-1.5 rounded-full ${a.color} shrink-0`} />
-                <p className="text-xs text-foreground flex-1 min-w-0 truncate">{a.text}</p>
-                <span className="text-[10px] text-muted-foreground shrink-0">{a.time}</span>
-              </div>
-            ))}
-          </div>
+          {recentActivity.length === 0 ? (
+            <div className="text-center py-6">
+              <Inbox className="h-8 w-8 text-muted-foreground/40 mx-auto mb-2" />
+              <p className="text-xs text-muted-foreground">Nenhuma atividade ainda</p>
+            </div>
+          ) : (
+            <div className="space-y-1">
+              {recentActivity.map((a, i) => (
+                <div key={i} className="flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-muted/60 transition-colors">
+                  <div className={`h-1.5 w-1.5 rounded-full ${a.color} shrink-0`} />
+                  <p className="text-xs text-foreground flex-1 min-w-0 truncate">{a.text}</p>
+                  <span className="text-[10px] text-muted-foreground shrink-0">{a.time}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </motion.div>
 
