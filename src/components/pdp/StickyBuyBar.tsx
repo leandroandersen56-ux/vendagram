@@ -7,7 +7,7 @@ import { formatBRL } from "@/lib/mock-data";
 interface StickyBuyBarProps {
   price: number;
   originalPrice?: string;
-  onBuy: () => void;
+  onBuy: (quantity: number) => void;
   triggerRef: React.RefObject<HTMLDivElement | null>;
 }
 
