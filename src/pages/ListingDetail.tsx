@@ -142,12 +142,12 @@ export default function ListingDetail() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleBuy = () => {
+  const handleBuy = (quantity: number = 1) => {
     if (listing) {
       addToCart({
         listingId: listing.id,
         title: listing.title,
-        price: Number(listing.price),
+        price: Number(listing.price) * quantity,
         category: listing.category,
         screenshot: listing.screenshots?.[0] || undefined,
       });
