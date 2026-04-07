@@ -34,7 +34,7 @@ export default function ReviewSection({ sellerId, sellerName, rating, totalSales
       if (data && data.length > 0) {
         const reviewerIds = [...new Set(data.map((r) => r.reviewer_id))];
         const { data: profiles } = await supabase
-          .from("profiles")
+          .from("public_profiles")
           .select("user_id, name")
           .in("user_id", reviewerIds);
 
