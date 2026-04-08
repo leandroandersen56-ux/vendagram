@@ -220,7 +220,7 @@ export default function Checkout() {
         },
       });
       if (response.error) {
-        const message = response.error.message || "Falha ao conectar com o serviço de pagamento. Tente novamente.";
+        const message = response.error.message || response.error.name || "Falha ao conectar com o serviço de pagamento. Tente novamente.";
         throw new Error(message);
       }
       const data = response.data;
