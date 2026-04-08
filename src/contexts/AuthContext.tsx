@@ -41,27 +41,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [authRedirect, setAuthRedirect] = useState<string | null>(null);
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        if (session?.user) {
-          setUser(mapSupabaseUser(session.user));
-        } else {
-          setUser(null);
-        }
-        setIsLoading(false);
-      }
-    );
+    let isMounted = true;
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        setUser(mapSupabaseUser(session.user));
-      } else {
-        setUser(null);
-      }
+    const syncUser = (session: { user?: SupabaseUser | null } | null) => {
+      if (!isMounted) return;
+      setUser(session?.user ? mapSupabaseUser(session.user) : null);
       setIsLoading(false);
+    };
+
+    void supabase.auth.getSession().then(({ data: { session } }) => {
+      syncUser(session);
     });
 
-    return () => subscription.unsubscribe();
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      syncUser(session);
+    });
+
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const login = (userData: User) => {
