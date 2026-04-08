@@ -334,7 +334,8 @@ export default function AuthModal() {
               </svg>
               Entrar com Google
             </Button>
-          </div>
+            </>
+            )}
         </motion.div>
       </motion.div>
     </AnimatePresence>
