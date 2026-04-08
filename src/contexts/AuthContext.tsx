@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { supabase } from "@/lib/supabase-custom-client";
-import type { User as SupabaseUser } from "@supabase/supabase-js";
+import type { User as SupabaseUser, Session } from "@supabase/supabase-js";
 
 interface User {
   id: string;
@@ -39,21 +39,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authRedirect, setAuthRedirect] = useState<string | null>(null);
+  const [authRole, setAuthRole] = useState<"buyer" | "seller" | null>(null);
 
   useEffect(() => {
     let isMounted = true;
 
-    const syncUser = (session: { user?: SupabaseUser | null } | null) => {
+    const syncUser = (session: Session | null) => {
       if (!isMounted) return;
       setUser(session?.user ? mapSupabaseUser(session.user) : null);
       setIsLoading(false);
     };
 
-    void supabase.auth.getSession().then(({ data: { session } }) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       syncUser(session);
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    void supabase.auth.getSession().then(({ data: { session } }) => {
       syncUser(session);
     });
 
@@ -72,8 +73,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await supabase.auth.signOut();
     setUser(null);
   };
-
-  const [authRole, setAuthRole] = useState<"buyer" | "seller" | null>(null);
 
   const openAuth = (redirect?: string, role?: "buyer" | "seller") => {
     setAuthRedirect(redirect || null);
