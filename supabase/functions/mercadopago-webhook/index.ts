@@ -21,9 +21,13 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    // Use personal Supabase for DB, Cloud for edge functions (email etc)
+    const personalUrl = Deno.env.get("PERSONAL_SUPABASE_URL") || Deno.env.get("SUPABASE_URL")!;
+    const personalKey = Deno.env.get("PERSONAL_SUPABASE_SERVICE_ROLE_KEY") || Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const cloudUrl = Deno.env.get("SUPABASE_URL")!;
+    const cloudKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    
+    const supabase = createClient(personalUrl, personalKey);
 
     const MERCADOPAGO_ACCESS_TOKEN = Deno.env.get("MERCADOPAGO_ACCESS_TOKEN")?.trim();
     if (!MERCADOPAGO_ACCESS_TOKEN) {
@@ -86,7 +90,6 @@ Deno.serve(async (req) => {
 
         const sellerReceives = Number(tx.seller_receives);
 
-        // Atomic wallet update using RPC
         await supabase.rpc("increment_wallet", {
           user_uuid: tx.seller_id,
           field: "pending",
@@ -94,7 +97,6 @@ Deno.serve(async (req) => {
         });
         console.log(`Seller ${tx.seller_id} pending +${sellerReceives} (atomic)`);
 
-        // Fetch listing and profiles for emails and chat
         const { data: listing } = await supabase
           .from("listings")
           .select("title, category")
@@ -113,30 +115,27 @@ Deno.serve(async (req) => {
           .eq("user_id", tx.seller_id)
           .single();
 
-        const anonKey = Deno.env.get("SUPABASE_ANON_KEY") || supabaseServiceKey;
         const amount = Number(tx.amount);
         const amountFormatted = `R$ ${amount.toFixed(2).replace(".", ",")}`;
         const buyerName = buyerProfile?.name || "Comprador";
         const listingTitle = listing?.title || "Conta Digital";
 
-        // === NEW FLOW: Open credential delivery chat ===
-
-        // 1. Insert system message to open the chat
+        // Insert system message to open the chat
         await supabase.from("transaction_messages").insert({
           transaction_id: transactionId,
-          sender_id: tx.seller_id, // needs a valid sender for RLS
+          sender_id: tx.seller_id,
           is_system: true,
           allow_sensitive_data: true,
-          message: `✅ Pagamento confirmado! Olá, ${buyerName}.\n\nSeu pagamento de ${amountFormatted} foi processado com sucesso.\n\nAguarde enquanto o vendedor envia as credenciais de acesso da conta. Normalmente isso acontece em poucos minutos.\n\n🔒 Este chat é protegido pelo Escrow Froiv. Não libere o pagamento antes de verificar que as credenciais estão corretas.`,
+          message: `✅ Pagamento confirmado! Olá, ${buyerName}.\n\nSeu pagamento de ${amountFormatted} foi processado com sucesso.\n\nAguarde enquanto o vendedor envia as credenciais de acesso da conta.\n\n🔒 Este chat é protegido pelo Escrow Froiv.`,
         });
 
-        // 2. Update transaction to transfer_in_progress (awaiting credentials)
+        // Update transaction to transfer_in_progress
         await supabase.from("transactions").update({
           status: "transfer_in_progress",
           updated_at: new Date().toISOString(),
         }).eq("id", transactionId);
 
-        // 3. Notify buyer
+        // Notifications
         await supabase.from("notifications").insert({
           user_id: tx.buyer_id,
           title: "💬 Chat aberto com o vendedor",
@@ -144,7 +143,6 @@ Deno.serve(async (req) => {
           link: `/compras/${transactionId}`,
         });
 
-        // 4. Notify seller
         await supabase.from("notifications").insert({
           user_id: tx.seller_id,
           title: "🔑 Envie as credenciais pelo chat!",
@@ -152,14 +150,14 @@ Deno.serve(async (req) => {
           link: `/compras/${transactionId}`,
         });
 
-        // 5. Send emails
+        // Emails via Cloud edge function
         if (buyerProfile?.email) {
-          await sendEmailNotification(supabaseUrl, anonKey, "purchase_confirmed", buyerProfile.email, {
+          await sendEmailNotification(cloudUrl, cloudKey, "purchase_confirmed", buyerProfile.email, {
             amount, title: listingTitle, transaction_id: transactionId,
           });
         }
         if (sellerProfile?.email) {
-          await sendEmailNotification(supabaseUrl, anonKey, "credentials_needed", sellerProfile.email, {
+          await sendEmailNotification(cloudUrl, cloudKey, "credentials_needed", sellerProfile.email, {
             amount, fee: Number(tx.platform_fee), net: sellerReceives,
             title: listingTitle, transaction_id: transactionId,
             buyer_name: buyerName,
