@@ -1,5 +1,9 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.100.0";
-import { corsHeaders } from "https://esm.sh/@supabase/supabase-js@2.100.0/cors";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -12,11 +16,11 @@ Deno.serve(async (req) => {
       throw new Error("MERCADOPAGO_ACCESS_TOKEN not configured");
     }
 
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabaseUrl = Deno.env.get("PERSONAL_SUPABASE_URL") || Deno.env.get("SUPABASE_URL")!;
+    const supabaseServiceKey = Deno.env.get("PERSONAL_SUPABASE_SERVICE_ROLE_KEY") || Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabaseAnonKey = Deno.env.get("PERSONAL_SUPABASE_ANON_KEY") || Deno.env.get("SUPABASE_ANON_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Validate JWT
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
       return new Response(JSON.stringify({ error: "Missing authorization" }), {
@@ -26,8 +30,7 @@ Deno.serve(async (req) => {
     }
 
     const { data: { user }, error: authError } = await createClient(
-      supabaseUrl,
-      Deno.env.get("SUPABASE_ANON_KEY")!
+      supabaseUrl, supabaseAnonKey
     ).auth.getUser(authHeader.replace("Bearer ", ""));
 
     if (authError || !user) {
@@ -38,17 +41,7 @@ Deno.serve(async (req) => {
     }
 
     const body = await req.json();
-    const {
-      transaction_id,
-      token,
-      installments,
-      payment_method_id,
-      issuer_id,
-      payer_email,
-      payer_cpf,
-      payer_first_name,
-      payer_last_name,
-    } = body;
+    const { transaction_id, token, installments, payment_method_id, issuer_id, payer_email, payer_cpf, payer_first_name, payer_last_name } = body;
 
     if (!transaction_id || !token || !payment_method_id || !payer_email || !payer_cpf || !payer_first_name) {
       return new Response(JSON.stringify({ error: "Missing required fields" }), {
@@ -57,7 +50,6 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Fetch transaction
     const { data: transaction, error: txError } = await supabase
       .from("transactions")
       .select("*")
@@ -74,8 +66,8 @@ Deno.serve(async (req) => {
     }
 
     const cleanCpf = payer_cpf.replace(/\D/g, "");
+    const webhookUrl = Deno.env.get("SUPABASE_URL")! + "/functions/v1/mercadopago-webhook";
 
-    // Create card payment via Mercado Pago
     const mpResponse = await fetch("https://api.mercadopago.com/v1/payments", {
       method: "POST",
       headers: {
@@ -94,12 +86,9 @@ Deno.serve(async (req) => {
           email: payer_email,
           first_name: payer_first_name,
           last_name: payer_last_name || "",
-          identification: {
-            type: "CPF",
-            number: cleanCpf,
-          },
+          identification: { type: "CPF", number: cleanCpf },
         },
-        notification_url: `${supabaseUrl}/functions/v1/mercadopago-webhook`,
+        notification_url: webhookUrl,
         external_reference: transaction_id,
       }),
     });
@@ -111,14 +100,12 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({
         error: "Failed to process card payment",
         details: mpData.message || mpData.cause?.[0]?.description || "Unknown error",
-        mercado_pago_status: mpData.status || null,
       }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // If approved immediately, update transaction
     if (mpData.status === "approved") {
       await supabase
         .from("transactions")
@@ -126,7 +113,6 @@ Deno.serve(async (req) => {
         .eq("id", transaction_id)
         .eq("status", "pending_payment");
 
-      // Notify seller
       const { data: tx } = await supabase
         .from("transactions")
         .select("seller_id, listing_id")
