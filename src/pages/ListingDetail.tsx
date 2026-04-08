@@ -216,7 +216,7 @@ export default function ListingDetail() {
                   title={listing.title}
                   category={listing.category}
                   verified={sellerSales >= 5}
-                  isDemo={listing.seller_id === "00000000-0000-0000-0000-000000000001"}
+                  isDemo={listing.seller_id === "00000000-0000-0000-0000-000000000001" || ["free_fire", "valorant", "fortnite", "roblox", "clash_royale"].includes(listing.category)}
                 />
 
                 <div className="lg:hidden bg-white rounded-xl border border-[hsl(var(--border))] overflow-hidden">
