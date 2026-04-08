@@ -4,11 +4,22 @@ import { supabase } from "@/lib/supabase-custom-client";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
+const SESSION_RETRY_COUNT = 15;
+const SESSION_RETRY_DELAY = 300;
+
 export default function AuthCallback() {
   const navigate = useNavigate();
 
   useEffect(() => {
     let isMounted = true;
+    let finished = false;
+
+    const finish = () => {
+      if (!isMounted || finished) return;
+      finished = true;
+      navigate("/", { replace: true });
+    };
+
     const url = new URL(window.location.href);
     const params = url.searchParams;
     const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
@@ -18,34 +29,55 @@ export default function AuthCallback() {
 
     if (oauthError) {
       toast.error(oauthErrorDescription || "Não foi possível concluir o login");
-      navigate("/", { replace: true });
+      finish();
       return;
     }
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (!isMounted) return;
+      if (!isMounted || finished) return;
 
-      if (event === "SIGNED_IN" && session) {
-        navigate("/", { replace: true });
+      if ((event === "SIGNED_IN" || event === "INITIAL_SESSION" || event === "TOKEN_REFRESHED") && session) {
+        finish();
       }
     });
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session && isMounted) {
-        navigate("/", { replace: true });
-      }
-    });
+    const waitForSession = async () => {
+      try {
+        const authCode = params.get("code");
 
-    const timeout = setTimeout(() => {
-      if (!isMounted) return;
-      toast.error("Não foi possível concluir o login");
-      navigate("/", { replace: true });
-    }, 10000);
+        if (authCode) {
+          const { error } = await supabase.auth.exchangeCodeForSession(authCode);
+          if (error) throw error;
+        }
+
+        for (let attempt = 0; attempt < SESSION_RETRY_COUNT; attempt += 1) {
+          const { data: { session }, error } = await supabase.auth.getSession();
+
+          if (!isMounted || finished) return;
+          if (error) throw error;
+
+          if (session) {
+            finish();
+            return;
+          }
+
+          await new Promise((resolve) => window.setTimeout(resolve, SESSION_RETRY_DELAY));
+        }
+
+        toast.error("Não foi possível concluir o login");
+        finish();
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "Não foi possível concluir o login";
+        toast.error(message);
+        finish();
+      }
+    };
+
+    void waitForSession();
 
     return () => {
       isMounted = false;
       subscription.unsubscribe();
-      clearTimeout(timeout);
     };
   }, [navigate]);
 
