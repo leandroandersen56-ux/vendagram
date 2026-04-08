@@ -257,7 +257,7 @@ export default function ListingDetail() {
                       </div>
                     </div>
                     <h1 className="text-lg font-semibold text-[hsl(var(--txt-primary))] leading-snug">{listing.title}</h1>
-                    {listing.seller_id === "00000000-0000-0000-0000-000000000001" && (
+                    {(listing.seller_id === "00000000-0000-0000-0000-000000000001" || ["free_fire", "valorant", "fortnite", "roblox", "clash_royale"].includes(listing.category)) && (
                       <span className="inline-block mt-1 bg-black/80 text-white text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">Anúncio Demo</span>
                     )}
                     <div className="flex items-center flex-wrap gap-x-2 gap-y-1 mt-2 text-[13px]">
