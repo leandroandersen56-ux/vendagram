@@ -288,9 +288,10 @@ export default function Checkout() {
       setTransactionId(tx.id);
 
       // Process card payment
-      const response = await supabase.functions.invoke("create-card-payment", {
+      const response = await cloudSupabase.functions.invoke("create-card-payment", {
         body: {
           transaction_id: tx.id,
+          amount: total,
           token: cardTokenResult.id,
           installments: parseInt(installments),
           payment_method_id: paymentMethodId,
