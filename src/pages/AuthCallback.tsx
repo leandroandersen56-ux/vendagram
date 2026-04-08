@@ -43,13 +43,6 @@ export default function AuthCallback() {
 
     const waitForSession = async () => {
       try {
-        const authCode = params.get("code");
-
-        if (authCode) {
-          const { error } = await supabase.auth.exchangeCodeForSession(authCode);
-          if (error) throw error;
-        }
-
         for (let attempt = 0; attempt < SESSION_RETRY_COUNT; attempt += 1) {
           const { data: { session }, error } = await supabase.auth.getSession();
 
