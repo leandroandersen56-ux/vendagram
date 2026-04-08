@@ -14,7 +14,6 @@ import Footer from "@/components/Footer";
 import PlatformIcon from "@/components/PlatformIcon";
 import { formatBRL, getPlatform } from "@/lib/mock-data";
 import { supabase } from "@/lib/supabase-custom-client";
-import { supabase as cloudSupabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import amexIcon from "@/assets/amex-icon.svg";
@@ -56,6 +55,57 @@ declare global {
   interface Window {
     MercadoPago: any;
   }
+}
+
+const CLOUD_FUNCTIONS_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1`;
+const CLOUD_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+
+function normalizeCpf(value: string) {
+  return value.replace(/\D/g, "");
+}
+
+function isValidCPF(value: string) {
+  const cpf = normalizeCpf(value);
+  if (cpf.length !== 11 || /^(\d){10}$/.test(cpf)) return false;
+
+  let sum = 0;
+  for (let i = 0; i < 9; i++) sum += Number(cpf[i]) * (10 - i);
+  let check = (sum * 10) % 11;
+  if (check === 10) check = 0;
+  if (check !== Number(cpf[9])) return false;
+
+  sum = 0;
+  for (let i = 0; i < 10; i++) sum += Number(cpf[i]) * (11 - i);
+  check = (sum * 10) % 11;
+  if (check === 10) check = 0;
+
+  return check === Number(cpf[10]);
+}
+
+async function callPaymentFunction<T>(functionName: string, options?: { method?: "GET" | "POST"; body?: unknown }) {
+  const response = await fetch(`${CLOUD_FUNCTIONS_URL}/${functionName}`, {
+    method: options?.method || "POST",
+    headers: {
+      apikey: CLOUD_PUBLISHABLE_KEY,
+      "Content-Type": "application/json",
+    },
+    body: options?.body ? JSON.stringify(options.body) : undefined,
+  });
+
+  const raw = await response.text();
+  let data: any = null;
+
+  try {
+    data = raw ? JSON.parse(raw) : null;
+  } catch {
+    data = { error: raw || `Erro ${response.status}` };
+  }
+
+  if (!response.ok) {
+    throw new Error(data?.details || data?.error || `Erro ${response.status} ao comunicar com o serviço de pagamento.`);
+  }
+
+  return data as T;
 }
 
 export default function Checkout() {
@@ -103,10 +153,9 @@ export default function Checkout() {
   useEffect(() => {
     async function loadMPKey() {
       try {
-        const { data } = await cloudSupabase.functions.invoke("mercadopago-public-key");
+        const data = await callPaymentFunction<{ public_key?: string }>("mercadopago-public-key", { method: "GET" });
         if (data?.public_key) {
           setMpPublicKey(data.public_key);
-          // Load MercadoPago.js SDK
           if (!document.getElementById("mp-sdk")) {
             const script = document.createElement("script");
             script.id = "mp-sdk";
@@ -203,35 +252,40 @@ export default function Checkout() {
   };
 
   const handlePixCheckout = async () => {
+    if (!isValidCPF(cpf)) {
+      toast({ title: "CPF inválido", description: "Digite um CPF válido para gerar o Pix.", variant: "destructive" });
+      return;
+    }
+
     setSubmitting(true);
-    const tx = await createTransaction();
-    if (!tx) { setSubmitting(false); return; }
-    setTransactionId(tx.id);
 
     try {
-      const response = await cloudSupabase.functions.invoke("create-pix-payment", {
+      const tx = await createTransaction();
+      if (!tx) return;
+      setTransactionId(tx.id);
+
+      const data = await callPaymentFunction<{
+        error?: string;
+        details?: string;
+        qr_code: string | null;
+        qr_code_base64: string | null;
+        payment_id: number | null;
+        expiration_date: string | null;
+      }>("create-pix-payment", {
         body: {
           transaction_id: tx.id,
           amount: total,
           payer_email: email,
-          payer_cpf: cpf,
+          payer_cpf: normalizeCpf(cpf),
           payer_first_name: nome,
           payer_last_name: sobrenome,
         },
       });
-      if (response.error) {
-        console.error("create-pix-payment invoke error", response.error);
-        const message = response.error.message || response.error.name || "Falha ao conectar com o serviço de pagamento. Tente novamente.";
-        throw new Error(message);
+
+      if (!data.qr_code && !data.qr_code_base64) {
+        throw new Error("O pagamento foi criado, mas o QR Code não foi retornado.");
       }
-      const data = response.data;
-      if (data.error) {
-        const detail = data.details || data.error;
-        if (detail?.toLowerCase().includes("identification")) {
-          throw new Error("CPF inválido. Verifique o número e tente novamente.");
-        }
-        throw new Error(detail);
-      }
+
       setPixData({
         qr_code: data.qr_code,
         qr_code_base64: data.qr_code_base64,
@@ -242,9 +296,10 @@ export default function Checkout() {
       toast({ title: "Pix gerado!", description: "Escaneie o QR Code ou copie o código para pagar." });
     } catch (err: any) {
       console.error("Pix error:", err);
-      toast({ title: "Erro ao gerar Pix", description: err.message, variant: "destructive" });
+      toast({ title: "Erro ao gerar Pix", description: err?.message || "Não foi possível gerar o Pix.", variant: "destructive" });
+    } finally {
+      setSubmitting(false);
     }
-    setSubmitting(false);
   };
 
   const handleCardCheckout = async () => {
@@ -256,13 +311,17 @@ export default function Checkout() {
       toast({ title: "Preencha todos os dados do cartão", variant: "destructive" });
       return;
     }
+    if (!isValidCPF(cpf)) {
+      toast({ title: "CPF inválido", description: "Digite um CPF válido para pagar com cartão.", variant: "destructive" });
+      return;
+    }
 
     setSubmitting(true);
 
     try {
       const mp = new window.MercadoPago(mpPublicKey);
+      const cleanCpf = normalizeCpf(cpf);
 
-      // Create card token
       const cardTokenResult = await mp.createCardToken({
         cardNumber: cardNumber.replace(/\s/g, ""),
         cardholderName: cardHolder,
@@ -270,35 +329,33 @@ export default function Checkout() {
         cardExpirationYear: cardExpYear.length === 2 ? `20${cardExpYear}` : cardExpYear,
         securityCode: cardCvc,
         identificationType: "CPF",
-        identificationNumber: cpf.replace(/\D/g, ""),
+        identificationNumber: cleanCpf,
       });
 
       if (!cardTokenResult?.id) {
         throw new Error("Falha ao tokenizar cartão. Verifique os dados.");
       }
 
-      // Detect payment method from card number
       const bin = cardNumber.replace(/\s/g, "").slice(0, 6);
-      let paymentMethodId = "visa"; // default
+      let paymentMethodId = "visa";
       try {
-        const pmResponse = await fetch(
-          `https://api.mercadopago.com/v1/payment_methods/search?public_key=${mpPublicKey}&bin=${bin}`
-        );
+        const pmResponse = await fetch(`https://api.mercadopago.com/v1/payment_methods/search?public_key=${mpPublicKey}&bin=${bin}`);
         const pmData = await pmResponse.json();
-        if (pmData.results?.[0]?.id) {
-          paymentMethodId = pmData.results[0].id;
-        }
-      } catch (e) {
+        if (pmData.results?.[0]?.id) paymentMethodId = pmData.results[0].id;
+      } catch {
         console.warn("Could not detect payment method, using default");
       }
 
-      // Create transaction
       const tx = await createTransaction();
-      if (!tx) { setSubmitting(false); return; }
+      if (!tx) return;
       setTransactionId(tx.id);
 
-      // Process card payment
-      const response = await cloudSupabase.functions.invoke("create-card-payment", {
+      const data = await callPaymentFunction<{
+        error?: string;
+        details?: string;
+        status: string;
+        status_detail?: string;
+      }>("create-card-payment", {
         body: {
           transaction_id: tx.id,
           amount: total,
@@ -306,15 +363,11 @@ export default function Checkout() {
           installments: parseInt(installments),
           payment_method_id: paymentMethodId,
           payer_email: email,
-          payer_cpf: cpf,
+          payer_cpf: cleanCpf,
           payer_first_name: nome,
           payer_last_name: sobrenome,
         },
       });
-
-      if (response.error) throw new Error(response.error.message);
-      const data = response.data;
-      if (data.error) throw new Error(data.details || data.error);
 
       if (data.status === "approved") {
         setPaymentStatus("approved");
@@ -328,15 +381,20 @@ export default function Checkout() {
       }
     } catch (err: any) {
       console.error("Card error:", err);
-      toast({ title: "Erro no pagamento", description: err.message, variant: "destructive" });
+      toast({ title: "Erro no pagamento", description: err?.message || "Não foi possível processar o cartão.", variant: "destructive" });
+    } finally {
+      setSubmitting(false);
     }
-    setSubmitting(false);
   };
 
   const handleCheckout = () => {
     if (!listing || !user) return;
     if (!nome || !email || !cpf) {
       toast({ title: "Preencha todos os campos obrigatórios", variant: "destructive" });
+      return;
+    }
+    if (!isValidCPF(cpf)) {
+      toast({ title: "CPF inválido", description: "Digite um CPF válido para continuar.", variant: "destructive" });
       return;
     }
     if (paymentMethod === "pix") {
