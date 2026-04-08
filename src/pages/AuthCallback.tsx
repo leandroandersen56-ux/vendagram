@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2 } from "lucide-react";
@@ -6,65 +6,38 @@ import { toast } from "sonner";
 
 export default function AuthCallback() {
   const navigate = useNavigate();
-  const handled = useRef(false);
 
   useEffect(() => {
-    if (handled.current) return;
-    handled.current = true;
-
     let isMounted = true;
 
-    const finishOAuth = async () => {
-      const searchParams = new URLSearchParams(window.location.search);
-      const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
-      const errorMessage = searchParams.get("error_description") || hashParams.get("error_description");
+    // With implicit flow + detectSessionInUrl, Supabase automatically
+    // picks up tokens from the URL hash. We just wait for the session.
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (!isMounted) return;
 
-      if (errorMessage) {
-        toast.error(decodeURIComponent(errorMessage));
-        if (isMounted) navigate("/", { replace: true });
-        return;
+      if (event === "SIGNED_IN" && session) {
+        navigate("/", { replace: true });
       }
+    });
 
-      const waitForSession = async () => {
-        for (let i = 0; i < 15; i += 1) {
-          const { data: { session } } = await supabase.auth.getSession();
-
-          if (session) {
-            if (isMounted) navigate("/", { replace: true });
-            return true;
-          }
-
-          await new Promise((resolve) => setTimeout(resolve, 300));
-        }
-
-        return false;
-      };
-
-      const hasSession = await waitForSession();
-      if (hasSession) return;
-
-      const code = searchParams.get("code");
-      if (code) {
-        const { error } = await supabase.auth.exchangeCodeForSession(code);
-
-        if (error) {
-          toast.error("Erro ao finalizar login com Google");
-          if (isMounted) navigate("/", { replace: true });
-          return;
-        }
-
-        const sessionReady = await waitForSession();
-        if (sessionReady) return;
+    // Also check immediately in case session was already set
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session && isMounted) {
+        navigate("/", { replace: true });
       }
+    });
 
-      toast.error("Não foi possível concluir o login com Google");
-      if (isMounted) navigate("/", { replace: true });
-    };
-
-    void finishOAuth();
+    // Safety timeout
+    const timeout = setTimeout(() => {
+      if (!isMounted) return;
+      toast.error("Não foi possível concluir o login");
+      navigate("/", { replace: true });
+    }, 10000);
 
     return () => {
       isMounted = false;
+      subscription.unsubscribe();
+      clearTimeout(timeout);
     };
   }, [navigate]);
 
