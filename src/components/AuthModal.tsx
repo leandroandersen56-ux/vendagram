@@ -336,6 +336,7 @@ export default function AuthModal() {
             </Button>
             </>
             )}
+          </div>
         </motion.div>
       </motion.div>
     </AnimatePresence>
