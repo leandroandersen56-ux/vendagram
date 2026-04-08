@@ -164,30 +164,32 @@ export default function AuthModal() {
           </div>
 
           {/* Tabs as pills */}
-          <div className="px-6 mt-4">
-            <div className="flex rounded-full bg-muted p-1">
-              <button
-                onClick={() => setMode("login")}
-                className={`flex-1 py-2 text-sm font-semibold rounded-full transition-all ${
-                  mode === "login"
-                    ? "bg-background text-foreground shadow-sm"
-                    : "text-muted-foreground"
-                }`}
-              >
-                Entrar
-              </button>
-              <button
-                onClick={() => setMode("register")}
-                className={`flex-1 py-2 text-sm font-semibold rounded-full transition-all ${
-                  mode === "register"
-                    ? "bg-background text-foreground shadow-sm"
-                    : "text-muted-foreground"
-                }`}
-              >
-                Cadastrar
-              </button>
+          {mode !== "forgot" && (
+            <div className="px-6 mt-4">
+              <div className="flex rounded-full bg-muted p-1">
+                <button
+                  onClick={() => setMode("login")}
+                  className={`flex-1 py-2 text-sm font-semibold rounded-full transition-all ${
+                    mode === "login"
+                      ? "bg-background text-foreground shadow-sm"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  Entrar
+                </button>
+                <button
+                  onClick={() => setMode("register")}
+                  className={`flex-1 py-2 text-sm font-semibold rounded-full transition-all ${
+                    mode === "register"
+                      ? "bg-background text-foreground shadow-sm"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  Cadastrar
+                </button>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Form */}
           <div className="p-6">
