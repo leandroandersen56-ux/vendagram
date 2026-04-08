@@ -14,7 +14,7 @@ import MfaChallengeModal from "@/components/MfaChallengeModal";
 export default function AuthModal() {
   const { showAuthModal, closeAuth, login, authRedirect, authRole } = useAuth();
   const navigate = useNavigate();
-  const [mode, setMode] = useState<"login" | "register">("login");
+  const [mode, setMode] = useState<"login" | "register" | "forgot">("login");
   const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -28,6 +28,24 @@ export default function AuthModal() {
     setSelectedRole(authRole || null);
     if (authRole) setMode("register");
   }, [showAuthModal, authRole]);
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) { toast.error("Informe seu e-mail"); return; }
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      if (error) throw error;
+      toast.success("E-mail de recuperação enviado! Verifique sua caixa de entrada.");
+      setMode("login");
+    } catch (err: any) {
+      toast.error(err.message || "Erro ao enviar e-mail de recuperação");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -146,38 +164,65 @@ export default function AuthModal() {
           </div>
 
           {/* Tabs as pills */}
-          <div className="px-6 mt-4">
-            <div className="flex rounded-full bg-muted p-1">
-              <button
-                onClick={() => setMode("login")}
-                className={`flex-1 py-2 text-sm font-semibold rounded-full transition-all ${
-                  mode === "login"
-                    ? "bg-background text-foreground shadow-sm"
-                    : "text-muted-foreground"
-                }`}
-              >
-                Entrar
-              </button>
-              <button
-                onClick={() => setMode("register")}
-                className={`flex-1 py-2 text-sm font-semibold rounded-full transition-all ${
-                  mode === "register"
-                    ? "bg-background text-foreground shadow-sm"
-                    : "text-muted-foreground"
-                }`}
-              >
-                Cadastrar
-              </button>
+          {mode !== "forgot" && (
+            <div className="px-6 mt-4">
+              <div className="flex rounded-full bg-muted p-1">
+                <button
+                  onClick={() => setMode("login")}
+                  className={`flex-1 py-2 text-sm font-semibold rounded-full transition-all ${
+                    mode === "login"
+                      ? "bg-background text-foreground shadow-sm"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  Entrar
+                </button>
+                <button
+                  onClick={() => setMode("register")}
+                  className={`flex-1 py-2 text-sm font-semibold rounded-full transition-all ${
+                    mode === "register"
+                      ? "bg-background text-foreground shadow-sm"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  Cadastrar
+                </button>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Form */}
           <div className="p-6">
             <p className="text-sm text-muted-foreground mb-5 text-center">
-              {mode === "login"
+              {mode === "forgot"
+                ? "Informe seu e-mail para recuperar sua senha"
+                : mode === "login"
                 ? "Bem-vindo de volta! Insira seus dados"
                 : "Escolha seu perfil e crie sua conta para começar"}
             </p>
+
+            {mode === "forgot" ? (
+              <form onSubmit={handleForgotPassword} className="space-y-4">
+                <div className="space-y-1.5">
+                  <Label className="text-xs text-muted-foreground">E-mail</Label>
+                  <Input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="seu@email.com"
+                    className="bg-muted border-border h-11 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20"
+                    required
+                  />
+                </div>
+                <Button variant="hero" type="submit" className="w-full h-11" disabled={loading}>
+                  {loading ? "Enviando..." : "Enviar link de recuperação"}
+                </Button>
+                <button type="button" onClick={() => setMode("login")} className="text-xs text-primary hover:underline w-full text-center">
+                  Voltar para login
+                </button>
+              </form>
+            ) : (
+              <>
 
             {mode === "register" && (
               <div className="grid grid-cols-2 gap-3 mb-5">
@@ -257,7 +302,7 @@ export default function AuthModal() {
               </div>
 
               {mode === "login" && (
-                <button type="button" className="text-xs text-primary hover:underline">
+                <button type="button" onClick={() => setMode("forgot")} className="text-xs text-primary hover:underline">
                   Esqueceu sua senha?
                 </button>
               )}
@@ -289,6 +334,8 @@ export default function AuthModal() {
               </svg>
               Entrar com Google
             </Button>
+            </>
+            )}
           </div>
         </motion.div>
       </motion.div>
