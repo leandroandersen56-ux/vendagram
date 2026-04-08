@@ -302,7 +302,7 @@ export default function AuthModal() {
               </div>
 
               {mode === "login" && (
-                <button type="button" className="text-xs text-primary hover:underline">
+                <button type="button" onClick={() => setMode("forgot")} className="text-xs text-primary hover:underline">
                   Esqueceu sua senha?
                 </button>
               )}
