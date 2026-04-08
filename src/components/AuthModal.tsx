@@ -194,10 +194,35 @@ export default function AuthModal() {
           {/* Form */}
           <div className="p-6">
             <p className="text-sm text-muted-foreground mb-5 text-center">
-              {mode === "login"
+              {mode === "forgot"
+                ? "Informe seu e-mail para recuperar sua senha"
+                : mode === "login"
                 ? "Bem-vindo de volta! Insira seus dados"
                 : "Escolha seu perfil e crie sua conta para começar"}
             </p>
+
+            {mode === "forgot" ? (
+              <form onSubmit={handleForgotPassword} className="space-y-4">
+                <div className="space-y-1.5">
+                  <Label className="text-xs text-muted-foreground">E-mail</Label>
+                  <Input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="seu@email.com"
+                    className="bg-muted border-border h-11 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20"
+                    required
+                  />
+                </div>
+                <Button variant="hero" type="submit" className="w-full h-11" disabled={loading}>
+                  {loading ? "Enviando..." : "Enviar link de recuperação"}
+                </Button>
+                <button type="button" onClick={() => setMode("login")} className="text-xs text-primary hover:underline w-full text-center">
+                  Voltar para login
+                </button>
+              </form>
+            ) : (
+              <>
 
             {mode === "register" && (
               <div className="grid grid-cols-2 gap-3 mb-5">
