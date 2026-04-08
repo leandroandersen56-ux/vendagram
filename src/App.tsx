@@ -177,15 +177,21 @@ function AppRoutes() {
   );
 }
 
+function AppShell() {
+  return (
+    <AuthProvider>
+      <AppRoutes />
+    </AuthProvider>
+  );
+}
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <AuthProvider>
-          <AppRoutes />
-        </AuthProvider>
+        <AppShell />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

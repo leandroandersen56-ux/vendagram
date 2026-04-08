@@ -9,9 +9,19 @@ export default function AuthCallback() {
 
   useEffect(() => {
     let isMounted = true;
+    const url = new URL(window.location.href);
+    const params = url.searchParams;
+    const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
 
-    // With implicit flow + detectSessionInUrl, Supabase automatically
-    // picks up tokens from the URL hash. We just wait for the session.
+    const oauthError = params.get("error") || hashParams.get("error");
+    const oauthErrorDescription = params.get("error_description") || hashParams.get("error_description");
+
+    if (oauthError) {
+      toast.error(oauthErrorDescription || "Não foi possível concluir o login");
+      navigate("/", { replace: true });
+      return;
+    }
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (!isMounted) return;
 
@@ -20,14 +30,12 @@ export default function AuthCallback() {
       }
     });
 
-    // Also check immediately in case session was already set
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session && isMounted) {
         navigate("/", { replace: true });
       }
     });
 
-    // Safety timeout
     const timeout = setTimeout(() => {
       if (!isMounted) return;
       toast.error("Não foi possível concluir o login");
