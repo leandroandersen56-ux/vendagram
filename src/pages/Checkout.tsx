@@ -103,7 +103,7 @@ export default function Checkout() {
   useEffect(() => {
     async function loadMPKey() {
       try {
-        const { data } = await supabase.functions.invoke("mercadopago-public-key");
+        const { data } = await cloudSupabase.functions.invoke("mercadopago-public-key");
         if (data?.public_key) {
           setMpPublicKey(data.public_key);
           // Load MercadoPago.js SDK
