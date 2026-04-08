@@ -209,9 +209,10 @@ export default function Checkout() {
     setTransactionId(tx.id);
 
     try {
-      const response = await supabase.functions.invoke("create-pix-payment", {
+      const response = await cloudSupabase.functions.invoke("create-pix-payment", {
         body: {
           transaction_id: tx.id,
+          amount: total,
           payer_email: email,
           payer_cpf: cpf,
           payer_first_name: nome,
