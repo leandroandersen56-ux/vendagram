@@ -1,5 +1,3 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.100.0";
-
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
@@ -16,58 +14,17 @@ Deno.serve(async (req) => {
       throw new Error("MERCADOPAGO_ACCESS_TOKEN not configured");
     }
 
-    const supabaseUrl = Deno.env.get("PERSONAL_SUPABASE_URL") || Deno.env.get("SUPABASE_URL")!;
-    const supabaseServiceKey = Deno.env.get("PERSONAL_SUPABASE_SERVICE_ROLE_KEY") || Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const supabaseAnonKey = Deno.env.get("PERSONAL_SUPABASE_ANON_KEY") || Deno.env.get("SUPABASE_ANON_KEY")!;
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
-
-    // Validate JWT
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader) {
-      return new Response(JSON.stringify({ error: "Missing authorization" }), {
-        status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
-    const { data: { user }, error: authError } = await createClient(
-      supabaseUrl, supabaseAnonKey
-    ).auth.getUser(authHeader.replace("Bearer ", ""));
-
-    if (authError || !user) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
     const body = await req.json();
-    const { transaction_id, payer_email, payer_cpf, payer_first_name, payer_last_name } = body;
+    const { transaction_id, amount, payer_email, payer_cpf, payer_first_name, payer_last_name } = body;
 
-    if (!transaction_id || !payer_email || !payer_cpf || !payer_first_name) {
+    if (!transaction_id || !amount || !payer_email || !payer_cpf || !payer_first_name) {
       return new Response(JSON.stringify({ error: "Missing required fields" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const { data: transaction, error: txError } = await supabase
-      .from("transactions")
-      .select("*")
-      .eq("id", transaction_id)
-      .eq("buyer_id", user.id)
-      .eq("status", "pending_payment")
-      .single();
-
-    if (txError || !transaction) {
-      return new Response(JSON.stringify({ error: "Transaction not found or not pending" }), {
-        status: 404,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
     const cleanCpf = payer_cpf.replace(/\D/g, "");
-    const webhookUrl = Deno.env.get("SUPABASE_URL")! + "/functions/v1/mercadopago-webhook";
 
     const mpResponse = await fetch("https://api.mercadopago.com/v1/payments", {
       method: "POST",
@@ -77,7 +34,7 @@ Deno.serve(async (req) => {
         "X-Idempotency-Key": transaction_id,
       },
       body: JSON.stringify({
-        transaction_amount: Number(transaction.amount),
+        transaction_amount: Number(amount),
         description: `Froiv - Compra #${transaction_id.slice(0, 8)}`,
         payment_method_id: "pix",
         payer: {
@@ -86,7 +43,6 @@ Deno.serve(async (req) => {
           last_name: payer_last_name || "",
           identification: { type: "CPF", number: cleanCpf },
         },
-        notification_url: webhookUrl,
         external_reference: transaction_id,
       }),
     });
