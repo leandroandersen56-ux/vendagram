@@ -12,48 +12,60 @@ export default function AuthCallback() {
     if (handled.current) return;
     handled.current = true;
 
-    const searchParams = new URLSearchParams(window.location.search);
-    const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
-    const errorMessage =
-      searchParams.get("error_description") || hashParams.get("error_description");
+    let isMounted = true;
 
-    if (errorMessage) {
-      toast.error(decodeURIComponent(errorMessage));
-      navigate("/", { replace: true });
-      return;
-    }
+    const finishOAuth = async () => {
+      const searchParams = new URLSearchParams(window.location.search);
+      const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+      const errorMessage = searchParams.get("error_description") || hashParams.get("error_description");
 
-    // PKCE flow: exchange code for session
-    const code = searchParams.get("code");
-    if (code) {
-      supabase.auth.exchangeCodeForSession(code).then(({ data, error }) => {
-        if (error) {
-          console.error("Code exchange error:", error);
-          toast.error("Erro ao finalizar login");
+      if (errorMessage) {
+        toast.error(decodeURIComponent(errorMessage));
+        if (isMounted) navigate("/", { replace: true });
+        return;
+      }
+
+      const waitForSession = async () => {
+        for (let i = 0; i < 15; i += 1) {
+          const { data: { session } } = await supabase.auth.getSession();
+
+          if (session) {
+            if (isMounted) navigate("/", { replace: true });
+            return true;
+          }
+
+          await new Promise((resolve) => setTimeout(resolve, 300));
         }
-        // Session is now set, navigate home
-        navigate("/", { replace: true });
-      });
-      return;
-    }
 
-    // Implicit flow: tokens in hash - Supabase client auto-detects them
-    // via detectSessionInUrl. We just need to wait for the session to be ready.
-    const waitForSession = async () => {
-      // Give Supabase time to process hash tokens
-      for (let i = 0; i < 20; i++) {
-        const { data } = await supabase.auth.getSession();
-        if (data.session) {
-          navigate("/", { replace: true });
+        return false;
+      };
+
+      const hasSession = await waitForSession();
+      if (hasSession) return;
+
+      const code = searchParams.get("code");
+      if (code) {
+        const { error } = await supabase.auth.exchangeCodeForSession(code);
+
+        if (error) {
+          toast.error("Erro ao finalizar login com Google");
+          if (isMounted) navigate("/", { replace: true });
           return;
         }
-        await new Promise((r) => setTimeout(r, 400));
+
+        const sessionReady = await waitForSession();
+        if (sessionReady) return;
       }
-      toast.error("Não foi possível concluir o login");
-      navigate("/", { replace: true });
+
+      toast.error("Não foi possível concluir o login com Google");
+      if (isMounted) navigate("/", { replace: true });
     };
 
-    waitForSession();
+    void finishOAuth();
+
+    return () => {
+      isMounted = false;
+    };
   }, [navigate]);
 
   return (
