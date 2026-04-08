@@ -29,6 +29,24 @@ export default function AuthModal() {
     if (authRole) setMode("register");
   }, [showAuthModal, authRole]);
 
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) { toast.error("Informe seu e-mail"); return; }
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      if (error) throw error;
+      toast.success("E-mail de recuperação enviado! Verifique sua caixa de entrada.");
+      setMode("login");
+    } catch (err: any) {
+      toast.error(err.message || "Erro ao enviar e-mail de recuperação");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
