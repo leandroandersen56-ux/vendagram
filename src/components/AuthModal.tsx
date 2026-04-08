@@ -69,18 +69,29 @@ export default function AuthModal() {
   };
 
   const handleGoogle = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: "https://www.froiv.com/auth/callback",
-        queryParams: {
+    try {
+      const result = await lovable.auth.signInWithOAuth("google", {
+        redirect_uri: window.location.origin,
+        extraParams: {
           prompt: "select_account",
         },
-      },
-    });
+      });
 
-    if (error) {
-      toast.error(error.message || "Erro ao entrar com Google");
+      if (result.error) {
+        toast.error("Erro ao entrar com Google");
+        return;
+      }
+
+      if (result.redirected) {
+        return;
+      }
+
+      // Session set automatically, close modal
+      closeAuth();
+      resetForm();
+      if (authRedirect) navigate(authRedirect);
+    } catch (err: any) {
+      toast.error(err.message || "Erro ao entrar com Google");
     }
   };
 
