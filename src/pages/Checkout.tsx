@@ -66,7 +66,7 @@ function normalizeCpf(value: string) {
 
 function isValidCPF(value: string) {
   const cpf = normalizeCpf(value);
-  if (cpf.length !== 11 || /^(\d){10}$/.test(cpf)) return false;
+  if (cpf.length !== 11 || new Set(cpf).size === 1) return false;
 
   let sum = 0;
   for (let i = 0; i < 9; i++) sum += Number(cpf[i]) * (10 - i);
