@@ -219,9 +219,15 @@ export default function Checkout() {
           payer_last_name: sobrenome,
         },
       });
-      if (response.error) throw new Error(response.error.message);
+      if (response.error) throw new Error("Falha ao conectar com o serviço de pagamento. Tente novamente.");
       const data = response.data;
-      if (data.error) throw new Error(data.details || data.error);
+      if (data.error) {
+        const detail = data.details || data.error;
+        if (detail?.toLowerCase().includes("identification")) {
+          throw new Error("CPF inválido. Verifique o número e tente novamente.");
+        }
+        throw new Error(detail);
+      }
       setPixData({
         qr_code: data.qr_code,
         qr_code_base64: data.qr_code_base64,
