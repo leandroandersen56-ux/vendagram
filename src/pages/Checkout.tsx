@@ -220,6 +220,7 @@ export default function Checkout() {
         },
       });
       if (response.error) {
+        console.error("create-pix-payment invoke error", response.error);
         const message = response.error.message || response.error.name || "Falha ao conectar com o serviço de pagamento. Tente novamente.";
         throw new Error(message);
       }
