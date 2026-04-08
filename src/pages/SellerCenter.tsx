@@ -44,6 +44,7 @@ export default function SellerCenter() {
     });
 
     if (profileRes.data?.pix_key) setPixKey(profileRes.data.pix_key);
+    if (profileRes.data?.name) setUserName(profileRes.data.name.split(" ")[0]);
     if (walletRes.data) setWallet({
       balance: Number(walletRes.data.balance),
       pending: Number(walletRes.data.pending),
