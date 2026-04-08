@@ -14,7 +14,7 @@ import MfaChallengeModal from "@/components/MfaChallengeModal";
 export default function AuthModal() {
   const { showAuthModal, closeAuth, login, authRedirect, authRole } = useAuth();
   const navigate = useNavigate();
-  const [mode, setMode] = useState<"login" | "register">("login");
+  const [mode, setMode] = useState<"login" | "register" | "forgot">("login");
   const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
