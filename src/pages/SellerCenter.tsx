@@ -14,7 +14,7 @@ import TransferModal from "@/components/wallet/TransferModal";
 
 export default function SellerCenter() {
   const navigate = useNavigate();
-  const { user, profile } = useAuth();
+  const { user } = useAuth();
   const [metrics, setMetrics] = useState({ purchases: 0, activeListings: 0, rating: 0, totalReviews: 0 });
   const [wallet, setWallet] = useState({ balance: 0, pending: 0, totalEarned: 0 });
   const [loading, setLoading] = useState(true);
@@ -22,8 +22,7 @@ export default function SellerCenter() {
   const [showDeposit, setShowDeposit] = useState(false);
   const [showTransfer, setShowTransfer] = useState(false);
   const [pixKey, setPixKey] = useState("");
-
-  const userName = profile?.name?.split(" ")[0] || "Vendedor";
+  const [userName, setUserName] = useState("Vendedor");
 
   useEffect(() => {
     if (user?.id) loadData();
