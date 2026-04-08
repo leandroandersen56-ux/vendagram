@@ -30,7 +30,7 @@ export default function SellerCenter() {
 
   const loadData = async () => {
     const [profileRes, purchasesRes, listingsRes, walletRes] = await Promise.all([
-      supabase.from("profiles").select("avg_rating, total_reviews, pix_key").eq("user_id", user!.id).single(),
+      supabase.from("profiles").select("avg_rating, total_reviews, pix_key, name").eq("user_id", user!.id).single(),
       supabase.from("transactions").select("id").eq("buyer_id", user!.id).eq("status", "completed"),
       supabase.from("listings").select("id").eq("seller_id", user!.id).eq("status", "active"),
       supabase.from("wallets").select("balance, pending, total_earned").eq("user_id", user!.id).single(),
