@@ -10,53 +10,74 @@ export default function AuthCallback() {
   useEffect(() => {
     let isActive = true;
 
-    const finishOAuth = async () => {
-      const searchParams = new URLSearchParams(window.location.search);
-      const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
-      const errorMessage = searchParams.get("error_description") || hashParams.get("error_description");
+    const handleCallback = async () => {
+      try {
+        // Check for error in URL params
+        const searchParams = new URLSearchParams(window.location.search);
+        const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+        const errorMessage =
+          searchParams.get("error_description") || hashParams.get("error_description");
 
-      if (errorMessage) {
-        toast.error(decodeURIComponent(errorMessage));
-        navigate("/", { replace: true });
-        return;
-      }
+        if (errorMessage) {
+          toast.error(decodeURIComponent(errorMessage));
+          if (isActive) navigate("/", { replace: true });
+          return;
+        }
 
-      const { data, error } = await supabase.auth.getSession();
+        // If there's a hash with access_token, let Supabase process it
+        if (window.location.hash && window.location.hash.includes("access_token")) {
+          // Supabase auto-detects hash tokens via detectSessionInUrl (enabled by default)
+          // Just wait for onAuthStateChange to fire
+          return;
+        }
 
-      if (error) {
-        toast.error("Erro ao finalizar login com Google");
-        navigate("/", { replace: true });
-        return;
-      }
+        // If there's a code param (PKCE flow), exchange it
+        const code = searchParams.get("code");
+        if (code) {
+          const { error } = await supabase.auth.exchangeCodeForSession(code);
+          if (error) {
+            console.error("Code exchange error:", error);
+            toast.error("Erro ao finalizar login");
+            if (isActive) navigate("/", { replace: true });
+          }
+          return;
+        }
 
-      if (data.session && isActive) {
-        navigate("/", { replace: true });
+        // Fallback: check if session already exists
+        const { data } = await supabase.auth.getSession();
+        if (data.session && isActive) {
+          navigate("/", { replace: true });
+        }
+      } catch (err) {
+        console.error("OAuth callback error:", err);
+        toast.error("Erro ao finalizar autenticação");
+        if (isActive) navigate("/", { replace: true });
       }
     };
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    // Listen for auth state changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
       if (!isActive) return;
-
-      if (event === "SIGNED_IN" && session) {
-        navigate("/", { replace: true });
-      }
-
-      if (event === "SIGNED_OUT") {
+      if ((event === "SIGNED_IN" || event === "TOKEN_REFRESHED") && session) {
         navigate("/", { replace: true });
       }
     });
 
-    void finishOAuth();
+    handleCallback();
 
+    // Safety timeout
     const timeout = setTimeout(async () => {
+      if (!isActive) return;
       const { data } = await supabase.auth.getSession();
       if (data.session) {
         navigate("/", { replace: true });
         return;
       }
-      toast.error("Não foi possível concluir o login com Google");
+      toast.error("Não foi possível concluir o login");
       navigate("/", { replace: true });
-    }, 5000);
+    }, 8000);
 
     return () => {
       isActive = false;
