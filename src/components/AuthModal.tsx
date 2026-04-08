@@ -68,10 +68,12 @@ export default function AuthModal() {
   };
 
   const handleGoogle = async () => {
+    const redirectTo = "https://www.froiv.com/auth/callback";
+
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: window.location.origin + "/auth/callback",
+        redirectTo,
         queryParams: {
           prompt: "select_account",
         },
