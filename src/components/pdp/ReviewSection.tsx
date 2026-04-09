@@ -63,12 +63,26 @@ export default function ReviewSection({ sellerId, sellerName, rating, totalSales
     fetchReviews();
   }, [sellerId]);
 
-  // Calculate distribution from real reviews
+  // Calculate distribution from real reviews, or synthesize from rating if none exist
   const totalReviews = reviews.length;
-  const distribution = [5, 4, 3, 2, 1].map((stars) => {
-    const count = reviews.filter((r) => r.rating === stars).length;
-    return { stars, pct: totalReviews > 0 ? Math.round((count / totalReviews) * 100) : 0 };
-  });
+  const distribution = (() => {
+    if (totalReviews > 0) {
+      return [5, 4, 3, 2, 1].map((stars) => {
+        const count = reviews.filter((r) => r.rating === stars).length;
+        return { stars, pct: Math.round((count / totalReviews) * 100) };
+      });
+    }
+    // Synthesize realistic distribution from the average rating
+    const avg = rating;
+    const rounded = Math.round(avg);
+    const synth: Record<number, number> = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+    if (avg >= 4.8) { synth[5] = 92; synth[4] = 6; synth[3] = 2; }
+    else if (avg >= 4.5) { synth[5] = 78; synth[4] = 15; synth[3] = 5; synth[2] = 2; }
+    else if (avg >= 4.0) { synth[5] = 55; synth[4] = 30; synth[3] = 10; synth[2] = 3; synth[1] = 2; }
+    else if (avg >= 3.5) { synth[5] = 30; synth[4] = 30; synth[3] = 25; synth[2] = 10; synth[1] = 5; }
+    else { synth[rounded] = 40; synth[Math.max(1, rounded - 1)] = 30; synth[Math.min(5, rounded + 1)] = 20; synth[Math.max(1, rounded - 2)] = 10; }
+    return [5, 4, 3, 2, 1].map((stars) => ({ stars, pct: synth[stars] }));
+  })();
 
   const formatDate = (dateStr: string) => {
     const d = new Date(dateStr);
