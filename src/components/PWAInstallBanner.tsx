@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { X, Download } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import logoWhite from "@/assets/logo-froiv-white.svg";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -61,31 +62,31 @@ export default function PWAInstallBanner() {
 
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
-  // Mobile: top banner
+  // Mobile: static banner that pushes content down (rendered above header)
   if (isMobile) {
     return (
-      <div className="fixed top-[56px] left-0 right-0 z-[55] bg-[#FFF3CD] border-b border-[#FFECB5] shadow-sm animate-in slide-in-from-top duration-300">
-        <div className="container mx-auto flex items-center gap-3 py-2.5 pr-2">
-          <div className="h-10 w-10 rounded-xl overflow-hidden shrink-0 shadow-sm">
-            <img src="/pwa-icon-192.png" alt="Froiv" className="h-full w-full object-cover" />
+      <div className="w-full bg-primary border-b border-primary/80 shadow-sm">
+        <div className="container mx-auto flex items-center gap-3 py-2.5 px-4">
+          <div className="h-10 w-10 rounded-xl bg-primary flex items-center justify-center shrink-0">
+            <img src={logoWhite} alt="Froiv" className="h-6 w-6 object-contain" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-[13px] font-semibold text-[#664D03] leading-tight">Instale o app Froiv</p>
-            <p className="text-[11px] text-[#664D03]/70 leading-tight">
+            <p className="text-[13px] font-semibold text-white leading-tight">Instale o app Froiv</p>
+            <p className="text-[11px] text-white/70 leading-tight">
               {isIOS ? "Toque em Compartilhar → Tela Inicial" : "Acesso rápido e notificações"}
             </p>
           </div>
           {!isIOS && deferredPrompt && (
-            <button onClick={handleInstall} className="shrink-0 bg-primary hover:bg-primary/90 text-white text-[12px] font-semibold px-4 py-2 rounded-lg transition-colors flex items-center gap-1.5">
+            <button onClick={handleInstall} className="shrink-0 bg-white hover:bg-white/90 text-primary text-[12px] font-semibold px-4 py-2 rounded-lg transition-colors flex items-center gap-1.5">
               <Download className="h-3.5 w-3.5" />
               Instalar
             </button>
           )}
           {isIOS && (
-            <div className="shrink-0 bg-primary text-white text-[11px] font-semibold px-3 py-1.5 rounded-lg">Adicionar</div>
+            <div className="shrink-0 bg-white text-primary text-[11px] font-semibold px-3 py-1.5 rounded-lg">Adicionar</div>
           )}
-          <button onClick={handleDismiss} className="shrink-0 h-7 w-7 flex items-center justify-center rounded-full hover:bg-[#664D03]/10 transition-colors" aria-label="Fechar">
-            <X className="h-4 w-4 text-[#664D03]/60" />
+          <button onClick={handleDismiss} className="shrink-0 h-7 w-7 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors" aria-label="Fechar">
+            <X className="h-4 w-4 text-white/70" />
           </button>
         </div>
       </div>
@@ -95,7 +96,6 @@ export default function PWAInstallBanner() {
   // Desktop: bottom-right popup
   return (
     <div className="fixed bottom-6 right-6 z-[60] w-[340px] bg-white rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-border/50 animate-in slide-in-from-bottom-5 fade-in duration-400">
-      {/* Close button */}
       <button
         onClick={handleDismiss}
         className="absolute top-3 right-3 h-6 w-6 flex items-center justify-center rounded-full hover:bg-muted transition-colors"
@@ -105,12 +105,10 @@ export default function PWAInstallBanner() {
       </button>
 
       <div className="p-5 flex flex-col items-center text-center gap-3">
-        {/* Icon */}
-        <div className="h-14 w-14 rounded-2xl overflow-hidden shadow-md">
-          <img src="/pwa-icon-192.png" alt="Froiv" className="h-full w-full object-cover" />
+        <div className="h-14 w-14 rounded-2xl bg-primary flex items-center justify-center shadow-md">
+          <img src={logoWhite} alt="Froiv" className="h-8 w-8 object-contain" />
         </div>
 
-        {/* Text */}
         <div>
           <p className="text-[15px] font-semibold text-foreground leading-tight">Instale o Froiv</p>
           <p className="text-[13px] text-muted-foreground mt-1 leading-snug">
@@ -118,7 +116,6 @@ export default function PWAInstallBanner() {
           </p>
         </div>
 
-        {/* Actions */}
         <div className="flex items-center gap-2 w-full mt-1">
           <button
             onClick={handleDismiss}
