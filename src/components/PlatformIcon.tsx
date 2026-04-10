@@ -1,6 +1,7 @@
 import React from "react";
 import freefireLogo from "@/assets/freefire-logo.png";
 import kwaiLogo from "@/assets/kwai-icon.svg";
+import youtubeLogo from "@/assets/youtube-icon.svg";
 interface PlatformIconProps {
   platformId: string;
   size?: number;
