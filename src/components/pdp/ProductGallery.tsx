@@ -159,8 +159,27 @@ export default function ProductGallery({ images, title, category, verified, isDe
               </button>
             </div>
 
-            {/* Image area */}
-            <div className="flex-1 flex items-center justify-center relative overflow-hidden">
+            {/* Image area with touch swipe */}
+            <div
+              className="flex-1 flex items-center justify-center relative overflow-hidden"
+              onTouchStart={(e) => {
+                const touch = e.touches[0];
+                (e.currentTarget as any)._touchStartX = touch.clientX;
+                (e.currentTarget as any)._touchStartY = touch.clientY;
+              }}
+              onTouchEnd={(e) => {
+                const startX = (e.currentTarget as any)._touchStartX;
+                const startY = (e.currentTarget as any)._touchStartY;
+                if (startX == null) return;
+                const touch = e.changedTouches[0];
+                const dx = touch.clientX - startX;
+                const dy = touch.clientY - startY;
+                if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+                  if (dx < 0) next();
+                  else prev();
+                }
+              }}
+            >
               <AnimatePresence mode="popLayout" initial={false} custom={direction}>
                 <motion.img
                   key={selected}
@@ -172,6 +191,7 @@ export default function ProductGallery({ images, title, category, verified, isDe
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: direction > 0 ? -200 : 200 }}
                   transition={{ duration: 0.25 }}
+                  draggable={false}
                 />
               </AnimatePresence>
 
