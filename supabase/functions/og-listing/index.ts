@@ -23,7 +23,7 @@ Deno.serve(async (req) => {
     const supabase = createClient(personalUrl, serviceKey);
 
     const { data: listing, error } = await supabase
-      .from("public_listings")
+      .from("listings")
       .select("id, title, description, price, screenshots, category, platform_username, followers_count, seller_id")
       .eq("id", listingId)
       .maybeSingle();
