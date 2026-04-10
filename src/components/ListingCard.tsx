@@ -62,7 +62,9 @@ export default function ListingCard({ listing }: ListingCardProps) {
           {/* Platform badge */}
           <div className="mt-0.5">
             <span className={`inline-flex items-center gap-1 ${badge.bg} rounded-[4px] px-2 py-0.5`}>
-              <PlatformIcon platformId={listing.platform} size={10} />
+              <span style={{ filter: "brightness(0) invert(1)", display: "inline-flex", lineHeight: 0 }}>
+                <PlatformIcon platformId={listing.platform} size={10} />
+              </span>
               <span className={`text-[10px] font-semibold ${badge.text} uppercase leading-none`}>{platform.name}</span>
             </span>
           </div>

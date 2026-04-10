@@ -43,7 +43,7 @@ const icons: Record<string, (s: number) => React.ReactNode> = {
   ),
 
   youtube: (s) => (
-    <img src={youtubeLogo} width={s * 1.2} height={s * 1.2} alt="YouTube" style={{ objectFit: "contain", filter: "brightness(0) invert(1)" }} />
+    <img src={youtubeLogo} width={s * 1.2} height={s * 1.2} alt="YouTube" style={{ objectFit: "contain" }} />
   ),
 
   valorant: (s) => (
