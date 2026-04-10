@@ -72,7 +72,7 @@ export default function Affiliates() {
               <div className="w-9 h-9 rounded-xl bg-white/15 flex items-center justify-center backdrop-blur-sm">
                 <Gift className="h-5 w-5 text-white" />
               </div>
-              <p className="text-xl font-bold text-white tracking-tight">Ganhe 10% de comissão</p>
+              <p className="text-xl font-bold text-white tracking-tight"><p className="text-xl font-bold text-white tracking-tight">Ganhe 10% de comissão</p></p>
             </div>
             <p className="text-sm text-white/70 ml-[46px]">Por cada venda indicada pelo seu link</p>
             

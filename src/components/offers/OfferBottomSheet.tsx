@@ -25,7 +25,7 @@ export default function OfferBottomSheet({ open, onClose, listing, onSent }: Pro
   const price = Number(listing.price);
   const discount = mask.value > 0 ? Math.round((1 - mask.value / price) * 100) : 0;
   const savings = price - mask.value;
-  const fee = mask.value * 0.10;
+  const fee = mask.value * 0.05;
   const total = mask.value;
   const isValid = mask.value > 0 && mask.value < price;
   const isLowOffer = discount > 40;
@@ -174,7 +174,7 @@ export default function OfferBottomSheet({ open, onClose, listing, onSent }: Pro
                       <span className="text-[#00A650] font-bold">{formatBRL(savings)}</span>
                     </div>
                     <div className="flex justify-between text-[13px]">
-                      <span className="text-[#888]">Taxa Froiv (10%)</span>
+                      <span className="text-[#888]"><span className="text-[#888]">Taxa Froiv (5%)</span></span>
                       <span className="text-[#111]">{formatBRL(fee)}</span>
                     </div>
                     <div className="h-px bg-[#E8E8E8] my-1" />

@@ -21,7 +21,7 @@ const FAQS = [
   { q: "O que fazer se a conta estiver errada?", a: "Você pode abrir uma disputa dentro de 24 horas após receber os dados. Nossa equipe irá mediar a situação em até 48h." },
   { q: "Como solicitar reembolso?", a: "Caso a disputa seja resolvida a seu favor, o reembolso é creditado automaticamente na sua carteira Froiv. De lá você pode sacar via Pix." },
   { q: "Como me tornar vendedor?", a: "Basta criar um anúncio pela Central do Vendedor. Todos os usuários podem vender na plataforma." },
-  { q: "Qual a taxa da Froiv?", a: "A Froiv cobra uma taxa fixa de 10% sobre cada venda. Não há mensalidade ou taxa de cadastro." },
+  { q: "Qual a taxa da Froiv?", a: "A Froiv cobra uma taxa fixa de 5% sobre cada venda. Não há mensalidade ou taxa de cadastro." },
   { q: "Quais métodos de pagamento são aceitos?", a: "Aceitamos Pix (aprovação instantânea) e Cartão de Crédito em até 12x (Visa, Mastercard, Elo, Amex, Hipercard)." },
   { q: "Como funciona o sistema de ofertas?", a: "Você pode fazer uma oferta abaixo do preço anunciado. O vendedor tem 24h para aceitar, recusar ou fazer uma contraproposta." },
   { q: "Posso baixar as credenciais em PDF?", a: "Sim! Após a compra, você pode baixar um PDF com todos os dados de acesso pela página de detalhes da compra." },
