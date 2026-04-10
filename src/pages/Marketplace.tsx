@@ -86,8 +86,13 @@ export default function Marketplace() {
     setPlatform(p);
     if (p === "all") {
       searchParams.delete("platform");
+      searchParams.delete("type");
+    } else if (p === "games") {
+      searchParams.delete("platform");
+      searchParams.set("type", "games");
     } else {
       searchParams.set("platform", p);
+      searchParams.delete("type");
     }
     setSearchParams(searchParams, { replace: true });
   };
