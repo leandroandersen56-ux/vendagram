@@ -135,7 +135,7 @@ export default function ListingDetail() {
   };
 
   const handleCopyLink = () => {
-    navigator.clipboard.writeText(`${window.location.origin}/listing/${listing.id}`);
+    navigator.clipboard.writeText(`https://www.froiv.com/listing/${listing.id}`);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
