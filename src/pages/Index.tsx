@@ -23,7 +23,7 @@ import bannerYoutube from "@/assets/banner-youtube-v4.jpg";
 import bannerSocialFacebook from "@/assets/banner-facebook.jpg";
 import bannerSocialTiktok from "@/assets/banners/banner-social-tiktok.jpg";
 import bannerInstagram from "@/assets/banner-instagram.jpg";
-import bannerKwai from "@/assets/banner-kwai.jpg";
+
 
 import catMinecraft from "@/assets/categories/minecraft.jpg";
 import catFreefire from "@/assets/categories/freefire.jpg";
@@ -210,7 +210,7 @@ export default function Index() {
   const tiktokListings = filtered.filter(l => l.platform === 'tiktok');
   const youtubeListings = filtered.filter(l => l.platform === 'youtube');
   const facebookListings = filtered.filter(l => l.platform === 'facebook');
-  const kwaiListings = filtered.filter(l => l.platform === 'kwai');
+  
 
   // Shuffle for "Destaques do Dia" only when filters/data actually change
   const shuffled = useMemo(() => [...filtered].sort(() => Math.random() - 0.5), [filtered]);
