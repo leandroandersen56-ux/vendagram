@@ -461,6 +461,19 @@ export default function Index() {
                   </div>
                 )}
 
+                {/* TikTok Banner */}
+                <Link to="/marketplace?platform=tiktok" className="block rounded-2xl overflow-hidden relative">
+                  <img src={bannerSocialTiktok} alt="TikTok" className="w-full h-[180px] md:h-[340px] object-cover" loading="lazy" />
+                  <div className="absolute inset-y-0 left-0 w-3/5 bg-gradient-to-r from-black/70 via-black/40 to-transparent pointer-events-none" />
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="px-5 sm:px-8 md:px-12 max-w-sm md:max-w-lg">
+                      <h2 className="text-white text-base sm:text-xl md:text-3xl lg:text-4xl font-semibold leading-tight">Contas TikTok</h2>
+                      <p className="text-white/80 text-[11px] sm:text-sm md:text-base lg:text-lg mt-1 md:mt-2 whitespace-pre-line">{"Perfis com seguidores reais,\nlives liberadas e engajamento"}</p>
+                      <span className="inline-block mt-2 md:mt-3 text-[11px] sm:text-xs md:text-sm font-semibold text-white border border-white/40 rounded-lg px-3 py-1 md:py-1.5 hover:bg-white/10 transition-colors">Explorar →</span>
+                    </div>
+                  </div>
+                </Link>
+
                 {/* === TIKTOK === */}
                 {tiktokListings.length > 0 && (
                   <div>
