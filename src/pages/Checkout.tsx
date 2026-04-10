@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PlatformIcon from "@/components/PlatformIcon";
+import { getListingImage, handleListingImageError } from "@/lib/utils";
 import { formatBRL, getPlatform } from "@/lib/mock-data";
 import { supabase } from "@/lib/supabase-custom-client";
 import { useAuth } from "@/contexts/AuthContext";
