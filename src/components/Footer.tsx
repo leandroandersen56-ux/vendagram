@@ -102,7 +102,7 @@ export default function Footer() {
       {/* Desktop */}
       <div className="hidden sm:block">
         <div className="container mx-auto px-4 py-12">
-          <div className="grid grid-cols-3 gap-8">
+          <div className="grid grid-cols-4 gap-8">
             <div>
               <img src={logoFroiv} alt="Froiv" className="h-9 mb-3" />
               <p className="text-[12px] text-txt-secondary leading-relaxed mb-5 max-w-[220px]">
@@ -124,11 +124,14 @@ export default function Footer() {
             </div>
             <div>
               <h4 className="font-semibold text-[12px] text-txt-primary mb-4 uppercase tracking-wider">Suporte</h4>
-              <div className="flex flex-col gap-2.5 text-[12px] text-txt-secondary mb-5">
+              <div className="flex flex-col gap-2.5 text-[12px] text-txt-secondary">
                 <Link to="/ajuda" className="hover:text-primary transition-colors">Central de Ajuda</Link>
                 <a href="mailto:contato@froiv.com" className="hover:text-primary transition-colors">contato@froiv.com</a>
               </div>
-              <img src={selosCertificados} alt="Selos e certificados" className="max-w-[240px] w-full" />
+            </div>
+            <div>
+              <h4 className="font-semibold text-[12px] text-txt-primary mb-4 uppercase tracking-wider">Selos e Certificações</h4>
+              <img src={selosCertificados} alt="Selos e certificados" className="max-w-[220px] w-full" />
             </div>
           </div>
           <div className="border-t border-border mt-10 pt-6">
