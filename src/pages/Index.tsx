@@ -65,8 +65,55 @@ function SkeletonCard() {
     </div>
   );
 }
+function DestaquesCarousel({ items, loading }: { items: Listing[]; loading: boolean }) {
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    align: "start",
+    containScroll: "trimSnaps",
+    dragFree: true,
+    slidesToScroll: 2,
+  });
 
-export default function Index() {
+  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
+
+  const slides = loading ? Array(8).fill(null) : items;
+
+  return (
+    <div className="relative">
+      <div className="overflow-hidden fade-edges -mx-1 px-1" ref={emblaRef}>
+        <div className="flex gap-3 pb-2">
+          {slides.map((listing, i) =>
+            listing ? (
+              <div key={listing.id} className="flex-shrink-0 min-w-0 w-[calc(50%-6px)] sm:w-[180px] md:w-[200px]">
+                <ListingCard listing={listing} />
+              </div>
+            ) : (
+              <div key={i} className="flex-shrink-0 min-w-0 w-[calc(50%-6px)] sm:w-[180px] md:w-[200px]">
+                <SkeletonCard />
+              </div>
+            )
+          )}
+        </div>
+      </div>
+      <button
+        onClick={scrollPrev}
+        className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition"
+        aria-label="Anterior"
+      >
+        <ChevronLeft className="h-4 w-4 text-txt-primary" />
+      </button>
+      <button
+        onClick={scrollNext}
+        className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition"
+        aria-label="Próximo"
+      >
+        <ChevronRight className="h-4 w-4 text-txt-primary" />
+      </button>
+    </div>
+  );
+}
+
+
   const { isAuthenticated, openAuth } = useAuth();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
