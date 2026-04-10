@@ -13,9 +13,9 @@ Deno.serve(async (req) => {
   try {
     const personalUrl = 'https://yzwncktlibdfycqhvlqg.supabase.co';
     const serviceKey = Deno.env.get('PERSONAL_SUPABASE_SERVICE_ROLE_KEY')!;
-    
+
     const supabase = createClient(personalUrl, serviceKey);
-    
+
     const body = await req.json();
     const { action } = body;
 
@@ -23,17 +23,17 @@ Deno.serve(async (req) => {
       const { image_url, file_name } = body;
       const imgRes = await fetch(image_url);
       const imgBlob = await imgRes.blob();
-      
-      const { data, error } = await supabase.storage
+
+      const { error } = await supabase.storage
         .from('listings')
         .upload(file_name, imgBlob, { contentType: 'image/jpeg', upsert: true });
-      
+
       if (error) throw error;
-      
+
       const { data: urlData } = supabase.storage
         .from('listings')
         .getPublicUrl(file_name);
-      
+
       return new Response(JSON.stringify({ url: urlData.publicUrl }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
@@ -46,9 +46,9 @@ Deno.serve(async (req) => {
         .insert(listing)
         .select()
         .single();
-      
+
       if (error) throw error;
-      
+
       return new Response(JSON.stringify({ listing: data }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
@@ -62,9 +62,9 @@ Deno.serve(async (req) => {
         .eq('id', id)
         .select()
         .single();
-      
+
       if (error) throw error;
-      
+
       return new Response(JSON.stringify({ listing: data }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
