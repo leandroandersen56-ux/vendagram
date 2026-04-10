@@ -53,6 +53,7 @@ export default function ListingDetail() {
       if (!error && data) {
         setListing(data);
         const profile = await fetchSellerProfile({ user_id: data.seller_id });
+        console.log("[ListingDetail] seller profile:", profile);
         if (profile) setSeller(profile);
       } else {
         const mock = MOCK_LISTINGS.find((m) => m.id === id);
