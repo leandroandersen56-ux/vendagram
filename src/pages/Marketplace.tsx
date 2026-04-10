@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Search, SlidersHorizontal, X, Loader2, ChevronDown, ArrowUpDown } from "lucide-react";
