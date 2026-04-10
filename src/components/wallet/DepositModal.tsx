@@ -145,10 +145,18 @@ export default function DepositModal({ open, onClose }: DepositModalProps) {
 
           {step === "qr" && (
             <div className="space-y-5">
-              <div className="text-center">
+            <div className="text-center">
                 <p className="text-2xl font-semibold text-primary mb-4">{formatBRL(amount)}</p>
-                <div className="bg-white p-4 rounded-xl inline-block">
-                  <QRCodeSVG value={pixKey} size={180} level="M" />
+                <div className="flex flex-col items-center gap-3">
+                  <svg width="80" height="28" viewBox="0 0 512 210" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M112.7 148.28l-53.45-53.45a21.94 21.94 0 010-31.02l53.78-53.78a21.94 21.94 0 0131.02 0l53.78 53.78a21.94 21.94 0 010 31.02l-53.78 53.78a21.94 21.94 0 01-31.35-.33z" fill="#32BCAD"/>
+                    <path d="M166.42 53.08l-25.55-25.55a21.94 21.94 0 00-15.51-6.42h-.09a21.94 21.94 0 00-15.51 6.42L83.5 53.78l44.78 44.78 38.14-38.14z" fill="#2D9E92"/>
+                    <path d="M166.42 105.5l-38.14-38.14-44.78 44.78 26.26 26.26a21.94 21.94 0 0031.02 0l25.64-25.55a7.73 7.73 0 000-7.35z" fill="#2D9E92"/>
+                    <text x="220" y="140" fontFamily="Arial, sans-serif" fontWeight="700" fontSize="120" fill="#32BCAD">Pix</text>
+                  </svg>
+                  <div className="bg-white p-4 rounded-xl inline-block">
+                    <QRCodeSVG value={pixKey} size={180} level="M" />
+                  </div>
                 </div>
               </div>
 
