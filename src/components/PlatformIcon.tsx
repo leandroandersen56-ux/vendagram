@@ -1,5 +1,6 @@
 import React from "react";
 import freefireLogo from "@/assets/freefire-logo.png";
+import kwaiLogo from "@/assets/kwai-icon.svg";
 interface PlatformIconProps {
   platformId: string;
   size?: number;
