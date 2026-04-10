@@ -15,6 +15,7 @@ import ListingCard from "@/components/ListingCard";
 import PlatformIcon from "@/components/PlatformIcon";
 import { PLATFORMS, MOCK_LISTINGS, type Listing } from "@/lib/mock-data";
 import { supabase } from "@/integrations/supabase/client";
+import useEmblaCarousel from "embla-carousel-react";
 
 import bannerHero1 from "@/assets/banners/banner-hero-1.jpg";
 import bannerHero2 from "@/assets/banners/banner-hero-2.jpg";
