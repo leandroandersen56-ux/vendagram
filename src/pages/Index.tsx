@@ -23,7 +23,7 @@ import bannerYoutube from "@/assets/banner-youtube-v4.jpg";
 import bannerSocialFacebook from "@/assets/banner-facebook.jpg";
 import bannerSocialTiktok from "@/assets/banners/banner-social-tiktok.jpg";
 import bannerInstagram from "@/assets/banner-instagram.jpg";
-import bannerKwai from "@/assets/banner-kwai.jpg";
+
 
 import catMinecraft from "@/assets/categories/minecraft.jpg";
 import catFreefire from "@/assets/categories/freefire.jpg";
@@ -210,7 +210,7 @@ export default function Index() {
   const tiktokListings = filtered.filter(l => l.platform === 'tiktok');
   const youtubeListings = filtered.filter(l => l.platform === 'youtube');
   const facebookListings = filtered.filter(l => l.platform === 'facebook');
-  const kwaiListings = filtered.filter(l => l.platform === 'kwai');
+  
 
   // Shuffle for "Destaques do Dia" only when filters/data actually change
   const shuffled = useMemo(() => [...filtered].sort(() => Math.random() - 0.5), [filtered]);
@@ -597,43 +597,7 @@ export default function Index() {
                   </div>
                 )}
 
-                {/* Kwai Banner */}
-                <Link to="/marketplace?platform=kwai" className="block rounded-2xl overflow-hidden relative">
-                  <img src={bannerKwai} alt="Kwai" className="w-full h-[180px] md:h-[340px] object-cover" loading="lazy" />
-                  <div className="absolute inset-y-0 left-0 w-3/5 bg-gradient-to-r from-black/70 via-black/40 to-transparent pointer-events-none" />
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="px-5 sm:px-8 md:px-12 max-w-sm md:max-w-lg">
-                      <h2 className="text-white text-base sm:text-xl md:text-3xl lg:text-4xl font-semibold leading-tight">Contas Kwai</h2>
-                      <p className="text-white/80 text-[11px] sm:text-sm md:text-base lg:text-lg mt-1 md:mt-2 whitespace-pre-line">{"Contas monetizadas,\ncom seguidores e engajamento"}</p>
-                      <span className="inline-block mt-2 md:mt-3 text-[11px] sm:text-xs md:text-sm font-semibold text-white border border-white/40 rounded-lg px-3 py-1 md:py-1.5 hover:bg-white/10 transition-colors">Explorar →</span>
-                    </div>
-                  </div>
-                </Link>
 
-                {/* === KWAI === */}
-                {kwaiListings.length > 0 && (
-                  <div>
-                    <div className="flex items-center justify-between mb-3">
-                      <h3 className="text-[15px] font-semibold text-txt-primary flex items-center gap-2">
-                        <PlatformIcon platformId="kwai" size={18} /> Contas Kwai
-                      </h3>
-                      <Link to="/marketplace?platform=kwai" className="text-[12px] text-primary font-semibold hover:underline flex items-center gap-1">
-                        Ver todos <ArrowRight className="h-3 w-3" />
-                      </Link>
-                    </div>
-                    <div className="relative">
-                      <div className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2 sm:grid sm:grid-cols-3 lg:grid-cols-5 sm:overflow-visible sm:pb-0" id="kwai-scroll">
-                        {kwaiListings.slice(0, isMobile ? 6 : 5).map((listing) => (
-                          <div key={listing.id} className="flex-shrink-0 w-[calc(50%-6px)] sm:w-auto snap-start">
-                            <ListingCard listing={listing} />
-                          </div>
-                        ))}
-                      </div>
-                      <button onClick={() => document.getElementById('kwai-scroll')?.scrollBy({ left: -300, behavior: 'smooth' })} className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition" aria-label="Anterior"><ChevronLeft className="h-4 w-4 text-txt-primary" /></button>
-                      <button onClick={() => document.getElementById('kwai-scroll')?.scrollBy({ left: 300, behavior: 'smooth' })} className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition" aria-label="Próximo"><ChevronRight className="h-4 w-4 text-txt-primary" /></button>
-                    </div>
-                  </div>
-                )}
 
                 <Link to="/marketplace?type=games" className="block rounded-2xl overflow-hidden relative">
                   <img
