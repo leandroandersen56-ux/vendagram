@@ -72,7 +72,6 @@ Deno.serve(async (req) => {
 
     if (action === 'update_profile') {
       const { user_id, updates } = body;
-      // Try update first
       const { data: existing } = await supabase
         .from('profiles')
         .select('user_id')
@@ -103,21 +102,17 @@ Deno.serve(async (req) => {
       }
     }
 
-    if (action === 'run_sql') {
-      const { sql } = body;
-      const { data, error } = await supabase.rpc('exec_sql', { query: sql });
-      // Fallback: use raw REST
-      const res = await fetch(`${personalUrl}/rest/v1/rpc/exec_sql`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': serviceKey,
-          'Authorization': `Bearer ${serviceKey}`,
-        },
-        body: JSON.stringify({ query: sql }),
-      });
-      const result = await res.text();
-      return new Response(JSON.stringify({ result }), {
+    if (action === 'query') {
+      const { table, filters, select: sel } = body;
+      let q = supabase.from(table).select(sel || '*');
+      if (filters) {
+        for (const [col, val] of Object.entries(filters)) {
+          q = q.eq(col, val);
+        }
+      }
+      const { data, error } = await q;
+      if (error) throw error;
+      return new Response(JSON.stringify({ data }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
