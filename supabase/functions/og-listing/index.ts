@@ -18,12 +18,12 @@ Deno.serve(async (req) => {
       return new Response("Missing id", { status: 400 });
     }
 
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseKey = Deno.env.get("SUPABASE_ANON_KEY")!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const personalUrl = 'https://yzwncktlibdfycqhvlqg.supabase.co';
+    const serviceKey = Deno.env.get('PERSONAL_SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabase = createClient(personalUrl, serviceKey);
 
     const { data: listing, error } = await supabase
-      .from("public_listings")
+      .from("listings")
       .select("id, title, description, price, screenshots, category, platform_username, followers_count, seller_id")
       .eq("id", listingId)
       .maybeSingle();
