@@ -214,8 +214,8 @@ export default function Index() {
   const youtubeListings = filtered.filter(l => l.platform === 'youtube');
   const facebookListings = filtered.filter(l => l.platform === 'facebook');
 
-  // Shuffle for "Destaques do Dia"
-  const shuffled = [...filtered].sort(() => Math.random() - 0.5);
+  // Shuffle for "Destaques do Dia" only when the source list changes
+  const shuffled = useMemo(() => [...filtered].sort(() => Math.random() - 0.5), [filtered]);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
