@@ -50,9 +50,9 @@ const QUICK_CATEGORIES = [
   { id: "instagram", label: "Instagram", icon: () => <PlatformIcon platformId="instagram" size={22} />, bg: "bg-[#FFE4F0]", color: "text-[#E1306C]" },
   { id: "facebook", label: "Facebook", icon: () => <PlatformIcon platformId="facebook" size={22} />, bg: "bg-[#E8F0FE]", color: "text-[#1877F2]" },
   { id: "tiktok", label: "TikTok", icon: () => <PlatformIcon platformId="tiktok" size={22} />, bg: "bg-[#F0F0F0]", color: "text-[#000]" },
-  { id: "free_fire", label: "Free Fire", icon: () => <PlatformIcon platformId="free_fire" size={22} />, bg: "bg-[#FFF3E0]", color: "text-[#FF6F00]" },
   { id: "kwai", label: "Kwai", icon: () => <PlatformIcon platformId="kwai" size={22} />, bg: "bg-[#FFF0EB]", color: "text-[#FF4906]" },
   { id: "twitter", label: "Twitter / X", icon: () => <PlatformIcon platformId="twitter" size={22} />, bg: "bg-[#F0F0F0]", color: "text-[#000]" },
+  { id: "free_fire", label: "Free Fire", icon: () => <PlatformIcon platformId="free_fire" size={22} />, bg: "bg-[#FFF3E0]", color: "text-[#FF6F00]" },
   { id: "valorant", label: "Jogos", icon: Gamepad2, bg: "bg-primary-light", color: "text-primary" },
 ];
 
