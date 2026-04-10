@@ -23,8 +23,7 @@ export default function PWAInstallBanner() {
       return;
     }
     if (window.location.hostname.includes("id-preview--") || window.location.hostname.includes("lovableproject.com")) return;
-    const dismissedAt = localStorage.getItem("pwa-banner-dismissed");
-    if (dismissedAt && Date.now() - Number(dismissedAt) < 24 * 60 * 60 * 1000) return;
+    // Show banner every page load if not installed (no 24h suppression)
     if (window.matchMedia("(display-mode: standalone)").matches) return;
 
     const handler = (e: Event) => {
