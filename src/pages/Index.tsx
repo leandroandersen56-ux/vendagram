@@ -23,6 +23,7 @@ import bannerYoutube from "@/assets/banner-youtube-v4.jpg";
 import bannerSocialFacebook from "@/assets/banner-facebook.jpg";
 import bannerSocialTiktok from "@/assets/banners/banner-social-tiktok.jpg";
 import bannerInstagram from "@/assets/banner-instagram.jpg";
+import bannerKwai from "@/assets/banner-kwai.jpg";
 
 import catMinecraft from "@/assets/categories/minecraft.jpg";
 import catFreefire from "@/assets/categories/freefire.jpg";
