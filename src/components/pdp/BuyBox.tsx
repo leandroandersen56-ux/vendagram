@@ -96,17 +96,6 @@ export default function BuyBox({ price, originalPrice, stock = 1, onBuy, onOffer
         </Button>
       </motion.div>
 
-      {/* WhatsApp support */}
-      <a
-        href="https://wa.me/5547996300314?text=Ol%C3%A1%2C%20tenho%20uma%20d%C3%BAvida%20sobre%20um%20produto%20na%20Froiv!"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="flex items-center justify-center gap-1.5 mt-3 text-[12px] text-[hsl(var(--txt-hint))] hover:text-[#25D366] transition-colors"
-      >
-        <MessageCircle className="h-3.5 w-3.5" />
-        Dúvidas? Fale conosco no WhatsApp
-      </a>
-
       {!inline && (
         <div className="flex justify-around mt-5 pt-4 border-t border-[hsl(var(--border))]">
           {[
@@ -121,6 +110,17 @@ export default function BuyBox({ price, originalPrice, stock = 1, onBuy, onOffer
           ))}
         </div>
       )}
+
+      {/* WhatsApp support - below everything */}
+      <a
+        href="https://wa.me/5547996300314?text=Ol%C3%A1%2C%20tenho%20uma%20d%C3%BAvida%20sobre%20um%20produto%20na%20Froiv!"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center justify-center gap-1.5 mt-4 text-[12px] text-[hsl(var(--txt-hint))] hover:text-[#25D366] transition-colors"
+      >
+        <MessageCircle className="h-3.5 w-3.5" />
+        Dúvidas? Fale conosco no WhatsApp
+      </a>
     </div>
   );
 }
