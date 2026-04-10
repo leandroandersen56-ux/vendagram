@@ -473,8 +473,8 @@ export default function Index() {
                           </div>
                         ))}
                       </div>
-                      <button onClick={() => document.getElementById('instagram-scroll')?.scrollBy({ left: -300, behavior: 'smooth' })} className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition sm:hidden" aria-label="Anterior"><ChevronLeft className="h-4 w-4 text-txt-primary" /></button>
-                      <button onClick={() => document.getElementById('instagram-scroll')?.scrollBy({ left: 300, behavior: 'smooth' })} className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition sm:hidden" aria-label="Próximo"><ChevronRight className="h-4 w-4 text-txt-primary" /></button>
+                      <button onClick={() => document.getElementById('instagram-scroll')?.scrollBy({ left: -300, behavior: 'smooth' })} className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition" aria-label="Anterior"><ChevronLeft className="h-4 w-4 text-txt-primary" /></button>
+                      <button onClick={() => document.getElementById('instagram-scroll')?.scrollBy({ left: 300, behavior: 'smooth' })} className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition" aria-label="Próximo"><ChevronRight className="h-4 w-4 text-txt-primary" /></button>
                     </div>
                   </div>
                 )}
@@ -511,8 +511,8 @@ export default function Index() {
                           </div>
                         ))}
                       </div>
-                      <button onClick={() => document.getElementById('tiktok-scroll')?.scrollBy({ left: -300, behavior: 'smooth' })} className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition sm:hidden" aria-label="Anterior"><ChevronLeft className="h-4 w-4 text-txt-primary" /></button>
-                      <button onClick={() => document.getElementById('tiktok-scroll')?.scrollBy({ left: 300, behavior: 'smooth' })} className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition sm:hidden" aria-label="Próximo"><ChevronRight className="h-4 w-4 text-txt-primary" /></button>
+                      <button onClick={() => document.getElementById('tiktok-scroll')?.scrollBy({ left: -300, behavior: 'smooth' })} className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition" aria-label="Anterior"><ChevronLeft className="h-4 w-4 text-txt-primary" /></button>
+                      <button onClick={() => document.getElementById('tiktok-scroll')?.scrollBy({ left: 300, behavior: 'smooth' })} className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition" aria-label="Próximo"><ChevronRight className="h-4 w-4 text-txt-primary" /></button>
                     </div>
                   </div>
                 )}
@@ -549,8 +549,8 @@ export default function Index() {
                           </div>
                         ))}
                       </div>
-                      <button onClick={() => document.getElementById('youtube-scroll')?.scrollBy({ left: -300, behavior: 'smooth' })} className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition sm:hidden" aria-label="Anterior"><ChevronLeft className="h-4 w-4 text-txt-primary" /></button>
-                      <button onClick={() => document.getElementById('youtube-scroll')?.scrollBy({ left: 300, behavior: 'smooth' })} className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition sm:hidden" aria-label="Próximo"><ChevronRight className="h-4 w-4 text-txt-primary" /></button>
+                      <button onClick={() => document.getElementById('youtube-scroll')?.scrollBy({ left: -300, behavior: 'smooth' })} className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition" aria-label="Anterior"><ChevronLeft className="h-4 w-4 text-txt-primary" /></button>
+                      <button onClick={() => document.getElementById('youtube-scroll')?.scrollBy({ left: 300, behavior: 'smooth' })} className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition" aria-label="Próximo"><ChevronRight className="h-4 w-4 text-txt-primary" /></button>
                     </div>
                   </div>
                 )}
@@ -587,8 +587,8 @@ export default function Index() {
                           </div>
                         ))}
                       </div>
-                      <button onClick={() => document.getElementById('facebook-scroll')?.scrollBy({ left: -300, behavior: 'smooth' })} className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition sm:hidden" aria-label="Anterior"><ChevronLeft className="h-4 w-4 text-txt-primary" /></button>
-                      <button onClick={() => document.getElementById('facebook-scroll')?.scrollBy({ left: 300, behavior: 'smooth' })} className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition sm:hidden" aria-label="Próximo"><ChevronRight className="h-4 w-4 text-txt-primary" /></button>
+                      <button onClick={() => document.getElementById('facebook-scroll')?.scrollBy({ left: -300, behavior: 'smooth' })} className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition" aria-label="Anterior"><ChevronLeft className="h-4 w-4 text-txt-primary" /></button>
+                      <button onClick={() => document.getElementById('facebook-scroll')?.scrollBy({ left: 300, behavior: 'smooth' })} className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition" aria-label="Próximo"><ChevronRight className="h-4 w-4 text-txt-primary" /></button>
                     </div>
                   </div>
                 )}
@@ -643,14 +643,14 @@ export default function Index() {
                     </div>
                     <button
                       onClick={() => document.getElementById('game-categories-scroll')?.scrollBy({ left: -300, behavior: 'smooth' })}
-                      className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition sm:hidden"
+                      className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition"
                       aria-label="Anterior"
                     >
                       <ChevronLeft className="h-4 w-4 text-txt-primary" />
                     </button>
                     <button
                       onClick={() => document.getElementById('game-categories-scroll')?.scrollBy({ left: 300, behavior: 'smooth' })}
-                      className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition sm:hidden"
+                      className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition"
                       aria-label="Próximo"
                     >
                       <ChevronRight className="h-4 w-4 text-txt-primary" />
@@ -676,8 +676,8 @@ export default function Index() {
                           </div>
                         ))}
                       </div>
-                      <button onClick={() => document.getElementById('games-scroll')?.scrollBy({ left: -300, behavior: 'smooth' })} className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition sm:hidden" aria-label="Anterior"><ChevronLeft className="h-4 w-4 text-txt-primary" /></button>
-                      <button onClick={() => document.getElementById('games-scroll')?.scrollBy({ left: 300, behavior: 'smooth' })} className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition sm:hidden" aria-label="Próximo"><ChevronRight className="h-4 w-4 text-txt-primary" /></button>
+                      <button onClick={() => document.getElementById('games-scroll')?.scrollBy({ left: -300, behavior: 'smooth' })} className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition" aria-label="Anterior"><ChevronLeft className="h-4 w-4 text-txt-primary" /></button>
+                      <button onClick={() => document.getElementById('games-scroll')?.scrollBy({ left: 300, behavior: 'smooth' })} className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition" aria-label="Próximo"><ChevronRight className="h-4 w-4 text-txt-primary" /></button>
                     </div>
                   </div>
                 )}
