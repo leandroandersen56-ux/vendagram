@@ -92,10 +92,6 @@ export default function Index() {
     return () => clearInterval(timer);
   }, []);
 
-  useEffect(() => {
-    const t = setInterval(() => setSocialSlide(p => (p + 1) % 2), 4000);
-    return () => clearInterval(t);
-  }, []);
 
   const goToBanner = useCallback((dir: number) => {
     setBannerIdx((i) => (i + dir + BANNERS.length) % BANNERS.length);
