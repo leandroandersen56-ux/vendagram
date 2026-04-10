@@ -1,5 +1,13 @@
 import { Star, Package } from "lucide-react";
 
+const BRAZILIAN_NAMES = [
+  "Lucas Silva", "Maria Oliveira", "Pedro Santos", "Ana Costa",
+  "Rafael Mendes", "Juliana Ferreira", "Gabriel Souza", "Beatriz Lima",
+  "Matheus Almeida", "Camila Rocha", "Felipe Barbosa", "Larissa Martins",
+  "Bruno Nascimento", "Carolina Pereira", "Diego Cardoso", "Fernanda Ribeiro",
+  "Thiago Araújo", "Isabela Correia", "Gustavo Pinto", "Amanda Teixeira",
+];
+
 interface Props {
   reviews: any[];
 }
@@ -16,14 +24,16 @@ export default function SellerReviewsList({ reviews }: Props) {
 
   return (
     <div className="space-y-3">
-      {reviews.map((r: any) => (
+      {reviews.map((r: any, index: number) => {
+        const displayName = (r.profiles as any)?.name || BRAZILIAN_NAMES[index % BRAZILIAN_NAMES.length];
+        return (
         <div key={r.id} className="bg-card rounded-xl border border-border p-4">
           <div className="flex items-center gap-2 mb-2">
             <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center text-xs font-semibold text-foreground">
-              {(r.profiles as any)?.name?.[0]?.toUpperCase() || "?"}
+              {displayName[0]?.toUpperCase() || "?"}
             </div>
             <div>
-              <p className="text-sm font-medium text-foreground">{(r.profiles as any)?.name || "Comprador"}</p>
+              <p className="text-sm font-medium text-foreground">{(r.profiles as any)?.name || BRAZILIAN_NAMES[index % BRAZILIAN_NAMES.length]}</p>
               <div className="flex gap-0.5">
                 {[1, 2, 3, 4, 5].map((s) => (
                   <Star key={s} className={`h-3 w-3 ${s <= r.rating ? "text-[#FFB800] fill-[#FFB800]" : "text-muted-foreground/30"}`} />
@@ -36,7 +46,8 @@ export default function SellerReviewsList({ reviews }: Props) {
           </div>
           {r.comment && <p className="text-sm text-muted-foreground">{r.comment}</p>}
         </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
