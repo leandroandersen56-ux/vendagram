@@ -1,7 +1,9 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Package } from "lucide-react";
-import { MOCK_LISTINGS, formatBRL } from "@/lib/mock-data";
+import { MOCK_LISTINGS, formatBRL, type Listing } from "@/lib/mock-data";
 import ListingCard from "@/components/ListingCard";
+import { supabase } from "@/integrations/supabase/client";
 
 interface RelatedProductsProps {
   currentId: string;
@@ -9,21 +11,66 @@ interface RelatedProductsProps {
 }
 
 export default function RelatedProducts({ currentId, category }: RelatedProductsProps) {
-  const related = MOCK_LISTINGS
+  const [dbListings, setDbListings] = useState<Listing[]>([]);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    async function fetchRelated() {
+      const { data } = await supabase
+        .from("public_listings")
+        .select("*")
+        .eq("status", "active")
+        .neq("id", currentId)
+        .limit(12);
+
+      if (data && data.length > 0) {
+        // Sort: same category first
+        const mapped: Listing[] = data
+          .filter((d) => d.id)
+          .map((d) => ({
+            id: d.id!,
+            sellerId: d.seller_id || "",
+            sellerName: "",
+            sellerRating: 0,
+            sellerSales: 0,
+            platform: d.category || "other",
+            title: d.title || "",
+            description: d.description || "",
+            price: d.price || 0,
+            status: (d.status as any) || "active",
+            screenshots: d.screenshots || [],
+            fields: {},
+            createdAt: d.created_at || "",
+          }));
+
+        const sameCategory = mapped.filter((l) => l.platform === category);
+        const otherCategory = mapped.filter((l) => l.platform !== category);
+        setDbListings([...sameCategory, ...otherCategory].slice(0, 6));
+      }
+      setLoaded(true);
+    }
+    fetchRelated();
+  }, [currentId, category]);
+
+  // Fallback to mock if no DB results
+  const mockRelated = MOCK_LISTINGS
     .filter((l) => l.id !== currentId && l.platform === category)
     .slice(0, 6);
-
-  const otherRelated = related.length < 4
-    ? MOCK_LISTINGS.filter((l) => l.id !== currentId && l.platform !== category).slice(0, 4 - related.length)
+  const mockOther = mockRelated.length < 4
+    ? MOCK_LISTINGS.filter((l) => l.id !== currentId && l.platform !== category).slice(0, 4 - mockRelated.length)
     : [];
+  const mockAll = [...mockRelated, ...mockOther];
 
-  const all = [...related, ...otherRelated];
-  if (all.length === 0) return null;
+  const all = dbListings.length > 0 ? dbListings : (loaded ? mockAll : []);
+  if (all.length === 0 && loaded) return null;
+  if (!loaded) return null;
 
   return (
     <div>
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-semibold text-[hsl(var(--txt-primary))] flex items-center gap-1.5"><Package className="h-4 w-4 text-primary" /> Contas semelhantes</h3>
+        <h3 className="text-sm font-semibold text-[hsl(var(--txt-primary))] flex items-center gap-1.5">
+          <Package className="h-4 w-4 text-primary" /> Contas semelhantes
+        </h3>
         <Link to="/marketplace" className="text-[13px] text-primary font-semibold hover:underline">
           Ver todos →
         </Link>
