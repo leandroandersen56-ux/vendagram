@@ -24,6 +24,7 @@ import bannerGamesSection from "@/assets/banner-roblox.jpg";
 import bannerSocialSection from "@/assets/banners/banner-social-section.jpg";
 import bannerSocialFacebook from "@/assets/banners/banner-social-facebook.jpg";
 import bannerSocialTiktok from "@/assets/banners/banner-social-tiktok.jpg";
+import bannerInstagram from "@/assets/banner-instagram.jpg";
 
 import catMinecraft from "@/assets/categories/minecraft.jpg";
 import catFreefire from "@/assets/categories/freefire.jpg";
@@ -443,6 +444,19 @@ export default function Index() {
               </div>
             ) : filtered.length > 0 ? (
               <div className="space-y-6">
+
+                {/* Instagram Banner */}
+                <Link to="/marketplace?platform=instagram" className="block rounded-2xl overflow-hidden relative">
+                  <img src={bannerInstagram} alt="Instagram" className="w-full h-[180px] md:h-[340px] object-cover" loading="lazy" />
+                  <div className="absolute inset-y-0 left-0 w-3/5 bg-gradient-to-r from-black/70 via-black/40 to-transparent pointer-events-none" />
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="px-5 sm:px-8 md:px-12 max-w-sm md:max-w-lg">
+                      <h2 className="text-white text-base sm:text-xl md:text-3xl lg:text-4xl font-semibold leading-tight">Contas Instagram</h2>
+                      <p className="text-white/80 text-[11px] sm:text-sm md:text-base lg:text-lg mt-1 md:mt-2 whitespace-pre-line">{"Perfis verificados, engajados\ne prontos para monetizar"}</p>
+                      <span className="inline-block mt-2 md:mt-3 text-[11px] sm:text-xs md:text-sm font-semibold text-white border border-white/40 rounded-lg px-3 py-1 md:py-1.5 hover:bg-white/10 transition-colors">Explorar →</span>
+                    </div>
+                  </div>
+                </Link>
 
                 {/* === INSTAGRAM === */}
                 {instagramListings.length > 0 && (
