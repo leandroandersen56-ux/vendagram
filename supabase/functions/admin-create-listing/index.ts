@@ -103,6 +103,25 @@ Deno.serve(async (req) => {
       }
     }
 
+    if (action === 'run_sql') {
+      const { sql } = body;
+      const { data, error } = await supabase.rpc('exec_sql', { query: sql });
+      // Fallback: use raw REST
+      const res = await fetch(`${personalUrl}/rest/v1/rpc/exec_sql`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': serviceKey,
+          'Authorization': `Bearer ${serviceKey}`,
+        },
+        body: JSON.stringify({ query: sql }),
+      });
+      const result = await res.text();
+      return new Response(JSON.stringify({ result }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
     return new Response(JSON.stringify({ error: 'Invalid action' }), {
       status: 400,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
