@@ -80,7 +80,7 @@ export default function Index() {
   const [sortBy, setSortBy] = useState<"recent" | "price_asc" | "price_desc">("recent");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000]);
   const [minFollowers, setMinFollowers] = useState<number>(0);
-  const [socialSlide, setSocialSlide] = useState(0);
+  
 
   const handleSell = () => {
     if (isAuthenticated) navigate("/vendedor/novo");
