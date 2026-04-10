@@ -14,7 +14,9 @@ import { supabase } from "@/integrations/supabase/client";
 
 export default function Marketplace() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const initialPlatform = searchParams.get("platform") || "all";
+  const typeParam = searchParams.get("type");
+  const GAME_PLATFORMS = ["free_fire", "valorant", "fortnite", "roblox", "clash_royale"];
+  const initialPlatform = searchParams.get("platform") || (typeParam === "games" ? "games" : "all");
   const [search, setSearch] = useState("");
   const [platform, setPlatform] = useState(initialPlatform);
   const [sortBy, setSortBy] = useState("recent");
@@ -24,7 +26,9 @@ export default function Marketplace() {
   // Sync platform filter with URL
   useEffect(() => {
     const p = searchParams.get("platform");
-    if (p && p !== platform) setPlatform(p);
+    const t = searchParams.get("type");
+    if (t === "games" && platform !== "games") setPlatform("games");
+    else if (p && p !== platform) setPlatform(p);
   }, [searchParams]);
 
   useEffect(() => {
