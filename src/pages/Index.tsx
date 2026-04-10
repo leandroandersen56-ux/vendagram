@@ -17,7 +17,7 @@ import { PLATFORMS, MOCK_LISTINGS, type Listing } from "@/lib/mock-data";
 import { supabase } from "@/integrations/supabase/client";
 import useEmblaCarousel from "embla-carousel-react";
 
-import bannerHero1 from "@/assets/banner-hero-v5.jpg";
+import bannerHero1 from "@/assets/banner-hero-v6.jpg";
 import bannerHero2 from "@/assets/banners/banner-hero-2.jpg";
 import bannerHero3 from "@/assets/banners/banner-hero-3.jpg";
 import bannerGamesSection from "@/assets/banner-roblox.jpg";
