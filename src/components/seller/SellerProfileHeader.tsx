@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { CheckCircle2, Star, Package, Calendar, Users, ShieldCheck, Award } from "lucide-react";
+import { CheckCircle2, Star, Package, Calendar, Users, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import sellerCoverMain from "@/assets/seller-cover-main.jpg";
 
@@ -34,7 +34,7 @@ export default function SellerProfileHeader({ seller, listingsCount, avgRating, 
   return (
     <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
       {/* Cover banner */}
-      <div className="h-28 sm:h-36 rounded-t-2xl relative overflow-hidden">
+      <div className="h-32 sm:h-40 rounded-t-2xl relative overflow-hidden">
         {seller.is_verified ? (
           <img src={sellerCoverMain} alt="" className="w-full h-full object-cover" />
         ) : (
@@ -44,31 +44,33 @@ export default function SellerProfileHeader({ seller, listingsCount, avgRating, 
         )}
       </div>
 
-      {/* Profile card overlapping banner */}
-      <div className="bg-card border border-border rounded-b-2xl px-4 sm:px-6 pb-5 -mt-0 relative pt-2">
-        {/* Avatar */}
-        <div className="flex items-end gap-4 -mt-10 sm:-mt-12 mb-3">
-          <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-full border-4 border-card bg-muted flex items-center justify-center text-2xl sm:text-3xl font-semibold text-foreground shrink-0 overflow-hidden">
+      {/* Profile card */}
+      <div className="bg-card border border-border rounded-b-2xl px-4 sm:px-6 pb-5 relative">
+        {/* Avatar row — overlaps banner */}
+        <div className="flex items-end gap-3 sm:gap-4 -mt-10 sm:-mt-14 mb-4">
+          <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-full border-4 border-card bg-muted flex items-center justify-center text-2xl sm:text-3xl font-semibold text-foreground shrink-0 overflow-hidden shadow-md">
             {seller.avatar_url ? (
               <img src={seller.avatar_url} alt="" className="h-full w-full rounded-full object-cover" />
             ) : (
               <span>{seller.name?.[0]?.toUpperCase() || "?"}</span>
             )}
           </div>
-          <div className="flex-1 min-w-0 pb-1">
-            <div className="flex items-center gap-2 flex-wrap">
-              <h1 className="text-lg sm:text-xl font-semibold text-foreground truncate">{seller.name || "Vendedor"}</h1>
-              {seller.is_verified && <CheckCircle2 className="h-5 w-5 text-primary shrink-0" />}
+          <div className="flex-1 min-w-0 pt-12 sm:pt-14">
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <h1 className="text-base sm:text-xl font-semibold text-foreground truncate leading-tight">{seller.name || "Vendedor"}</h1>
+              {seller.is_verified && <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 text-primary shrink-0" />}
             </div>
-            <p className="text-sm text-muted-foreground">@{seller.username || "usuario"}</p>
+            <p className="text-xs sm:text-sm text-muted-foreground">@{seller.username || "usuario"}</p>
           </div>
-          <Button variant="outline" size="sm" className="rounded-full text-xs font-semibold border-primary text-primary hover:bg-primary/5 shrink-0">
-            Seguir
-          </Button>
+          <div className="pt-12 sm:pt-14 shrink-0">
+            <Button variant="outline" size="sm" className="rounded-full text-xs font-semibold border-primary text-primary hover:bg-primary/5 h-8 px-4">
+              Seguir
+            </Button>
+          </div>
         </div>
 
-        {/* Followers & products count */}
-        <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
+        {/* Meta info */}
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs sm:text-sm text-muted-foreground mb-3">
           <span className="flex items-center gap-1">
             <Users className="h-3.5 w-3.5" />
             <strong className="text-foreground font-semibold">{seller.total_sales || 0}</strong> vendas
@@ -84,12 +86,12 @@ export default function SellerProfileHeader({ seller, listingsCount, avgRating, 
         </div>
 
         {seller.bio && (
-          <p className="text-sm text-muted-foreground mb-3">{seller.bio}</p>
+          <p className="text-xs sm:text-sm text-muted-foreground mb-3 leading-relaxed">{seller.bio}</p>
         )}
 
         {/* Reputation badge */}
         {seller.is_verified && rep.badge && (
-          <div className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full border mb-3 ${rep.badge}`}>
+          <div className={`inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-semibold px-3 py-1.5 rounded-full border mb-3 ${rep.badge}`}>
             <Award className="h-3.5 w-3.5" />
             Froiv {rep.label}
             {rep.idx >= 3 && <span className="opacity-60">· É um dos melhores do site!</span>}
@@ -99,26 +101,25 @@ export default function SellerProfileHeader({ seller, listingsCount, avgRating, 
         {/* Stats row */}
         <div className="flex items-center justify-between border-t border-border pt-3 mt-1">
           <div className="flex-1 text-center">
-            <p className="text-lg font-semibold text-foreground">{seller.total_sales || 0}+</p>
-            <p className="text-[11px] text-muted-foreground">Vendas</p>
+            <p className="text-base sm:text-lg font-semibold text-foreground">{seller.total_sales || 0}+</p>
+            <p className="text-[10px] sm:text-[11px] text-muted-foreground">Vendas</p>
           </div>
           <div className="w-px h-8 bg-border" />
           <div className="flex-1 text-center">
             <div className="flex items-center justify-center gap-1">
-              <Star className="h-4 w-4 text-[#FFB800] fill-[#FFB800]" />
-              <p className="text-lg font-semibold text-foreground">{avgRating}</p>
+              <Star className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[#FFB800] fill-[#FFB800]" />
+              <p className="text-base sm:text-lg font-semibold text-foreground">{avgRating}</p>
             </div>
-            <p className="text-[11px] text-muted-foreground">{reviewsCount} avaliações</p>
+            <p className="text-[10px] sm:text-[11px] text-muted-foreground">{reviewsCount} avaliações</p>
           </div>
           <div className="w-px h-8 bg-border" />
           <div className="flex-1 text-center">
-            {/* Reputation bar mini */}
-            <div className="flex gap-0.5 mx-auto max-w-[80px] mb-1">
+            <div className="flex gap-0.5 mx-auto max-w-[70px] sm:max-w-[80px] mb-1">
               {REP_SEGMENTS.map((seg, i) => (
                 <div key={i} className={`h-1.5 flex-1 rounded-full transition-all ${seg.color} ${i <= rep.idx ? "opacity-100" : "opacity-15"}`} />
               ))}
             </div>
-            <p className="text-[11px] text-muted-foreground">{positiveRate}% positivas</p>
+            <p className="text-[10px] sm:text-[11px] text-muted-foreground">{positiveRate}% positivas</p>
           </div>
         </div>
       </div>
