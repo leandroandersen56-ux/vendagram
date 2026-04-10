@@ -15,6 +15,21 @@ async function sendEmailNotification(supabaseUrl: string, supabaseKey: string, t
   }
 }
 
+async function sendWhatsAppNotification(supabaseUrl: string, supabaseKey: string, transactionId: string, type: string) {
+  try {
+    await fetch(`${supabaseUrl}/functions/v1/notify-whatsapp`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${supabaseKey}`,
+      },
+      body: JSON.stringify({ transaction_id: transactionId, type }),
+    });
+  } catch (e) {
+    console.error("Failed to send WhatsApp notification:", e);
+  }
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { status: 200 });
