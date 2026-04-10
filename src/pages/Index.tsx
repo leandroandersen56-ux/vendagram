@@ -17,7 +17,7 @@ import { PLATFORMS, MOCK_LISTINGS, type Listing } from "@/lib/mock-data";
 import { supabase } from "@/integrations/supabase/client";
 import useEmblaCarousel from "embla-carousel-react";
 
-import bannerHero1 from "@/assets/banner-hero-v7.jpg";
+import bannerHero1 from "@/assets/banner-hero-v8.jpg";
 import bannerGamesSection from "@/assets/banner-roblox.jpg";
 import bannerYoutube from "@/assets/banner-youtube-v2.jpg";
 import bannerSocialFacebook from "@/assets/banner-facebook.jpg";
