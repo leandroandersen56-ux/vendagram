@@ -1,7 +1,14 @@
 import { MessageCircle } from "lucide-react";
 
 const WHATSAPP_NUMBER = "5547996300314";
-const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=Ol%C3%A1%2C%20preciso%20de%20ajuda%20na%20Froiv!`;
+
+function buildWhatsAppUrl(phone: string, text: string) {
+  const encoded = encodeURIComponent(text);
+  // Use wa.me which is the official short link and works on all devices
+  return `https://wa.me/${phone}?text=${encoded}`;
+}
+
+const WHATSAPP_URL = buildWhatsAppUrl(WHATSAPP_NUMBER, "Olá, preciso de ajuda na Froiv!");
 
 export function WhatsAppLink({ children, message, className }: { children?: React.ReactNode; message?: string; className?: string }) {
   const url = message
