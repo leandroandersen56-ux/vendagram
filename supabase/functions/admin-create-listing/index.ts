@@ -70,6 +70,53 @@ Deno.serve(async (req) => {
       });
     }
 
+    if (action === 'update_profile') {
+      const { user_id, updates } = body;
+      const { data: existing } = await supabase
+        .from('profiles')
+        .select('user_id')
+        .eq('user_id', user_id)
+        .maybeSingle();
+
+      if (existing) {
+        const { data, error } = await supabase
+          .from('profiles')
+          .update(updates)
+          .eq('user_id', user_id)
+          .select()
+          .single();
+        if (error) throw error;
+        return new Response(JSON.stringify({ profile: data }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      } else {
+        const { data, error } = await supabase
+          .from('profiles')
+          .insert({ user_id, ...updates })
+          .select()
+          .single();
+        if (error) throw error;
+        return new Response(JSON.stringify({ profile: data }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+    }
+
+    if (action === 'query') {
+      const { table, filters, select: sel } = body;
+      let q = supabase.from(table).select(sel || '*');
+      if (filters) {
+        for (const [col, val] of Object.entries(filters)) {
+          q = q.eq(col, val);
+        }
+      }
+      const { data, error } = await q;
+      if (error) throw error;
+      return new Response(JSON.stringify({ data }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
     return new Response(JSON.stringify({ error: 'Invalid action' }), {
       status: 400,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

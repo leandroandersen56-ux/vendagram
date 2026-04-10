@@ -15,6 +15,7 @@ import PlatformIcon from "@/components/PlatformIcon";
 import { getListingImage, handleListingImageError } from "@/lib/utils";
 import { formatBRL, getPlatform } from "@/lib/mock-data";
 import { supabase } from "@/lib/supabase-custom-client";
+import { fetchSellerProfile } from "@/lib/fetch-seller-profile";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import amexIcon from "@/assets/amex-icon.svg";
@@ -184,11 +185,7 @@ export default function Checkout() {
         .single();
       if (error || !data) { setLoading(false); return; }
       setListing(data);
-      const { data: profile } = await (supabase
-        .from("public_profiles" as any)
-        .select("*")
-        .eq("user_id", data.seller_id)
-        .single() as any);
+      const profile = await fetchSellerProfile({ user_id: data.seller_id });
       if (profile) setSeller(profile);
       setLoading(false);
     }

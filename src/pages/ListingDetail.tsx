@@ -12,6 +12,7 @@ import Footer from "@/components/Footer";
 import { formatBRL, getPlatform, MOCK_LISTINGS } from "@/lib/mock-data";
 import PlatformIcon from "@/components/PlatformIcon";
 import { supabase } from "@/integrations/supabase/client";
+import { fetchSellerProfile } from "@/lib/fetch-seller-profile";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFavorites } from "@/hooks/useFavorites";
 import { addToCart } from "@/pages/Cart";
@@ -51,11 +52,7 @@ export default function ListingDetail() {
 
       if (!error && data) {
         setListing(data);
-        const { data: profile } = await (supabase
-          .from("public_profiles" as any)
-          .select("*")
-          .eq("user_id", data.seller_id)
-          .maybeSingle() as any);
+        const profile = await fetchSellerProfile({ user_id: data.seller_id });
         if (profile) setSeller(profile);
       } else {
         const mock = MOCK_LISTINGS.find((m) => m.id === id);
