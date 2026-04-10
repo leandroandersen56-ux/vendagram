@@ -90,6 +90,7 @@ export default function Footer() {
               <PaymentIcon type="hipercard" />
             </div>
           </div>
+          <TrustSeals />
           <p className="text-[10px] text-txt-hint text-center">© {new Date().getFullYear()} Froiv. Todos os direitos reservados.</p>
         </div>
       </div>
