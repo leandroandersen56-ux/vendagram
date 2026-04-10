@@ -57,7 +57,7 @@ export default function ProductGallery({ images, title, category, verified, isDe
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0.5, x: direction > 0 ? -60 : 60 }}
               transition={{ duration: 0.25 }}
-              loading="lazy"
+              loading="eager"
             />
           </AnimatePresence>
 
