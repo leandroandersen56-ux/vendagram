@@ -1,6 +1,7 @@
 import React from "react";
 import freefireLogo from "@/assets/freefire-logo.png";
 import kwaiLogo from "@/assets/kwai-icon.svg";
+import youtubeLogo from "@/assets/youtube-icon.svg";
 interface PlatformIconProps {
   platformId: string;
   size?: number;
@@ -42,10 +43,7 @@ const icons: Record<string, (s: number) => React.ReactNode> = {
   ),
 
   youtube: (s) => (
-    <svg width={s} height={s} viewBox="0 0 24 24" fill="none">
-      <rect x="1" y="4" width="22" height="16" rx="4" fill="#FF0000"/>
-      <path d="M10 8.5v7l6-3.5-6-3.5z" fill="#fff"/>
-    </svg>
+    <img src={youtubeLogo} width={s * 1.2} height={s * 1.2} alt="YouTube" style={{ objectFit: "contain", filter: "brightness(0) invert(1)" }} />
   ),
 
   valorant: (s) => (
