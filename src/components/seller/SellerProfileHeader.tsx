@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { CheckCircle2, Star, Package, Calendar, Users, ShieldCheck, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import sellerCoverMain from "@/assets/seller-cover-main.jpg";
 
 const REP_SEGMENTS = [
   { color: "bg-destructive" },
