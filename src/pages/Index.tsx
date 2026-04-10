@@ -208,6 +208,7 @@ export default function Index() {
   const tiktokListings = filtered.filter(l => l.platform === 'tiktok');
   const youtubeListings = filtered.filter(l => l.platform === 'youtube');
   const facebookListings = filtered.filter(l => l.platform === 'facebook');
+  const kwaiListings = filtered.filter(l => l.platform === 'kwai');
 
   // Shuffle for "Destaques do Dia" only when filters/data actually change
   const shuffled = useMemo(() => [...filtered].sort(() => Math.random() - 0.5), [filtered]);
