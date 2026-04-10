@@ -116,7 +116,7 @@ export default function Affiliates() {
           {[
             { text: "Copie seu link de afiliado", icon: Link2, color: "#2D6FF0" },
             { text: "Compartilhe em redes sociais, grupos, Discord", icon: Megaphone, color: "#7C3AED" },
-            { text: "{ text: "Ganhe 10% de cada venda realizada", icon: DollarSign, color: "#00A650" },", icon: DollarSign, color: "#00A650" },
+            { text: "Ganhe 10% de cada venda realizada", icon: DollarSign, color: "#00A650" },
           ].map((step, i) => (
             <div key={i} className="flex gap-3 items-center mb-3 last:mb-0">
               <div className="h-9 w-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: `${step.color}12` }}>
