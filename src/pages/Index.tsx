@@ -21,7 +21,7 @@ import bannerHero1 from "@/assets/banners/banner-hero-1.jpg";
 import bannerHero2 from "@/assets/banners/banner-hero-2.jpg";
 import bannerHero3 from "@/assets/banners/banner-hero-3.jpg";
 import bannerGamesSection from "@/assets/banner-roblox.jpg";
-import bannerSocialSection from "@/assets/banners/banner-social-section.jpg";
+import bannerYoutube from "@/assets/banner-youtube.jpg";
 import bannerSocialFacebook from "@/assets/banners/banner-social-facebook.jpg";
 import bannerSocialTiktok from "@/assets/banners/banner-social-tiktok.jpg";
 import bannerInstagram from "@/assets/banner-instagram.jpg";
