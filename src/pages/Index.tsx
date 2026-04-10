@@ -455,8 +455,12 @@ export default function Index() {
                         Ver todos <ArrowRight className="h-3 w-3" />
                       </Link>
                     </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-                      {instagramListings.slice(0, isMobile ? 4 : 5).map((listing) => <ListingCard key={listing.id} listing={listing} />)}
+                    <div className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2 sm:grid sm:grid-cols-3 lg:grid-cols-5 sm:overflow-visible sm:pb-0">
+                      {instagramListings.slice(0, isMobile ? 6 : 5).map((listing) => (
+                        <div key={listing.id} className="flex-shrink-0 w-[calc(50%-6px)] sm:w-auto snap-start">
+                          <ListingCard listing={listing} />
+                        </div>
+                      ))}
                     </div>
                   </div>
                 )}
@@ -485,8 +489,12 @@ export default function Index() {
                         Ver todos <ArrowRight className="h-3 w-3" />
                       </Link>
                     </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-                      {tiktokListings.slice(0, isMobile ? 4 : 5).map((listing) => <ListingCard key={listing.id} listing={listing} />)}
+                    <div className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2 sm:grid sm:grid-cols-3 lg:grid-cols-5 sm:overflow-visible sm:pb-0">
+                      {tiktokListings.slice(0, isMobile ? 6 : 5).map((listing) => (
+                        <div key={listing.id} className="flex-shrink-0 w-[calc(50%-6px)] sm:w-auto snap-start">
+                          <ListingCard listing={listing} />
+                        </div>
+                      ))}
                     </div>
                   </div>
                 )}
@@ -515,8 +523,12 @@ export default function Index() {
                         Ver todos <ArrowRight className="h-3 w-3" />
                       </Link>
                     </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-                      {youtubeListings.slice(0, isMobile ? 4 : 5).map((listing) => <ListingCard key={listing.id} listing={listing} />)}
+                    <div className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2 sm:grid sm:grid-cols-3 lg:grid-cols-5 sm:overflow-visible sm:pb-0">
+                      {youtubeListings.slice(0, isMobile ? 6 : 5).map((listing) => (
+                        <div key={listing.id} className="flex-shrink-0 w-[calc(50%-6px)] sm:w-auto snap-start">
+                          <ListingCard listing={listing} />
+                        </div>
+                      ))}
                     </div>
                   </div>
                 )}
@@ -545,8 +557,12 @@ export default function Index() {
                         Ver todos <ArrowRight className="h-3 w-3" />
                       </Link>
                     </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-                      {facebookListings.slice(0, isMobile ? 4 : 5).map((listing) => <ListingCard key={listing.id} listing={listing} />)}
+                    <div className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2 sm:grid sm:grid-cols-3 lg:grid-cols-5 sm:overflow-visible sm:pb-0">
+                      {facebookListings.slice(0, isMobile ? 6 : 5).map((listing) => (
+                        <div key={listing.id} className="flex-shrink-0 w-[calc(50%-6px)] sm:w-auto snap-start">
+                          <ListingCard listing={listing} />
+                        </div>
+                      ))}
                     </div>
                   </div>
                 )}
@@ -626,8 +642,12 @@ export default function Index() {
                         Ver todos <ArrowRight className="h-3 w-3" />
                       </Link>
                     </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-                      {games.slice(0, isMobile ? 4 : 5).map((listing) => <ListingCard key={listing.id} listing={listing} />)}
+                    <div className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2 sm:grid sm:grid-cols-3 lg:grid-cols-5 sm:overflow-visible sm:pb-0">
+                      {games.slice(0, isMobile ? 6 : 5).map((listing) => (
+                        <div key={listing.id} className="flex-shrink-0 w-[calc(50%-6px)] sm:w-auto snap-start">
+                          <ListingCard listing={listing} />
+                        </div>
+                      ))}
                     </div>
                   </div>
                 )}
