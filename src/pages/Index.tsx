@@ -6,7 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Input } from "@/components/ui/input";
 import {
   ArrowRight, Search, Loader2, Shield, CheckCircle2, Clock, Zap,
-  Gamepad2, Smartphone, ChevronLeft, ChevronRight, SlidersHorizontal,
+  Gamepad2, ChevronLeft, ChevronRight, SlidersHorizontal,
   Flame
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -20,8 +20,6 @@ import bannerHero1 from "@/assets/banners/banner-hero-1.jpg";
 import bannerHero2 from "@/assets/banners/banner-hero-2.jpg";
 import bannerHero3 from "@/assets/banners/banner-hero-3.jpg";
 import bannerGamesSection from "@/assets/banner-roblox.jpg";
-import bannerSocialSection from "@/assets/banners/banner-social-section.jpg";
-import bannerSocialFacebook from "@/assets/banners/banner-social-facebook.jpg";
 
 import catMinecraft from "@/assets/categories/minecraft.jpg";
 import catFreefire from "@/assets/categories/freefire.jpg";
@@ -80,7 +78,7 @@ export default function Index() {
   const [sortBy, setSortBy] = useState<"recent" | "price_asc" | "price_desc">("recent");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000]);
   const [minFollowers, setMinFollowers] = useState<number>(0);
-  const [socialSlide, setSocialSlide] = useState(0);
+  
 
   const handleSell = () => {
     if (isAuthenticated) navigate("/vendedor/novo");
@@ -92,10 +90,6 @@ export default function Index() {
     return () => clearInterval(timer);
   }, []);
 
-  useEffect(() => {
-    const t = setInterval(() => setSocialSlide(p => (p + 1) % 2), 4000);
-    return () => clearInterval(t);
-  }, []);
 
   const goToBanner = useCallback((dir: number) => {
     setBannerIdx((i) => (i + dir + BANNERS.length) % BANNERS.length);
@@ -158,7 +152,15 @@ export default function Index() {
 
   const GAME_PLATFORMS = ['free_fire', 'valorant', 'fortnite', 'roblox', 'clash_royale'];
   const games = filtered.filter(l => GAME_PLATFORMS.includes(l.platform));
-  const social = filtered.filter(l => !GAME_PLATFORMS.includes(l.platform));
+
+  // Individual platform arrays (priority order)
+  const instagramListings = filtered.filter(l => l.platform === 'instagram');
+  const tiktokListings = filtered.filter(l => l.platform === 'tiktok');
+  const youtubeListings = filtered.filter(l => l.platform === 'youtube');
+  const facebookListings = filtered.filter(l => l.platform === 'facebook');
+
+  // Shuffle for "Destaques do Dia"
+  const shuffled = [...filtered].sort(() => Math.random() - 0.5);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -378,7 +380,7 @@ export default function Index() {
             </div>
             <div className="relative">
               <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 -mx-1 px-1 snap-x snap-mandatory fade-edges" id="destaques-scroll">
-                {(loading ? Array(8).fill(null) : filtered.slice(0, 10)).map((listing, i) =>
+                {(loading ? Array(8).fill(null) : shuffled.slice(0, 10)).map((listing, i) =>
                   listing ? (
                     <div key={listing.id} className="flex-shrink-0 w-[calc(50%-6px)] sm:w-[180px] md:w-[200px] snap-start">
                       <ListingCard listing={listing} />
@@ -417,50 +419,70 @@ export default function Index() {
               </div>
             ) : filtered.length > 0 ? (
               <div className="space-y-6">
-                {social.length > 0 && (
+                {/* === INSTAGRAM === */}
+                {instagramListings.length > 0 && (
                   <div>
-                    {/* Social Section Banner Carousel */}
-                    {(() => {
-                      const socialBanners = [
-                        { img: bannerSocialSection, alt: "YouTube", title: "Canais YouTube", subtitle: "Canais monetizados, inscritos\ne audiência garantida", link: "/marketplace?category=youtube" },
-                        { img: bannerSocialFacebook, alt: "Facebook", title: "Páginas Facebook", subtitle: "Páginas com seguidores,\nalcance e engajamento real", link: "/marketplace?category=facebook" },
-                      ];
-                      return (
-                        <div className="relative rounded-2xl overflow-hidden mb-4">
-                          {socialBanners.map((sb, i) => (
-                            <Link key={i} to={sb.link} className={`block ${i === socialSlide ? '' : 'hidden'}`}>
-                              <img src={sb.img} alt={sb.alt} className="w-full h-[180px] md:h-[340px] object-cover" loading="lazy" />
-                              <div className="absolute inset-y-0 left-0 w-3/5 bg-gradient-to-r from-black/70 via-black/40 to-transparent pointer-events-none" />
-                              <div className="absolute inset-0 flex items-center">
-                                <div className="px-5 sm:px-8 md:px-12 max-w-sm md:max-w-lg">
-                                  <h2 className="text-white text-base sm:text-xl md:text-3xl lg:text-4xl font-semibold leading-tight">{sb.title}</h2>
-                                  <p className="text-white/80 text-[11px] sm:text-sm md:text-base lg:text-lg mt-1 md:mt-2 whitespace-pre-line">{sb.subtitle}</p>
-                                  <span className="inline-block mt-2 md:mt-3 text-[11px] sm:text-xs md:text-sm font-semibold text-white border border-white/40 rounded-lg px-3 py-1 md:py-1.5 hover:bg-white/10 transition-colors">
-                                    Explorar →
-                                  </span>
-                                </div>
-                              </div>
-                            </Link>
-                          ))}
-                          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
-                            {socialBanners.map((_, i) => (
-                              <button key={i} onClick={(e) => { e.preventDefault(); setSocialSlide(i); }} className={`w-2 h-2 rounded-full transition-all ${i === socialSlide ? 'bg-white w-4' : 'bg-white/50'}`} />
-                            ))}
-                          </div>
-                        </div>
-                      );
-                    })()}
-
                     <div className="flex items-center justify-between mb-3">
                       <h3 className="text-[15px] font-semibold text-txt-primary flex items-center gap-2">
-                        <Smartphone className="h-4 w-4 text-primary" /> Redes Sociais
+                        <PlatformIcon platformId="instagram" size={18} /> Contas Instagram
                       </h3>
-                      <Link to="/marketplace?type=social" className="text-[12px] text-primary font-semibold hover:underline flex items-center gap-1">
+                      <Link to="/marketplace?platform=instagram" className="text-[12px] text-primary font-semibold hover:underline flex items-center gap-1">
                         Ver todos <ArrowRight className="h-3 w-3" />
                       </Link>
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-                      {social.slice(0, isMobile ? 4 : 5).map((listing) => <ListingCard key={listing.id} listing={listing} />)}
+                      {instagramListings.slice(0, isMobile ? 4 : 5).map((listing) => <ListingCard key={listing.id} listing={listing} />)}
+                    </div>
+                  </div>
+                )}
+
+                {/* === TIKTOK === */}
+                {tiktokListings.length > 0 && (
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="text-[15px] font-semibold text-txt-primary flex items-center gap-2">
+                        <PlatformIcon platformId="tiktok" size={18} /> Contas TikTok
+                      </h3>
+                      <Link to="/marketplace?platform=tiktok" className="text-[12px] text-primary font-semibold hover:underline flex items-center gap-1">
+                        Ver todos <ArrowRight className="h-3 w-3" />
+                      </Link>
+                    </div>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                      {tiktokListings.slice(0, isMobile ? 4 : 5).map((listing) => <ListingCard key={listing.id} listing={listing} />)}
+                    </div>
+                  </div>
+                )}
+
+                {/* === YOUTUBE === */}
+                {youtubeListings.length > 0 && (
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="text-[15px] font-semibold text-txt-primary flex items-center gap-2">
+                        <PlatformIcon platformId="youtube" size={18} /> Canais YouTube
+                      </h3>
+                      <Link to="/marketplace?platform=youtube" className="text-[12px] text-primary font-semibold hover:underline flex items-center gap-1">
+                        Ver todos <ArrowRight className="h-3 w-3" />
+                      </Link>
+                    </div>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                      {youtubeListings.slice(0, isMobile ? 4 : 5).map((listing) => <ListingCard key={listing.id} listing={listing} />)}
+                    </div>
+                  </div>
+                )}
+
+                {/* === FACEBOOK === */}
+                {facebookListings.length > 0 && (
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="text-[15px] font-semibold text-txt-primary flex items-center gap-2">
+                        <PlatformIcon platformId="facebook" size={18} /> Páginas Facebook
+                      </h3>
+                      <Link to="/marketplace?platform=facebook" className="text-[12px] text-primary font-semibold hover:underline flex items-center gap-1">
+                        Ver todos <ArrowRight className="h-3 w-3" />
+                      </Link>
+                    </div>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                      {facebookListings.slice(0, isMobile ? 4 : 5).map((listing) => <ListingCard key={listing.id} listing={listing} />)}
                     </div>
                   </div>
                 )}
