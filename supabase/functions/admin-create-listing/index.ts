@@ -54,6 +54,22 @@ Deno.serve(async (req) => {
       });
     }
 
+    if (action === 'update_listing') {
+      const { id, updates } = body;
+      const { data, error } = await supabase
+        .from('listings')
+        .update(updates)
+        .eq('id', id)
+        .select()
+        .single();
+      
+      if (error) throw error;
+      
+      return new Response(JSON.stringify({ listing: data }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
     return new Response(JSON.stringify({ error: 'Invalid action' }), {
       status: 400,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
