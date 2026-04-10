@@ -184,7 +184,7 @@ export default function Index() {
     fetchListings();
   }, []);
 
-  const filtered = listings.filter((l) => {
+  const filtered = useMemo(() => listings.filter((l) => {
     if (selectedPlatform && l.platform !== selectedPlatform) return false;
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
@@ -200,7 +200,7 @@ export default function Index() {
     if (sortBy === "price_asc") return a.price - b.price;
     if (sortBy === "price_desc") return b.price - a.price;
     return 0;
-  });
+  }), [listings, selectedPlatform, searchQuery, priceRange, minFollowers, sortBy]);
 
   const GAME_PLATFORMS = ['free_fire', 'valorant', 'fortnite', 'roblox', 'clash_royale'];
   const games = filtered.filter(l => GAME_PLATFORMS.includes(l.platform));
@@ -211,7 +211,7 @@ export default function Index() {
   const youtubeListings = filtered.filter(l => l.platform === 'youtube');
   const facebookListings = filtered.filter(l => l.platform === 'facebook');
 
-  // Shuffle for "Destaques do Dia" only when the source list changes
+  // Shuffle for "Destaques do Dia" only when filters/data actually change
   const shuffled = useMemo(() => [...filtered].sort(() => Math.random() - 0.5), [filtered]);
 
   return (
