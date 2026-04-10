@@ -117,6 +117,15 @@ Deno.serve(async (req) => {
       });
     }
 
+    if (action === 'insert_rows') {
+      const { table, rows } = body;
+      const { data, error } = await supabase.from(table).insert(rows).select();
+      if (error) throw error;
+      return new Response(JSON.stringify({ data }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
     return new Response(JSON.stringify({ error: 'Invalid action' }), {
       status: 400,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
