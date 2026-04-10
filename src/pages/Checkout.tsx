@@ -659,12 +659,12 @@ export default function Checkout() {
               <div className="bg-card border border-border rounded-lg p-5 sticky top-24">
                 <h3 className="font-semibold text-foreground text-sm mb-4">Resumo do Pedido</h3>
                 <div className="flex gap-3 mb-5 pb-5 border-b border-border">
-                  <div
-                    className="h-16 w-16 rounded-lg flex items-center justify-center shrink-0"
-                    style={{ background: platform ? `${platform.color}15` : "hsl(var(--muted))" }}
-                  >
-                    <PlatformIcon platformId={listing.category} size={32} />
-                  </div>
+                  <img
+                    src={getListingImage(listing.category, listing.screenshots)}
+                    alt={listing.title}
+                    onError={(e) => handleListingImageError(e, listing.category)}
+                    className="h-16 w-16 rounded-lg object-cover shrink-0 bg-muted"
+                  />
                   <div className="min-w-0">
                     <p className="text-sm font-medium text-foreground line-clamp-2">{listing.title}</p>
                     <p className="text-xs text-muted-foreground mt-0.5">{formatBRL(total)}</p>
