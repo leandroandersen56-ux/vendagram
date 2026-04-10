@@ -174,7 +174,7 @@ export default function OfferBottomSheet({ open, onClose, listing, onSent }: Pro
                       <span className="text-[#00A650] font-bold">{formatBRL(savings)}</span>
                     </div>
                     <div className="flex justify-between text-[13px]">
-                      <span className="text-[#888]">Taxa Froiv (10%)</span>
+                      <span className="text-[#888]"><span className="text-[#888]">Taxa Froiv (5%)</span></span>
                       <span className="text-[#111]">{formatBRL(fee)}</span>
                     </div>
                     <div className="h-px bg-[#E8E8E8] my-1" />
