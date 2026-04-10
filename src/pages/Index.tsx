@@ -113,8 +113,7 @@ function DestaquesCarousel({ items, loading }: { items: Listing[]; loading: bool
   );
 }
 
-
-  const { isAuthenticated, openAuth } = useAuth();
+export default function Index() {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const [listings, setListings] = useState<Listing[]>([]);
