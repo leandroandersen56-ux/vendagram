@@ -59,6 +59,53 @@ function PaymentIcon({ type }: { type: "pix" | "visa" | "mastercard" | "amex" | 
   return <span className="text-primary flex items-center justify-center min-w-[40px] h-7 px-1.5 rounded-md border border-border bg-muted/50">{icons[type]}</span>;
 }
 
+function TrustSeals() {
+  return (
+    <div className="flex flex-col items-center gap-2">
+      <p className="text-[10px] text-txt-hint uppercase tracking-wider">Selos e certificados</p>
+      <div className="flex flex-wrap items-center justify-center gap-2">
+        {/* Site Protegido SSL */}
+        <div className="flex items-center gap-1.5 bg-muted/50 border border-border rounded-lg px-3 py-2">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-emerald-500 shrink-0">
+            <path d="M12 2L4 6v5c0 5.55 3.84 10.74 8 12 4.16-1.26 8-6.45 8-12V6l-8-4z" fill="currentColor" opacity="0.2"/>
+            <path d="M12 2L4 6v5c0 5.55 3.84 10.74 8 12 4.16-1.26 8-6.45 8-12V6l-8-4z" stroke="currentColor" strokeWidth="1.5" fill="none"/>
+            <path d="M9 12l2 2 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+          <div className="flex flex-col leading-none">
+            <span className="text-[8px] font-bold text-txt-primary uppercase">Site Protegido</span>
+            <span className="text-[7px] text-txt-hint">Certificado SSL</span>
+          </div>
+        </div>
+        {/* Compra Segura */}
+        <div className="flex items-center gap-1.5 bg-muted/50 border border-border rounded-lg px-3 py-2">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-primary shrink-0">
+            <rect x="3" y="11" width="18" height="10" rx="2" stroke="currentColor" strokeWidth="1.5"/>
+            <path d="M7 11V7a5 5 0 0110 0v4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+            <circle cx="12" cy="16" r="1.5" fill="currentColor"/>
+          </svg>
+          <div className="flex flex-col leading-none">
+            <span className="text-[8px] font-bold text-txt-primary uppercase">Compra Segura</span>
+            <span className="text-[7px] text-txt-hint">Escrow Automático</span>
+          </div>
+        </div>
+        {/* Dados Protegidos */}
+        <div className="flex items-center gap-1.5 bg-muted/50 border border-border rounded-lg px-3 py-2">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-blue-500 shrink-0">
+            <path d="M12 2L4 6v5c0 5.55 3.84 10.74 8 12 4.16-1.26 8-6.45 8-12V6l-8-4z" fill="currentColor" opacity="0.15"/>
+            <path d="M12 2L4 6v5c0 5.55 3.84 10.74 8 12 4.16-1.26 8-6.45 8-12V6l-8-4z" stroke="currentColor" strokeWidth="1.5" fill="none"/>
+            <circle cx="12" cy="11" r="2" fill="currentColor"/>
+            <path d="M12 13v2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+          </svg>
+          <div className="flex flex-col leading-none">
+            <span className="text-[8px] font-bold text-txt-primary uppercase">Dados Protegidos</span>
+            <span className="text-[7px] text-txt-hint">Criptografia AES-256</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Footer() {
   return (
     <footer className="border-t border-border bg-card">
@@ -90,6 +137,7 @@ export default function Footer() {
               <PaymentIcon type="hipercard" />
             </div>
           </div>
+          <TrustSeals />
           <p className="text-[10px] text-txt-hint text-center">© {new Date().getFullYear()} Froiv. Todos os direitos reservados.</p>
         </div>
       </div>
@@ -146,6 +194,7 @@ export default function Footer() {
                   <PaymentIcon type="hipercard" />
                 </div>
               </div>
+              <TrustSeals />
               <p className="text-[10px] text-txt-hint">© {new Date().getFullYear()} Froiv. Todos os direitos reservados.</p>
             </div>
           </div>
