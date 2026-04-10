@@ -45,7 +45,7 @@ export default function SellerProfileHeader({ seller, listingsCount, avgRating, 
       </div>
 
       {/* Profile card overlapping banner */}
-      <div className="bg-card border border-border rounded-b-2xl px-4 sm:px-6 pb-5 -mt-0 relative">
+      <div className="bg-card border border-border rounded-b-2xl px-4 sm:px-6 pb-5 -mt-0 relative pt-2">
         {/* Avatar */}
         <div className="flex items-end gap-4 -mt-10 sm:-mt-12 mb-3">
           <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-full border-4 border-card bg-muted flex items-center justify-center text-2xl sm:text-3xl font-semibold text-foreground shrink-0 overflow-hidden">
