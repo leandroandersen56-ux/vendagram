@@ -18,9 +18,14 @@ Deno.serve(async (req) => {
       return new Response("Missing id", { status: 400 });
     }
 
-    const personalUrl = 'https://yzwncktlibdfycqhvlqg.supabase.co';
-    const serviceKey = Deno.env.get('PERSONAL_SUPABASE_SERVICE_ROLE_KEY')!;
-    const supabase = createClient(personalUrl, serviceKey);
+    const projectUrl = Deno.env.get("SUPABASE_URL");
+    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+
+    if (!projectUrl || !serviceKey) {
+      return new Response("Missing backend configuration", { status: 500 });
+    }
+
+    const supabase = createClient(projectUrl, serviceKey);
 
     const { data: listing, error } = await supabase
       .from("listings")
