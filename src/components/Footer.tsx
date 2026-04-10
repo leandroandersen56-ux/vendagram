@@ -81,6 +81,9 @@ export default function Footer() {
             <Link to="/privacidade" className="hover:text-primary transition-colors">Privacidade</Link>
             <Link to="/ajuda" className="hover:text-primary transition-colors">Ajuda</Link>
             <Link to="/contato" className="hover:text-primary transition-colors">Contato</Link>
+            <a href="https://wa.me/5547996300314?text=Ol%C3%A1%2C%20preciso%20de%20ajuda%20na%20Froiv!" target="_blank" rel="noopener noreferrer" className="hover:text-[#25D366] transition-colors flex items-center gap-1">
+              <MessageCircle className="h-3 w-3" /> WhatsApp
+            </a>
           </div>
           <div className="flex flex-col items-center gap-1.5">
             <p className="text-[10px] text-txt-hint uppercase tracking-wider">Métodos de pagamento</p>
