@@ -61,69 +61,79 @@ function PaymentIcon({ type }: { type: "pix" | "visa" | "mastercard" | "amex" | 
 
 function TrustSeals() {
   return (
-    <div className="flex flex-col items-center gap-2.5">
-      <p className="text-[10px] text-txt-hint uppercase tracking-wider font-semibold">Selos e certificados</p>
-      <div className="flex flex-wrap items-stretch justify-center gap-2.5">
-        {/* Site Protegido - Compra Segura SSL */}
-        <div className="flex items-center gap-2 bg-background border border-border rounded-lg px-3 py-2.5">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" className="shrink-0">
-            <path d="M12 2L4 6v5c0 5.55 3.84 10.74 8 12 4.16-1.26 8-6.45 8-12V6l-8-4z" fill="#22c55e" opacity="0.85"/>
-            <path d="M12 2L4 6v5c0 5.55 3.84 10.74 8 12 4.16-1.26 8-6.45 8-12V6l-8-4z" stroke="#16a34a" strokeWidth="1" fill="none"/>
-            <path d="M9 12l2 2 4-4" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+    <div className="flex flex-col items-center gap-3">
+      <p className="text-[11px] text-txt-primary font-bold">Selos e certificados</p>
+      {/* Row 1 - 2 seals */}
+      <div className="flex items-center justify-center gap-4">
+        {/* Site Protegido SSL - green/gold shield */}
+        <div className="flex items-center gap-2">
+          <svg width="36" height="40" viewBox="0 0 36 40" fill="none" className="shrink-0">
+            <path d="M18 2L4 9v10c0 9.25 6.4 17.9 14 20 7.6-2.1 14-10.75 14-20V9L18 2z" fill="url(#shieldGrad)" stroke="#2d8a2e" strokeWidth="1.2"/>
+            <path d="M13 20l4 4 7-7" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+            <defs>
+              <linearGradient id="shieldGrad" x1="4" y1="2" x2="32" y2="38">
+                <stop offset="0%" stopColor="#4CAF50"/>
+                <stop offset="50%" stopColor="#66BB6A"/>
+                <stop offset="100%" stopColor="#8BC34A"/>
+              </linearGradient>
+            </defs>
           </svg>
           <div className="flex flex-col leading-tight">
-            <span className="text-[7px] text-txt-hint uppercase">Compra Segura</span>
-            <span className="text-[10px] font-bold text-txt-primary uppercase tracking-wide">Site Protegido</span>
-            <span className="text-[7px] text-txt-hint uppercase">Certificado SSL</span>
+            <span className="text-[8px] text-txt-hint uppercase tracking-wide">Compra Segura</span>
+            <span className="text-[13px] font-extrabold text-txt-primary uppercase tracking-tight leading-none">Site Protegido</span>
+            <span className="text-[8px] text-txt-hint uppercase tracking-wide">Certificado SSL</span>
           </div>
         </div>
 
         {/* Safe Browsing Google */}
-        <div className="flex items-center gap-2 bg-background border border-border rounded-lg px-3 py-2.5">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" className="shrink-0">
-            <path d="M12 2L4 6v5c0 5.55 3.84 10.74 8 12 4.16-1.26 8-6.45 8-12V6l-8-4z" fill="#4285F4" opacity="0.15"/>
-            <path d="M12 2L4 6v5c0 5.55 3.84 10.74 8 12 4.16-1.26 8-6.45 8-12V6l-8-4z" stroke="#4285F4" strokeWidth="1.2" fill="none"/>
-            <path d="M9 12l2 2 4-4" stroke="#34A853" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+        <div className="flex items-center gap-2">
+          <svg width="24" height="28" viewBox="0 0 24 28" fill="none" className="shrink-0">
+            <path d="M12 1L3 5.5v7c0 6.5 4.5 12.6 9 14 4.5-1.4 9-7.5 9-14v-7L12 1z" fill="#4CAF50" stroke="#388E3C" strokeWidth="0.8"/>
+            <path d="M8 14l3 3 5-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
           <div className="flex flex-col leading-tight">
-            <span className="text-[7px] text-txt-hint uppercase">Safe Browsing</span>
-            <span className="text-[11px] font-bold text-txt-primary tracking-tight">Google</span>
+            <span className="text-[8px] text-txt-hint uppercase tracking-wider">Safe Browsing</span>
+            <span className="text-[16px] font-bold text-txt-primary tracking-tight leading-none" style={{ fontFamily: "'Product Sans', Arial, sans-serif" }}>Google</span>
           </div>
         </div>
+      </div>
 
-        {/* Verificada - Escrow */}
-        <div className="flex items-center gap-2 bg-background border border-border rounded-lg px-3 py-2.5">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="shrink-0">
-            <circle cx="12" cy="12" r="10" fill="#3b82f6" opacity="0.15"/>
-            <path d="M12 2L4 6v5c0 5.55 3.84 10.74 8 12 4.16-1.26 8-6.45 8-12V6l-8-4z" fill="#3b82f6" opacity="0.8"/>
+      {/* Row 2 - 3 cards */}
+      <div className="flex items-stretch justify-center gap-3">
+        {/* Loja Confiável - purple border card */}
+        <div className="flex flex-col items-center justify-center bg-background border-2 border-purple-400 rounded-xl px-4 py-3 min-w-[100px]">
+          <svg width="22" height="16" viewBox="0 0 22 16" fill="none" className="mb-1">
+            <circle cx="8" cy="8" r="5" stroke="#7C3AED" strokeWidth="1.5" fill="#7C3AED" opacity="0.15"/>
+            <circle cx="8" cy="8" r="2" fill="#7C3AED"/>
+            <path d="M14 5h6M14 8h5M14 11h4" stroke="#7C3AED" strokeWidth="1.2" strokeLinecap="round"/>
+          </svg>
+          <span className="text-[9px] font-bold text-txt-primary uppercase leading-tight">Loja Confiável</span>
+          <span className="text-[7px] text-txt-hint leading-tight text-center">Froiv Marketplace</span>
+          <span className="text-[7px] text-purple-500 font-semibold mt-0.5">{new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-')}</span>
+        </div>
+
+        {/* Verificada por Reclame Aqui style - blue shield + diamond */}
+        <div className="flex flex-col items-center justify-center bg-background border border-border rounded-xl px-4 py-3 min-w-[100px]">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" className="mb-1">
+            <path d="M12 2L4 6v5c0 5.55 3.84 10.74 8 12 4.16-1.26 8-6.45 8-12V6l-8-4z" fill="#2563EB"/>
             <path d="M9 12l2 2 4-4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
-          <div className="flex flex-col leading-tight">
-            <span className="text-[9px] font-semibold text-txt-primary">Verificada por</span>
-            <span className="text-[10px] font-bold text-primary">Froiv Escrow</span>
-          </div>
+          <span className="text-[9px] text-txt-secondary leading-tight">Verificada por</span>
+          <span className="text-[10px] font-bold text-primary leading-tight">Froiv Trust</span>
         </div>
 
-        {/* Ebit - Excelente */}
-        <div className="flex flex-col items-center justify-center bg-background border border-border rounded-lg px-4 py-2.5 min-w-[80px]">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" className="mb-0.5">
-            <path d="M12 2l2.5 5.5L21 8l-4.5 4 1.5 6-6-3.5L6 18l1.5-6L3 8l6.5-.5z" fill="#06b6d4" opacity="0.8"/>
-            <path d="M12 2l2.5 5.5L21 8l-4.5 4 1.5 6-6-3.5L6 18l1.5-6L3 8l6.5-.5z" stroke="#0891b2" strokeWidth="0.8" fill="none"/>
-          </svg>
-          <span className="text-[8px] font-bold text-txt-primary uppercase tracking-wide">Excelente</span>
-        </div>
-
-        {/* Dados Criptografados */}
-        <div className="flex items-center gap-2 bg-background border border-border rounded-lg px-3 py-2.5">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="shrink-0">
-            <rect x="3" y="11" width="18" height="10" rx="2" fill="hsl(var(--primary))" opacity="0.15" stroke="hsl(var(--primary))" strokeWidth="1.2"/>
-            <path d="M7 11V7a5 5 0 0110 0v4" stroke="hsl(var(--primary))" strokeWidth="1.5" strokeLinecap="round"/>
-            <circle cx="12" cy="16" r="1.5" fill="hsl(var(--primary))"/>
-          </svg>
-          <div className="flex flex-col leading-tight">
-            <span className="text-[9px] font-bold text-txt-primary uppercase">Dados Protegidos</span>
-            <span className="text-[7px] text-txt-hint">Criptografia AES-256</span>
+        {/* Ebit Excelente style - diamond */}
+        <div className="flex flex-col items-center justify-center bg-background border-2 border-emerald-400 rounded-xl px-4 py-3 min-w-[90px]">
+          <div className="flex items-center gap-1 mb-1">
+            <span className="text-[10px] font-bold bg-emerald-600 text-white rounded px-1.5 py-0.5 leading-none">F</span>
           </div>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="mb-0.5">
+            <path d="M12 2L6 12l6 10 6-10L12 2z" fill="#06b6d4" opacity="0.7"/>
+            <path d="M12 2L6 12l6 10 6-10L12 2z" stroke="#0891b2" strokeWidth="1"/>
+            <path d="M6 12h12" stroke="#0891b2" strokeWidth="0.8"/>
+            <path d="M12 2L6 12M12 2l6 10" stroke="#0891b2" strokeWidth="0.8"/>
+          </svg>
+          <span className="text-[9px] font-bold text-txt-primary uppercase tracking-wide">Excelente</span>
         </div>
       </div>
     </div>
