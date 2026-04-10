@@ -465,12 +465,16 @@ export default function Index() {
                         Ver todos <ArrowRight className="h-3 w-3" />
                       </Link>
                     </div>
-                    <div className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2 sm:grid sm:grid-cols-3 lg:grid-cols-5 sm:overflow-visible sm:pb-0">
-                      {instagramListings.slice(0, isMobile ? 6 : 5).map((listing) => (
-                        <div key={listing.id} className="flex-shrink-0 w-[calc(50%-6px)] sm:w-auto snap-start">
-                          <ListingCard listing={listing} />
-                        </div>
-                      ))}
+                    <div className="relative">
+                      <div className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2 sm:grid sm:grid-cols-3 lg:grid-cols-5 sm:overflow-visible sm:pb-0" id="instagram-scroll">
+                        {instagramListings.slice(0, isMobile ? 6 : 5).map((listing) => (
+                          <div key={listing.id} className="flex-shrink-0 w-[calc(50%-6px)] sm:w-auto snap-start">
+                            <ListingCard listing={listing} />
+                          </div>
+                        ))}
+                      </div>
+                      <button onClick={() => document.getElementById('instagram-scroll')?.scrollBy({ left: -300, behavior: 'smooth' })} className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition sm:hidden" aria-label="Anterior"><ChevronLeft className="h-4 w-4 text-txt-primary" /></button>
+                      <button onClick={() => document.getElementById('instagram-scroll')?.scrollBy({ left: 300, behavior: 'smooth' })} className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition sm:hidden" aria-label="Próximo"><ChevronRight className="h-4 w-4 text-txt-primary" /></button>
                     </div>
                   </div>
                 )}
@@ -499,12 +503,16 @@ export default function Index() {
                         Ver todos <ArrowRight className="h-3 w-3" />
                       </Link>
                     </div>
-                    <div className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2 sm:grid sm:grid-cols-3 lg:grid-cols-5 sm:overflow-visible sm:pb-0">
-                      {tiktokListings.slice(0, isMobile ? 6 : 5).map((listing) => (
-                        <div key={listing.id} className="flex-shrink-0 w-[calc(50%-6px)] sm:w-auto snap-start">
-                          <ListingCard listing={listing} />
-                        </div>
-                      ))}
+                    <div className="relative">
+                      <div className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2 sm:grid sm:grid-cols-3 lg:grid-cols-5 sm:overflow-visible sm:pb-0" id="tiktok-scroll">
+                        {tiktokListings.slice(0, isMobile ? 6 : 5).map((listing) => (
+                          <div key={listing.id} className="flex-shrink-0 w-[calc(50%-6px)] sm:w-auto snap-start">
+                            <ListingCard listing={listing} />
+                          </div>
+                        ))}
+                      </div>
+                      <button onClick={() => document.getElementById('tiktok-scroll')?.scrollBy({ left: -300, behavior: 'smooth' })} className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition sm:hidden" aria-label="Anterior"><ChevronLeft className="h-4 w-4 text-txt-primary" /></button>
+                      <button onClick={() => document.getElementById('tiktok-scroll')?.scrollBy({ left: 300, behavior: 'smooth' })} className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition sm:hidden" aria-label="Próximo"><ChevronRight className="h-4 w-4 text-txt-primary" /></button>
                     </div>
                   </div>
                 )}
@@ -533,12 +541,16 @@ export default function Index() {
                         Ver todos <ArrowRight className="h-3 w-3" />
                       </Link>
                     </div>
-                    <div className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2 sm:grid sm:grid-cols-3 lg:grid-cols-5 sm:overflow-visible sm:pb-0">
-                      {youtubeListings.slice(0, isMobile ? 6 : 5).map((listing) => (
-                        <div key={listing.id} className="flex-shrink-0 w-[calc(50%-6px)] sm:w-auto snap-start">
-                          <ListingCard listing={listing} />
-                        </div>
-                      ))}
+                    <div className="relative">
+                      <div className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2 sm:grid sm:grid-cols-3 lg:grid-cols-5 sm:overflow-visible sm:pb-0" id="youtube-scroll">
+                        {youtubeListings.slice(0, isMobile ? 6 : 5).map((listing) => (
+                          <div key={listing.id} className="flex-shrink-0 w-[calc(50%-6px)] sm:w-auto snap-start">
+                            <ListingCard listing={listing} />
+                          </div>
+                        ))}
+                      </div>
+                      <button onClick={() => document.getElementById('youtube-scroll')?.scrollBy({ left: -300, behavior: 'smooth' })} className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition sm:hidden" aria-label="Anterior"><ChevronLeft className="h-4 w-4 text-txt-primary" /></button>
+                      <button onClick={() => document.getElementById('youtube-scroll')?.scrollBy({ left: 300, behavior: 'smooth' })} className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition sm:hidden" aria-label="Próximo"><ChevronRight className="h-4 w-4 text-txt-primary" /></button>
                     </div>
                   </div>
                 )}
@@ -567,12 +579,16 @@ export default function Index() {
                         Ver todos <ArrowRight className="h-3 w-3" />
                       </Link>
                     </div>
-                    <div className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2 sm:grid sm:grid-cols-3 lg:grid-cols-5 sm:overflow-visible sm:pb-0">
-                      {facebookListings.slice(0, isMobile ? 6 : 5).map((listing) => (
-                        <div key={listing.id} className="flex-shrink-0 w-[calc(50%-6px)] sm:w-auto snap-start">
-                          <ListingCard listing={listing} />
-                        </div>
-                      ))}
+                    <div className="relative">
+                      <div className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2 sm:grid sm:grid-cols-3 lg:grid-cols-5 sm:overflow-visible sm:pb-0" id="facebook-scroll">
+                        {facebookListings.slice(0, isMobile ? 6 : 5).map((listing) => (
+                          <div key={listing.id} className="flex-shrink-0 w-[calc(50%-6px)] sm:w-auto snap-start">
+                            <ListingCard listing={listing} />
+                          </div>
+                        ))}
+                      </div>
+                      <button onClick={() => document.getElementById('facebook-scroll')?.scrollBy({ left: -300, behavior: 'smooth' })} className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition sm:hidden" aria-label="Anterior"><ChevronLeft className="h-4 w-4 text-txt-primary" /></button>
+                      <button onClick={() => document.getElementById('facebook-scroll')?.scrollBy({ left: 300, behavior: 'smooth' })} className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition sm:hidden" aria-label="Próximo"><ChevronRight className="h-4 w-4 text-txt-primary" /></button>
                     </div>
                   </div>
                 )}
@@ -652,12 +668,16 @@ export default function Index() {
                         Ver todos <ArrowRight className="h-3 w-3" />
                       </Link>
                     </div>
-                    <div className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2 sm:grid sm:grid-cols-3 lg:grid-cols-5 sm:overflow-visible sm:pb-0">
-                      {games.slice(0, isMobile ? 6 : 5).map((listing) => (
-                        <div key={listing.id} className="flex-shrink-0 w-[calc(50%-6px)] sm:w-auto snap-start">
-                          <ListingCard listing={listing} />
-                        </div>
-                      ))}
+                    <div className="relative">
+                      <div className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2 sm:grid sm:grid-cols-3 lg:grid-cols-5 sm:overflow-visible sm:pb-0" id="games-scroll">
+                        {games.slice(0, isMobile ? 6 : 5).map((listing) => (
+                          <div key={listing.id} className="flex-shrink-0 w-[calc(50%-6px)] sm:w-auto snap-start">
+                            <ListingCard listing={listing} />
+                          </div>
+                        ))}
+                      </div>
+                      <button onClick={() => document.getElementById('games-scroll')?.scrollBy({ left: -300, behavior: 'smooth' })} className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition sm:hidden" aria-label="Anterior"><ChevronLeft className="h-4 w-4 text-txt-primary" /></button>
+                      <button onClick={() => document.getElementById('games-scroll')?.scrollBy({ left: 300, behavior: 'smooth' })} className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition sm:hidden" aria-label="Próximo"><ChevronRight className="h-4 w-4 text-txt-primary" /></button>
                     </div>
                   </div>
                 )}
