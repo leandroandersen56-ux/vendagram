@@ -94,7 +94,9 @@ export default function Marketplace() {
 
   const filtered = listings
     .filter((l) => {
-      if (platform !== "all" && l.platform !== platform) return false;
+      if (platform === "games") {
+        if (!GAME_PLATFORMS.includes(l.platform)) return false;
+      } else if (platform !== "all" && l.platform !== platform) return false;
       if (search && !l.title.toLowerCase().includes(search.toLowerCase())) return false;
       return true;
     })
