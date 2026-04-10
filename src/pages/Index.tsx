@@ -158,7 +158,15 @@ export default function Index() {
 
   const GAME_PLATFORMS = ['free_fire', 'valorant', 'fortnite', 'roblox', 'clash_royale'];
   const games = filtered.filter(l => GAME_PLATFORMS.includes(l.platform));
-  const social = filtered.filter(l => !GAME_PLATFORMS.includes(l.platform));
+
+  // Individual platform arrays (priority order)
+  const instagramListings = filtered.filter(l => l.platform === 'instagram');
+  const tiktokListings = filtered.filter(l => l.platform === 'tiktok');
+  const youtubeListings = filtered.filter(l => l.platform === 'youtube');
+  const facebookListings = filtered.filter(l => l.platform === 'facebook');
+
+  // Shuffle for "Destaques do Dia"
+  const shuffled = [...filtered].sort(() => Math.random() - 0.5);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
