@@ -179,7 +179,9 @@ Deno.serve(async (req) => {
           });
         }
 
-      } else if (payment.status === "cancelled" || payment.status === "rejected") {
+        // WhatsApp notification to seller
+        await sendWhatsAppNotification(cloudUrl, cloudKey, transactionId, "payment_confirmed");
+
         await supabase
           .from("transactions")
           .update({ status: "cancelled", cancelled_at: new Date().toISOString() })
