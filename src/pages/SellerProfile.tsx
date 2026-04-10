@@ -80,7 +80,7 @@ export default function SellerProfile() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Navbar />
-      <div className="pt-14 pb-16 sm:pb-0">
+      <div className="pb-16 sm:pb-0" style={{ paddingTop: 'calc(56px + var(--pwa-banner-offset, 0px))' }}>
         <div className="container mx-auto px-4 py-4 max-w-3xl">
           <SellerProfileHeader
             seller={seller}

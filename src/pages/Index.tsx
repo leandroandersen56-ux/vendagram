@@ -222,7 +222,7 @@ export default function Index() {
       {/* SEO H1 — visually hidden */}
       <h1 className="sr-only">Comprar Conta Instagram, TikTok, Free Fire, Valorant — Froiv Marketplace de Contas Digitais</h1>
 
-      <div className="pt-14 pb-16 sm:pb-0">
+      <div className="pb-16 sm:pb-0" style={{ paddingTop: 'calc(56px + var(--pwa-banner-offset, 0px))' }}>
         {/* === BANNER CAROUSEL === */}
         <section className="pt-3 md:pt-6">
           <div className="container mx-auto">
