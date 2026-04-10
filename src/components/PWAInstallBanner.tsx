@@ -64,7 +64,7 @@ export default function PWAInstallBanner() {
   // Mobile: top banner
   if (isMobile) {
     return (
-      <div className="fixed top-0 left-0 right-0 z-[60] bg-[#FFF3CD] border-b border-[#FFECB5] shadow-sm animate-in slide-in-from-top duration-300">
+      <div className="fixed top-[56px] left-0 right-0 z-[55] bg-[#FFF3CD] border-b border-[#FFECB5] shadow-sm animate-in slide-in-from-top duration-300">
         <div className="container mx-auto flex items-center gap-3 py-2.5 pr-2">
           <div className="h-10 w-10 rounded-xl overflow-hidden shrink-0 shadow-sm">
             <img src="/pwa-icon-192.png" alt="Froiv" className="h-full w-full object-cover" />
