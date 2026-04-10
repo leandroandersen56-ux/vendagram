@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" id="kwai">
+  <path fill="#000" fill-rule="evenodd" d="M22 14.5a3 3 0 0 0-3-3h-8a3 3 0 0 0-3 3v5a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3v-5Zm-3-1a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1h-8a1 1 0 0 1-1-1v-5a1 1 0 0 1 1-1h8Z" clip-rule="evenodd"></path>
+  <path fill="#000" fill-rule="evenodd" d="m4 14.618 4 2v.764l-4 2v-4.764zm.17-2.15A1.5 1.5 0 0 0 2 13.808v6.382a1.5 1.5 0 0 0 2.17 1.342l5.277-2.639A1 1 0 0 0 10 18v-2a1 1 0 0 0-.553-.894l-5.276-2.639zM10.5 3a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm-5 3a5 5 0 1 1 10 0 5 5 0 0 1-10 0z" clip-rule="evenodd"></path>
+  <path fill="#000" fill-rule="evenodd" d="M17.5 5a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-4 2a4 4 0 1 1 8 0 4 4 0 0 1-8 0Z" clip-rule="evenodd"></path>
+</svg>
