@@ -70,6 +70,8 @@ export const PLATFORMS = [
   { id: 'fortnite', name: 'Fortnite', color: '#9D4DBB' },
   { id: 'roblox', name: 'Roblox', color: '#E2231A' },
   { id: 'clash_royale', name: 'Clash Royale', color: '#F5C518' },
+  { id: 'kwai', name: 'Kwai', color: '#FF4906' },
+  { id: 'twitter', name: 'Twitter / X', color: '#000000' },
   { id: 'other', name: 'Outros', color: '#7C3AED' },
 ];
 

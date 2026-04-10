@@ -18,6 +18,8 @@ const PLATFORM_BADGE_COLORS: Record<string, { bg: string; text: string }> = {
   fortnite: { bg: "bg-[#9D4DBB]", text: "text-white" },
   roblox: { bg: "bg-[#E2231A]", text: "text-white" },
   clash_royale: { bg: "bg-[#F5C518]", text: "text-[#111]" },
+  kwai: { bg: "bg-[#FF4906]", text: "text-white" },
+  twitter: { bg: "bg-[#000]", text: "text-white" },
   other: { bg: "bg-[#666]", text: "text-white" },
 };
 
