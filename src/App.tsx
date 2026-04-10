@@ -9,6 +9,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import { useMessageToasts } from "@/hooks/useMessageToasts";
 import PWAInstallBanner from "@/components/PWAInstallBanner";
 import BottomNav from "@/components/BottomNav";
+import WhatsAppFloatingButton from "@/components/WhatsAppButton";
 import Index from "./pages/Index.tsx";
 import Marketplace from "./pages/Marketplace.tsx";
 import ListingDetail from "./pages/ListingDetail.tsx";
@@ -96,6 +97,7 @@ function AppRoutes() {
       <ScrollToTop />
       <AuthModal />
       <BottomNav />
+      <WhatsAppFloatingButton />
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<Index />} />
