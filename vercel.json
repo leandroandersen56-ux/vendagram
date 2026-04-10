@@ -1,13 +1,6 @@
 {
   "rewrites": [
+    { "source": "/listing/:id", "destination": "/api/listing/:id" },
     { "source": "/(.*)", "destination": "/index.html" }
-  ],
-  "headers": [
-    {
-      "source": "/listing/(.*)",
-      "headers": [
-        { "key": "X-Robots-Tag", "value": "index, follow" }
-      ]
-    }
   ]
 }
