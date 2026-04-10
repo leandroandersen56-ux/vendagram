@@ -72,6 +72,19 @@ const icons: Record<string, (s: number) => React.ReactNode> = {
     </svg>
   ),
 
+  kwai: (s) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="none">
+      <rect width="24" height="24" rx="6" fill="#FF4906"/>
+      <path d="M12 4c-1.1 0-2 .9-2 2v3.17L7.12 6.29a1.5 1.5 0 1 0-2.12 2.12L8.59 12 5 15.59a1.5 1.5 0 1 0 2.12 2.12L10 14.83V18c0 1.1.9 2 2 2s2-.9 2-2v-3.17l2.88 2.88a1.5 1.5 0 1 0 2.12-2.12L15.41 12 19 8.41a1.5 1.5 0 1 0-2.12-2.12L14 9.17V6c0-1.1-.9-2-2-2z" fill="#fff"/>
+    </svg>
+  ),
+
+  twitter: (s) => (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="none">
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" fill="#000"/>
+    </svg>
+  ),
+
   other: (s) => (
     <svg width={s} height={s} viewBox="0 0 24 24" fill="none">
       <circle cx="12" cy="12" r="10" stroke={C} strokeWidth="2" fill="none"/>
