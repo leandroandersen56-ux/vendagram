@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, createContext, useContext } from "react";
 import { X, Download } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import logoWhite from "@/assets/logo-froiv-white.svg";
@@ -6,6 +6,48 @@ import logoWhite from "@/assets/logo-froiv-white.svg";
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
   userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
+}
+
+// Context to share banner visibility with Navbar
+const PWABannerContext = createContext<boolean>(false);
+export const usePWABannerVisible = () => useContext(PWABannerContext);
+
+export function PWABannerProvider({ children }: { children: React.ReactNode }) {
+  const [showBanner, setShowBanner] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
+
+  useEffect(() => {
+    try {
+      if (window.self !== window.top) return;
+    } catch {
+      return;
+    }
+    if (window.location.hostname.includes("id-preview--") || window.location.hostname.includes("lovableproject.com")) return;
+    const dismissedAt = localStorage.getItem("pwa-banner-dismissed");
+    if (dismissedAt && Date.now() - Number(dismissedAt) < 24 * 60 * 60 * 1000) return;
+    if (window.matchMedia("(display-mode: standalone)").matches) return;
+
+    const handler = (e: Event) => {
+      e.preventDefault();
+      setShowBanner(true);
+    };
+    window.addEventListener("beforeinstallprompt", handler);
+
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (isIOS && !window.matchMedia("(display-mode: standalone)").matches) {
+      setShowBanner(true);
+    }
+
+    return () => window.removeEventListener("beforeinstallprompt", handler);
+  }, []);
+
+  const visible = showBanner && !dismissed;
+
+  return (
+    <PWABannerContext.Provider value={visible}>
+      {children}
+    </PWABannerContext.Provider>
+  );
 }
 
 export default function PWAInstallBanner() {
@@ -21,10 +63,8 @@ export default function PWAInstallBanner() {
       return;
     }
     if (window.location.hostname.includes("id-preview--") || window.location.hostname.includes("lovableproject.com")) return;
-
     const dismissedAt = localStorage.getItem("pwa-banner-dismissed");
     if (dismissedAt && Date.now() - Number(dismissedAt) < 24 * 60 * 60 * 1000) return;
-
     if (window.matchMedia("(display-mode: standalone)").matches) return;
 
     const handler = (e: Event) => {
@@ -32,7 +72,6 @@ export default function PWAInstallBanner() {
       setDeferredPrompt(e as BeforeInstallPromptEvent);
       setShowBanner(true);
     };
-
     window.addEventListener("beforeinstallprompt", handler);
 
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
@@ -62,12 +101,12 @@ export default function PWAInstallBanner() {
 
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
-  // Mobile: static banner that pushes content down (rendered above header)
+  // Mobile: fixed banner ABOVE the navbar (top-0, z-[60])
   if (isMobile) {
     return (
-      <div className="w-full bg-primary border-b border-primary/80 shadow-sm">
-        <div className="container mx-auto flex items-center gap-3 py-2.5 px-4">
-          <div className="h-10 w-10 rounded-xl bg-primary flex items-center justify-center shrink-0">
+      <div className="fixed top-0 left-0 right-0 z-[60] bg-primary shadow-sm">
+        <div className="flex items-center gap-3 py-2.5 px-4">
+          <div className="h-10 w-10 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
             <img src={logoWhite} alt="Froiv" className="h-6 w-6 object-contain" />
           </div>
           <div className="flex-1 min-w-0">
@@ -103,39 +142,24 @@ export default function PWAInstallBanner() {
       >
         <X className="h-3.5 w-3.5 text-muted-foreground" />
       </button>
-
       <div className="p-5 flex flex-col items-center text-center gap-3">
         <div className="h-14 w-14 rounded-2xl bg-primary flex items-center justify-center shadow-md">
           <img src={logoWhite} alt="Froiv" className="h-8 w-8 object-contain" />
         </div>
-
         <div>
           <p className="text-[15px] font-semibold text-foreground leading-tight">Instale o Froiv</p>
-          <p className="text-[13px] text-muted-foreground mt-1 leading-snug">
-            Tenha acesso rápido direto da sua área de trabalho
-          </p>
+          <p className="text-[13px] text-muted-foreground mt-1 leading-snug">Tenha acesso rápido direto da sua área de trabalho</p>
         </div>
-
         <div className="flex items-center gap-2 w-full mt-1">
-          <button
-            onClick={handleDismiss}
-            className="flex-1 text-[13px] font-medium text-muted-foreground hover:text-foreground py-2 rounded-lg hover:bg-muted transition-colors"
-          >
-            Agora não
-          </button>
+          <button onClick={handleDismiss} className="flex-1 text-[13px] font-medium text-muted-foreground hover:text-foreground py-2 rounded-lg hover:bg-muted transition-colors">Agora não</button>
           {!isIOS && deferredPrompt && (
-            <button
-              onClick={handleInstall}
-              className="flex-1 bg-primary hover:bg-primary/90 text-white text-[13px] font-semibold py-2 rounded-lg transition-colors flex items-center justify-center gap-1.5"
-            >
+            <button onClick={handleInstall} className="flex-1 bg-primary hover:bg-primary/90 text-white text-[13px] font-semibold py-2 rounded-lg transition-colors flex items-center justify-center gap-1.5">
               <Download className="h-3.5 w-3.5" />
               Instalar
             </button>
           )}
           {isIOS && (
-            <button className="flex-1 bg-primary text-white text-[13px] font-semibold py-2 rounded-lg">
-              Adicionar
-            </button>
+            <button className="flex-1 bg-primary text-white text-[13px] font-semibold py-2 rounded-lg">Adicionar</button>
           )}
         </div>
       </div>
