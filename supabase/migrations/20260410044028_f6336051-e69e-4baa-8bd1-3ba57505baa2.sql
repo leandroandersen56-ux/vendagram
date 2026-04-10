@@ -1,0 +1,1 @@
+UPDATE listings SET seller_id = 'b78c563a-41eb-4933-9b4d-b53e3cd62dfb' WHERE id = 'b8c62b2a-7931-4398-8bd4-a4005eeb8ae5';
