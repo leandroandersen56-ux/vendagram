@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
@@ -15,6 +15,7 @@ import ListingCard from "@/components/ListingCard";
 import PlatformIcon from "@/components/PlatformIcon";
 import { PLATFORMS, MOCK_LISTINGS, type Listing } from "@/lib/mock-data";
 import { supabase } from "@/integrations/supabase/client";
+import useEmblaCarousel from "embla-carousel-react";
 
 import bannerHero1 from "@/assets/banners/banner-hero-1.jpg";
 import bannerHero2 from "@/assets/banners/banner-hero-2.jpg";
@@ -61,6 +62,53 @@ function SkeletonCard() {
         <div className="h-3 skeleton-shimmer rounded w-2/3" />
         <div className="h-4 skeleton-shimmer rounded w-1/2 mt-3" />
       </div>
+    </div>
+  );
+}
+function DestaquesCarousel({ items, loading }: { items: Listing[]; loading: boolean }) {
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    align: "start",
+    containScroll: "trimSnaps",
+    dragFree: true,
+    slidesToScroll: 2,
+  });
+
+  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
+
+  const slides = loading ? Array(8).fill(null) : items;
+
+  return (
+    <div className="relative">
+      <div className="overflow-hidden fade-edges -mx-1 px-1" ref={emblaRef}>
+        <div className="flex gap-3 pb-2">
+          {slides.map((listing, i) =>
+            listing ? (
+              <div key={listing.id} className="flex-shrink-0 min-w-0 w-[calc(50%-6px)] sm:w-[180px] md:w-[200px]">
+                <ListingCard listing={listing} />
+              </div>
+            ) : (
+              <div key={i} className="flex-shrink-0 min-w-0 w-[calc(50%-6px)] sm:w-[180px] md:w-[200px]">
+                <SkeletonCard />
+              </div>
+            )
+          )}
+        </div>
+      </div>
+      <button
+        onClick={scrollPrev}
+        className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition"
+        aria-label="Anterior"
+      >
+        <ChevronLeft className="h-4 w-4 text-txt-primary" />
+      </button>
+      <button
+        onClick={scrollNext}
+        className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition"
+        aria-label="Próximo"
+      >
+        <ChevronRight className="h-4 w-4 text-txt-primary" />
+      </button>
     </div>
   );
 }
@@ -378,35 +426,7 @@ export default function Index() {
                 🔥 HOT
               </span>
             </div>
-            <div className="relative">
-              <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 -mx-1 px-1 snap-x snap-mandatory fade-edges" id="destaques-scroll">
-                {(loading ? Array(8).fill(null) : shuffled.slice(0, 10)).map((listing, i) =>
-                  listing ? (
-                    <div key={listing.id} className="flex-shrink-0 w-[calc(50%-6px)] sm:w-[180px] md:w-[200px] snap-start">
-                      <ListingCard listing={listing} />
-                    </div>
-                  ) : (
-                    <div key={i} className="flex-shrink-0 w-[calc(50%-6px)] sm:w-[180px] md:w-[200px]">
-                      <SkeletonCard />
-                    </div>
-                  )
-                )}
-              </div>
-              <button
-                onClick={() => document.getElementById('destaques-scroll')?.scrollBy({ left: -300, behavior: 'smooth' })}
-                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition"
-                aria-label="Anterior"
-              >
-                <ChevronLeft className="h-4 w-4 text-txt-primary" />
-              </button>
-              <button
-                onClick={() => document.getElementById('destaques-scroll')?.scrollBy({ left: 300, behavior: 'smooth' })}
-                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition"
-                aria-label="Próximo"
-              >
-                <ChevronRight className="h-4 w-4 text-txt-primary" />
-              </button>
-            </div>
+            <DestaquesCarousel items={loading ? [] : shuffled.slice(0, 10)} loading={loading} />
           </div>
         </section>
 
