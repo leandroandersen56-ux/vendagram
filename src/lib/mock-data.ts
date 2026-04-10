@@ -75,21 +75,6 @@ export const PLATFORMS = [
 
 export const MOCK_LISTINGS: Listing[] = [
   {
-    id: '1',
-    sellerId: 'u1',
-    sellerName: 'GameMaster99',
-    sellerRating: 4.9,
-    sellerSales: 23,
-    platform: 'free_fire',
-    title: 'Conta Free Fire Nível 75 - Full Skin',
-    description: 'Conta com todas as skins raras, incluindo Angelical e Lendárias. Level 75, mais de 200 diamantes. Rank Heroico.',
-    price: 350,
-    status: 'active',
-    screenshots: [ssFreefire],
-    fields: { 'Nível': 75, 'Diamantes': 200, 'Skins': 45, 'Rank': 'Heroico', 'Facebook Vinculado': true },
-    createdAt: '2024-03-20',
-  },
-  {
     id: '2',
     sellerId: 'u2',
     sellerName: 'SocialSeller',
