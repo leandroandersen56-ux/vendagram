@@ -1083,6 +1083,8 @@ export type Database = {
         | "roblox"
         | "clash_royale"
         | "other"
+        | "kwai"
+        | "twitter"
       listing_status: "draft" | "active" | "sold" | "removed"
       transaction_status:
         | "pending_payment"
@@ -1234,6 +1236,8 @@ export const Constants = {
         "roblox",
         "clash_royale",
         "other",
+        "kwai",
+        "twitter",
       ],
       listing_status: ["draft", "active", "sold", "removed"],
       transaction_status: [
