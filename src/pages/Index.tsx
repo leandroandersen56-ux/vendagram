@@ -6,7 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Input } from "@/components/ui/input";
 import {
   ArrowRight, Search, Loader2, Shield, CheckCircle2, Clock, Zap,
-  Gamepad2, Smartphone, ChevronLeft, ChevronRight, SlidersHorizontal,
+  Gamepad2, ChevronLeft, ChevronRight, SlidersHorizontal,
   Flame
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
