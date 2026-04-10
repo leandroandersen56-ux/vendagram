@@ -48,12 +48,12 @@ const BANNERS = [
 ];
 
 const QUICK_CATEGORIES = [
-  { id: "free_fire", label: "Jogos", icon: Gamepad2, bg: "bg-primary-light", color: "text-primary" },
-  { id: "instagram", label: "Instagram", icon: () => <PlatformIcon platformId="instagram" size={22} />, bg: "bg-[#FFE4F0]", color: "text-[#E1306C]" },
-  { id: "tiktok", label: "TikTok", icon: () => <PlatformIcon platformId="tiktok" size={22} />, bg: "bg-[#F0F0F0]", color: "text-[#000]" },
   { id: "youtube", label: "YouTube", icon: () => <PlatformIcon platformId="youtube" size={22} />, bg: "bg-[#FFE8E8]", color: "text-[#FF0000]" },
-  { id: "valorant", label: "Valorant", icon: () => <PlatformIcon platformId="valorant" size={22} />, bg: "bg-[#FFE8E8]", color: "text-[#FF4655]" },
-  { id: "fortnite", label: "Fortnite", icon: () => <PlatformIcon platformId="fortnite" size={22} />, bg: "bg-[#F0E8FF]", color: "text-[#9D4DBB]" },
+  { id: "instagram", label: "Instagram", icon: () => <PlatformIcon platformId="instagram" size={22} />, bg: "bg-[#FFE4F0]", color: "text-[#E1306C]" },
+  { id: "facebook", label: "Facebook", icon: () => <PlatformIcon platformId="facebook" size={22} />, bg: "bg-[#E8F0FE]", color: "text-[#1877F2]" },
+  { id: "tiktok", label: "TikTok", icon: () => <PlatformIcon platformId="tiktok" size={22} />, bg: "bg-[#F0F0F0]", color: "text-[#000]" },
+  { id: "free_fire", label: "Free Fire", icon: () => <PlatformIcon platformId="free_fire" size={22} />, bg: "bg-[#FFF3E0]", color: "text-[#FF6F00]" },
+  { id: "valorant", label: "Jogos", icon: Gamepad2, bg: "bg-primary-light", color: "text-primary" },
 ];
 
 function SkeletonCard() {
