@@ -129,7 +129,8 @@ export default function ListingDetail() {
   const allImages = screenshots;
 
   const handleShare = () => {
-    const message = `🎮 ${listing.title} por ${formatBRL(listing.price)} 🔒 Compra segura: ${window.location.origin}/listing/${listing.id}`;
+    const ogUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/og-listing?id=${listing.id}`;
+    const message = `🎮 ${listing.title} por ${formatBRL(listing.price)} 🔒 Compra segura: ${ogUrl}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
   };
 
