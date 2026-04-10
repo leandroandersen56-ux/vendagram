@@ -72,18 +72,35 @@ Deno.serve(async (req) => {
 
     if (action === 'update_profile') {
       const { user_id, updates } = body;
-      const { data, error } = await supabase
+      // Try update first
+      const { data: existing } = await supabase
         .from('profiles')
-        .update(updates)
+        .select('user_id')
         .eq('user_id', user_id)
-        .select()
-        .single();
+        .maybeSingle();
 
-      if (error) throw error;
-
-      return new Response(JSON.stringify({ profile: data }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      if (existing) {
+        const { data, error } = await supabase
+          .from('profiles')
+          .update(updates)
+          .eq('user_id', user_id)
+          .select()
+          .single();
+        if (error) throw error;
+        return new Response(JSON.stringify({ profile: data }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      } else {
+        const { data, error } = await supabase
+          .from('profiles')
+          .insert({ user_id, ...updates })
+          .select()
+          .single();
+        if (error) throw error;
+        return new Response(JSON.stringify({ profile: data }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
     }
 
     return new Response(JSON.stringify({ error: 'Invalid action' }), {
