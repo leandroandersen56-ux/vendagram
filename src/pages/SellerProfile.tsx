@@ -8,6 +8,7 @@ import ListingCard from "@/components/ListingCard";
 import SellerProfileHeader from "@/components/seller/SellerProfileHeader";
 import SellerReviewsList from "@/components/seller/SellerReviewsList";
 import { supabase } from "@/integrations/supabase/client";
+import { fetchSellerProfile } from "@/lib/fetch-seller-profile";
 import type { Listing } from "@/lib/mock-data";
 
 export default function SellerProfile() {
@@ -21,11 +22,7 @@ export default function SellerProfile() {
   useEffect(() => {
     async function load() {
       setLoading(true);
-      const { data: profile } = await (supabase
-        .from("public_profiles" as any)
-        .select("*")
-        .eq("username", username)
-        .maybeSingle() as any);
+      const profile = await fetchSellerProfile({ username: username! });
 
       if (!profile) { setLoading(false); return; }
       setSeller(profile);
