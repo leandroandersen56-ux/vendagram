@@ -672,10 +672,10 @@ export default function Index() {
             <p className="text-[11px] text-txt-hint text-center mb-5">Compre contas digitais com segurança em 4 passos</p>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {[
-                { icon: <Search className="h-5 w-5" />, title: "Encontre", desc: "Busque a conta ideal no marketplace com filtros avançados", num: "1", color: "bg-blue-500" },
-                { icon: <Shield className="h-5 w-5" />, title: "Compre", desc: "Pague com segurança via sistema Escrow protegido", num: "2", color: "bg-emerald-500" },
-                { icon: <CheckCircle2 className="h-5 w-5" />, title: "Verifique", desc: "Acesse e confira a conta antes de liberar o pagamento", num: "3", color: "bg-amber-500" },
-                { icon: <Zap className="h-5 w-5" />, title: "Pronto!", desc: "Pagamento liberado ao vendedor automaticamente", num: "4", color: "bg-purple-500" },
+                { icon: <Search className="h-5 w-5" />, title: "Encontre", desc: "Busque a conta ideal no marketplace com filtros avançados", num: "1", color: "bg-primary" },
+                { icon: <Shield className="h-5 w-5" />, title: "Compre", desc: "Pague com segurança via sistema Escrow protegido", num: "2", color: "bg-primary" },
+                { icon: <CheckCircle2 className="h-5 w-5" />, title: "Verifique", desc: "Acesse e confira a conta antes de liberar o pagamento", num: "3", color: "bg-primary" },
+                { icon: <Zap className="h-5 w-5" />, title: "Pronto!", desc: "Pagamento liberado ao vendedor automaticamente", num: "4", color: "bg-primary" },
               ].map((step, i) => (
                 <motion.div
                   key={step.title}
