@@ -45,7 +45,6 @@ const GAME_CATEGORIES = [
 const BANNERS = [
   { img: bannerHero1, title: "Contas & Perfis Digitais", subtitle: "Redes sociais e jogos\ncom segurança e escrow", cta: "Explorar", link: "/marketplace", objectPosition: "right 40%" },
   { img: bannerHero2, title: "Contas Free Fire", subtitle: "Skins raras, ranks altos\ne contas completas", cta: "Ver contas", link: "/marketplace?type=games", objectPosition: "right 30%" },
-  { img: bannerHero3, title: "Contas TikTok", subtitle: "Perfis com seguidores reais\ne lives liberadas", cta: "Explorar", link: "/marketplace?type=social", objectPosition: "right 35%" },
 ];
 
 const QUICK_CATEGORIES = [
