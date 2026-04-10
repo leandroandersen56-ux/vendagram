@@ -52,6 +52,7 @@ const QUICK_CATEGORIES = [
   { id: "tiktok", label: "TikTok", icon: () => <PlatformIcon platformId="tiktok" size={22} />, bg: "bg-[#F0F0F0]", color: "text-[#000]" },
   { id: "free_fire", label: "Free Fire", icon: () => <PlatformIcon platformId="free_fire" size={22} />, bg: "bg-[#FFF3E0]", color: "text-[#FF6F00]" },
   { id: "kwai", label: "Kwai", icon: () => <PlatformIcon platformId="kwai" size={22} />, bg: "bg-[#FFF0EB]", color: "text-[#FF4906]" },
+  { id: "twitter", label: "Twitter / X", icon: () => <PlatformIcon platformId="twitter" size={22} />, bg: "bg-[#F0F0F0]", color: "text-[#000]" },
   { id: "valorant", label: "Jogos", icon: Gamepad2, bg: "bg-primary-light", color: "text-primary" },
 ];
 
