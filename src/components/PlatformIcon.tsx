@@ -1,5 +1,6 @@
 import React from "react";
 import freefireLogo from "@/assets/freefire-logo.png";
+import kwaiLogo from "@/assets/kwai-icon.svg";
 interface PlatformIconProps {
   platformId: string;
   size?: number;
@@ -73,10 +74,7 @@ const icons: Record<string, (s: number) => React.ReactNode> = {
   ),
 
   kwai: (s) => (
-    <svg width={s} height={s} viewBox="0 0 24 24" fill="none">
-      <rect width="24" height="24" rx="6" fill="#FF4906"/>
-      <path d="M12 4c-1.1 0-2 .9-2 2v3.17L7.12 6.29a1.5 1.5 0 1 0-2.12 2.12L8.59 12 5 15.59a1.5 1.5 0 1 0 2.12 2.12L10 14.83V18c0 1.1.9 2 2 2s2-.9 2-2v-3.17l2.88 2.88a1.5 1.5 0 1 0 2.12-2.12L15.41 12 19 8.41a1.5 1.5 0 1 0-2.12-2.12L14 9.17V6c0-1.1-.9-2-2-2z" fill="#fff"/>
-    </svg>
+    <img src={kwaiLogo} width={s * 1.2} height={s * 1.2} alt="Kwai" style={{ objectFit: "contain" }} />
   ),
 
   twitter: (s) => (
