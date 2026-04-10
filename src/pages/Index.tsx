@@ -741,7 +741,7 @@ export default function Index() {
                 {[
                   { icon: <Shield className="h-5 w-5" />, value: "100%", label: "Escrow Seguro" },
                   { icon: <Clock className="h-5 w-5" />, value: "24h", label: "Garantia" },
-                  { icon: <CheckCircle2 className="h-5 w-5" />, value: "10%", label: "Taxa Fixa" },
+                  { icon: <CheckCircle2 className="h-5 w-5" />, value: "5%", label: "Taxa Fixa" },
                 ].map((stat) => (
                   <div key={stat.label} className="flex flex-col items-center gap-2 text-center">
                     <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">{stat.icon}</div>

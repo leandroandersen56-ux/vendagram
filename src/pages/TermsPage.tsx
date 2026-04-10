@@ -27,7 +27,7 @@ export default function TermsPage() {
               <li>O vendedor envia as credenciais de acesso da conta.</li>
               <li>O comprador tem 24 horas para verificar e confirmar o recebimento.</li>
               <li>Após a confirmação (ou expiração do prazo sem disputa), o valor é liberado ao vendedor.</li>
-              <li>A Froiv retém uma taxa de 10% sobre o valor da transação.</li>
+              <li><li>A Froiv retém uma taxa de 5% sobre o valor da transação.</li></li>
             </ul>
           </section>
 
@@ -62,7 +62,7 @@ export default function TermsPage() {
 
           <section>
             <h2 className="text-lg font-semibold text-foreground">6. Pagamentos e Taxas</h2>
-            <p>A Froiv cobra uma taxa fixa de <strong>10%</strong> sobre cada transação concluída, descontada automaticamente do valor recebido pelo vendedor. Não há mensalidade ou taxa de anúncio.</p>
+            <p><p>A Froiv cobra uma taxa fixa de <strong>5%</strong> sobre cada transação concluída, descontada automaticamente do valor recebido pelo vendedor. Não há mensalidade ou taxa de anúncio.</p>, descontada automaticamente do valor recebido pelo vendedor. Não há mensalidade ou taxa de anúncio.</p>
             <p>Os métodos de pagamento aceitos são: Pix (aprovação instantânea) e Cartão de Crédito (parcelamento em até 12x).</p>
           </section>
 

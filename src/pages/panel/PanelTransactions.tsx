@@ -144,7 +144,7 @@ export default function PanelTransactions() {
                   <span className="text-foreground font-medium">{formatBRL(selectedTx.amount)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Taxa (10%)</span>
+                  <span className="text-muted-foreground">Taxa (5%)</span>
                   <span className="text-muted-foreground">{formatBRL(selectedTx.platform_fee)}</span>
                 </div>
                 <div className="flex justify-between text-sm">

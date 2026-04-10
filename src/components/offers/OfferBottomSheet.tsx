@@ -25,7 +25,7 @@ export default function OfferBottomSheet({ open, onClose, listing, onSent }: Pro
   const price = Number(listing.price);
   const discount = mask.value > 0 ? Math.round((1 - mask.value / price) * 100) : 0;
   const savings = price - mask.value;
-  const fee = mask.value * 0.10;
+  const fee = mask.value * 0.05;
   const total = mask.value;
   const isValid = mask.value > 0 && mask.value < price;
   const isLowOffer = discount > 40;
