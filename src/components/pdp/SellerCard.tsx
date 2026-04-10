@@ -1,4 +1,4 @@
-import { Star, MessageCircle, User, CheckCircle2, Package, ShieldCheck } from "lucide-react";
+import { Star, MessageCircle, User, CheckCircle2, Package, ShieldCheck, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface SellerCardProps {
@@ -14,89 +14,67 @@ interface SellerCardProps {
 export default function SellerCard({ name, rating, sales, avatarUrl, isVerified, onMessage, onViewProfile }: SellerCardProps) {
   const initial = name?.[0]?.toUpperCase() || "V";
   const level = isVerified ? (sales >= 20 ? "Platinum" : sales >= 10 ? "Gold" : sales >= 5 ? "Silver" : null) : null;
-  const levelColors: Record<string, string> = {
-    Platinum: "bg-amber-50 text-amber-700 border-amber-200",
-    Gold: "bg-yellow-50 text-yellow-700 border-yellow-200",
-    Silver: "bg-gray-50 text-gray-500 border-gray-200",
-  };
-
-  // Reputation bar segments
-  const repLevel = sales >= 20 ? 5 : sales >= 15 ? 4 : sales >= 10 ? 3 : sales >= 5 ? 2 : 1;
+  const positiveRate = Math.min(98, 85 + Math.floor(sales * 0.5));
 
   return (
-    <div className="rounded-xl border border-[hsl(var(--border))] bg-white p-4">
+    <div className="rounded-xl border border-border bg-card p-4">
+      {/* Seller info row */}
       <div className="flex items-center gap-3 mb-3">
         {avatarUrl ? (
-          <img src={avatarUrl} alt={name} className="h-12 w-12 rounded-full object-cover" />
+          <img src={avatarUrl} alt={name} className="h-11 w-11 rounded-full object-cover" />
         ) : (
-          <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold text-base">
+          <div className="h-11 w-11 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold text-sm">
             {initial}
           </div>
         )}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5">
-            <p className="text-sm font-semibold text-[hsl(var(--txt-primary))] truncate">{name}</p>
-            {isVerified && (
-              <ShieldCheck className="h-4 w-4 text-primary flex-shrink-0" />
-            )}
-            {level && (
-              <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded border ${levelColors[level]}`}>
-                {level}
-              </span>
-            )}
+            <p className="text-sm font-semibold text-foreground truncate">{name}</p>
+            {isVerified && <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />}
           </div>
-          <div className="flex items-center gap-1.5 mt-0.5">
-            <Star className="h-3.5 w-3.5 text-amber-400 fill-amber-400" />
-            <span className="text-[13px] font-semibold text-primary">{rating.toFixed(1)}</span>
-            <span className="text-[12px] text-[hsl(var(--txt-hint))]">({sales} vendas)</span>
-          </div>
+          <p className="text-xs text-muted-foreground">+{sales} vendas</p>
         </div>
       </div>
 
-      {/* Reputation bar */}
-      <div className="flex gap-0.5 mb-3">
-        {[1, 2, 3, 4, 5].map((seg) => (
-          <div
-            key={seg}
-            className={`h-1 flex-1 rounded-full ${
-              seg <= repLevel
-                ? seg <= 2 ? "bg-red-400" : seg <= 3 ? "bg-yellow-400" : "bg-[hsl(var(--success))]"
-                : "bg-[hsl(var(--border))]"
-            }`}
-          />
-        ))}
-      </div>
+      {/* Level badge */}
+      {level && (
+        <div className={`inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded-full border mb-3 ${
+          level === "Platinum" ? "bg-primary/10 text-primary border-primary/20" :
+          level === "Gold" ? "bg-amber-50 text-amber-700 border-amber-200" :
+          "bg-muted text-muted-foreground border-border"
+        }`}>
+          <Award className="h-3 w-3" />
+          Froiv {level}
+        </div>
+      )}
 
       {/* Stats */}
-      <div className="space-y-1.5 mb-4 text-[12px] text-[hsl(var(--txt-secondary))]">
+      <div className="flex items-center gap-4 text-xs text-muted-foreground mb-3 pb-3 border-b border-border">
+        <span className="flex items-center gap-1">
+          <Star className="h-3.5 w-3.5 text-[#FFB800] fill-[#FFB800]" />
+          <span className="font-semibold text-foreground">{rating.toFixed(1)}</span>
+        </span>
+        <span>{positiveRate}% positivas</span>
+      </div>
+
+      {/* Trust signals */}
+      <div className="space-y-1.5 mb-4 text-[12px] text-muted-foreground">
         <div className="flex items-center gap-2">
-          <CheckCircle2 className="h-3.5 w-3.5 text-[hsl(var(--success))]" />
-          <span>Responde em menos de 1h</span>
+          <ShieldCheck className="h-3.5 w-3.5 text-[hsl(var(--success))]" />
+          <span>Compra Garantida via Escrow</span>
         </div>
         <div className="flex items-center gap-2">
           <Package className="h-3.5 w-3.5 text-primary" />
-          <span>{Math.min(98, 85 + Math.floor(sales * 0.5))}% de avaliações positivas</span>
+          <span>Entrega imediata após pagamento</span>
         </div>
       </div>
 
       {/* Actions */}
       <div className="grid grid-cols-2 gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          className="text-xs rounded-lg border-[hsl(var(--border))]"
-          onClick={onMessage}
-          aria-label="Enviar mensagem ao vendedor"
-        >
+        <Button variant="outline" size="sm" className="text-xs rounded-lg" onClick={onMessage} aria-label="Enviar mensagem ao vendedor">
           <MessageCircle className="h-3.5 w-3.5 mr-1" /> Mensagem
         </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          className="text-xs rounded-lg border-[hsl(var(--border))]"
-          onClick={onViewProfile}
-          aria-label="Ver perfil do vendedor"
-        >
+        <Button variant="outline" size="sm" className="text-xs rounded-lg" onClick={onViewProfile} aria-label="Ver perfil do vendedor">
           <User className="h-3.5 w-3.5 mr-1" /> Ver Perfil
         </Button>
       </div>
