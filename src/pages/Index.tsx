@@ -801,7 +801,7 @@ export default function Index() {
               <p>
                 Encontre as melhores ofertas para <strong>comprar conta Instagram</strong>, <strong>comprar conta TikTok</strong>, <strong>comprar conta Free Fire</strong>, 
                 <strong>comprar conta Valorant</strong>, <strong>comprar conta Fortnite</strong>, <strong>comprar conta Roblox</strong>, <strong>comprar conta YouTube</strong> e 
-                <strong>comprar conta Facebook</strong>. Contas verificadas, com seguidores reais, skins raras e itens exclusivos.
+                <strong>comprar conta Facebook</strong> e <strong>comprar conta Kwai</strong>. Contas verificadas, com seguidores reais, skins raras e itens exclusivos.
               </p>
               <p>
                 Aceite pagamentos via <strong>Pix</strong> e cartão de crédito. Processo simples: busque, pague, verifique e pronto. 
