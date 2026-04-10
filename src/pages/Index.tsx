@@ -379,35 +379,7 @@ export default function Index() {
                 🔥 HOT
               </span>
             </div>
-            <div className="relative">
-              <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 -mx-1 px-1 snap-x snap-mandatory fade-edges" id="destaques-scroll">
-                {(loading ? Array(8).fill(null) : shuffled.slice(0, 10)).map((listing, i) =>
-                  listing ? (
-                    <div key={listing.id} className="flex-shrink-0 w-[calc(50%-6px)] sm:w-[180px] md:w-[200px] snap-start">
-                      <ListingCard listing={listing} />
-                    </div>
-                  ) : (
-                    <div key={i} className="flex-shrink-0 w-[calc(50%-6px)] sm:w-[180px] md:w-[200px]">
-                      <SkeletonCard />
-                    </div>
-                  )
-                )}
-              </div>
-              <button
-                onClick={() => document.getElementById('destaques-scroll')?.scrollBy({ left: -300, behavior: 'smooth' })}
-                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition"
-                aria-label="Anterior"
-              >
-                <ChevronLeft className="h-4 w-4 text-txt-primary" />
-              </button>
-              <button
-                onClick={() => document.getElementById('destaques-scroll')?.scrollBy({ left: 300, behavior: 'smooth' })}
-                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 z-10 h-8 w-8 rounded-full bg-card shadow-md border border-border flex items-center justify-center hover:bg-muted transition"
-                aria-label="Próximo"
-              >
-                <ChevronRight className="h-4 w-4 text-txt-primary" />
-              </button>
-            </div>
+            <DestaquesCarousel items={loading ? [] : shuffled.slice(0, 10)} loading={loading} />
           </div>
         </section>
 
