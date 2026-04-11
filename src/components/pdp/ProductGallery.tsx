@@ -176,15 +176,39 @@ export default function ProductGallery({ images, title, category, verified, isDe
                 (e.currentTarget as any)._touchStartY = touch.clientY;
               }}
               onTouchEnd={(e) => {
-                const startX = (e.currentTarget as any)._touchStartX;
-                const startY = (e.currentTarget as any)._touchStartY;
-                if (startX == null) return;
-                const touch = e.changedTouches[0];
-                const dx = touch.clientX - startX;
-                const dy = touch.clientY - startY;
-                if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
-                  if (dx < 0) next();
-                  else prev();
+                const now = Date.now();
+                const timeSinceLastTap = now - lastTapRef.current;
+
+                // Double-tap zoom
+                if (timeSinceLastTap < 300) {
+                  e.preventDefault();
+                  if (zoomed) {
+                    setZoomed(false);
+                  } else {
+                    const touch = e.changedTouches[0];
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    const x = ((touch.clientX - rect.left) / rect.width) * 100;
+                    const y = ((touch.clientY - rect.top) / rect.height) * 100;
+                    setZoomOrigin({ x, y });
+                    setZoomed(true);
+                  }
+                  lastTapRef.current = 0;
+                  return;
+                }
+                lastTapRef.current = now;
+
+                // Swipe navigation (only when not zoomed)
+                if (!zoomed) {
+                  const startX = (e.currentTarget as any)._touchStartX;
+                  const startY = (e.currentTarget as any)._touchStartY;
+                  if (startX == null) return;
+                  const touch = e.changedTouches[0];
+                  const dx = touch.clientX - startX;
+                  const dy = touch.clientY - startY;
+                  if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+                    if (dx < 0) next();
+                    else prev();
+                  }
                 }
               }}
             >
@@ -193,7 +217,11 @@ export default function ProductGallery({ images, title, category, verified, isDe
                   key={selected}
                   src={images[selected]}
                   alt={`${title} - Imagem ${selected + 1}`}
-                  className="max-w-full max-h-full object-contain px-2"
+                  className="max-w-full max-h-full object-contain px-2 transition-transform duration-300 ease-out"
+                  style={{
+                    transform: zoomed ? 'scale(2.5)' : 'scale(1)',
+                    transformOrigin: zoomed ? `${zoomOrigin.x}% ${zoomOrigin.y}%` : 'center center',
+                  }}
                   custom={direction}
                   initial={{ opacity: 0, x: direction > 0 ? 200 : -200 }}
                   animate={{ opacity: 1, x: 0 }}
