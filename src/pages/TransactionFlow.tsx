@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { MOCK_LISTINGS, formatBRL, getPlatformSteps, getPlatform } from "@/lib/mock-data";
+import { formatBRL, getPlatformSteps, getPlatform } from "@/lib/mock-data";
 import { useToast } from "@/hooks/use-toast";
 
 type TxStatus = 'pending_payment' | 'credentials_pending' | 'transfer_in_progress' | 'completed';
@@ -30,7 +30,7 @@ const STATUS_CONFIG: Record<TxStatus, { label: string; color: string; icon: Reac
 export default function TransactionFlow() {
   const { listingId } = useParams();
   const { toast } = useToast();
-  const listing = MOCK_LISTINGS.find((l) => l.id === listingId);
+  const listing = null; // MOCK_LISTINGS removed — this page needs DB integration
   const platform = listing ? getPlatform(listing.platform) : null;
   const steps = listing ? getPlatformSteps(listing.platform) : [];
 

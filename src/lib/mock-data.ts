@@ -75,7 +75,7 @@ export const PLATFORMS = [
   { id: 'other', name: 'Outros', color: '#7C3AED' },
 ];
 
-export const MOCK_LISTINGS: Listing[] = [];
+
 
 export const SOCIAL_MEDIA_STEPS = [
   'Recebi o login e senha da conta',

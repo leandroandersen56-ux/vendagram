@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { formatBRL, getPlatform, MOCK_LISTINGS } from "@/lib/mock-data";
+import { formatBRL, getPlatform } from "@/lib/mock-data";
 import PlatformIcon from "@/components/PlatformIcon";
 import { supabase } from "@/integrations/supabase/client";
 import { fetchSellerProfile } from "@/lib/fetch-seller-profile";
@@ -50,22 +50,10 @@ export default function ListingDetail() {
         .eq("id", id)
         .maybeSingle();
 
-      if (data) {
+      if (!error && data) {
         setListing(data);
         const profile = await fetchSellerProfile({ user_id: data.seller_id });
         if (profile) setSeller(profile);
-      } else {
-        // Listing not found in DB, try mock data as fallback
-        const mock = MOCK_LISTINGS.find((m) => m.id === id);
-        if (mock) {
-          setListing({
-            id: mock.id, seller_id: mock.sellerId, category: mock.platform,
-            title: mock.title, description: mock.description, price: mock.price,
-            status: mock.status, screenshots: mock.screenshots, highlights: mock.fields,
-          });
-          setSeller({ name: mock.sellerName, avg_rating: mock.sellerRating, total_sales: mock.sellerSales });
-        }
-        // If neither DB nor mock found, listing stays null → "not found" screen
       }
       setLoading(false);
     }
