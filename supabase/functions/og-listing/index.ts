@@ -7,19 +7,6 @@ const corsHeaders = {
 
 const DEFAULT_OG_IMAGE = "https://froiv.com/og-image.jpg";
 
-const PLATFORM_OG_IMAGES: Record<string, string> = {
-  instagram: "https://froiv.com/og-image.jpg",
-  tiktok: "https://froiv.com/og-image.jpg",
-  youtube: "https://froiv.com/og-image.jpg",
-  facebook: "https://froiv.com/og-image.jpg",
-  free_fire: "https://froiv.com/og-image.jpg",
-  valorant: "https://froiv.com/og-image.jpg",
-  fortnite: "https://froiv.com/og-image.jpg",
-  roblox: "https://froiv.com/og-image.jpg",
-  kwai: "https://froiv.com/og-image.jpg",
-  twitter: "https://froiv.com/og-image.jpg",
-};
-
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -62,7 +49,7 @@ Deno.serve(async (req) => {
     const firstScreenshot = listing.screenshots && listing.screenshots.length > 0
       ? listing.screenshots.find((s: string) => typeof s === "string" && s.trim().length > 0)
       : null;
-    const image = firstScreenshot || PLATFORM_OG_IMAGES[listing.category] || DEFAULT_OG_IMAGE;
+    const image = firstScreenshot || DEFAULT_OG_IMAGE;
 
     const listingUrl = `https://froiv.com/listing/${listing.id}`;
 
@@ -87,6 +74,7 @@ Deno.serve(async (req) => {
   <meta name="twitter:title" content="${escapeHtml(title)}">
   <meta name="twitter:description" content="${escapeHtml(description)}">
   <meta name="twitter:image" content="${escapeHtml(image)}">
+  <link rel="canonical" href="${listingUrl}">
   <meta http-equiv="refresh" content="0;url=${listingUrl}">
 </head>
 <body>
@@ -95,11 +83,15 @@ Deno.serve(async (req) => {
 </html>`;
 
     return new Response(html, {
-      headers: {
-        "Content-Type": "text/html; charset=utf-8",
-        "Cache-Control": "public, max-age=3600",
-        ...corsHeaders,
-      },
+      status: 200,
+      headers: new Headers({
+        "content-type": "text/html; charset=utf-8",
+        "cache-control": "public, max-age=3600",
+        "content-security-policy": "default-src * 'unsafe-inline'; img-src *",
+        "access-control-allow-origin": "*",
+        "access-control-allow-headers": "authorization, x-client-info, apikey, content-type",
+        "x-content-type-options": "nosniff",
+      }),
     });
   } catch (err) {
     console.error("OG listing error:", err);

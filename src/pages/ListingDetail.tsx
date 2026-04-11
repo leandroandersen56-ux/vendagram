@@ -118,7 +118,7 @@ export default function ListingDetail() {
   const screenshots = (listing.screenshots || []).filter((s: string) => s);
   const allImages = screenshots;
 
-  const officialUrl = `https://froiv.com/listing/${listing.id}`;
+  const officialUrl = `https://www.froiv.com/listing/${listing.id}`;
   const sharePreviewUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/og-listing?id=${listing.id}`;
 
   const handleShare = () => {
