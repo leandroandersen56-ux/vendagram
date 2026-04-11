@@ -112,7 +112,8 @@ export default function ProductGallery({ images, title, category, verified, isDe
                 />
               ))}
             </div>
-          )}
+          </div>
+          </div>
         </div>
 
         {/* Thumbnails (desktop) */}
