@@ -50,6 +50,21 @@ export default function ProductGallery({ images, title, category, verified, isDe
         <div
           className="relative rounded-xl overflow-hidden bg-card group cursor-zoom-in p-2 ring-1 ring-border/40 shadow-[0_2px_8px_rgba(0,0,0,0.14)]"
           onClick={() => setLightbox(true)}
+          onTouchStart={(e) => {
+            mainTouchRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+          }}
+          onTouchEnd={(e) => {
+            if (!mainTouchRef.current || images.length <= 1) return;
+            const dx = e.changedTouches[0].clientX - mainTouchRef.current.x;
+            const dy = e.changedTouches[0].clientY - mainTouchRef.current.y;
+            if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+              e.preventDefault();
+              if (dx < 0) next(); else prev();
+              // Prevent lightbox from opening on swipe
+              e.stopPropagation();
+            }
+            mainTouchRef.current = null;
+          }}
         >
           <div className="rounded-lg overflow-hidden relative">
             <AnimatePresence mode="popLayout" initial={false} custom={direction}>
