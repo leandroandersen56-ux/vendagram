@@ -46,6 +46,7 @@ export default function ProductGallery({ images, title, category, verified, isDe
           className="relative rounded-xl overflow-hidden bg-card group cursor-zoom-in p-2 ring-1 ring-border/40 shadow-[0_2px_8px_rgba(0,0,0,0.14)]"
           onClick={() => setLightbox(true)}
         >
+          <div className="rounded-lg overflow-hidden relative">
           <AnimatePresence mode="popLayout" initial={false} custom={direction}>
             <motion.img
               key={selected}
