@@ -4,16 +4,14 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
   ArrowDownRight, ArrowUpRight, Wallet, Clock, Loader2, Inbox,
-  ArrowDown, ArrowRight, ArrowUp, ScanLine,
+  ArrowDown, ArrowUp,
   RefreshCcw, Send, Repeat
 } from "lucide-react";
 import { formatBRL } from "@/lib/mock-data";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import DepositModal from "@/components/wallet/DepositModal";
-import TransferModal from "@/components/wallet/TransferModal";
 import WithdrawModal from "@/components/wallet/WithdrawModal";
-import QRScannerModal from "@/components/wallet/QRScannerModal";
 import BalanceChart from "@/components/wallet/BalanceChart";
 
 type HistoryItem = {
@@ -70,9 +68,7 @@ function getStatusColor(status: string) {
 export default function PanelWallet() {
   const { user } = useAuth();
   const [showDeposit, setShowDeposit] = useState(false);
-  const [showTransfer, setShowTransfer] = useState(false);
   const [showWithdraw, setShowWithdraw] = useState(false);
-  const [showQR, setShowQR] = useState(false);
   const [activeFilter, setActiveFilter] = useState<FilterTab>("all");
   const [loading, setLoading] = useState(true);
 
