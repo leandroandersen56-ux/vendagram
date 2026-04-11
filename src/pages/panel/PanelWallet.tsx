@@ -271,9 +271,7 @@ export default function PanelWallet() {
       </motion.div>
 
       <DepositModal open={showDeposit} onClose={() => setShowDeposit(false)} />
-      <TransferModal open={showTransfer} onClose={() => setShowTransfer(false)} balance={balance} />
       <WithdrawModal open={showWithdraw} onClose={() => setShowWithdraw(false)} balance={balance} pixKey={pixKey} />
-      <QRScannerModal open={showQR} onClose={() => setShowQR(false)} balance={balance} />
     </>
   );
 }
