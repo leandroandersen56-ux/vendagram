@@ -120,7 +120,7 @@ export default function Marketplace() {
     }
     if (subFilter === "nao_monetizado") {
       const val = h["Monetizado"] ?? h["monetizado"];
-      return !val || val === false || val === "false" || val === "Não" || val === "nao" || val === "não";
+      return !val || String(val) === "false" || val === "Não" || val === "nao" || val === "não";
     }
     if (subFilter === "verificado") {
       const val = h["Verificado"] ?? h["verificado"];
