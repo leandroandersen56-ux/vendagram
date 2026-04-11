@@ -20,6 +20,7 @@ export default function ProductGallery({ images, title, category, verified, isDe
   const [zoomOrigin, setZoomOrigin] = useState({ x: 50, y: 50 });
   const lastTapRef = useRef(0);
   const mainTouchRef = useRef<{ x: number; y: number } | null>(null);
+  const swipedRef = useRef(false);
 
   const hasImages = images.length > 0;
 
