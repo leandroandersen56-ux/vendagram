@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useSearchParams, Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import { Search, SlidersHorizontal, X, Loader2, ChevronDown, ArrowUpDown } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Search, SlidersHorizontal, X, Loader2, ChevronDown, ArrowUpDown, CheckCircle2, DollarSign, CircleOff } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -20,8 +20,20 @@ export default function Marketplace() {
   const [search, setSearch] = useState("");
   const [platform, setPlatform] = useState(initialPlatform);
   const [sortBy, setSortBy] = useState("recent");
+  const [subFilter, setSubFilter] = useState<string | null>(null);
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Subcategory definitions per platform
+  const SUBCATEGORIES: Record<string, { id: string; label: string; icon: React.ReactNode }[]> = {
+    youtube: [
+      { id: "monetizado", label: "Monetizado", icon: <DollarSign className="h-3.5 w-3.5" /> },
+      { id: "nao_monetizado", label: "Não Monetizado", icon: <CircleOff className="h-3.5 w-3.5" /> },
+    ],
+    instagram: [
+      { id: "verificado", label: "Verificado", icon: <CheckCircle2 className="h-3.5 w-3.5" /> },
+    ],
+  };
 
   // Sync platform filter with URL
   useEffect(() => {
@@ -84,6 +96,7 @@ export default function Marketplace() {
 
   const handlePlatformChange = (p: string) => {
     setPlatform(p);
+    setSubFilter(null);
     if (p === "all") {
       searchParams.delete("platform");
       searchParams.delete("type");
@@ -95,6 +108,25 @@ export default function Marketplace() {
       searchParams.delete("type");
     }
     setSearchParams(searchParams, { replace: true });
+  };
+
+  // Subcategory filter logic
+  const matchesSubFilter = (l: Listing): boolean => {
+    if (!subFilter) return true;
+    const h = l.fields || {};
+    if (subFilter === "monetizado") {
+      const val = h["Monetizado"] ?? h["monetizado"];
+      return val === true || val === "true" || val === "Sim" || val === "sim";
+    }
+    if (subFilter === "nao_monetizado") {
+      const val = h["Monetizado"] ?? h["monetizado"];
+      return !val || String(val) === "false" || val === "Não" || val === "nao" || val === "não";
+    }
+    if (subFilter === "verificado") {
+      const val = h["Verificado"] ?? h["verificado"];
+      return val === true || val === "true" || val === "Sim" || val === "sim";
+    }
+    return true;
   };
 
   // Shuffle listings once on load for random order
@@ -113,6 +145,7 @@ export default function Marketplace() {
         if (!GAME_PLATFORMS.includes(l.platform)) return false;
       } else if (platform !== "all" && l.platform !== platform) return false;
       if (search && !l.title.toLowerCase().includes(search.toLowerCase())) return false;
+      if (!matchesSubFilter(l)) return false;
       return true;
     })
     .sort((a, b) => {
@@ -193,7 +226,46 @@ export default function Marketplace() {
             ))}
           </div>
 
-          {/* Sort bar */}
+          {/* Subcategory filters */}
+          <AnimatePresence>
+            {SUBCATEGORIES[platform] && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="overflow-hidden"
+              >
+                <div className="flex gap-2 pb-3">
+                  <button
+                    onClick={() => setSubFilter(null)}
+                    className={`shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                      !subFilter
+                        ? "bg-primary/10 text-primary border border-primary/30"
+                        : "bg-muted text-muted-foreground hover:text-foreground border border-border"
+                    }`}
+                  >
+                    Todos
+                  </button>
+                  {SUBCATEGORIES[platform].map((sub) => (
+                    <button
+                      key={sub.id}
+                      onClick={() => setSubFilter(subFilter === sub.id ? null : sub.id)}
+                      className={`shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                        subFilter === sub.id
+                          ? "bg-primary/10 text-primary border border-primary/30"
+                          : "bg-muted text-muted-foreground hover:text-foreground border border-border"
+                      }`}
+                    >
+                      {sub.icon}
+                      {sub.label}
+                    </button>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           <div className="flex items-center justify-between mb-4 py-2 border-b border-border">
             <p className="text-xs text-muted-foreground">
               {filtered.length} {filtered.length === 1 ? "anúncio" : "anúncios"}
