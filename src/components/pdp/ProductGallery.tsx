@@ -50,9 +50,10 @@ export default function ProductGallery({ images, title, category, verified, isDe
         {/* Main image — click to open lightbox */}
         <div
           className="relative rounded-xl overflow-hidden bg-card group cursor-zoom-in p-2 ring-1 ring-border/40 shadow-[0_2px_8px_rgba(0,0,0,0.14)]"
-          onClick={() => setLightbox(true)}
+          onClick={() => { if (swipedRef.current) { swipedRef.current = false; return; } setLightbox(true); }}
           onTouchStart={(e) => {
             mainTouchRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+            swipedRef.current = false;
           }}
           onTouchEnd={(e) => {
             if (!mainTouchRef.current || images.length <= 1) return;
@@ -60,9 +61,8 @@ export default function ProductGallery({ images, title, category, verified, isDe
             const dy = e.changedTouches[0].clientY - mainTouchRef.current.y;
             if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
               e.preventDefault();
+              swipedRef.current = true;
               if (dx < 0) next(); else prev();
-              // Prevent lightbox from opening on swipe
-              e.stopPropagation();
             }
             mainTouchRef.current = null;
           }}
