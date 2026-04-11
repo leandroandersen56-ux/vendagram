@@ -19,6 +19,8 @@ export default function ProductGallery({ images, title, category, verified, isDe
   const [zoomed, setZoomed] = useState(false);
   const [zoomOrigin, setZoomOrigin] = useState({ x: 50, y: 50 });
   const lastTapRef = useRef(0);
+  const mainTouchRef = useRef<{ x: number; y: number } | null>(null);
+  const swipedRef = useRef(false);
 
   const hasImages = images.length > 0;
 
@@ -48,7 +50,22 @@ export default function ProductGallery({ images, title, category, verified, isDe
         {/* Main image — click to open lightbox */}
         <div
           className="relative rounded-xl overflow-hidden bg-card group cursor-zoom-in p-2 ring-1 ring-border/40 shadow-[0_2px_8px_rgba(0,0,0,0.14)]"
-          onClick={() => setLightbox(true)}
+          onClick={() => { if (swipedRef.current) { swipedRef.current = false; return; } setLightbox(true); }}
+          onTouchStart={(e) => {
+            mainTouchRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+            swipedRef.current = false;
+          }}
+          onTouchEnd={(e) => {
+            if (!mainTouchRef.current || images.length <= 1) return;
+            const dx = e.changedTouches[0].clientX - mainTouchRef.current.x;
+            const dy = e.changedTouches[0].clientY - mainTouchRef.current.y;
+            if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+              e.preventDefault();
+              swipedRef.current = true;
+              if (dx < 0) next(); else prev();
+            }
+            mainTouchRef.current = null;
+          }}
         >
           <div className="rounded-lg overflow-hidden relative">
             <AnimatePresence mode="popLayout" initial={false} custom={direction}>
