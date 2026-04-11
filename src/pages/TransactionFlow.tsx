@@ -30,7 +30,7 @@ const STATUS_CONFIG: Record<TxStatus, { label: string; color: string; icon: Reac
 export default function TransactionFlow() {
   const { listingId } = useParams();
   const { toast } = useToast();
-  const listing = MOCK_LISTINGS.find((l) => l.id === listingId);
+  const listing = null; // MOCK_LISTINGS removed — this page needs DB integration
   const platform = listing ? getPlatform(listing.platform) : null;
   const steps = listing ? getPlatformSteps(listing.platform) : [];
 
