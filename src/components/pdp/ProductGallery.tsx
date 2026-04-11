@@ -69,6 +69,11 @@ export default function ProductGallery({ images, title, category, verified, isDe
             {/* Gradient shadow bottom → transparent at 50% */}
             <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/15 to-transparent pointer-events-none" />
 
+            {/* Zoom hint icon */}
+            <div className="absolute bottom-3 right-3 h-7 w-7 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center pointer-events-none z-10">
+              <ZoomIn className="h-3.5 w-3.5 text-white" />
+            </div>
+
             {verified && (
               <div className="absolute top-3 right-3 flex items-center gap-1 bg-[hsl(var(--success-light))] text-[hsl(var(--success))] px-2.5 py-1 rounded-full text-[10px] font-semibold">
                 <CheckCircle2 className="h-3 w-3" /> VERIFICADO
