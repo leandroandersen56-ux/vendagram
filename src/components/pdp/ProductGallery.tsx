@@ -62,8 +62,8 @@ export default function ProductGallery({ images, title, category, verified, isDe
               />
             </AnimatePresence>
 
-            {/* Gradient shadow top → transparent at 50% */}
-            <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-black/15 to-transparent pointer-events-none" />
+            {/* Gradient shadow bottom → transparent at 50% */}
+            <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/15 to-transparent pointer-events-none" />
 
             {verified && (
               <div className="absolute top-3 right-3 flex items-center gap-1 bg-[hsl(var(--success-light))] text-[hsl(var(--success))] px-2.5 py-1 rounded-full text-[10px] font-semibold">
