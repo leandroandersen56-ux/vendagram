@@ -1,6 +1,7 @@
 {
-  "rewrites": [
-    { "source": "/listing/:id", "destination": "/api/listing/:id" },
-    { "source": "/(.*)", "destination": "/index.html" }
+  "routes": [
+    { "src": "/listing/([^/]+)", "dest": "/api/listing/$1" },
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
