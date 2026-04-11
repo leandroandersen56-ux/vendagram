@@ -47,72 +47,72 @@ export default function ProductGallery({ images, title, category, verified, isDe
           onClick={() => setLightbox(true)}
         >
           <div className="rounded-lg overflow-hidden relative">
-          <AnimatePresence mode="popLayout" initial={false} custom={direction}>
-            <motion.img
-              key={selected}
-              src={images[selected]}
-              alt={`${title} - Imagem ${selected + 1} de ${images.length}`}
-              className="w-full aspect-[4/3] object-cover object-top"
-              custom={direction}
-              initial={{ opacity: 0.5, x: direction > 0 ? 60 : -60 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0.5, x: direction > 0 ? -60 : 60 }}
-              transition={{ duration: 0.25 }}
-              loading="eager"
-            />
-          </AnimatePresence>
+            <AnimatePresence mode="popLayout" initial={false} custom={direction}>
+              <motion.img
+                key={selected}
+                src={images[selected]}
+                alt={`${title} - Imagem ${selected + 1} de ${images.length}`}
+                className="w-full aspect-[4/3] object-cover object-top"
+                custom={direction}
+                initial={{ opacity: 0.5, x: direction > 0 ? 60 : -60 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0.5, x: direction > 0 ? -60 : 60 }}
+                transition={{ duration: 0.25 }}
+                loading="eager"
+              />
+            </AnimatePresence>
 
-          {verified && (
-            <div className="absolute top-3 right-3 flex items-center gap-1 bg-[hsl(var(--success-light))] text-[hsl(var(--success))] px-2.5 py-1 rounded-full text-[10px] font-semibold">
-              <CheckCircle2 className="h-3 w-3" /> VERIFICADO
-            </div>
-          )}
+            {verified && (
+              <div className="absolute top-3 right-3 flex items-center gap-1 bg-[hsl(var(--success-light))] text-[hsl(var(--success))] px-2.5 py-1 rounded-full text-[10px] font-semibold">
+                <CheckCircle2 className="h-3 w-3" /> VERIFICADO
+              </div>
+            )}
 
-          {isDemo && (
-            <span className="absolute bottom-3 left-3 bg-black/70 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-lg z-10">
-              Anúncio Demo
-            </span>
-          )}
+            {isDemo && (
+              <span className="absolute bottom-3 left-3 bg-black/70 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-lg z-10">
+                Anúncio Demo
+              </span>
+            )}
 
-          {images.length > 1 && (
-            <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-sm rounded-lg px-2.5 py-1 text-[11px] text-white font-medium">
-              {selected + 1} / {images.length}
-            </div>
-          )}
+            {images.length > 1 && (
+              <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-sm rounded-lg px-2.5 py-1 text-[11px] text-white font-medium">
+                {selected + 1} / {images.length}
+              </div>
+            )}
 
-          {images.length > 1 && (
-            <>
-              <button
-                onClick={(e) => { e.stopPropagation(); prev(); }}
-                className="absolute left-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 sm:opacity-100 transition-opacity shadow-sm"
-                aria-label="Imagem anterior"
-              >
-                <ChevronLeft className="h-4 w-4 text-[hsl(var(--txt-primary))]" />
-              </button>
-              <button
-                onClick={(e) => { e.stopPropagation(); next(); }}
-                className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 sm:opacity-100 transition-opacity shadow-sm"
-                aria-label="Próxima imagem"
-              >
-                <ChevronRight className="h-4 w-4 text-[hsl(var(--txt-primary))]" />
-              </button>
-            </>
-          )}
-
-          {images.length > 1 && (
-            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 sm:hidden">
-              {images.map((_, i) => (
+            {images.length > 1 && (
+              <>
                 <button
-                  key={i}
-                  onClick={(e) => { e.stopPropagation(); go(i); }}
-                  className={`h-1.5 rounded-full transition-all ${
-                    selected === i ? "w-5 bg-primary" : "w-1.5 bg-white/60"
-                  }`}
-                  aria-label={`Ir para imagem ${i + 1}`}
-                />
-              ))}
-            </div>
-          </div>
+                  onClick={(e) => { e.stopPropagation(); prev(); }}
+                  className="absolute left-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 sm:opacity-100 transition-opacity shadow-sm"
+                  aria-label="Imagem anterior"
+                >
+                  <ChevronLeft className="h-4 w-4 text-[hsl(var(--txt-primary))]" />
+                </button>
+                <button
+                  onClick={(e) => { e.stopPropagation(); next(); }}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 sm:opacity-100 transition-opacity shadow-sm"
+                  aria-label="Próxima imagem"
+                >
+                  <ChevronRight className="h-4 w-4 text-[hsl(var(--txt-primary))]" />
+                </button>
+              </>
+            )}
+
+            {images.length > 1 && (
+              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 sm:hidden">
+                {images.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={(e) => { e.stopPropagation(); go(i); }}
+                    className={`h-1.5 rounded-full transition-all ${
+                      selected === i ? "w-5 bg-primary" : "w-1.5 bg-white/60"
+                    }`}
+                    aria-label={`Ir para imagem ${i + 1}`}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
