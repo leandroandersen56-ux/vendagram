@@ -4,7 +4,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   ArrowLeft, Star, Shield, Edit, AlertCircle, Loader2,
-  Share2, Heart, ChevronRight, CheckCircle2, Copy, Check, FileText
+  Share2, Heart, ChevronRight, CheckCircle2, Copy, Check, FileText, MessageCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
