@@ -33,7 +33,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
     <Link to={`/listing/${listing.id}`} className="block h-full group">
       <div className="bg-card rounded-lg border border-border overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.04)] hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 flex flex-col h-full">
         {/* Thumbnail */}
-        <div className="relative overflow-hidden bg-muted aspect-[4/3] m-2 rounded-md ring-1 ring-border/20 shadow-[0_0.5px_2px_rgba(0,0,0,0.03)]">
+        <div className="relative overflow-hidden bg-muted aspect-[4/3] m-2 rounded-md ring-1 ring-border/20">
           {coverImage ? (
             <img
               src={coverImage}
@@ -46,6 +46,8 @@ export default function ListingCard({ listing }: ListingCardProps) {
               <PlatformIcon platformId={listing.platform} size={48} />
             </div>
           )}
+          {/* Bottom gradient overlay */}
+          <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/10 to-transparent pointer-events-none" />
           {listing.sellerId === "00000000-0000-0000-0000-000000000001" && (
             <span className="absolute top-2 left-2 bg-black/70 text-white text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">
               Anúncio Demo
