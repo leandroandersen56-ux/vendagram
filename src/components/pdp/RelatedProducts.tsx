@@ -21,7 +21,7 @@ export default function RelatedProducts({ currentId, category }: RelatedProducts
         .from("public_listings")
         .select("*")
         .eq("status", "active")
-        .eq("category", category)
+        .eq("category", category as any)
         .neq("id", currentId)
         .limit(6);
 
