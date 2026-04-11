@@ -16,6 +16,9 @@ export default function ProductGallery({ images, title, category, verified, isDe
   const [selected, setSelected] = useState(0);
   const [direction, setDirection] = useState(0);
   const [lightbox, setLightbox] = useState(false);
+  const [zoomed, setZoomed] = useState(false);
+  const [zoomOrigin, setZoomOrigin] = useState({ x: 50, y: 50 });
+  const lastTapRef = useRef(0);
 
   const hasImages = images.length > 0;
 
