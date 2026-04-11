@@ -122,7 +122,7 @@ export default function ListingDetail() {
   const sharePreviewUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/og-listing?id=${listing.id}`;
 
   const handleShare = () => {
-    const message = `🎮 ${listing.title}\n💰 ${formatBRL(listing.price)}\n🔒 Compra segura no Froiv\n${sharePreviewUrl}`;
+    const message = `🎮 ${listing.title}\n💰 ${formatBRL(listing.price)}\n🔒 Compra segura no Froiv\n${officialUrl}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank");
   };
 
