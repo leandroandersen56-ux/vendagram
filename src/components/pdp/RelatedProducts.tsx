@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Package } from "lucide-react";
-import { MOCK_LISTINGS, formatBRL, type Listing } from "@/lib/mock-data";
+import { formatBRL, type Listing } from "@/lib/mock-data";
 import ListingCard from "@/components/ListingCard";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -50,16 +50,7 @@ export default function RelatedProducts({ currentId, category }: RelatedProducts
     fetchRelated();
   }, [currentId, category]);
 
-  // Fallback to mock if no DB results
-  const mockRelated = MOCK_LISTINGS
-    .filter((l) => l.id !== currentId && l.platform === category)
-    .slice(0, 6);
-  const mockOther = mockRelated.length < 4
-    ? MOCK_LISTINGS.filter((l) => l.id !== currentId && l.platform !== category).slice(0, 4 - mockRelated.length)
-    : [];
-  const mockAll = [...mockRelated, ...mockOther];
-
-  const all = dbListings.length > 0 ? dbListings : (loaded ? mockAll : []);
+  const all = loaded ? dbListings : [];
   if (all.length === 0 && loaded) return null;
   if (!loaded) return null;
 

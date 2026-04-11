@@ -13,7 +13,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ListingCard from "@/components/ListingCard";
 import PlatformIcon from "@/components/PlatformIcon";
-import { PLATFORMS, MOCK_LISTINGS, type Listing } from "@/lib/mock-data";
+import { PLATFORMS, type Listing } from "@/lib/mock-data";
 import { supabase } from "@/integrations/supabase/client";
 import useEmblaCarousel from "embla-carousel-react";
 
@@ -172,12 +172,9 @@ export default function Index() {
         const isGamePlatform = (p: string) => GAME_PLATFORMS.includes(p);
         const dbGames = mapped.filter((l) => isGamePlatform(l.platform));
         const dbSocial = mapped.filter((l) => !isGamePlatform(l.platform));
-        const existingIds = new Set(mapped.map((l) => String(l.id)));
-        const gameFillers = MOCK_LISTINGS.filter((m) => isGamePlatform(m.platform) && !existingIds.has(String(m.id))).slice(0, Math.max(0, 5 - dbGames.length));
-        const socialFillers = MOCK_LISTINGS.filter((m) => !isGamePlatform(m.platform) && !existingIds.has(String(m.id))).slice(0, Math.max(0, 5 - dbSocial.length));
-        setListings([...mapped, ...gameFillers, ...socialFillers]);
+        setListings(mapped);
       } else {
-        setListings(MOCK_LISTINGS);
+        setListings([]);
       }
       setLoading(false);
     };
