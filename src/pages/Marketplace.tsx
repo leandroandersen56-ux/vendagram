@@ -96,6 +96,7 @@ export default function Marketplace() {
 
   const handlePlatformChange = (p: string) => {
     setPlatform(p);
+    setSubFilter(null);
     if (p === "all") {
       searchParams.delete("platform");
       searchParams.delete("type");
@@ -107,6 +108,25 @@ export default function Marketplace() {
       searchParams.delete("type");
     }
     setSearchParams(searchParams, { replace: true });
+  };
+
+  // Subcategory filter logic
+  const matchesSubFilter = (l: Listing): boolean => {
+    if (!subFilter) return true;
+    const h = l.fields || {};
+    if (subFilter === "monetizado") {
+      const val = h["Monetizado"] ?? h["monetizado"];
+      return val === true || val === "true" || val === "Sim" || val === "sim";
+    }
+    if (subFilter === "nao_monetizado") {
+      const val = h["Monetizado"] ?? h["monetizado"];
+      return !val || val === false || val === "false" || val === "Não" || val === "nao" || val === "não";
+    }
+    if (subFilter === "verificado") {
+      const val = h["Verificado"] ?? h["verificado"];
+      return val === true || val === "true" || val === "Sim" || val === "sim";
+    }
+    return true;
   };
 
   // Shuffle listings once on load for random order
