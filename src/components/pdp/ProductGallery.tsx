@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, CheckCircle2, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, CheckCircle2, X, ZoomIn } from "lucide-react";
 import PlatformIcon from "@/components/PlatformIcon";
 
 interface ProductGalleryProps {
