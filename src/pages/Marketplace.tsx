@@ -20,8 +20,20 @@ export default function Marketplace() {
   const [search, setSearch] = useState("");
   const [platform, setPlatform] = useState(initialPlatform);
   const [sortBy, setSortBy] = useState("recent");
+  const [subFilter, setSubFilter] = useState<string | null>(null);
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Subcategory definitions per platform
+  const SUBCATEGORIES: Record<string, { id: string; label: string; icon: React.ReactNode }[]> = {
+    youtube: [
+      { id: "monetizado", label: "Monetizado", icon: <DollarSign className="h-3.5 w-3.5" /> },
+      { id: "nao_monetizado", label: "Não Monetizado", icon: <CircleOff className="h-3.5 w-3.5" /> },
+    ],
+    instagram: [
+      { id: "verificado", label: "Verificado", icon: <CheckCircle2 className="h-3.5 w-3.5" /> },
+    ],
+  };
 
   // Sync platform filter with URL
   useEffect(() => {
