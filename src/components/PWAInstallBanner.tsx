@@ -77,7 +77,7 @@ export default function PWAInstallBanner() {
       <div className="fixed top-0 left-0 right-0 z-[60] bg-primary" style={{ height: PWA_BANNER_HEIGHT }}>
         <div className="flex items-center gap-3 h-full px-4">
           <div className="h-9 w-9 rounded-xl bg-white/15 flex items-center justify-center shrink-0">
-            <img src={logoWhite} alt="Froiv" className="h-5 w-5 object-contain" />
+            <img src={ghostIcon} alt="Froiv" className="h-5 w-5 object-contain" style={{ filter: "brightness(0) invert(1)" }} />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-[13px] font-semibold text-white leading-tight">Instale o app Froiv</p>
@@ -110,7 +110,7 @@ export default function PWAInstallBanner() {
       </button>
       <div className="p-5 flex flex-col items-center text-center gap-3">
         <div className="h-14 w-14 rounded-2xl bg-primary flex items-center justify-center shadow-md">
-          <img src={logoWhite} alt="Froiv" className="h-8 w-8 object-contain" />
+          <img src={ghostIcon} alt="Froiv" className="h-8 w-8 object-contain" style={{ filter: "brightness(0) invert(1)" }} />
         </div>
         <div>
           <p className="text-[15px] font-semibold text-foreground leading-tight">Instale o Froiv</p>
