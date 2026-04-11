@@ -145,6 +145,7 @@ export default function Marketplace() {
         if (!GAME_PLATFORMS.includes(l.platform)) return false;
       } else if (platform !== "all" && l.platform !== platform) return false;
       if (search && !l.title.toLowerCase().includes(search.toLowerCase())) return false;
+      if (!matchesSubFilter(l)) return false;
       return true;
     })
     .sort((a, b) => {
