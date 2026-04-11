@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ShoppingCart, Shield, Zap, Clock, Tag, Minus, Plus, MessageCircle } from "lucide-react";
+import { ShoppingCart, Shield, Zap, Clock, Tag, Minus, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatBRL } from "@/lib/mock-data";
 
