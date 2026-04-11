@@ -226,7 +226,46 @@ export default function Marketplace() {
             ))}
           </div>
 
-          {/* Sort bar */}
+          {/* Subcategory filters */}
+          <AnimatePresence>
+            {SUBCATEGORIES[platform] && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="overflow-hidden"
+              >
+                <div className="flex gap-2 pb-3">
+                  <button
+                    onClick={() => setSubFilter(null)}
+                    className={`shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                      !subFilter
+                        ? "bg-primary/10 text-primary border border-primary/30"
+                        : "bg-muted text-muted-foreground hover:text-foreground border border-border"
+                    }`}
+                  >
+                    Todos
+                  </button>
+                  {SUBCATEGORIES[platform].map((sub) => (
+                    <button
+                      key={sub.id}
+                      onClick={() => setSubFilter(subFilter === sub.id ? null : sub.id)}
+                      className={`shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                        subFilter === sub.id
+                          ? "bg-primary/10 text-primary border border-primary/30"
+                          : "bg-muted text-muted-foreground hover:text-foreground border border-border"
+                      }`}
+                    >
+                      {sub.icon}
+                      {sub.label}
+                    </button>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           <div className="flex items-center justify-between mb-4 py-2 border-b border-border">
             <p className="text-xs text-muted-foreground">
               {filtered.length} {filtered.length === 1 ? "anúncio" : "anúncios"}
