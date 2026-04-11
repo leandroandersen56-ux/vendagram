@@ -5,6 +5,21 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+const DEFAULT_OG_IMAGE = "https://froiv.com/og-image.jpg";
+
+const PLATFORM_OG_IMAGES: Record<string, string> = {
+  instagram: "https://froiv.com/og-image.jpg",
+  tiktok: "https://froiv.com/og-image.jpg",
+  youtube: "https://froiv.com/og-image.jpg",
+  facebook: "https://froiv.com/og-image.jpg",
+  free_fire: "https://froiv.com/og-image.jpg",
+  valorant: "https://froiv.com/og-image.jpg",
+  fortnite: "https://froiv.com/og-image.jpg",
+  roblox: "https://froiv.com/og-image.jpg",
+  kwai: "https://froiv.com/og-image.jpg",
+  twitter: "https://froiv.com/og-image.jpg",
+};
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -42,10 +57,12 @@ Deno.serve(async (req) => {
     const description = listing.description
       ? listing.description.substring(0, 160)
       : `Compre ${listing.title} por ${price} com proteção Escrow no Froiv.`;
-    
-    const image = listing.screenshots && listing.screenshots.length > 0
-      ? listing.screenshots[0]
-      : "https://froiv.com/og-image.jpg";
+
+    // Pick the best available image
+    const firstScreenshot = listing.screenshots && listing.screenshots.length > 0
+      ? listing.screenshots.find((s: string) => typeof s === "string" && s.trim().length > 0)
+      : null;
+    const image = firstScreenshot || PLATFORM_OG_IMAGES[listing.category] || DEFAULT_OG_IMAGE;
 
     const listingUrl = `https://froiv.com/listing/${listing.id}`;
 
