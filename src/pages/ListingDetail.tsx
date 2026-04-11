@@ -50,11 +50,12 @@ export default function ListingDetail() {
         .eq("id", id)
         .maybeSingle();
 
-      if (!error && data) {
+      if (data) {
         setListing(data);
         const profile = await fetchSellerProfile({ user_id: data.seller_id });
         if (profile) setSeller(profile);
       } else {
+        // Listing not found in DB, try mock data as fallback
         const mock = MOCK_LISTINGS.find((m) => m.id === id);
         if (mock) {
           setListing({
@@ -64,6 +65,7 @@ export default function ListingDetail() {
           });
           setSeller({ name: mock.sellerName, avg_rating: mock.sellerRating, total_sales: mock.sellerSales });
         }
+        // If neither DB nor mock found, listing stays null → "not found" screen
       }
       setLoading(false);
     }
