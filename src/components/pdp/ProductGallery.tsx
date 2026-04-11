@@ -25,6 +25,7 @@ export default function ProductGallery({ images, title, category, verified, isDe
   const go = useCallback((idx: number) => {
     setDirection(idx > selected ? 1 : -1);
     setSelected(idx);
+    setZoomed(false);
   }, [selected]);
 
   const next = useCallback(() => go((selected + 1) % images.length), [go, selected, images.length]);
