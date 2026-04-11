@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { MOCK_LISTINGS, formatBRL, getPlatformSteps, getPlatform } from "@/lib/mock-data";
+import { formatBRL, getPlatformSteps, getPlatform } from "@/lib/mock-data";
 import { useToast } from "@/hooks/use-toast";
 
 type TxStatus = 'pending_payment' | 'credentials_pending' | 'transfer_in_progress' | 'completed';
