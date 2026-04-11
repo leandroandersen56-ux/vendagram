@@ -4,16 +4,14 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
   ArrowDownRight, ArrowUpRight, Wallet, Clock, Loader2, Inbox,
-  ArrowDown, ArrowRight, ArrowUp, ScanLine,
+  ArrowDown, ArrowUp,
   RefreshCcw, Send, Repeat
 } from "lucide-react";
 import { formatBRL } from "@/lib/mock-data";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import DepositModal from "@/components/wallet/DepositModal";
-import TransferModal from "@/components/wallet/TransferModal";
 import WithdrawModal from "@/components/wallet/WithdrawModal";
-import QRScannerModal from "@/components/wallet/QRScannerModal";
 import BalanceChart from "@/components/wallet/BalanceChart";
 
 type HistoryItem = {
@@ -70,9 +68,7 @@ function getStatusColor(status: string) {
 export default function PanelWallet() {
   const { user } = useAuth();
   const [showDeposit, setShowDeposit] = useState(false);
-  const [showTransfer, setShowTransfer] = useState(false);
   const [showWithdraw, setShowWithdraw] = useState(false);
-  const [showQR, setShowQR] = useState(false);
   const [activeFilter, setActiveFilter] = useState<FilterTab>("all");
   const [loading, setLoading] = useState(true);
 
@@ -207,30 +203,18 @@ export default function PanelWallet() {
         </div>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+        <div className="grid grid-cols-2 gap-3 mb-8">
           <button onClick={() => setShowDeposit(true)} className="group flex flex-col items-center gap-2.5 p-4 bg-card border border-border rounded-xl hover:border-success/40 hover:bg-success/5 transition-all">
             <div className="h-11 w-11 rounded-full bg-success/10 flex items-center justify-center group-hover:bg-success/20 transition-colors">
               <ArrowDown className="h-5 w-5 text-success" />
             </div>
             <span className="text-sm font-medium text-foreground">Depositar</span>
           </button>
-          <button onClick={() => setShowTransfer(true)} className="group flex flex-col items-center gap-2.5 p-4 bg-card border border-border rounded-xl hover:border-info/40 hover:bg-info/5 transition-all">
-            <div className="h-11 w-11 rounded-full bg-info/10 flex items-center justify-center group-hover:bg-info/20 transition-colors">
-              <ArrowRight className="h-5 w-5 text-info" />
-            </div>
-            <span className="text-sm font-medium text-foreground">Transferir</span>
-          </button>
           <button onClick={() => setShowWithdraw(true)} className="group flex flex-col items-center gap-2.5 p-4 bg-card border border-border rounded-xl hover:border-primary/40 hover:bg-primary/5 transition-all">
             <div className="h-11 w-11 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
               <ArrowUp className="h-5 w-5 text-primary" />
             </div>
             <span className="text-sm font-medium text-foreground">Sacar</span>
-          </button>
-          <button onClick={() => setShowQR(true)} className="group flex flex-col items-center gap-2.5 p-4 bg-card border border-border rounded-xl hover:border-warning/40 hover:bg-warning/5 transition-all">
-            <div className="h-11 w-11 rounded-full bg-warning/10 flex items-center justify-center group-hover:bg-warning/20 transition-colors">
-              <ScanLine className="h-5 w-5 text-warning" />
-            </div>
-            <span className="text-sm font-medium text-foreground">Pagar com QR</span>
           </button>
         </div>
 
@@ -287,9 +271,7 @@ export default function PanelWallet() {
       </motion.div>
 
       <DepositModal open={showDeposit} onClose={() => setShowDeposit(false)} />
-      <TransferModal open={showTransfer} onClose={() => setShowTransfer(false)} balance={balance} />
       <WithdrawModal open={showWithdraw} onClose={() => setShowWithdraw(false)} balance={balance} pixKey={pixKey} />
-      <QRScannerModal open={showQR} onClose={() => setShowQR(false)} balance={balance} />
     </>
   );
 }
