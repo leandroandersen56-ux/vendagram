@@ -121,7 +121,7 @@ export default function ProductGallery({ images, title, category, verified, isDe
 
         {/* Thumbnails (desktop) */}
         {images.length > 1 && (
-          <div className="hidden sm:flex gap-2 overflow-x-auto scrollbar-hide">
+          <div className="flex gap-2 overflow-x-auto scrollbar-hide">
             {images.map((img, i) => (
               <button
                 key={i}
