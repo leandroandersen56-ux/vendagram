@@ -18,7 +18,7 @@ import { supabase } from "@/integrations/supabase/client";
 import useEmblaCarousel from "embla-carousel-react";
 
 import bannerHero1 from "@/assets/banner-hero.png";
-import bannerHeroSecurity from "@/assets/banner-hero.jpg";
+import bannerHeroSecurity from "@/assets/banner-hero-security.jpg";
 import bannerGamesSection from "@/assets/banner-roblox.jpg";
 import bannerYoutube from "@/assets/banner-youtube-v4.jpg";
 import bannerSocialFacebook from "@/assets/banner-facebook.jpg";
