@@ -43,7 +43,7 @@ export default function ProductGallery({ images, title, category, verified, isDe
       <div className="space-y-2.5">
         {/* Main image — click to open lightbox */}
         <div
-          className="relative rounded-xl overflow-hidden bg-[hsl(var(--muted))] group cursor-zoom-in"
+          className="relative rounded-xl overflow-hidden bg-card group cursor-zoom-in p-2 ring-1 ring-border/40 shadow-[0_2px_8px_rgba(0,0,0,0.14)]"
           onClick={() => setLightbox(true)}
         >
           <AnimatePresence mode="popLayout" initial={false} custom={direction}>
