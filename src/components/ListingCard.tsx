@@ -33,7 +33,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
     <Link to={`/listing/${listing.id}`} className="block h-full group">
       <div className="bg-card rounded-lg border border-border overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.04)] hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 flex flex-col h-full">
         {/* Thumbnail */}
-        <div className="relative overflow-hidden bg-muted aspect-[4/3] m-2 rounded-md ring-1 ring-border/20">
+        <div className="relative overflow-hidden bg-muted aspect-[4/3] m-1.5 rounded-md ring-1 ring-border/20">
           {coverImage ? (
             <img
               src={coverImage}
