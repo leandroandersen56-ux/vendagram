@@ -42,7 +42,7 @@ const GAME_CATEGORIES = [
 ];
 
 const BANNERS = [
-  { img: bannerHero1, title: "Compre ou Venda\nContas Digitais\ncom Segurança", subtitle: "Redes sociais e jogos\ncom escrow integrado", cta: "Explorar", link: "/marketplace", objectPosition: "right 40%" },
+  { img: bannerHero1, title: "Compre e Venda\nContas Digitais\ncom Segurança", subtitle: "Redes sociais e jogos\ncom escrow integrado", cta: "Explorar", link: "/marketplace", objectPosition: "right 40%" },
 ];
 
 const QUICK_CATEGORIES = [
