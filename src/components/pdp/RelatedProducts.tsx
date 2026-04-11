@@ -16,15 +16,16 @@ export default function RelatedProducts({ currentId, category }: RelatedProducts
 
   useEffect(() => {
     async function fetchRelated() {
+      // Only fetch listings from the same category
       const { data } = await supabase
         .from("public_listings")
         .select("*")
         .eq("status", "active")
+        .eq("category", category)
         .neq("id", currentId)
-        .limit(12);
+        .limit(6);
 
       if (data && data.length > 0) {
-        // Sort: same category first
         const mapped: Listing[] = data
           .filter((d) => d.id)
           .map((d) => ({
@@ -42,10 +43,7 @@ export default function RelatedProducts({ currentId, category }: RelatedProducts
             fields: {},
             createdAt: d.created_at || "",
           }));
-
-        const sameCategory = mapped.filter((l) => l.platform === category);
-        const otherCategory = mapped.filter((l) => l.platform !== category);
-        setDbListings([...sameCategory, ...otherCategory].slice(0, 6));
+        setDbListings(mapped);
       }
       setLoaded(true);
     }
