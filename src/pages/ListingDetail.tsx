@@ -166,7 +166,7 @@ export default function ListingDetail() {
     <div className="min-h-screen bg-[hsl(var(--muted))] pb-20 sm:pb-0">
       <Navbar />
 
-      <div className="pt-16 sm:pt-20">
+      <div className="sm:pt-20" style={{ paddingTop: 'calc(64px + var(--pwa-banner-offset, 0px))' }}>
         {/* Floating back + actions row (mobile) */}
         <div className="sm:hidden flex items-center justify-between px-4 py-2">
           <button
