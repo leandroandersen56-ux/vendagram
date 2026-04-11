@@ -115,12 +115,12 @@ export default function Marketplace() {
     if (!subFilter) return true;
     const h = l.fields || {};
     if (subFilter === "monetizado") {
-      const val = h["Monetizado"] ?? h["monetizado"];
-      return val === true || val === "true" || val === "Sim" || val === "sim";
+      const val = String(h["Monetizado"] ?? h["monetizado"] ?? h["Monetização"] ?? h["monetização"] ?? "").toLowerCase();
+      return val.includes("sim") || val.includes("ativad") || val === "true";
     }
     if (subFilter === "nao_monetizado") {
-      const val = h["Monetizado"] ?? h["monetizado"];
-      return !val || String(val) === "false" || val === "Não" || val === "nao" || val === "não";
+      const val = String(h["Monetizado"] ?? h["monetizado"] ?? h["Monetização"] ?? h["monetização"] ?? "").toLowerCase();
+      return val === "não" || val === "nao" || val === "" || val === "undefined" || val === "false";
     }
     if (subFilter === "verificado") {
       const val = h["Verificado"] ?? h["verificado"];
