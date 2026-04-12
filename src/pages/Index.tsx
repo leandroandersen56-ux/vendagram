@@ -640,10 +640,6 @@ export default function Index() {
                         >
                           <div className={`relative aspect-[3/4] rounded-2xl overflow-hidden transition-all ${selectedPlatform === cat.id ? 'ring-2 ring-primary ring-offset-2' : ''}`}>
                             <img src={cat.img} alt={cat.label} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                            <span className="absolute bottom-2.5 left-0 right-0 text-center text-white text-[13px] font-semibold drop-shadow-lg">
-                              {cat.label}
-                            </span>
                           </div>
                         </button>
                       ))}
