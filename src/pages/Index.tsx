@@ -44,9 +44,8 @@ const GAME_CATEGORIES = [
 ];
 
 const BANNERS = [
-  { img: bannerHero1, title: "Compre e Venda\nContas Digitais\ncom Segurança", subtitle: "Redes sociais e jogos\ncom escrow integrado", cta: "Explorar", link: "/marketplace", objectPosition: "right 40%" },
+  { img: bannerSecurityHero, title: "Compre e Venda\nContas Digitais\ncom Segurança", subtitle: "Redes sociais e jogos\ncom escrow integrado", cta: "Explorar", link: "/marketplace", objectPosition: "right 40%" },
   { img: bannerHeroSecurity, title: "Transações\n100% Seguras", subtitle: "Pagamento protegido\ncom sistema escrow", cta: "Saiba mais", link: "/ajuda/como-funciona-escrow", objectPosition: "right 40%" },
-  { img: bannerSecurityHero, title: "Sua Conta\nProtegida\nde Verdade", subtitle: "Escrow automático e\nsuporte dedicado", cta: "Explorar", link: "/marketplace", objectPosition: "right 40%" },
 ];
 
 const QUICK_CATEGORIES = [
