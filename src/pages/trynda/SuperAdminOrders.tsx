@@ -72,12 +72,11 @@ export default function SuperAdminOrders() {
       <div className="flex items-center justify-between flex-wrap gap-3">
         <h1 className="text-xl font-bold text-white">Pedidos Externos</h1>
         <button
-          onClick={() => syncMutation.mutate()}
-          disabled={syncMutation.isPending}
-          className="bg-[#7c3aed] hover:bg-[#6d28d9] text-white rounded-lg px-4 py-2 text-sm font-medium flex items-center gap-2 disabled:opacity-50"
+          onClick={handleRefresh}
+          className="bg-[#7c3aed] hover:bg-[#6d28d9] text-white rounded-lg px-4 py-2 text-sm font-medium flex items-center gap-2"
         >
-          <RefreshCw className={`h-4 w-4 ${syncMutation.isPending ? "animate-spin" : ""}`} />
-          {syncMutation.isPending ? "Sincronizando..." : "Sincronizar agora"}
+          <RefreshCw className="h-4 w-4" />
+          Atualizar dados
         </button>
       </div>
 
