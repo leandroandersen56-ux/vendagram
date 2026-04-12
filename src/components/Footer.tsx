@@ -81,7 +81,7 @@ export default function Footer() {
             <Link to="/privacidade" className="hover:text-primary transition-colors">Privacidade</Link>
             <Link to="/ajuda" className="hover:text-primary transition-colors">Ajuda</Link>
             <Link to="/contato" className="hover:text-primary transition-colors">Contato</Link>
-            <a href="https://wa.me/5547996300314?text=Ol%C3%A1%2C%20preciso%20de%20ajuda%20na%20Froiv!" target="_blank" rel="noopener noreferrer" className="hover:text-[#25D366] transition-colors flex items-center gap-1">
+            <a href="https://wa.me/5519988499681?text=Ol%C3%A1%2C%20preciso%20de%20ajuda%20na%20Froiv!" target="_blank" rel="noopener noreferrer" className="hover:text-[#25D366] transition-colors flex items-center gap-1">
               <MessageCircle className="h-3 w-3" /> WhatsApp
             </a>
           </div>
@@ -131,7 +131,7 @@ export default function Footer() {
               <div className="flex flex-col gap-2.5 text-[12px] text-txt-secondary">
                 <Link to="/ajuda" className="hover:text-primary transition-colors">Central de Ajuda</Link>
                 <a href="mailto:contato@froiv.com" className="hover:text-primary transition-colors">contato@froiv.com</a>
-                <a href="https://wa.me/5547996300314?text=Ol%C3%A1%2C%20preciso%20de%20ajuda%20na%20Froiv!" target="_blank" rel="noopener noreferrer" className="hover:text-[#25D366] transition-colors flex items-center gap-1.5">
+                <a href="https://wa.me/5519988499681?text=Ol%C3%A1%2C%20preciso%20de%20ajuda%20na%20Froiv!" target="_blank" rel="noopener noreferrer" className="hover:text-[#25D366] transition-colors flex items-center gap-1.5">
                   <MessageCircle className="h-3.5 w-3.5" />
                   WhatsApp
                 </a>
