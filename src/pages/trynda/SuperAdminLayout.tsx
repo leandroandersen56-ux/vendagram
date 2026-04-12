@@ -20,6 +20,7 @@ const navItems = [
   { label: "Emails", icon: Mail, path: "/trynda/emails" },
   { label: "Storage", icon: HardDrive, path: "/trynda/storage" },
   { label: "Configurações", icon: Settings, path: "/trynda/config" },
+  { label: "Pedidos Ext.", icon: Globe, path: "/trynda/pedidos-externos" },
   { label: "Segurança", icon: Shield, path: "/trynda/seguranca" },
 ];
 

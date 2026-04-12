@@ -68,6 +68,7 @@ import SuperAdminEmails from "./pages/trynda/SuperAdminEmails.tsx";
 import SuperAdminStorage from "./pages/trynda/SuperAdminStorage.tsx";
 import SuperAdminConfig from "./pages/trynda/SuperAdminConfig.tsx";
 import SuperAdminSecurity from "./pages/trynda/SuperAdminSecurity.tsx";
+import SuperAdminOrders from "./pages/trynda/SuperAdminOrders.tsx";
 
 const queryClient = new QueryClient();
 
@@ -173,6 +174,7 @@ function AppRoutes() {
           <Route path="storage" element={<SuperAdminStorage />} />
           <Route path="config" element={<SuperAdminConfig />} />
           <Route path="seguranca" element={<SuperAdminSecurity />} />
+          <Route path="pedidos-externos" element={<SuperAdminOrders />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />
