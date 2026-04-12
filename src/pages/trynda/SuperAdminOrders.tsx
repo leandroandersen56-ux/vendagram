@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { RefreshCw, Search, Eye, ShoppingCart, DollarSign, TrendingUp, Users } from "lucide-react";
@@ -35,22 +35,10 @@ export default function SuperAdminOrders() {
     refetchInterval: 60_000,
   });
 
-  const syncMutation = useMutation({
-    mutationFn: async () => {
-      const { data, error } = await supabase.functions.invoke("sync-external-orders", {
-        body: { per_page: 100 },
-      });
-      if (error) throw error;
-      return data;
-    },
-    onSuccess: (data) => {
-      toast.success(`Sincronização concluída: ${data.inserted} novos, ${data.skipped} atualizados`);
-      queryClient.invalidateQueries({ queryKey: ["external-orders"] });
-    },
-    onError: (err: any) => {
-      toast.error(`Erro na sincronização: ${err.message}`);
-    },
-  });
+  const handleRefresh = () => {
+    queryClient.invalidateQueries({ queryKey: ["external-orders"] });
+    toast.success("Dados atualizados! O scraper externo alimenta automaticamente.");
+  };
 
   const filtered = orders.filter((o: any) => {
     const matchesStatus = statusFilter === "all" || o.status === statusFilter;
@@ -84,12 +72,11 @@ export default function SuperAdminOrders() {
       <div className="flex items-center justify-between flex-wrap gap-3">
         <h1 className="text-xl font-bold text-white">Pedidos Externos</h1>
         <button
-          onClick={() => syncMutation.mutate()}
-          disabled={syncMutation.isPending}
-          className="bg-[#7c3aed] hover:bg-[#6d28d9] text-white rounded-lg px-4 py-2 text-sm font-medium flex items-center gap-2 disabled:opacity-50"
+          onClick={handleRefresh}
+          className="bg-[#7c3aed] hover:bg-[#6d28d9] text-white rounded-lg px-4 py-2 text-sm font-medium flex items-center gap-2"
         >
-          <RefreshCw className={`h-4 w-4 ${syncMutation.isPending ? "animate-spin" : ""}`} />
-          {syncMutation.isPending ? "Sincronizando..." : "Sincronizar agora"}
+          <RefreshCw className="h-4 w-4" />
+          Atualizar dados
         </button>
       </div>
 
