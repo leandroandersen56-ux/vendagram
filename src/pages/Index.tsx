@@ -45,7 +45,7 @@ const GAME_CATEGORIES = [
 ];
 
 const BANNERS = [
-  { img: bannerHeroOffers, title: "Apenas 7%\nde Taxas", subtitle: "Negocie direto com o vendedor,\nenvie propostas e garanta\nsua compra segura", cta: "Começar agora", link: "/marketplace", objectPosition: "right 30%" },
+  { img: bannerHeroOffers, title: "Apenas 7% de Taxa\nem Cada Venda", subtitle: "A menor taxa do mercado.\nNegocie direto, sem mensalidade\ne sem custos ocultos", cta: "Começar agora", link: "/marketplace", objectPosition: "right 30%" },
   { img: bannerSecurityHero, title: "Compre e Venda\nContas Digitais\ncom Segurança", subtitle: "Redes sociais e jogos\ncom escrow integrado", cta: "Explorar", link: "/marketplace", objectPosition: "right 40%" },
   { img: bannerHeroSecurity, title: "Só Liberamos o Valor\nApós Sua Confirmação", subtitle: "Pagamento protegido\ncom sistema escrow", cta: "Saiba mais", link: "/ajuda/como-funciona-escrow", objectPosition: "right 40%" },
 ];
