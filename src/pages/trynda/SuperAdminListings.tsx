@@ -110,7 +110,8 @@ export default function SuperAdminListings() {
                     </div>
                   </td>
                 </tr>
-              ))}
+                );
+              })}
             </tbody>
           </table>
         </div>
