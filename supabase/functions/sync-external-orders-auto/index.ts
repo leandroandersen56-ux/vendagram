@@ -15,86 +15,47 @@ function getSupabase() {
   );
 }
 
-// ─── Strategy 1: WooCommerce REST API v3 (consumer key auth) ───
-async function fetchOrdersFromWcApi(page: number, perPage = 50): Promise<{ orders: any[]; totalPages: number } | null> {
+// ─── WooCommerce REST API v3 — Orders only ───
+async function fetchOrders(page: number, perPage = 50): Promise<{ orders: any[]; totalPages: number } | null> {
   const ck = Deno.env.get("WC_CONSUMER_KEY");
   const cs = Deno.env.get("WC_CONSUMER_SECRET");
   if (!ck || !cs) return null;
 
-  try {
-    const url = `${BASE_URL}/wp-json/wc/v3/orders?page=${page}&per_page=${perPage}&orderby=date&order=desc&consumer_key=${ck}&consumer_secret=${cs}`;
-    const res = await fetch(url, { headers: { "User-Agent": "FroivSync/1.0" } });
-    if (!res.ok) {
-      console.log(`WC API ${res.status}`);
-      return null;
-    }
-    const totalPages = parseInt(res.headers.get("x-wp-totalpages") || "1");
-    const data = await res.json();
-    const orders = data.map((o: any) => ({
-      external_id: String(o.id),
-      status: o.status || "pending",
-      total_amount: parseFloat(o.total) || 0,
-      currency: o.currency || "BRL",
-      payment_method: o.payment_method_title || o.payment_method || null,
-      ordered_at: o.date_created || null,
-      customer_name: `${o.billing?.first_name || ""} ${o.billing?.last_name || ""}`.trim() || null,
-      customer_email: o.billing?.email || null,
-      country: o.billing?.country || null,
-      items: (o.line_items || []).map((i: any) => ({
-        name: i.name || "Produto",
-        price: parseFloat(i.total) || 0,
-        quantity: i.quantity || 1,
-        product_id: String(i.product_id || ""),
-        category: null,
-      })),
-      raw: o,
-    }));
-    return { orders, totalPages };
-  } catch (e) {
-    console.error("WC API error:", e.message);
+  const url = `${BASE_URL}/wp-json/wc/v3/orders?page=${page}&per_page=${perPage}&orderby=date&order=desc&consumer_key=${ck}&consumer_secret=${cs}`;
+  const res = await fetch(url, { headers: { "User-Agent": "FroivSync/1.0" } });
+
+  if (!res.ok) {
+    console.error(`WC Orders API returned ${res.status}`);
     return null;
   }
+
+  const totalPages = parseInt(res.headers.get("x-wp-totalpages") || "1");
+  const data = await res.json();
+
+  const orders = data.map((o: any) => ({
+    external_id: String(o.id),
+    status: o.status || "pending",
+    total_amount: parseFloat(o.total) || 0,
+    currency: o.currency || "BRL",
+    payment_method: o.payment_method_title || o.payment_method || null,
+    ordered_at: o.date_created || null,
+    customer_name: `${o.billing?.first_name || ""} ${o.billing?.last_name || ""}`.trim() || null,
+    customer_email: o.billing?.email || null,
+    country: o.billing?.country || null,
+    items: (o.line_items || []).map((i: any) => ({
+      name: i.name || "Produto",
+      price: parseFloat(i.total) || 0,
+      quantity: i.quantity || 1,
+      product_id: String(i.product_id || ""),
+      category: null,
+    })),
+    raw: o,
+  }));
+
+  return { orders, totalPages };
 }
 
-// ─── Strategy 2: Public Store API (product catalog fallback) ───
-async function fetchProductsFromStoreApi(page: number, perPage = 100): Promise<{ items: any[]; totalPages: number } | null> {
-  try {
-    const url = `${BASE_URL}/wp-json/wc/store/v1/products?page=${page}&per_page=${perPage}&orderby=date&order=desc`;
-    const res = await fetch(url, { headers: { "User-Agent": "FroivSync/1.0" } });
-    if (!res.ok) return null;
-    const totalPages = parseInt(res.headers.get("x-wp-totalpages") || "1");
-    const data = await res.json();
-    const items = data.map((p: any) => ({
-      external_id: `PROD-${p.id}`,
-      status: p.is_purchasable ? "active" : "inactive",
-      total_amount: parseInt(p.prices?.price || "0") / 100,
-      currency: p.prices?.currency_code || "BRL",
-      payment_method: "catalog",
-      ordered_at: null,
-      customer_name: null,
-      customer_email: null,
-      country: null,
-      items: [{
-        name: decodeHtml(p.name || "Produto"),
-        price: parseInt(p.prices?.price || "0") / 100,
-        quantity: 1,
-        product_id: String(p.id),
-        category: p.categories?.[0]?.name ? decodeHtml(p.categories[0].name).trim() : null,
-      }],
-      raw: { type: "product_catalog", id: p.id, slug: p.slug, permalink: p.permalink },
-    }));
-    return { items, totalPages };
-  } catch (e) {
-    console.error("Store API error:", e.message);
-    return null;
-  }
-}
-
-function decodeHtml(t: string): string {
-  return t.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#039;/g, "'").replace(/\n/g, " ").trim();
-}
-
-// ─── Upsert ───
+// ─── Upsert orders into DB ───
 async function upsertOrders(supabase: any, records: any[]): Promise<{ inserted: number; updated: number }> {
   let inserted = 0, updated = 0;
 
@@ -106,6 +67,7 @@ async function upsertOrders(supabase: any, records: any[]): Promise<{ inserted: 
       await supabase.from("external_orders").update({
         status: order.status,
         total_amount: order.total_amount,
+        payment_method: order.payment_method,
         updated_at: new Date().toISOString(),
       }).eq("external_id", extId);
       updated++;
@@ -145,7 +107,7 @@ async function upsertOrders(supabase: any, records: any[]): Promise<{ inserted: 
       ordered_at: order.ordered_at,
     }).select("id").single();
 
-    if (error) { console.error(`Insert ${extId}:`, error.message); continue; }
+    if (error) { console.error(`Insert order ${extId}:`, error.message); continue; }
 
     if (newOrder && order.items?.length) {
       await supabase.from("external_order_items").insert(
@@ -174,50 +136,69 @@ Deno.serve(async (req) => {
     let mode = "incremental";
     try { const b = await req.json(); mode = b?.mode || "incremental"; } catch { /* */ }
 
+    // Check credentials
+    const ck = Deno.env.get("WC_CONSUMER_KEY");
+    const cs = Deno.env.get("WC_CONSUMER_SECRET");
+
+    if (!ck || !cs) {
+      console.log("⚠️ Missing WC_CONSUMER_KEY / WC_CONSUMER_SECRET — orders not accessible.");
+      console.log("Products endpoint ignored for order sync. Orders require authenticated WooCommerce API access.");
+      return new Response(JSON.stringify({
+        success: true,
+        strategy: "none",
+        mode,
+        inserted: 0,
+        updated: 0,
+        message: "WooCommerce API credentials not configured. Set WC_CONSUMER_KEY and WC_CONSUMER_SECRET to enable order sync.",
+        timestamp: new Date().toISOString(),
+      }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
+    console.log("Using WooCommerce Orders API (/wp-json/wc/v3/orders)");
+
     const supabase = getSupabase();
     const maxPages = mode === "backfill" ? 500 : 3;
     let totalInserted = 0, totalUpdated = 0;
-    let strategy = "none";
 
-    // Strategy 1: WC REST API
-    console.log("Trying WC REST API v3...");
-    const wcTest = await fetchOrdersFromWcApi(1);
-
-    if (wcTest) {
-      strategy = "wc_rest_api";
-      console.log(`✅ WC API: ${wcTest.orders.length} orders, ${wcTest.totalPages} pages`);
-      let r = await upsertOrders(supabase, wcTest.orders);
-      totalInserted += r.inserted; totalUpdated += r.updated;
-
-      for (let p = 2; p <= Math.min(wcTest.totalPages, maxPages); p++) {
-        const pr = await fetchOrdersFromWcApi(p);
-        if (!pr || !pr.orders.length) break;
-        console.log(`  Page ${p}: ${pr.orders.length} orders`);
-        r = await upsertOrders(supabase, pr.orders);
-        totalInserted += r.inserted; totalUpdated += r.updated;
-      }
+    const firstPage = await fetchOrders(1);
+    if (!firstPage) {
+      console.error("WC Orders API failed on first page. Check credentials.");
+      return new Response(JSON.stringify({
+        success: false,
+        error: "WC Orders API request failed. Verify consumer key/secret.",
+      }), { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    // Fallback: Store API
-    if (!wcTest) {
-      console.log("⚠️ WC API unavailable → Store API fallback (product catalog)");
-      strategy = "store_api_catalog";
+    console.log(`✅ WC Orders API: ${firstPage.orders.length} orders, ${firstPage.totalPages} total pages`);
+    let r = await upsertOrders(supabase, firstPage.orders);
+    totalInserted += r.inserted;
+    totalUpdated += r.updated;
 
-      for (let p = 1; p <= maxPages; p++) {
-        const result = await fetchProductsFromStoreApi(p);
-        if (!result || !result.items.length) break;
-        console.log(`  Store API page ${p}/${Math.min(result.totalPages, maxPages)}: ${result.items.length} items`);
-        const r = await upsertOrders(supabase, result.items);
-        totalInserted += r.inserted; totalUpdated += r.updated;
-        if (p >= result.totalPages) break;
-      }
+    const pagesToFetch = Math.min(firstPage.totalPages, maxPages);
+    for (let p = 2; p <= pagesToFetch; p++) {
+      const page = await fetchOrders(p);
+      if (!page || !page.orders.length) break;
+      console.log(`  Page ${p}/${pagesToFetch}: ${page.orders.length} orders`);
+      r = await upsertOrders(supabase, page.orders);
+      totalInserted += r.inserted;
+      totalUpdated += r.updated;
     }
 
-    const summary = { success: true, strategy, mode, inserted: totalInserted, updated: totalUpdated, timestamp: new Date().toISOString() };
-    console.log(`✅ Done: ${JSON.stringify(summary)}`);
+    const summary = {
+      success: true,
+      strategy: "wc_rest_api_v3",
+      mode,
+      inserted: totalInserted,
+      updated: totalUpdated,
+      total_pages: firstPage.totalPages,
+      timestamp: new Date().toISOString(),
+    };
+    console.log(`✅ Sync complete: ${JSON.stringify(summary)}`);
     return new Response(JSON.stringify(summary), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
   } catch (error) {
     console.error("Sync error:", error);
-    return new Response(JSON.stringify({ success: false, error: error.message }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    return new Response(JSON.stringify({ success: false, error: error.message }), {
+      status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 });
