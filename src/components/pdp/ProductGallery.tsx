@@ -145,23 +145,31 @@ export default function ProductGallery({ images, title, category, verified, isDe
           </div>
         </div>
 
-        {/* Thumbnails (desktop) */}
+        {/* Thumbnails */}
         {images.length > 1 && (
-          <div className="flex overflow-x-auto scrollbar-hide mx-2 border-t border-white/80 bg-white">
-            {images.map((img, i) => (
-              <button
-                key={i}
-                onClick={() => go(i)}
-                className={`flex-1 min-w-0 h-14 overflow-hidden transition-all border-r border-white/80 last:border-r-0 ${
-                  selected === i
-                    ? "ring-2 ring-inset ring-primary"
-                    : "opacity-70 hover:opacity-100"
-                }`}
-                aria-label={`Selecionar imagem ${i + 1}`}
-              >
-                <img src={img} alt={`Thumb ${i + 1}`} className="w-full h-full object-cover object-top" loading="lazy" />
-              </button>
-            ))}
+          <div className="overflow-x-auto scrollbar-hide mx-2 border-t border-white/80 bg-white">
+            <div className="flex" style={{ width: images.length <= 5 ? '100%' : `${(images.length / 5) * 100}%` }}>
+              {images.map((img, i) => (
+                <button
+                  key={i}
+                  ref={(el) => {
+                    if (el && selected === i) {
+                      el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                    }
+                  }}
+                  onClick={() => go(i)}
+                  className={`h-14 overflow-hidden transition-all border-r border-white/80 last:border-r-0 ${
+                    selected === i
+                      ? "ring-2 ring-inset ring-primary"
+                      : "opacity-70 hover:opacity-100"
+                  }`}
+                  style={{ width: images.length <= 5 ? `${100 / images.length}%` : `${100 / images.length}%` }}
+                  aria-label={`Selecionar imagem ${i + 1}`}
+                >
+                  <img src={img} alt={`Thumb ${i + 1}`} className="w-full h-full object-cover object-top" loading="lazy" />
+                </button>
+              ))}
+            </div>
           </div>
         )}
       </div>
