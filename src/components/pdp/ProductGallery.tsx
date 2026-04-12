@@ -67,7 +67,7 @@ export default function ProductGallery({ images, title, category, verified, isDe
             mainTouchRef.current = null;
           }}
         >
-          <div className="rounded-lg overflow-hidden relative">
+          <div className="overflow-hidden relative">
             <AnimatePresence mode="popLayout" initial={false} custom={direction}>
               <motion.img
                 key={selected}
