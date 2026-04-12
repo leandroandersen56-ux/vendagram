@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { MessageCircle } from "lucide-react";
-import logoFroiv from "@/assets/logo-froiv.svg";
+import logoFroiv from "@/assets/logo-froiv-footer.png";
 import selosCertificados from "@/assets/selos-certificados.png";
 import amexIcon from "@/assets/amex-icon.svg";
 import eloIcon from "@/assets/elo-icon.png";
