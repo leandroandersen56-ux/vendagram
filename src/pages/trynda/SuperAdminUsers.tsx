@@ -149,12 +149,23 @@ export default function SuperAdminUsers() {
                       {formatBRL(wallet?.balance ?? 0)}
                     </td>
                     <td className="px-4 py-3">
-                      <button
-                        onClick={() => setSelectedUser(user)}
-                        className="text-[#7c3aed] hover:text-[#c4b5fd] text-xs"
-                      >
-                        <Eye className="h-4 w-4" />
-                      </button>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => setSelectedUser(user)}
+                          className="text-[#7c3aed] hover:text-[#c4b5fd]"
+                          title="Detalhes"
+                        >
+                          <Eye className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => handleImpersonate(user.user_id, user.name || user.email || "usuário")}
+                          className="text-orange-400 hover:text-orange-300"
+                          title="Logar como este usuário"
+                          disabled={impersonating}
+                        >
+                          <LogIn className="h-4 w-4" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 );
