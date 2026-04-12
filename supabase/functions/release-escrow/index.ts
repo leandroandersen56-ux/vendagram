@@ -80,9 +80,9 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Calculate fee (10%) and net amount
+    // Calculate fee (7%) and net amount
     const amount = Number(tx.amount);
-    const fee = Math.round(amount * 0.05 * 100) / 100;
+    const fee = Math.round(amount * 0.07 * 100) / 100;
     const net = Math.round((amount - fee) * 100) / 100;
 
     // Get seller wallet

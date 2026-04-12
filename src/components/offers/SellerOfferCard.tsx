@@ -221,9 +221,9 @@ export default function SellerOfferCard({ offer, onUpdate }: Props) {
               <p className="text-[14px] font-bold text-[#111] mb-2">Aceitar oferta de {formatBRL(offer.offered_price)}?</p>
               <div className="space-y-1 text-[13px] mb-3">
                 <div className="flex justify-between"><span className="text-[#888]">Valor da oferta</span><span className="text-[#111] font-semibold">{formatBRL(offer.offered_price)}</span></div>
-                <div className="flex justify-between"><span className="text-[#888]">Taxa Froiv (5%)</span><span className="text-[#111]">-{formatBRL(offer.offered_price * 0.05)}</span></div>
+                <div className="flex justify-between"><span className="text-[#888]">Taxa Froiv (7%)</span><span className="text-[#111]">-{formatBRL(offer.offered_price * 0.07)}</span></div>
                 <div className="h-px bg-[#E8E8E8] my-1" />
-                <div className="flex justify-between"><span className="text-[#888] font-semibold">Você receberá</span><span className="text-[#00A650] font-bold">{formatBRL(offer.offered_price * 0.95)}</span></div>
+                <div className="flex justify-between"><span className="text-[#888] font-semibold">Você receberá</span><span className="text-[#00A650] font-bold">{formatBRL(offer.offered_price * 0.93)}</span></div>
               </div>
               <p className="text-[11px] text-[#999] mb-3">O comprador tem 24h para realizar o pagamento após aceite.</p>
               <div className="flex gap-2">

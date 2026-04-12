@@ -48,7 +48,7 @@ export default function SuperAdminFinancial() {
 
   const kpis = [
     { label: "GMV TOTAL", value: formatBRL(stats?.gmv ?? 0), icon: DollarSign, color: "#10B981" },
-    { label: "RECEITA FROIV (5%)", value: formatBRL(stats?.revenue ?? 0), icon: TrendingUp, color: "#7c3aed" },
+    { label: "RECEITA FROIV (7%)", value: formatBRL(stats?.revenue ?? 0), icon: TrendingUp, color: "#7c3aed" },
     { label: "EM ESCROW", value: formatBRL(walletsSummary?.pending ?? 0), icon: Clock, color: "#F59E0B" },
     { label: "SAQUES PENDENTES", value: formatBRL(stats?.pendingWithdrawals ?? 0), icon: Banknote, color: "#EF4444" },
   ];

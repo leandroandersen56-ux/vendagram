@@ -14,7 +14,7 @@ interface ConfigItem {
 
 const CONFIG_SCHEMA: ConfigItem[] = [
   { key: "mp_webhook_url", value: "", label: "Webhook URL (Mercado Pago)", type: "text", section: "mercadopago" },
-  { key: "platform_fee_percent", value: "5", label: "Taxa da plataforma (%)", type: "number", section: "mercadopago" },
+  { key: "platform_fee_percent", value: "7", label: "Taxa da plataforma (%)", type: "number", section: "mercadopago" },
   { key: "resend_from_email", value: "noreply@froiv.com", label: "Email remetente (FROM)", type: "text", section: "email" },
   { key: "support_email", value: "contato@froiv.com", label: "Email de suporte", type: "text", section: "email" },
   { key: "escrow_auto_release_hours", value: "24", label: "Prazo liberação escrow (horas)", type: "number", section: "escrow" },

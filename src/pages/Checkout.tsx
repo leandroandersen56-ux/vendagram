@@ -675,7 +675,7 @@ export default function Checkout() {
                     <span className="font-medium text-foreground">{formatBRL(total)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Taxa (5%)</span>
+                    <span className="text-muted-foreground">Taxa (7%)</span>
                     <span className="text-muted-foreground text-xs">incluída</span>
                   </div>
                   {paymentMethod === "card" && parseInt(installments) > 1 && (
