@@ -196,6 +196,13 @@ export default function SuperAdminUsers() {
                 {selectedUser.username && <p className="text-xs text-gray-500">@{selectedUser.username}</p>}
                 <div className="flex gap-2 mt-2">
                   {selectedUser.is_verified && <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full">Verificado</span>}
+                  <button
+                    onClick={() => handleImpersonate(selectedUser.user_id, selectedUser.name || selectedUser.email || "usuário")}
+                    disabled={impersonating}
+                    className="text-[10px] bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded-full hover:bg-orange-500/30 flex items-center gap-1"
+                  >
+                    <LogIn className="h-3 w-3" /> Logar como
+                  </button>
                 </div>
               </div>
               <button onClick={() => setSelectedUser(null)} className="text-gray-400 hover:text-white">
