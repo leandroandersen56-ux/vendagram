@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { formatBRL } from "@/hooks/useAdminStats";
-import { Search, Eye, Trash2, Pause, Play, ExternalLink } from "lucide-react";
+import { Search, Eye, Trash2, Pause, Play, ExternalLink, ImageOff } from "lucide-react";
 import { toast } from "sonner";
 
 const STATUS_MAP: Record<string, { label: string; cls: string }> = {
@@ -66,16 +66,27 @@ export default function SuperAdminListings() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-white/[0.06]">
-                {["Título", "Plataforma", "Vendedor", "Preço", "Status", "Views", "Criado", "Ações"].map(h => (
+                {["", "Título", "Plataforma", "Vendedor", "Preço", "Status", "Views", "Criado", "Ações"].map(h => (
                   <th key={h} className="text-left px-4 py-3 text-[11px] text-gray-400 uppercase font-medium">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {isLoading ? (
-                <tr><td colSpan={8} className="text-center py-10 text-gray-500">Carregando...</td></tr>
-              ) : listings?.map(l => (
+                <tr><td colSpan={9} className="text-center py-10 text-gray-500">Carregando...</td></tr>
+              ) : listings?.map(l => {
+                const thumb = l.screenshots?.[0] || null;
+                return (
                 <tr key={l.id} className="border-b border-white/[0.04] hover:bg-white/[0.02]">
+                  <td className="px-4 py-2 w-14">
+                    {thumb ? (
+                      <img src={thumb} alt="" className="w-10 h-10 rounded object-cover" />
+                    ) : (
+                      <div className="w-10 h-10 rounded bg-white/[0.06] flex items-center justify-center">
+                        <ImageOff className="h-4 w-4 text-gray-600" />
+                      </div>
+                    )}
+                  </td>
                   <td className="px-4 py-3 text-white font-medium max-w-[200px] truncate">{l.title}</td>
                   <td className="px-4 py-3 text-gray-300 capitalize">{l.category.replace(/_/g, " ")}</td>
                   <td className="px-4 py-3 text-gray-400 text-xs">{(l as any).profiles?.name || "—"}</td>
@@ -99,7 +110,8 @@ export default function SuperAdminListings() {
                     </div>
                   </td>
                 </tr>
-              ))}
+                );
+              })}
             </tbody>
           </table>
         </div>
