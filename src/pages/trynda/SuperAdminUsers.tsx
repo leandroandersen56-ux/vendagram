@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { formatBRL } from "@/hooks/useAdminStats";
-import { Search, ChevronLeft, ChevronRight, X, Eye, Ban, DollarSign, Mail } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight, X, Eye, Ban, DollarSign, Mail, LogIn } from "lucide-react";
 import { toast } from "sonner";
 
 export default function SuperAdminUsers() {
