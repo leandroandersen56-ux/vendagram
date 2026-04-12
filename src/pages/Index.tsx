@@ -622,8 +622,7 @@ export default function Index() {
                   </div>
                 </Link>
 
-                {/* Game Categories Slider */}
-                <div>
+                <div className="sm:bg-card sm:rounded-2xl sm:border sm:border-border sm:p-5">
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="text-[15px] font-semibold text-txt-primary flex items-center gap-2">
                       <Gamepad2 className="h-4 w-4 text-primary" /> Categorias de Jogos
@@ -664,7 +663,7 @@ export default function Index() {
                 </div>
 
                 {games.length > 0 && (
-                  <div>
+                  <div className="sm:bg-card sm:rounded-2xl sm:border sm:border-border sm:p-5">
                     <div className="flex items-center justify-between mb-3">
                       <h3 className="text-[15px] font-semibold text-txt-primary flex items-center gap-2">
                         <Gamepad2 className="h-4 w-4 text-primary" /> Contas de Jogos
