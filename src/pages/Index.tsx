@@ -20,7 +20,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import bannerHero1 from "@/assets/banner-hero.png";
 import bannerHeroSecurity from "@/assets/banner-hero-security-v2.jpg";
 import bannerSecurityHero from "@/assets/banner-security-hero.png";
-import bannerGamesSection from "@/assets/banner-roblox.jpg";
+import bannerGamesSection from "@/assets/banner-games-v2.jpg";
 import bannerYoutube from "@/assets/banner-youtube-v4.jpg";
 import bannerSocialFacebook from "@/assets/banner-facebook.jpg";
 import bannerSocialTiktok from "@/assets/banners/banner-social-tiktok.jpg";
