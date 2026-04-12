@@ -37,7 +37,7 @@ export default function SuperAdminOrders() {
 
   const handleRefresh = () => {
     queryClient.invalidateQueries({ queryKey: ["external-orders"] });
-    toast.success("Dados atualizados! O scraper externo alimenta automaticamente.");
+    toast.success("Dados atualizados! Sincronização automática ativa (a cada 1 minuto).");
   };
 
   const filtered = orders.filter((o: any) => {
