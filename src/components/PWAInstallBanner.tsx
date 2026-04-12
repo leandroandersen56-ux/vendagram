@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { X, Download } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
-import ghostIcon from "@/assets/froiv-ghost-icon.png";
+import ghostIcon from "@/assets/froiv-app-icon.png";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
