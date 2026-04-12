@@ -199,16 +199,15 @@ export default function ListingDetail() {
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-5 lg:gap-8">
               {/* Left column */}
               <div className="lg:col-span-3 space-y-4">
-                {/* Gallery */}
-                <ProductGallery
-                  images={allImages}
-                  title={listing.title}
-                  category={listing.category}
-                  verified={sellerSales >= 5}
-                  isDemo={listing.seller_id === "00000000-0000-0000-0000-000000000001"}
-                />
-
+                {/* Gallery + Info unified card (mobile) */}
                 <div className="lg:hidden bg-white rounded-xl border border-[hsl(var(--border))] overflow-hidden">
+                  <ProductGallery
+                    images={allImages}
+                    title={listing.title}
+                    category={listing.category}
+                    verified={sellerSales >= 5}
+                    isDemo={listing.seller_id === "00000000-0000-0000-0000-000000000001"}
+                  />
                   {/* Info */}
                   <div className="p-4 pb-0">
                     <div className="flex items-start justify-between gap-2">
@@ -293,6 +292,17 @@ export default function ListingDetail() {
                   <div className="px-4 pb-4 pt-1 border-t border-[hsl(var(--border))]">
                     <TrustSignals inline />
                   </div>
+                </div>
+
+                {/* Gallery (desktop only) */}
+                <div className="hidden lg:block">
+                  <ProductGallery
+                    images={allImages}
+                    title={listing.title}
+                    category={listing.category}
+                    verified={sellerSales >= 5}
+                    isDemo={listing.seller_id === "00000000-0000-0000-0000-000000000001"}
+                  />
                 </div>
 
                 {/* Seller Card (mobile only) */}
