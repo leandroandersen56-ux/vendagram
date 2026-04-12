@@ -49,7 +49,7 @@ export default function ProductGallery({ images, title, category, verified, isDe
       <div className="space-y-0">
         {/* Main image — click to open lightbox */}
         <div
-          className="relative overflow-hidden bg-white group cursor-zoom-in p-2 lg:rounded-xl lg:ring-1 lg:ring-border/40 lg:shadow-[0_2px_8px_rgba(0,0,0,0.14)]"
+          className="relative overflow-hidden bg-white group cursor-zoom-in pt-2 px-2 pb-0 lg:rounded-xl lg:ring-1 lg:ring-border/40 lg:shadow-[0_2px_8px_rgba(0,0,0,0.14)]"
           onClick={() => { if (swipedRef.current) { swipedRef.current = false; return; } setLightbox(true); }}
           onTouchStart={(e) => {
             mainTouchRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
