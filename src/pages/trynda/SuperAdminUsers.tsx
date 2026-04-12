@@ -11,7 +11,37 @@ export default function SuperAdminUsers() {
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [adjustAmount, setAdjustAmount] = useState("");
   const [adjustReason, setAdjustReason] = useState("");
+  const [impersonating, setImpersonating] = useState(false);
   const PAGE_SIZE = 50;
+
+  const handleImpersonate = async (userId: string, userName: string) => {
+    if (impersonating) return;
+    const confirm = window.confirm(`Logar como "${userName}"? Você será deslogado da sua conta atual.`);
+    if (!confirm) return;
+
+    setImpersonating(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) { toast.error("Sessão expirada"); return; }
+
+      const res = await supabase.functions.invoke("impersonate-user", {
+        body: { user_id: userId },
+      });
+
+      if (res.error || !res.data?.url) {
+        toast.error("Erro ao gerar link de acesso");
+        console.error(res.error || res.data);
+        return;
+      }
+
+      toast.success("Redirecionando...");
+      window.open(res.data.url, "_blank");
+    } catch (e: any) {
+      toast.error(e.message || "Erro");
+    } finally {
+      setImpersonating(false);
+    }
+  };
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["admin-users", search, page],
