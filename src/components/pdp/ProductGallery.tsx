@@ -147,12 +147,12 @@ export default function ProductGallery({ images, title, category, verified, isDe
 
         {/* Thumbnails (desktop) */}
         {images.length > 1 && (
-          <div className="flex overflow-x-auto scrollbar-hide px-2 border-t border-white/80 bg-white">
+          <div className="flex overflow-x-auto scrollbar-hide mx-2 border-t border-white/80 bg-white">
             {images.map((img, i) => (
               <button
                 key={i}
                 onClick={() => go(i)}
-                className={`flex-shrink-0 w-16 h-16 overflow-hidden transition-all border-r border-white last:border-r-0 ${
+                className={`flex-1 min-w-0 h-14 overflow-hidden transition-all border-r border-white/80 last:border-r-0 ${
                   selected === i
                     ? "ring-2 ring-inset ring-primary"
                     : "opacity-70 hover:opacity-100"
