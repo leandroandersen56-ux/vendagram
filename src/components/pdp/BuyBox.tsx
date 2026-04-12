@@ -23,7 +23,7 @@ export default function BuyBox({ price, originalPrice, stock = 1, onBuy, onOffer
 
   const totalPrice = price * quantity;
   const installment = (totalPrice / 6).toFixed(2).replace(".", ",");
-  const pixPrice = formatBRL(totalPrice * 0.93);
+  const pixPrice = formatBRL(totalPrice * 0.97);
 
   return (
     <div className={inline ? "" : "rounded-xl border border-[hsl(var(--border))] bg-white p-4 sm:p-5"}>
@@ -53,7 +53,7 @@ export default function BuyBox({ price, originalPrice, stock = 1, onBuy, onOffer
 
         <div className="flex items-center gap-1.5 mt-2 text-[13px] text-[hsl(var(--success))] font-semibold">
           <Tag className="h-3.5 w-3.5" />
-          <span>7% OFF no Pix → {pixPrice}</span>
+          <span>3% OFF no Pix → {pixPrice}</span>
         </div>
       </div>
 
