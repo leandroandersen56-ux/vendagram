@@ -31,7 +31,7 @@ export default function SuperAdminUsers() {
       console.log("Impersonate response:", res);
 
       if (res.error) {
-        toast.error("Erro ao gerar link: " + (res.error?.message || "unknown"));
+        toast.error("Erro ao gerar link: " + (res.error?.message || "falha de rede/CORS"));
         console.error("Invoke error:", res.error);
         return;
       }
@@ -45,7 +45,7 @@ export default function SuperAdminUsers() {
       toast.success("Redirecionando...");
       window.open(res.data.url, "_blank");
     } catch (e: any) {
-      toast.error(e.message || "Erro");
+      toast.error(e.message || "Erro de rede ao chamar a função");
     } finally {
       setImpersonating(false);
     }
