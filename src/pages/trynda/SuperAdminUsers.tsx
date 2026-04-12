@@ -28,9 +28,17 @@ export default function SuperAdminUsers() {
         body: { user_id: userId },
       });
 
-      if (res.error || !res.data?.url) {
-        toast.error("Erro ao gerar link de acesso");
-        console.error(res.error || res.data);
+      console.log("Impersonate response:", res);
+
+      if (res.error) {
+        toast.error("Erro ao gerar link: " + (res.error?.message || "unknown"));
+        console.error("Invoke error:", res.error);
+        return;
+      }
+
+      if (!res.data?.url) {
+        toast.error("Resposta inválida da função");
+        console.error("Response data:", res.data);
         return;
       }
 
