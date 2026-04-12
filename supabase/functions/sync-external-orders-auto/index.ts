@@ -7,6 +7,7 @@ const corsHeaders = {
 };
 
 const BASE_URL = "https://alphapropriedadesdigitais.com.br";
+const UA = "FroivSync/1.0";
 
 function getSupabase() {
   return createClient(
@@ -15,25 +16,200 @@ function getSupabase() {
   );
 }
 
-// ─── WooCommerce REST API v3 — Orders only ───
-async function fetchOrders(page: number, perPage = 50): Promise<{ orders: any[]; totalPages: number } | null> {
+interface OrderRecord {
+  external_id: string;
+  status: string;
+  total_amount: number;
+  currency: string;
+  payment_method: string | null;
+  ordered_at: string | null;
+  customer_name: string | null;
+  customer_email: string | null;
+  country: string | null;
+  items: { name: string; price: number; quantity: number; product_id: string; category: string | null }[];
+  raw: Record<string, unknown>;
+}
+
+interface StrategyResult {
+  name: string;
+  success: boolean;
+  orders: OrderRecord[];
+  totalPages: number;
+  message: string;
+}
+
+// ─── Strategy 1: WooCommerce REST API v3 (Authenticated) ───
+async function strategyWcRestApi(page: number, perPage = 50): Promise<StrategyResult> {
+  const name = "wc_rest_api_v3";
   const ck = Deno.env.get("WC_CONSUMER_KEY");
   const cs = Deno.env.get("WC_CONSUMER_SECRET");
-  if (!ck || !cs) return null;
 
-  const url = `${BASE_URL}/wp-json/wc/v3/orders?page=${page}&per_page=${perPage}&orderby=date&order=desc&consumer_key=${ck}&consumer_secret=${cs}`;
-  const res = await fetch(url, { headers: { "User-Agent": "FroivSync/1.0" } });
-
-  if (!res.ok) {
-    console.error(`WC Orders API returned ${res.status}`);
-    return null;
+  if (!ck || !cs) {
+    console.log("⏭️ [Strategy 1] WC REST API — credentials not found, skipping");
+    return { name, success: false, orders: [], totalPages: 0, message: "WC_CONSUMER_KEY/SECRET not configured" };
   }
 
-  const totalPages = parseInt(res.headers.get("x-wp-totalpages") || "1");
-  const data = await res.json();
+  console.log("🔑 [Strategy 1] Trying WC REST API v3 with consumer key/secret...");
+  try {
+    const url = `${BASE_URL}/wp-json/wc/v3/orders?page=${page}&per_page=${perPage}&orderby=date&order=desc&consumer_key=${ck}&consumer_secret=${cs}`;
+    const res = await fetch(url, { headers: { "User-Agent": UA } });
 
-  const orders = data.map((o: any) => ({
-    external_id: String(o.id),
+    if (!res.ok) {
+      console.log(`❌ [Strategy 1] WC REST API returned ${res.status}`);
+      return { name, success: false, orders: [], totalPages: 0, message: `API returned ${res.status}` };
+    }
+
+    const totalPages = parseInt(res.headers.get("x-wp-totalpages") || "1");
+    const data = await res.json();
+    const orders = mapWcOrders(data);
+    console.log(`✅ [Strategy 1] WC REST API: ${orders.length} orders, ${totalPages} pages`);
+    return { name, success: true, orders, totalPages, message: "OK" };
+  } catch (e) {
+    console.error(`❌ [Strategy 1] WC REST API error:`, e.message);
+    return { name, success: false, orders: [], totalPages: 0, message: e.message };
+  }
+}
+
+// ─── Strategy 2: Unauthenticated WC REST API probe ───
+async function strategyUnauthProbe(): Promise<StrategyResult> {
+  const name = "wc_unauth_probe";
+  console.log("🔍 [Strategy 2] Probing unauthenticated WC REST API...");
+  try {
+    const url = `${BASE_URL}/wp-json/wc/v3/orders?per_page=10`;
+    const res = await fetch(url, { headers: { "User-Agent": UA } });
+
+    if (res.status === 401 || res.status === 403) {
+      console.log(`⏭️ [Strategy 2] Orders endpoint requires auth (${res.status}) — expected`);
+      return { name, success: false, orders: [], totalPages: 0, message: `Auth required (${res.status})` };
+    }
+
+    if (!res.ok) {
+      console.log(`⏭️ [Strategy 2] Endpoint returned ${res.status}`);
+      return { name, success: false, orders: [], totalPages: 0, message: `HTTP ${res.status}` };
+    }
+
+    const data = await res.json();
+    if (!Array.isArray(data) || data.length === 0) {
+      console.log("⏭️ [Strategy 2] No order data in unauthenticated response");
+      return { name, success: false, orders: [], totalPages: 0, message: "Empty response" };
+    }
+
+    const totalPages = parseInt(res.headers.get("x-wp-totalpages") || "1");
+    const orders = mapWcOrders(data);
+    console.log(`✅ [Strategy 2] Unauthenticated probe found ${orders.length} orders!`);
+    return { name, success: true, orders, totalPages, message: "OK — orders exposed without auth" };
+  } catch (e) {
+    console.error(`❌ [Strategy 2] Probe error:`, e.message);
+    return { name, success: false, orders: [], totalPages: 0, message: e.message };
+  }
+}
+
+// ─── Strategy 3: WP REST API alternate order endpoints ───
+async function strategyAlternateEndpoints(): Promise<StrategyResult> {
+  const name = "alternate_endpoints";
+  console.log("🔍 [Strategy 3] Scanning alternate WP/WC order endpoints...");
+
+  const endpoints = [
+    "/wp-json/wc/v2/orders",
+    "/wp-json/wc/v1/orders",
+    "/wp-json/wc/store/v1/checkout",
+    "/wp-json/wp/v2/shop_order",
+    "/?rest_route=/wc/v3/orders",
+    "/?rest_route=/wc/store/v1/order",
+    "/wp-json/wc/store/v1/order",
+  ];
+
+  for (const ep of endpoints) {
+    try {
+      const url = `${BASE_URL}${ep}`;
+      console.log(`  → Trying ${ep}`);
+      const res = await fetch(url, {
+        headers: { "User-Agent": UA, "Accept": "application/json" },
+        redirect: "follow",
+      });
+
+      if (!res.ok) continue;
+
+      const ct = res.headers.get("content-type") || "";
+      if (!ct.includes("json")) continue;
+
+      const data = await res.json();
+      if (Array.isArray(data) && data.length > 0 && (data[0].id || data[0].order_id)) {
+        const orders = mapWcOrders(data);
+        console.log(`✅ [Strategy 3] Found ${orders.length} orders at ${ep}`);
+        return { name, success: true, orders, totalPages: 1, message: `Found at ${ep}` };
+      }
+    } catch {
+      // continue to next endpoint
+    }
+  }
+
+  console.log("⏭️ [Strategy 3] No alternate endpoints exposed order data");
+  return { name, success: false, orders: [], totalPages: 0, message: "No accessible alternate endpoints" };
+}
+
+// ─── Strategy 4: Frontend state extraction ───
+async function strategyFrontendScan(): Promise<StrategyResult> {
+  const name = "frontend_scan";
+  console.log("🔍 [Strategy 4] Scanning frontend pages for embedded order data...");
+
+  const pages = [
+    "/minha-conta/orders/",
+    "/my-account/orders/",
+    "/checkout/order-received/",
+    "/wp-json/",
+  ];
+
+  for (const page of pages) {
+    try {
+      const url = `${BASE_URL}${page}`;
+      console.log(`  → Scanning ${page}`);
+      const res = await fetch(url, {
+        headers: { "User-Agent": UA, "Accept": "text/html,application/json" },
+        redirect: "follow",
+      });
+
+      if (!res.ok) continue;
+
+      const body = await res.text();
+
+      // Look for embedded JSON data in script tags
+      const patterns = [
+        /var\s+wc_orders?\s*=\s*(\[[\s\S]*?\]);/i,
+        /window\.__INITIAL_STATE__\s*=\s*(\{[\s\S]*?\});/i,
+        /"orders"\s*:\s*(\[[\s\S]*?\])/i,
+        /woocommerce_params\s*=\s*(\{[\s\S]*?\});/i,
+      ];
+
+      for (const pattern of patterns) {
+        const match = body.match(pattern);
+        if (match && match[1]) {
+          try {
+            const parsed = JSON.parse(match[1]);
+            const arr = Array.isArray(parsed) ? parsed : [parsed];
+            if (arr.length > 0 && (arr[0].id || arr[0].order_id)) {
+              const orders = mapWcOrders(arr);
+              console.log(`✅ [Strategy 4] Extracted ${orders.length} orders from ${page}`);
+              return { name, success: true, orders, totalPages: 1, message: `Extracted from ${page}` };
+            }
+          } catch {
+            // JSON parse failed, continue
+          }
+        }
+      }
+    } catch {
+      // continue
+    }
+  }
+
+  console.log("⏭️ [Strategy 4] No embedded order data found in frontend pages");
+  return { name, success: false, orders: [], totalPages: 0, message: "No embedded order data found" };
+}
+
+// ─── Shared: Map WC order data to normalized records ───
+function mapWcOrders(data: any[]): OrderRecord[] {
+  return data.filter(o => o && (o.id || o.order_id)).map((o: any) => ({
+    external_id: String(o.id || o.order_id),
     status: o.status || "pending",
     total_amount: parseFloat(o.total) || 0,
     currency: o.currency || "BRL",
@@ -51,12 +227,10 @@ async function fetchOrders(page: number, perPage = 50): Promise<{ orders: any[];
     })),
     raw: o,
   }));
-
-  return { orders, totalPages };
 }
 
 // ─── Upsert orders into DB ───
-async function upsertOrders(supabase: any, records: any[]): Promise<{ inserted: number; updated: number }> {
+async function upsertOrders(supabase: any, records: OrderRecord[]): Promise<{ inserted: number; updated: number }> {
   let inserted = 0, updated = 0;
 
   for (const order of records) {
@@ -111,7 +285,7 @@ async function upsertOrders(supabase: any, records: any[]): Promise<{ inserted: 
 
     if (newOrder && order.items?.length) {
       await supabase.from("external_order_items").insert(
-        order.items.map((i: any) => ({
+        order.items.map((i) => ({
           order_id: newOrder.id,
           product_name: i.name || "Produto",
           category: i.category,
@@ -126,6 +300,21 @@ async function upsertOrders(supabase: any, records: any[]): Promise<{ inserted: 
   return { inserted, updated };
 }
 
+// ─── Fetch additional pages for a winning strategy ───
+async function fetchWcPage(page: number, perPage = 50): Promise<{ orders: OrderRecord[]; totalPages: number } | null> {
+  const ck = Deno.env.get("WC_CONSUMER_KEY");
+  const cs = Deno.env.get("WC_CONSUMER_SECRET");
+  if (!ck || !cs) return null;
+
+  const url = `${BASE_URL}/wp-json/wc/v3/orders?page=${page}&per_page=${perPage}&orderby=date&order=desc&consumer_key=${ck}&consumer_secret=${cs}`;
+  const res = await fetch(url, { headers: { "User-Agent": UA } });
+  if (!res.ok) return null;
+
+  const totalPages = parseInt(res.headers.get("x-wp-totalpages") || "1");
+  const data = await res.json();
+  return { orders: mapWcOrders(data), totalPages };
+}
+
 // ─── Main ───
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -136,64 +325,99 @@ Deno.serve(async (req) => {
     let mode = "incremental";
     try { const b = await req.json(); mode = b?.mode || "incremental"; } catch { /* */ }
 
-    // Check credentials
-    const ck = Deno.env.get("WC_CONSUMER_KEY");
-    const cs = Deno.env.get("WC_CONSUMER_SECRET");
+    console.log(`\n${"=".repeat(60)}`);
+    console.log(`🚀 Order sync started — mode: ${mode}`);
+    console.log(`${"=".repeat(60)}`);
 
-    if (!ck || !cs) {
-      console.log("⚠️ Missing WC_CONSUMER_KEY / WC_CONSUMER_SECRET — orders not accessible.");
-      console.log("Products endpoint ignored for order sync. Orders require authenticated WooCommerce API access.");
+    const strategiesAttempted: string[] = [];
+    let winningStrategy: StrategyResult | null = null;
+
+    // ─── Execute strategies in priority order ───
+
+    // Strategy 1: Authenticated WC REST API
+    const s1 = await strategyWcRestApi(1);
+    strategiesAttempted.push(s1.name);
+    if (s1.success && s1.orders.length > 0) {
+      winningStrategy = s1;
+    }
+
+    // Strategy 2: Unauthenticated probe
+    if (!winningStrategy) {
+      const s2 = await strategyUnauthProbe();
+      strategiesAttempted.push(s2.name);
+      if (s2.success && s2.orders.length > 0) {
+        winningStrategy = s2;
+      }
+    }
+
+    // Strategy 3: Alternate endpoints
+    if (!winningStrategy) {
+      const s3 = await strategyAlternateEndpoints();
+      strategiesAttempted.push(s3.name);
+      if (s3.success && s3.orders.length > 0) {
+        winningStrategy = s3;
+      }
+    }
+
+    // Strategy 4: Frontend scan
+    if (!winningStrategy) {
+      const s4 = await strategyFrontendScan();
+      strategiesAttempted.push(s4.name);
+      if (s4.success && s4.orders.length > 0) {
+        winningStrategy = s4;
+      }
+    }
+
+    // ─── No strategy found orders ───
+    if (!winningStrategy) {
+      console.log(`\n⚠️ All ${strategiesAttempted.length} strategies exhausted — no orders found`);
       return new Response(JSON.stringify({
         success: true,
-        strategy: "none",
+        status: "no_orders_found_after_full_scan",
+        strategies_attempted: strategiesAttempted,
         mode,
         inserted: 0,
         updated: 0,
-        message: "WooCommerce API credentials not configured. Set WC_CONSUMER_KEY and WC_CONSUMER_SECRET to enable order sync.",
+        message: "All extraction strategies attempted. Orders require authenticated WooCommerce API access. Configure WC_CONSUMER_KEY and WC_CONSUMER_SECRET to enable.",
         timestamp: new Date().toISOString(),
       }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    console.log("Using WooCommerce Orders API (/wp-json/wc/v3/orders)");
-
+    // ─── Process winning strategy ───
+    console.log(`\n🏆 Winning strategy: ${winningStrategy.name}`);
     const supabase = getSupabase();
-    const maxPages = mode === "backfill" ? 500 : 3;
     let totalInserted = 0, totalUpdated = 0;
 
-    const firstPage = await fetchOrders(1);
-    if (!firstPage) {
-      console.error("WC Orders API failed on first page. Check credentials.");
-      return new Response(JSON.stringify({
-        success: false,
-        error: "WC Orders API request failed. Verify consumer key/secret.",
-      }), { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } });
-    }
-
-    console.log(`✅ WC Orders API: ${firstPage.orders.length} orders, ${firstPage.totalPages} total pages`);
-    let r = await upsertOrders(supabase, firstPage.orders);
+    // Upsert first page
+    let r = await upsertOrders(supabase, winningStrategy.orders);
     totalInserted += r.inserted;
     totalUpdated += r.updated;
 
-    const pagesToFetch = Math.min(firstPage.totalPages, maxPages);
-    for (let p = 2; p <= pagesToFetch; p++) {
-      const page = await fetchOrders(p);
-      if (!page || !page.orders.length) break;
-      console.log(`  Page ${p}/${pagesToFetch}: ${page.orders.length} orders`);
-      r = await upsertOrders(supabase, page.orders);
-      totalInserted += r.inserted;
-      totalUpdated += r.updated;
+    // Fetch additional pages if strategy supports pagination (WC REST API)
+    if (winningStrategy.name === "wc_rest_api_v3" && winningStrategy.totalPages > 1) {
+      const maxPages = mode === "backfill" ? 500 : 3;
+      const pagesToFetch = Math.min(winningStrategy.totalPages, maxPages);
+      for (let p = 2; p <= pagesToFetch; p++) {
+        const page = await fetchWcPage(p);
+        if (!page || !page.orders.length) break;
+        console.log(`  Page ${p}/${pagesToFetch}: ${page.orders.length} orders`);
+        r = await upsertOrders(supabase, page.orders);
+        totalInserted += r.inserted;
+        totalUpdated += r.updated;
+      }
     }
 
     const summary = {
       success: true,
-      strategy: "wc_rest_api_v3",
+      strategy: winningStrategy.name,
+      strategies_attempted: strategiesAttempted,
       mode,
       inserted: totalInserted,
       updated: totalUpdated,
-      total_pages: firstPage.totalPages,
+      total_pages: winningStrategy.totalPages,
       timestamp: new Date().toISOString(),
     };
-    console.log(`✅ Sync complete: ${JSON.stringify(summary)}`);
+    console.log(`\n✅ Sync complete: ${JSON.stringify(summary)}`);
     return new Response(JSON.stringify(summary), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
   } catch (error) {
     console.error("Sync error:", error);
