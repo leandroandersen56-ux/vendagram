@@ -46,7 +46,7 @@ export default function ProductGallery({ images, title, category, verified, isDe
 
   return (
     <>
-      <div className="space-y-2.5">
+      <div className="space-y-0">
         {/* Main image — click to open lightbox */}
         <div
           className="relative overflow-hidden bg-white group cursor-zoom-in p-2 lg:rounded-xl lg:ring-1 lg:ring-border/40 lg:shadow-[0_2px_8px_rgba(0,0,0,0.14)]"
