@@ -29,7 +29,7 @@ export function useAdminStats() {
         totalUsers: users.count ?? 0,
         activeListings: listings.count ?? 0,
         gmv,
-        revenue: gmv * 0.05,
+        revenue: gmv * 0.07,
         openDisputes: disputes.count ?? 0,
         pendingWithdrawals,
         thisWeekGmv,

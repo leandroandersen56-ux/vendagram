@@ -72,7 +72,7 @@ function getEmailBody(type: string, data: Record<string, any>): { subject: strin
           <p style="color:#555;font-size:14px;line-height:1.6">O anúncio <strong>${data.title}</strong> foi vendido.</p>
           <table style="width:100%;margin:16px 0;border-collapse:collapse">
             <tr><td style="padding:8px 0;color:#888;font-size:13px">Valor da venda</td><td style="padding:8px 0;text-align:right;font-weight:600;color:#111;font-size:14px">${fmt(data.amount)}</td></tr>
-            <tr><td style="padding:8px 0;color:#888;font-size:13px">Taxa Froiv (5%)</td><td style="padding:8px 0;text-align:right;color:#888;font-size:14px">-${fmt(data.fee)}</td></tr>
+            <tr><td style="padding:8px 0;color:#888;font-size:13px">Taxa Froiv (7%)</td><td style="padding:8px 0;text-align:right;color:#888;font-size:14px">-${fmt(data.fee)}</td></tr>
             <tr style="border-top:1px solid #E8E8E8"><td style="padding:12px 0;font-weight:700;color:#111;font-size:14px">Você recebe</td><td style="padding:12px 0;text-align:right;font-weight:700;color:#2D6FF0;font-size:16px">${fmt(data.net)}</td></tr>
           </table>
           <p style="color:#555;font-size:13px">O valor ficará em custódia até o comprador confirmar o recebimento (até 24h).</p>
@@ -186,7 +186,7 @@ function getEmailBody(type: string, data: Record<string, any>): { subject: strin
           <div style="margin:20px 0">
             <p style="color:#555;font-size:13px;line-height:1.8">🔒 <strong>Compre com segurança</strong> — Escrow protege seu pagamento</p>
             <p style="color:#555;font-size:13px;line-height:1.8">⚡ <strong>Receba na hora</strong> — Credenciais entregues após pagamento</p>
-            <p style="color:#555;font-size:13px;line-height:1.8">💰 <strong>Venda suas contas</strong> — Taxa fixa de 5%</p>
+            <p style="color:#555;font-size:13px;line-height:1.8">💰 <strong>Venda suas contas</strong> — Taxa fixa de 7%</p>
           </div>
           ${btn("🚀 Explorar contas", `${SITE_URL}/marketplace`)}
         `),
