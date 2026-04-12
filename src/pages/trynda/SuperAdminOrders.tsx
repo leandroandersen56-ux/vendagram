@@ -35,22 +35,10 @@ export default function SuperAdminOrders() {
     refetchInterval: 60_000,
   });
 
-  const syncMutation = useMutation({
-    mutationFn: async () => {
-      const { data, error } = await supabase.functions.invoke("sync-external-orders", {
-        body: { per_page: 100 },
-      });
-      if (error) throw error;
-      return data;
-    },
-    onSuccess: (data) => {
-      toast.success(`Sincronização concluída: ${data.inserted} novos, ${data.skipped} atualizados`);
-      queryClient.invalidateQueries({ queryKey: ["external-orders"] });
-    },
-    onError: (err: any) => {
-      toast.error(`Erro na sincronização: ${err.message}`);
-    },
-  });
+  const handleRefresh = () => {
+    queryClient.invalidateQueries({ queryKey: ["external-orders"] });
+    toast.success("Dados atualizados! O scraper externo alimenta automaticamente.");
+  };
 
   const filtered = orders.filter((o: any) => {
     const matchesStatus = statusFilter === "all" || o.status === statusFilter;
