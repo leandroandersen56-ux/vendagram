@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { formatBRL } from "@/hooks/useAdminStats";
-import { Search, Eye, Trash2, Pause, Play, ExternalLink } from "lucide-react";
+import { Search, Eye, Trash2, Pause, Play, ExternalLink, ImageOff } from "lucide-react";
 import { toast } from "sonner";
 
 const STATUS_MAP: Record<string, { label: string; cls: string }> = {
