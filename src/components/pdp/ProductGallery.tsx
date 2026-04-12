@@ -147,15 +147,15 @@ export default function ProductGallery({ images, title, category, verified, isDe
 
         {/* Thumbnails (desktop) */}
         {images.length > 1 && (
-          <div className="flex gap-2 overflow-x-auto scrollbar-hide px-2">
+          <div className="flex overflow-x-auto scrollbar-hide px-2 -mt-0.5">
             {images.map((img, i) => (
               <button
                 key={i}
                 onClick={() => go(i)}
-                className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${
+                className={`flex-shrink-0 w-16 h-16 overflow-hidden transition-all border-r border-white last:border-r-0 ${
                   selected === i
-                    ? "border-primary ring-1 ring-primary/30"
-                    : "border-[hsl(var(--border))] hover:border-primary/40"
+                    ? "ring-2 ring-inset ring-primary"
+                    : "opacity-70 hover:opacity-100"
                 }`}
                 aria-label={`Selecionar imagem ${i + 1}`}
               >
