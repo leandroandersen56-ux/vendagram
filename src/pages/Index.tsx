@@ -425,15 +425,17 @@ export default function Index() {
         {/* === DESTAQUES DO DIA === */}
         <section className="py-4">
           <div className="container mx-auto">
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="text-[15px] font-semibold text-txt-primary flex items-center gap-1.5">
-                <Flame className="h-4 w-4 text-hot" /> Destaques do Dia
-              </h2>
-              <span className="text-[11px] font-semibold bg-hot text-white px-2.5 py-1 rounded-full">
-                🔥 HOT
-              </span>
+            <div className="sm:bg-card sm:rounded-2xl sm:border sm:border-border sm:p-5">
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-[15px] font-semibold text-txt-primary flex items-center gap-1.5">
+                  <Flame className="h-4 w-4 text-hot" /> Destaques do Dia
+                </h2>
+                <span className="text-[11px] font-semibold bg-hot text-white px-2.5 py-1 rounded-full">
+                  🔥 HOT
+                </span>
+              </div>
+              <DestaquesCarousel items={loading ? [] : shuffled.slice(0, 10)} loading={loading} />
             </div>
-            <DestaquesCarousel items={loading ? [] : shuffled.slice(0, 10)} loading={loading} />
           </div>
         </section>
 
@@ -462,7 +464,7 @@ export default function Index() {
 
                 {/* === INSTAGRAM === */}
                 {instagramListings.length > 0 && (
-                  <div>
+                  <div className="sm:bg-card sm:rounded-2xl sm:border sm:border-border sm:p-5">
                     <div className="flex items-center justify-between mb-3">
                       <h3 className="text-[15px] font-semibold text-txt-primary flex items-center gap-2">
                         <PlatformIcon platformId="instagram" size={18} /> Contas Instagram
@@ -500,7 +502,7 @@ export default function Index() {
 
                 {/* === TIKTOK === */}
                 {tiktokListings.length > 0 && (
-                  <div>
+                  <div className="sm:bg-card sm:rounded-2xl sm:border sm:border-border sm:p-5">
                     <div className="flex items-center justify-between mb-3">
                       <h3 className="text-[15px] font-semibold text-txt-primary flex items-center gap-2">
                         <PlatformIcon platformId="tiktok" size={18} /> Contas TikTok
@@ -538,7 +540,7 @@ export default function Index() {
 
                 {/* === YOUTUBE === */}
                 {youtubeListings.length > 0 && (
-                  <div>
+                  <div className="sm:bg-card sm:rounded-2xl sm:border sm:border-border sm:p-5">
                     <div className="flex items-center justify-between mb-3">
                       <h3 className="text-[15px] font-semibold text-txt-primary flex items-center gap-2">
                         <PlatformIcon platformId="youtube" size={18} /> Canais YouTube
@@ -576,7 +578,7 @@ export default function Index() {
 
                 {/* === FACEBOOK === */}
                 {facebookListings.length > 0 && (
-                  <div>
+                  <div className="sm:bg-card sm:rounded-2xl sm:border sm:border-border sm:p-5">
                     <div className="flex items-center justify-between mb-3">
                       <h3 className="text-[15px] font-semibold text-txt-primary flex items-center gap-2">
                         <PlatformIcon platformId="facebook" size={18} /> Páginas Facebook
@@ -620,8 +622,7 @@ export default function Index() {
                   </div>
                 </Link>
 
-                {/* Game Categories Slider */}
-                <div>
+                <div className="sm:bg-card sm:rounded-2xl sm:border sm:border-border sm:p-5">
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="text-[15px] font-semibold text-txt-primary flex items-center gap-2">
                       <Gamepad2 className="h-4 w-4 text-primary" /> Categorias de Jogos
@@ -662,7 +663,7 @@ export default function Index() {
                 </div>
 
                 {games.length > 0 && (
-                  <div>
+                  <div className="sm:bg-card sm:rounded-2xl sm:border sm:border-border sm:p-5">
                     <div className="flex items-center justify-between mb-3">
                       <h3 className="text-[15px] font-semibold text-txt-primary flex items-center gap-2">
                         <Gamepad2 className="h-4 w-4 text-primary" /> Contas de Jogos
