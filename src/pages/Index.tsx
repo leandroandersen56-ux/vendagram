@@ -284,7 +284,7 @@ export default function Index() {
                 return (
                   <button
                     key={cat.id}
-                    onClick={() => setSelectedPlatform(selectedPlatform === cat.id ? null : cat.id)}
+                    onClick={() => navigate(`/marketplace?platform=${cat.id}`)}
                     className="flex flex-col items-center gap-1.5 min-w-[60px] group"
                   >
                     <div className={`h-[52px] w-[52px] rounded-full ${cat.bg} flex items-center justify-center transition-transform group-hover:scale-105 ${selectedPlatform === cat.id ? 'ring-2 ring-primary ring-offset-2' : ''}`}>
