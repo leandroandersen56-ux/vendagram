@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { X, Download } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
-import ghostIcon from "@/assets/froiv-app-icon.png";
+import appIcon from "@/assets/froiv-app-icon.png";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -23,7 +23,6 @@ export default function PWAInstallBanner() {
       return;
     }
     if (window.location.hostname.includes("id-preview--") || window.location.hostname.includes("lovableproject.com")) return;
-    // Show banner every page load if not installed (no 24h suppression)
     if (window.matchMedia("(display-mode: standalone)").matches) return;
 
     const handler = (e: Event) => {
@@ -33,23 +32,19 @@ export default function PWAInstallBanner() {
     };
     window.addEventListener("beforeinstallprompt", handler);
 
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-    if (isIOS && !window.matchMedia("(display-mode: standalone)").matches) {
+    const isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (isIOSDevice && !window.matchMedia("(display-mode: standalone)").matches) {
       setShowBanner(true);
     }
 
     return () => window.removeEventListener("beforeinstallprompt", handler);
   }, []);
 
-  // Set CSS variable for navbar offset
   useEffect(() => {
     const visible = showBanner && !dismissed && isMobile;
-    document.documentElement.style.setProperty(
-      '--pwa-banner-offset',
-      visible ? `${PWA_BANNER_HEIGHT}px` : '0px'
-    );
+    document.documentElement.style.setProperty("--pwa-banner-offset", visible ? `${PWA_BANNER_HEIGHT}px` : "0px");
     return () => {
-      document.documentElement.style.setProperty('--pwa-banner-offset', '0px');
+      document.documentElement.style.setProperty("--pwa-banner-offset", "0px");
     };
   }, [showBanner, dismissed, isMobile]);
 
@@ -76,8 +71,8 @@ export default function PWAInstallBanner() {
     return (
       <div className="fixed top-0 left-0 right-0 z-[60] bg-primary" style={{ height: PWA_BANNER_HEIGHT }}>
         <div className="flex items-center gap-3 h-full px-4">
-          <div className="h-9 w-9 rounded-xl bg-white/15 flex items-center justify-center shrink-0">
-            <img src={ghostIcon} alt="Froiv" className="h-5 w-5 object-contain" style={{ filter: "brightness(0) invert(1)" }} />
+          <div className="h-9 w-9 rounded-xl bg-white/15 flex items-center justify-center shrink-0 overflow-hidden">
+            <img src={appIcon} alt="Froiv" className="h-7 w-7 object-contain" />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-[13px] font-semibold text-white leading-tight">Instale o app Froiv</p>
@@ -102,15 +97,14 @@ export default function PWAInstallBanner() {
     );
   }
 
-  // Desktop: bottom-right popup
   return (
     <div className="fixed bottom-6 right-6 z-[60] w-[340px] bg-white rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-border/50 animate-in slide-in-from-bottom-5 fade-in duration-400">
       <button onClick={handleDismiss} className="absolute top-3 right-3 h-6 w-6 flex items-center justify-center rounded-full hover:bg-muted transition-colors" aria-label="Fechar">
         <X className="h-3.5 w-3.5 text-muted-foreground" />
       </button>
       <div className="p-5 flex flex-col items-center text-center gap-3">
-        <div className="h-14 w-14 rounded-2xl bg-primary flex items-center justify-center shadow-md">
-          <img src={ghostIcon} alt="Froiv" className="h-8 w-8 object-contain" style={{ filter: "brightness(0) invert(1)" }} />
+        <div className="h-14 w-14 rounded-2xl bg-primary flex items-center justify-center shadow-md overflow-hidden">
+          <img src={appIcon} alt="Froiv" className="h-10 w-10 object-contain" />
         </div>
         <div>
           <p className="text-[15px] font-semibold text-foreground leading-tight">Instale o Froiv</p>
@@ -123,9 +117,7 @@ export default function PWAInstallBanner() {
               <Download className="h-3.5 w-3.5" /> Instalar
             </button>
           )}
-          {isIOS && (
-            <button className="flex-1 bg-primary text-white text-[13px] font-semibold py-2 rounded-lg">Adicionar</button>
-          )}
+          {isIOS && <button className="flex-1 bg-primary text-white text-[13px] font-semibold py-2 rounded-lg">Adicionar</button>}
         </div>
       </div>
     </div>
