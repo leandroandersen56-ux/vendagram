@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { formatBRL } from "@/hooks/useAdminStats";
-import { Search, ChevronLeft, ChevronRight, X, Eye, Ban, DollarSign, Mail } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight, X, Eye, Ban, DollarSign, Mail, LogIn } from "lucide-react";
 import { toast } from "sonner";
 
 export default function SuperAdminUsers() {
@@ -11,7 +11,37 @@ export default function SuperAdminUsers() {
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [adjustAmount, setAdjustAmount] = useState("");
   const [adjustReason, setAdjustReason] = useState("");
+  const [impersonating, setImpersonating] = useState(false);
   const PAGE_SIZE = 50;
+
+  const handleImpersonate = async (userId: string, userName: string) => {
+    if (impersonating) return;
+    const confirm = window.confirm(`Logar como "${userName}"? Você será deslogado da sua conta atual.`);
+    if (!confirm) return;
+
+    setImpersonating(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) { toast.error("Sessão expirada"); return; }
+
+      const res = await supabase.functions.invoke("impersonate-user", {
+        body: { user_id: userId },
+      });
+
+      if (res.error || !res.data?.url) {
+        toast.error("Erro ao gerar link de acesso");
+        console.error(res.error || res.data);
+        return;
+      }
+
+      toast.success("Redirecionando...");
+      window.open(res.data.url, "_blank");
+    } catch (e: any) {
+      toast.error(e.message || "Erro");
+    } finally {
+      setImpersonating(false);
+    }
+  };
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["admin-users", search, page],
@@ -119,12 +149,23 @@ export default function SuperAdminUsers() {
                       {formatBRL(wallet?.balance ?? 0)}
                     </td>
                     <td className="px-4 py-3">
-                      <button
-                        onClick={() => setSelectedUser(user)}
-                        className="text-[#7c3aed] hover:text-[#c4b5fd] text-xs"
-                      >
-                        <Eye className="h-4 w-4" />
-                      </button>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => setSelectedUser(user)}
+                          className="text-[#7c3aed] hover:text-[#c4b5fd]"
+                          title="Detalhes"
+                        >
+                          <Eye className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => handleImpersonate(user.user_id, user.name || user.email || "usuário")}
+                          className="text-orange-400 hover:text-orange-300"
+                          title="Logar como este usuário"
+                          disabled={impersonating}
+                        >
+                          <LogIn className="h-4 w-4" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 );
@@ -155,6 +196,13 @@ export default function SuperAdminUsers() {
                 {selectedUser.username && <p className="text-xs text-gray-500">@{selectedUser.username}</p>}
                 <div className="flex gap-2 mt-2">
                   {selectedUser.is_verified && <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full">Verificado</span>}
+                  <button
+                    onClick={() => handleImpersonate(selectedUser.user_id, selectedUser.name || selectedUser.email || "usuário")}
+                    disabled={impersonating}
+                    className="text-[10px] bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded-full hover:bg-orange-500/30 flex items-center gap-1"
+                  >
+                    <LogIn className="h-3 w-3" /> Logar como
+                  </button>
                 </div>
               </div>
               <button onClick={() => setSelectedUser(null)} className="text-gray-400 hover:text-white">
