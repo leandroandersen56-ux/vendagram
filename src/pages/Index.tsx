@@ -276,7 +276,7 @@ export default function Index() {
         </section>
 
         {/* === QUICK CATEGORIES === */}
-        <section className="py-4">
+        <section className="py-4 bg-card">
           <div className="container mx-auto">
             <div className="flex items-center gap-4 overflow-x-auto scrollbar-hide fade-edges py-1 px-1 md:justify-evenly md:gap-6">
               {QUICK_CATEGORIES.map((cat) => {
