@@ -40,7 +40,8 @@ export default function SuperAdminGuard({ children }: { children: React.ReactNod
       });
       setLoggingIn(false);
       if (error) {
-        toast.error("Credenciais inválidas");
+        console.error("SuperAdmin login error:", error.message, error.status, error);
+        toast.error(`Erro: ${error.message}`);
       }
     };
 
