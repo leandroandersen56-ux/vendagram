@@ -1,6 +1,6 @@
 import { MessageCircle } from "lucide-react";
 
-const WHATSAPP_NUMBER = "5547996300314";
+const WHATSAPP_NUMBER = "5519988499681";
 
 function buildWhatsAppUrl(phone: string, text: string) {
   const encoded = encodeURIComponent(text);
