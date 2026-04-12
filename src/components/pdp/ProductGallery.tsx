@@ -147,7 +147,7 @@ export default function ProductGallery({ images, title, category, verified, isDe
 
         {/* Thumbnails (desktop) */}
         {images.length > 1 && (
-          <div className="flex overflow-x-auto scrollbar-hide px-2 -mt-0.5">
+          <div className="flex overflow-x-auto scrollbar-hide px-2 border-t border-white/80 bg-white">
             {images.map((img, i) => (
               <button
                 key={i}
