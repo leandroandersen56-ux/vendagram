@@ -476,7 +476,7 @@ export default function Index() {
                     <div className="relative">
                       <div className="flex gap-0 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2 sm:grid sm:grid-cols-3 lg:grid-cols-5 sm:overflow-visible sm:pb-0 divide-x divide-border" id="instagram-scroll">
                         {instagramListings.slice(0, isMobile ? 6 : 5).map((listing) => (
-                          <div key={listing.id} className="flex-shrink-0 w-[calc(50%-6px)] sm:w-auto snap-start">
+                          <div key={listing.id} className="flex-shrink-0 w-[50%] sm:w-auto snap-start">
                             <ListingCard listing={listing} />
                           </div>
                         ))}
@@ -514,7 +514,7 @@ export default function Index() {
                     <div className="relative">
                       <div className="flex gap-0 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2 sm:grid sm:grid-cols-3 lg:grid-cols-5 sm:overflow-visible sm:pb-0 divide-x divide-border" id="tiktok-scroll">
                         {tiktokListings.slice(0, isMobile ? 6 : 5).map((listing) => (
-                          <div key={listing.id} className="flex-shrink-0 w-[calc(50%-6px)] sm:w-auto snap-start">
+                          <div key={listing.id} className="flex-shrink-0 w-[50%] sm:w-auto snap-start">
                             <ListingCard listing={listing} />
                           </div>
                         ))}
@@ -552,7 +552,7 @@ export default function Index() {
                     <div className="relative">
                       <div className="flex gap-0 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2 sm:grid sm:grid-cols-3 lg:grid-cols-5 sm:overflow-visible sm:pb-0 divide-x divide-border" id="youtube-scroll">
                         {youtubeListings.slice(0, isMobile ? 6 : 5).map((listing) => (
-                          <div key={listing.id} className="flex-shrink-0 w-[calc(50%-6px)] sm:w-auto snap-start">
+                          <div key={listing.id} className="flex-shrink-0 w-[50%] sm:w-auto snap-start">
                             <ListingCard listing={listing} />
                           </div>
                         ))}
@@ -590,7 +590,7 @@ export default function Index() {
                     <div className="relative">
                       <div className="flex gap-0 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2 sm:grid sm:grid-cols-3 lg:grid-cols-5 sm:overflow-visible sm:pb-0 divide-x divide-border" id="facebook-scroll">
                         {facebookListings.slice(0, isMobile ? 6 : 5).map((listing) => (
-                          <div key={listing.id} className="flex-shrink-0 w-[calc(50%-6px)] sm:w-auto snap-start">
+                          <div key={listing.id} className="flex-shrink-0 w-[50%] sm:w-auto snap-start">
                             <ListingCard listing={listing} />
                           </div>
                         ))}
@@ -675,7 +675,7 @@ export default function Index() {
                     <div className="relative">
                       <div className="flex gap-0 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2 sm:grid sm:grid-cols-3 lg:grid-cols-5 sm:overflow-visible sm:pb-0 divide-x divide-border" id="games-scroll">
                         {games.slice(0, isMobile ? 6 : 5).map((listing) => (
-                          <div key={listing.id} className="flex-shrink-0 w-[calc(50%-6px)] sm:w-auto snap-start">
+                          <div key={listing.id} className="flex-shrink-0 w-[50%] sm:w-auto snap-start">
                             <ListingCard listing={listing} />
                           </div>
                         ))}
