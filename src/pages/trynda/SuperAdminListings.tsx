@@ -66,7 +66,7 @@ export default function SuperAdminListings() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-white/[0.06]">
-                {["Título", "Plataforma", "Vendedor", "Preço", "Status", "Views", "Criado", "Ações"].map(h => (
+                {["", "Título", "Plataforma", "Vendedor", "Preço", "Status", "Views", "Criado", "Ações"].map(h => (
                   <th key={h} className="text-left px-4 py-3 text-[11px] text-gray-400 uppercase font-medium">{h}</th>
                 ))}
               </tr>
