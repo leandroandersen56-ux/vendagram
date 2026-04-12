@@ -192,6 +192,139 @@ export type Database = {
           },
         ]
       }
+      external_customers: {
+        Row: {
+          country: string | null
+          created_at: string
+          email: string | null
+          external_id: string | null
+          id: string
+          ip_address: string | null
+          name: string | null
+          updated_at: string
+        }
+        Insert: {
+          country?: string | null
+          created_at?: string
+          email?: string | null
+          external_id?: string | null
+          id?: string
+          ip_address?: string | null
+          name?: string | null
+          updated_at?: string
+        }
+        Update: {
+          country?: string | null
+          created_at?: string
+          email?: string | null
+          external_id?: string | null
+          id?: string
+          ip_address?: string | null
+          name?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      external_order_items: {
+        Row: {
+          category: string | null
+          created_at: string
+          external_product_id: string | null
+          id: string
+          order_id: string
+          price: number
+          product_name: string
+          quantity: number
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          external_product_id?: string | null
+          id?: string
+          order_id: string
+          price?: number
+          product_name: string
+          quantity?: number
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          external_product_id?: string | null
+          id?: string
+          order_id?: string
+          price?: number
+          product_name?: string
+          quantity?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "external_order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "external_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      external_orders: {
+        Row: {
+          commission: number | null
+          created_at: string
+          currency: string | null
+          customer_id: string | null
+          external_id: string
+          id: string
+          net_amount: number | null
+          ordered_at: string | null
+          payment_method: string | null
+          platform_fee: number | null
+          raw_data: Json | null
+          status: string
+          total_amount: number
+          updated_at: string
+        }
+        Insert: {
+          commission?: number | null
+          created_at?: string
+          currency?: string | null
+          customer_id?: string | null
+          external_id: string
+          id?: string
+          net_amount?: number | null
+          ordered_at?: string | null
+          payment_method?: string | null
+          platform_fee?: number | null
+          raw_data?: Json | null
+          status?: string
+          total_amount?: number
+          updated_at?: string
+        }
+        Update: {
+          commission?: number | null
+          created_at?: string
+          currency?: string | null
+          customer_id?: string | null
+          external_id?: string
+          id?: string
+          net_amount?: number | null
+          ordered_at?: string | null
+          payment_method?: string | null
+          platform_fee?: number | null
+          raw_data?: Json | null
+          status?: string
+          total_amount?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "external_orders_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "external_customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       favorites: {
         Row: {
           created_at: string
