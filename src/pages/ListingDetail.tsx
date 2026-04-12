@@ -294,6 +294,17 @@ export default function ListingDetail() {
                   </div>
                 </div>
 
+                {/* Gallery (desktop only) */}
+                <div className="hidden lg:block">
+                  <ProductGallery
+                    images={allImages}
+                    title={listing.title}
+                    category={listing.category}
+                    verified={sellerSales >= 5}
+                    isDemo={listing.seller_id === "00000000-0000-0000-0000-000000000001"}
+                  />
+                </div>
+
                 {/* Seller Card (mobile only) */}
                 <div className="lg:hidden">
                   <SellerCard
