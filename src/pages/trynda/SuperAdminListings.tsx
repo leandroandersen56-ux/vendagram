@@ -73,9 +73,20 @@ export default function SuperAdminListings() {
             </thead>
             <tbody>
               {isLoading ? (
-                <tr><td colSpan={8} className="text-center py-10 text-gray-500">Carregando...</td></tr>
-              ) : listings?.map(l => (
+                <tr><td colSpan={9} className="text-center py-10 text-gray-500">Carregando...</td></tr>
+              ) : listings?.map(l => {
+                const thumb = l.screenshots?.[0] || null;
+                return (
                 <tr key={l.id} className="border-b border-white/[0.04] hover:bg-white/[0.02]">
+                  <td className="px-4 py-2 w-14">
+                    {thumb ? (
+                      <img src={thumb} alt="" className="w-10 h-10 rounded object-cover" />
+                    ) : (
+                      <div className="w-10 h-10 rounded bg-white/[0.06] flex items-center justify-center">
+                        <ImageOff className="h-4 w-4 text-gray-600" />
+                      </div>
+                    )}
+                  </td>
                   <td className="px-4 py-3 text-white font-medium max-w-[200px] truncate">{l.title}</td>
                   <td className="px-4 py-3 text-gray-300 capitalize">{l.category.replace(/_/g, " ")}</td>
                   <td className="px-4 py-3 text-gray-400 text-xs">{(l as any).profiles?.name || "—"}</td>
