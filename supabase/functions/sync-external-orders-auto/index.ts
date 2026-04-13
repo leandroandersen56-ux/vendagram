@@ -91,7 +91,7 @@ async function upsertOrders(supabase: any, records: any[]): Promise<{ inserted: 
     }
 
     const total = order.total_amount;
-    const commission = Math.round(total * 0.07 * 100) / 100;
+    const commission = Math.round(total * 0.10 * 100) / 100;
     const net = Math.round((total - commission) * 100) / 100;
 
     const { data: newOrder, error } = await supabase.from("external_orders").insert({

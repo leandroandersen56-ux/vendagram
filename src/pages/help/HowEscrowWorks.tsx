@@ -54,7 +54,7 @@ export default function HowEscrowWorks() {
 
         <div className="bg-[#E8F8EF] rounded-2xl border border-[#C0E8D0] p-4">
           <p className="text-[13px] text-[#226644] leading-relaxed">
-            <strong>Taxa:</strong> A Froiv cobra uma taxa fixa de 7% sobre o valor da venda. Não há mensalidade ou taxa de cadastro.
+            <strong>Taxa:</strong> <strong>Taxa:</strong> A Froiv cobra uma taxa fixa de 10% sobre o valor da venda. Não há mensalidade ou taxa de cadastro.
           </p>
         </div>
       </div>

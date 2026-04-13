@@ -45,7 +45,7 @@ const GAME_CATEGORIES = [
 ];
 
 const BANNERS = [
-  { img: bannerHeroOffers, title: "Apenas 7% de Taxa\nem Cada Venda", subtitle: "A menor taxa do mercado.\nNegocie direto, sem mensalidade\ne sem custos ocultos", cta: "Começar agora", link: "/marketplace", objectPosition: "right 30%" },
+  { img: bannerHeroOffers, title: "Apenas 10% de Taxa\nem Cada Venda", subtitle: "A menor taxa do mercado.\nNegocie direto, sem mensalidade\ne sem custos ocultos", cta: "Começar agora", link: "/marketplace", objectPosition: "right 30%" },
   { img: bannerSecurityHero, title: "Compre e Venda\nContas Digitais\ncom Segurança", subtitle: "Redes sociais e jogos\ncom escrow integrado", cta: "Explorar", link: "/marketplace", objectPosition: "right 40%" },
   { img: bannerHeroSecurity, title: "Só Liberamos o Valor\nApós Sua Confirmação", subtitle: "Pagamento protegido\ncom sistema escrow", cta: "Saiba mais", link: "/ajuda/como-funciona-escrow", objectPosition: "right 40%" },
 ];
@@ -740,7 +740,7 @@ export default function Index() {
                 {[
                   { icon: <Shield className="h-5 w-5" />, value: "100%", label: "Escrow Seguro" },
                   { icon: <Clock className="h-5 w-5" />, value: "24h", label: "Garantia" },
-                  { icon: <CheckCircle2 className="h-5 w-5" />, value: "7%", label: "Taxa Fixa" },
+                  { icon: <CheckCircle2 className="h-5 w-5" />, value: "10%", label: "Taxa Fixa" },
                 ].map((stat) => (
                   <div key={stat.label} className="flex flex-col items-center gap-2 text-center">
                     <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">{stat.icon}</div>
