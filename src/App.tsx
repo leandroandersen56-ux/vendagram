@@ -168,6 +168,15 @@ function AppRoutes() {
         <Route path="/painel/verificacao" element={<Navigate to="/vendedor/verificacao" replace />} />
         <Route path="/painel/notificacoes" element={<Navigate to="/notificacoes" replace />} />
 
+        {/* Partners */}
+        <Route path="/admintoplogin" element={<PartnerGuard><PartnerLayout /></PartnerGuard>}>
+          <Route index element={<PartnerDashboard />} />
+          <Route path="faturamento" element={<PartnerRevenue />} />
+          <Route path="desempenho" element={<PartnerPerformance />} />
+          <Route path="saque" element={<PartnerWithdrawal />} />
+          <Route path="conta" element={<PartnerAccount />} />
+        </Route>
+
         {/* Admin */}
         <Route path="/admin" element={<Dashboard />} />
 
