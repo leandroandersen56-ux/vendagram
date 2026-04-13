@@ -54,6 +54,15 @@ import HowEscrowWorks from "./pages/help/HowEscrowWorks.tsx";
 import WithdrawalsPayments from "./pages/help/WithdrawalsPayments.tsx";
 import HowToList from "./pages/help/HowToList.tsx";
 
+// Partners
+import PartnerGuard from "./pages/partners/PartnerGuard.tsx";
+import PartnerLayout from "./pages/partners/PartnerLayout.tsx";
+import PartnerDashboard from "./pages/partners/PartnerDashboard.tsx";
+import PartnerRevenue from "./pages/partners/PartnerRevenue.tsx";
+import PartnerPerformance from "./pages/partners/PartnerPerformance.tsx";
+import PartnerWithdrawal from "./pages/partners/PartnerWithdrawal.tsx";
+import PartnerAccount from "./pages/partners/PartnerAccount.tsx";
+
 // Super Admin
 import SuperAdminGuard from "./pages/trynda/SuperAdminGuard.tsx";
 import SuperAdminLayout from "./pages/trynda/SuperAdminLayout.tsx";
@@ -69,6 +78,7 @@ import SuperAdminStorage from "./pages/trynda/SuperAdminStorage.tsx";
 import SuperAdminConfig from "./pages/trynda/SuperAdminConfig.tsx";
 import SuperAdminSecurity from "./pages/trynda/SuperAdminSecurity.tsx";
 import SuperAdminOrders from "./pages/trynda/SuperAdminOrders.tsx";
+import SuperAdminPartners from "./pages/trynda/SuperAdminPartners.tsx";
 
 const queryClient = new QueryClient();
 
@@ -159,6 +169,15 @@ function AppRoutes() {
         <Route path="/painel/verificacao" element={<Navigate to="/vendedor/verificacao" replace />} />
         <Route path="/painel/notificacoes" element={<Navigate to="/notificacoes" replace />} />
 
+        {/* Partners */}
+        <Route path="/admintoplogin" element={<PartnerGuard><PartnerLayout /></PartnerGuard>}>
+          <Route index element={<PartnerDashboard />} />
+          <Route path="faturamento" element={<PartnerRevenue />} />
+          <Route path="desempenho" element={<PartnerPerformance />} />
+          <Route path="saque" element={<PartnerWithdrawal />} />
+          <Route path="conta" element={<PartnerAccount />} />
+        </Route>
+
         {/* Admin */}
         <Route path="/admin" element={<Dashboard />} />
 
@@ -176,6 +195,7 @@ function AppRoutes() {
           <Route path="config" element={<SuperAdminConfig />} />
           <Route path="seguranca" element={<SuperAdminSecurity />} />
           <Route path="pedidos-externos" element={<SuperAdminOrders />} />
+          <Route path="socios" element={<SuperAdminPartners />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

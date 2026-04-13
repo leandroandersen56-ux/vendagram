@@ -592,6 +592,86 @@ export type Database = {
           },
         ]
       }
+      partner_withdrawals: {
+        Row: {
+          amount: number
+          approved_by: string | null
+          id: string
+          notes: string | null
+          partner_id: string
+          pix_key: string
+          processed_at: string | null
+          requested_at: string | null
+          status: string | null
+        }
+        Insert: {
+          amount: number
+          approved_by?: string | null
+          id?: string
+          notes?: string | null
+          partner_id: string
+          pix_key: string
+          processed_at?: string | null
+          requested_at?: string | null
+          status?: string | null
+        }
+        Update: {
+          amount?: number
+          approved_by?: string | null
+          id?: string
+          notes?: string | null
+          partner_id?: string
+          pix_key?: string
+          processed_at?: string | null
+          requested_at?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_withdrawals_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partners: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          email: string
+          id: string
+          is_active: boolean | null
+          name: string
+          pix_key: string | null
+          pix_key_type: string | null
+          profit_percent: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          email: string
+          id?: string
+          is_active?: boolean | null
+          name: string
+          pix_key?: string | null
+          pix_key_type?: string | null
+          profit_percent?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          email?: string
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          pix_key?: string | null
+          pix_key_type?: string | null
+          profit_percent?: number | null
+        }
+        Relationships: []
+      }
       platform_settings: {
         Row: {
           id: string
@@ -1190,6 +1270,7 @@ export type Database = {
     }
     Functions: {
       auto_release_escrow: { Args: never; Returns: undefined }
+      get_partner_id_by_auth: { Args: never; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
