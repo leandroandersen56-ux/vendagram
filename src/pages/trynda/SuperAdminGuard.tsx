@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import logoWhite from "@/assets/logo-froiv-white.svg";
+import logoWhite from "@/assets/logo-froiv-white.png";
 
 const SUPERADMIN_EMAIL = "sparckonmeta@gmail.com";
 
