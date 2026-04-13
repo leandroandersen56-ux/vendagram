@@ -121,7 +121,7 @@ export default function ListingDetail() {
   const officialUrl = `https://www.froiv.com/listing/${listing.id}`;
 
   const handleShare = () => {
-    const message = `🎮 ${listing.title}\n💰 ${formatBRL(listing.price)}\n🔒 Compra segura no Froiv\n${officialUrl}`;
+    const message = `🎮 ${listing.title}\n💰 ${formatBRL(listing.price)}\n🔒 Compra segura no Froiv by Top Login\n${officialUrl}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank");
   };
 
