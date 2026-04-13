@@ -13,7 +13,7 @@ export default function TermsPage() {
         <div className="prose prose-sm max-w-none text-foreground/90 space-y-6">
           <section>
             <h2 className="text-lg font-semibold text-foreground">1. Definições</h2>
-            <p><strong>Froiv</strong>: Plataforma online de intermediação para compra e venda de contas digitais (redes sociais e jogos).</p>
+            <p><strong>Froiv by Top Login</strong>: Plataforma online de intermediação para compra e venda de contas digitais (redes sociais e jogos).</p>
             <p><strong>Escrow</strong>: Sistema de custódia onde o pagamento do comprador é retido pela plataforma até a confirmação do recebimento.</p>
             <p><strong>Vendedor</strong>: Usuário que anuncia contas digitais para venda.</p>
             <p><strong>Comprador</strong>: Usuário que adquire contas digitais na plataforma.</p>
@@ -21,13 +21,13 @@ export default function TermsPage() {
 
           <section>
             <h2 className="text-lg font-semibold text-foreground">2. Como Funciona o Escrow</h2>
-            <p>Todo pagamento realizado na Froiv é protegido pelo sistema de Escrow automático:</p>
+            <p>Todo pagamento realizado na Froiv by Top Login é protegido pelo sistema de Escrow automático:</p>
             <ul className="list-disc pl-5 space-y-1">
               <li>O comprador efetua o pagamento, que fica em custódia.</li>
               <li>O vendedor envia as credenciais de acesso da conta.</li>
               <li>O comprador tem 24 horas para verificar e confirmar o recebimento.</li>
               <li>Após a confirmação (ou expiração do prazo sem disputa), o valor é liberado ao vendedor.</li>
-              <li><li>A Froiv retém uma taxa fixa de 7% sobre o valor da transação.</li></li>
+              <li>A Froiv by Top Login retém uma taxa fixa de 10% sobre o valor da transação.</li>
             </ul>
           </section>
 
@@ -62,13 +62,13 @@ export default function TermsPage() {
 
           <section>
             <h2 className="text-lg font-semibold text-foreground">6. Pagamentos e Taxas</h2>
-            <p><p>A Froiv cobra uma taxa fixa de <strong>7%</strong> sobre cada transação concluída, descontada automaticamente do valor recebido pelo vendedor. Não há mensalidade ou taxa de anúncio.</p>, descontada automaticamente do valor recebido pelo vendedor. Não há mensalidade ou taxa de anúncio.</p>
+            <p>A Froiv by Top Login cobra uma taxa fixa de <strong>10%</strong> sobre cada transação concluída, descontada automaticamente do valor recebido pelo vendedor. Não há mensalidade ou taxa de anúncio.</p>
             <p>Os métodos de pagamento aceitos são: Pix (aprovação instantânea) e Cartão de Crédito (parcelamento em até 12x).</p>
           </section>
 
           <section>
             <h2 className="text-lg font-semibold text-foreground">7. Disputas</h2>
-            <p>Em caso de problemas com a transação, o comprador pode abrir uma disputa dentro do prazo de verificação. A equipe Froiv analisará o caso em até 48 horas e poderá determinar:</p>
+            <p>Em caso de problemas com a transação, o comprador pode abrir uma disputa dentro do prazo de verificação. A equipe Froiv by Top Login analisará o caso em até 48 horas e poderá determinar:</p>
             <ul className="list-disc pl-5 space-y-1">
               <li>Reembolso integral ao comprador.</li>
               <li>Liberação do valor ao vendedor.</li>
@@ -78,7 +78,7 @@ export default function TermsPage() {
 
           <section>
             <h2 className="text-lg font-semibold text-foreground">8. Rescisão</h2>
-            <p>A Froiv reserva-se o direito de suspender ou encerrar contas que violem estes termos, sem aviso prévio, incluindo a retenção de valores em custódia para análise.</p>
+            <p>A Froiv by Top Login reserva-se o direito de suspender ou encerrar contas que violem estes termos, sem aviso prévio, incluindo a retenção de valores em custódia para análise.</p>
           </section>
 
           <section>

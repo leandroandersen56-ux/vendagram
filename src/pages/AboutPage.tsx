@@ -16,7 +16,7 @@ export default function AboutPage() {
       <div className="container mx-auto px-4 pt-20 sm:pt-24 pb-16 max-w-3xl">
         {/* Hero */}
         <div className="text-center mb-12">
-          <h1 className="text-3xl font-bold text-foreground mb-4">Sobre a Froiv</h1>
+          <h1 className="text-3xl font-bold text-foreground mb-4">Sobre a Froiv by Top Login</h1>
           <p className="text-muted-foreground text-lg max-w-xl mx-auto leading-relaxed">
             O marketplace mais seguro do Brasil para comprar e vender contas digitais de redes sociais e jogos.
           </p>
@@ -38,7 +38,7 @@ export default function AboutPage() {
           <section>
             <h2 className="text-xl font-semibold text-foreground mb-3">Nossa Missão</h2>
             <p className="text-muted-foreground leading-relaxed">
-              A Froiv nasceu para resolver um problema real: a compra e venda de contas digitais sempre foi arriscada, cheia de golpes e sem garantias. Nossa missão é tornar esse mercado seguro, transparente e acessível para todos.
+              A Froiv by Top Login nasceu para resolver um problema real: a compra e venda de contas digitais sempre foi arriscada, cheia de golpes e sem garantias. Nossa missão é tornar esse mercado seguro, transparente e acessível para todos.
             </p>
           </section>
 
