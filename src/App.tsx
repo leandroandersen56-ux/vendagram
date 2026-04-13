@@ -195,6 +195,7 @@ function AppRoutes() {
           <Route path="config" element={<SuperAdminConfig />} />
           <Route path="seguranca" element={<SuperAdminSecurity />} />
           <Route path="pedidos-externos" element={<SuperAdminOrders />} />
+          <Route path="socios" element={<SuperAdminPartners />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />
