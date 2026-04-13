@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabase-custom-client";
 import { toast } from "sonner";
 import logoWhite from "@/assets/logo-froiv-white.png";
 
