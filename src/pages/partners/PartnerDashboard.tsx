@@ -122,7 +122,7 @@ export default function PartnerDashboard() {
         <h3 className="font-bold text-lg mb-4 flex items-center gap-2">💰 Split de Receita — Como funciona</h3>
         <div className="space-y-2 text-sm">
           <div className="flex justify-between">
-            <span>Faturamento Bruto:</span>
+            <span>Total em Produtos:</span>
             <span className="font-bold">{formatBRL(gmv)}</span>
           </div>
           <div className="h-px bg-white/20" />
