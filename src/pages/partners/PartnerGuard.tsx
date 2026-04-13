@@ -16,7 +16,7 @@ export interface PartnerData {
   created_at: string;
 }
 
-const SUPERADMIN_EMAIL = "sparckonmeta@gmail.com";
+const ADMIN_EMAILS = ["sparckonmeta@gmail.com", "contabanco743@gmail.com"];
 
 export default function PartnerGuard({ children }: { children: React.ReactNode }) {
   const { user, isLoading, isAuthenticated } = useAuth();
