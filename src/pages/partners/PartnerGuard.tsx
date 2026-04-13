@@ -16,7 +16,7 @@ export interface PartnerData {
   created_at: string;
 }
 
-const SUPERADMIN_EMAIL = "sparckonmeta@gmail.com";
+const ADMIN_EMAILS = ["sparckonmeta@gmail.com", "contabanco743@gmail.com"];
 
 export default function PartnerGuard({ children }: { children: React.ReactNode }) {
   const { user, isLoading, isAuthenticated } = useAuth();
@@ -32,11 +32,11 @@ export default function PartnerGuard({ children }: { children: React.ReactNode }
       return;
     }
 
-    if (user.email === SUPERADMIN_EMAIL) {
+    if (ADMIN_EMAILS.includes(user.email.toLowerCase())) {
       setPartner({
-        id: "superadmin-partner-access",
-        name: "Super Admin",
-        email: SUPERADMIN_EMAIL,
+        id: "admin-partner-access",
+        name: user.name || "Admin",
+        email: user.email,
         profit_percent: 0,
         pix_key: null,
         pix_key_type: null,
