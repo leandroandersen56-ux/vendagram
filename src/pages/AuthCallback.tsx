@@ -14,10 +14,14 @@ export default function AuthCallback() {
     let isMounted = true;
     let finished = false;
 
+    // Check for redirect destination from URL params or localStorage
+    const redirectTo = params.get("redirect") || localStorage.getItem("auth_redirect") || "/";
+    localStorage.removeItem("auth_redirect");
+
     const finish = () => {
       if (!isMounted || finished) return;
       finished = true;
-      navigate("/", { replace: true });
+      navigate(redirectTo, { replace: true });
     };
 
     const url = new URL(window.location.href);
