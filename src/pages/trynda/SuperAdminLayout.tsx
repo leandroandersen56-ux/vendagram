@@ -30,16 +30,17 @@ export default function SuperAdminLayout() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [badges, setBadges] = useState<{ disputes: number; withdrawals: number }>({ disputes: 0, withdrawals: 0 });
+  const [badges, setBadges] = useState<{ disputes: number; withdrawals: number; partnerWithdrawals: number }>({ disputes: 0, withdrawals: 0, partnerWithdrawals: 0 });
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchBadges = async () => {
-      const [d, w] = await Promise.all([
+      const [d, w, pw] = await Promise.all([
         supabase.from("disputes").select("id", { count: "exact", head: true }).eq("status", "open"),
         supabase.from("withdrawals").select("id", { count: "exact", head: true }).eq("status", "pending"),
+        supabase.from("partner_withdrawals" as any).select("id", { count: "exact", head: true }).eq("status", "pending"),
       ]);
-      setBadges({ disputes: d.count ?? 0, withdrawals: w.count ?? 0 });
+      setBadges({ disputes: d.count ?? 0, withdrawals: w.count ?? 0, partnerWithdrawals: (pw as any).count ?? 0 });
     };
     fetchBadges();
 
