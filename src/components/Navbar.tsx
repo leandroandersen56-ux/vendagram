@@ -9,7 +9,7 @@ import { useFavorites } from "@/hooks/useFavorites";
 import { formatBRL, PLATFORM_COVERS } from "@/lib/mock-data";
 import { getListingImage } from "@/lib/utils";
 import logoFroiv from "@/assets/logo-froiv.png";
-import logoFroivWhite from "@/assets/logo-froiv-white.png";
+import logoFroivWhite from "@/assets/logo-froiv-white.svg";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem,
   DropdownMenuSeparator, DropdownMenuTrigger
