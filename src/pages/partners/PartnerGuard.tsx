@@ -66,10 +66,11 @@ export default function PartnerGuard({ children }: { children: React.ReactNode }
 
     const handleGoogleLogin = async () => {
       setLoggingIn(true);
+      localStorage.setItem("auth_redirect", "/admintoplogin");
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/admintoplogin`,
+          redirectTo: `${window.location.origin}/auth/callback`,
         },
       });
       setLoggingIn(false);
