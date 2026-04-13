@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   User, Lock, Mail, Smartphone, ShieldCheck,
   Bell, MessageCircle, Star, Tag, Mail as MailIcon,
-  CreditCard, Receipt, Clock, Monitor, Trash2, ChevronRight
+  CreditCard, Receipt, Clock, Monitor, Trash2, ChevronRight, Handshake
 } from "lucide-react";
 import DesktopPageShell from "@/components/DesktopPageShell";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/lib/supabase-custom-client";
 
 interface ToggleProps {
   enabled: boolean;
