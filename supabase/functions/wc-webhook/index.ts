@@ -58,7 +58,7 @@ async function upsertOrder(supabase: any, o: any) {
     customerId = nc?.id ?? null;
   }
 
-  const commission = Math.round(totalAmount * 0.07 * 100) / 100;
+  const commission = Math.round(totalAmount * 0.10 * 100) / 100;
   const netAmount = Math.round((totalAmount - commission) * 100) / 100;
 
   const { data: newOrder, error } = await supabase

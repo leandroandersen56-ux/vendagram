@@ -93,7 +93,7 @@ Deno.serve(async (req) => {
       }
 
       const totalAmount = parseFloat(order.total) || 0;
-      const commission = totalAmount * 0.07;
+      const commission = totalAmount * 0.10;
       const netAmount = totalAmount - commission;
 
       const { data: newOrder, error: orderError } = await supabase
