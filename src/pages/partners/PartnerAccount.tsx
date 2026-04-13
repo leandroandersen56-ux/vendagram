@@ -2,7 +2,7 @@ import { usePartner } from "./PartnerGuard";
 import { useAuth } from "@/contexts/AuthContext";
 import { User, Mail, Percent, Key, Calendar, Lock } from "lucide-react";
 import { format } from "date-fns";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabase-custom-client";
 import { toast } from "sonner";
 import { useState } from "react";
 

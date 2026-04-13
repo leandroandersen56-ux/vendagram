@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabase-custom-client";
 import { ShoppingBag, Users, TrendingUp, Target, Award, BarChart3 } from "lucide-react";
 import { LineChart, Line, PieChart, Pie, Cell, AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 import { subDays, subWeeks, format, startOfWeek } from "date-fns";
