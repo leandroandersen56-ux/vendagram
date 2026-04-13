@@ -18,10 +18,10 @@ export default function PartnerDashboard() {
     queryKey: ["partner-gmv"],
     queryFn: async () => {
       const { data } = await supabase
-        .from("transactions")
-        .select("amount")
-        .eq("status", "completed");
-      return data?.reduce((s, t) => s + Number(t.amount), 0) ?? 0;
+        .from("listings")
+        .select("price, stock")
+        .eq("status", "active");
+      return data?.reduce((s, t) => s + Number(t.price) * (Number(t.stock) || 1), 0) ?? 0;
     },
     refetchInterval: 60_000,
   });
