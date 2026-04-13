@@ -47,10 +47,11 @@ export default function SuperAdminGuard({ children }: { children: React.ReactNod
 
     const handleGoogleLogin = async () => {
       setLoggingIn(true);
+      localStorage.setItem("auth_redirect", "/trynda");
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/trynda`,
+          redirectTo: `${window.location.origin}/auth/callback`,
         },
       });
       setLoggingIn(false);
