@@ -78,6 +78,7 @@ import SuperAdminStorage from "./pages/trynda/SuperAdminStorage.tsx";
 import SuperAdminConfig from "./pages/trynda/SuperAdminConfig.tsx";
 import SuperAdminSecurity from "./pages/trynda/SuperAdminSecurity.tsx";
 import SuperAdminOrders from "./pages/trynda/SuperAdminOrders.tsx";
+import SuperAdminPartners from "./pages/trynda/SuperAdminPartners.tsx";
 
 const queryClient = new QueryClient();
 
