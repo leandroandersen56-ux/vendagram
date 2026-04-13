@@ -181,7 +181,7 @@ export default function Navbar() {
                         {searchResults.map((item) => (
                           <Link
                             key={item.id}
-                            to={`/anuncio/${item.id}`}
+                            to={`/listing/${item.id}`}
                             onClick={() => { setSearchOpen(false); setSearchQuery(""); }}
                             className="flex items-center gap-3 px-3 py-2.5 hover:bg-[hsl(var(--muted))] transition-colors border-b border-[hsl(var(--border))]/40 last:border-0"
                           >
