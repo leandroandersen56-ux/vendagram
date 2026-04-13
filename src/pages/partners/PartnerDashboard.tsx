@@ -18,10 +18,10 @@ export default function PartnerDashboard() {
     queryKey: ["partner-gmv"],
     queryFn: async () => {
       const { data } = await supabase
-        .from("transactions")
-        .select("amount")
-        .eq("status", "completed");
-      return data?.reduce((s, t) => s + Number(t.amount), 0) ?? 0;
+        .from("listings")
+        .select("price, stock")
+        .eq("status", "active");
+      return data?.reduce((s, t) => s + Number(t.price) * (Number(t.stock) || 1), 0) ?? 0;
     },
     refetchInterval: 60_000,
   });
@@ -82,8 +82,8 @@ export default function PartnerDashboard() {
   const platformFee = gmv * 0.10;
 
   const kpis = [
-    { label: "Faturamento Total da Plataforma", value: formatBRL(gmv), icon: TrendingUp, color: "#0ea5e9" },
-    { label: `Sua Participação (${partner.profit_percent}%)`, value: formatBRL(partnerShare), icon: DollarSign, color: "#10B981", sub: `Baseado em ${partner.profit_percent}% do faturamento` },
+    { label: "Total em Produtos Disponíveis", value: formatBRL(gmv), icon: TrendingUp, color: "#0ea5e9", sub: "Soma dos anúncios ativos" },
+    { label: `Sua Participação (${partner.profit_percent}%)`, value: formatBRL(partnerShare), icon: DollarSign, color: "#10B981", sub: `Baseado em ${partner.profit_percent}% sobre vendas` },
     { label: "Lucro da Plataforma (5%)", value: formatBRL(platformShare), icon: Building2, color: "#F59E0B", sub: "Parcela operacional Froiv" },
     { label: "Disponível para Saque", value: formatBRL(available), icon: Wallet, color: "#10B981", action: true },
   ];
@@ -122,7 +122,7 @@ export default function PartnerDashboard() {
         <h3 className="font-bold text-lg mb-4 flex items-center gap-2">💰 Split de Receita — Como funciona</h3>
         <div className="space-y-2 text-sm">
           <div className="flex justify-between">
-            <span>Faturamento Bruto:</span>
+            <span>Total em Produtos:</span>
             <span className="font-bold">{formatBRL(gmv)}</span>
           </div>
           <div className="h-px bg-white/20" />
