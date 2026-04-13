@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Wallet } from "lucide-react";
-import logoWhite from "@/assets/logo-froiv-white.svg";
+import logoWhite from "@/assets/logo-froiv-header.png";
 import { useAuth } from "@/contexts/AuthContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
