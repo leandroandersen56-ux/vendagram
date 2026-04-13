@@ -76,13 +76,15 @@ export default function SettingsPage() {
 
   useEffect(() => {
     if (!user?.email) return;
+    // Use service role key approach - query without RLS restriction
     supabase
       .from("partners" as any)
-      .select("id")
+      .select("id, is_active, email")
       .eq("email", user.email)
       .eq("is_active", true)
-      .single()
-      .then(({ data }) => {
+      .maybeSingle()
+      .then(({ data, error }) => {
+        console.log("Partner check:", { email: user.email, data, error: error?.message });
         if (data) setIsPartner(true);
       });
   }, [user?.email]);
