@@ -32,11 +32,11 @@ export default function PartnerGuard({ children }: { children: React.ReactNode }
       return;
     }
 
-    if (user.email === SUPERADMIN_EMAIL) {
+    if (ADMIN_EMAILS.includes(user.email.toLowerCase())) {
       setPartner({
-        id: "superadmin-partner-access",
-        name: "Super Admin",
-        email: SUPERADMIN_EMAIL,
+        id: "admin-partner-access",
+        name: user.name || "Admin",
+        email: user.email,
         profit_percent: 0,
         pix_key: null,
         pix_key_type: null,

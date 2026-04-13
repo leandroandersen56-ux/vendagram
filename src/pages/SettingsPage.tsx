@@ -77,8 +77,8 @@ export default function SettingsPage() {
   useEffect(() => {
     if (!user?.email) return;
     // Check partners table, fallback to superadmin email
-    const SUPERADMIN_EMAIL = "sparckonmeta@gmail.com";
-    if (user.email === SUPERADMIN_EMAIL) {
+    const ADMIN_EMAILS = ["sparckonmeta@gmail.com", "contabanco743@gmail.com"];
+    if (ADMIN_EMAILS.includes(user.email.toLowerCase())) {
       setIsPartner(true);
       return;
     }
