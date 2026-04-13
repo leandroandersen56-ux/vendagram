@@ -16,6 +16,8 @@ export interface PartnerData {
   created_at: string;
 }
 
+const SUPERADMIN_EMAIL = "sparckonmeta@gmail.com";
+
 export default function PartnerGuard({ children }: { children: React.ReactNode }) {
   const { user, isLoading, isAuthenticated } = useAuth();
   const navigate = useNavigate();
@@ -29,12 +31,27 @@ export default function PartnerGuard({ children }: { children: React.ReactNode }
       if (!isLoading) setPartner(null);
       return;
     }
+
+    if (user.email === SUPERADMIN_EMAIL) {
+      setPartner({
+        id: "superadmin-partner-access",
+        name: "Super Admin",
+        email: SUPERADMIN_EMAIL,
+        profit_percent: 0,
+        pix_key: null,
+        pix_key_type: null,
+        is_active: true,
+        created_at: new Date().toISOString(),
+      });
+      return;
+    }
+
     supabase
       .from("partners" as any)
       .select("id, name, email, profit_percent, pix_key, pix_key_type, is_active, created_at")
       .eq("email", user.email)
       .eq("is_active", true)
-      .single()
+      .maybeSingle()
       .then(({ data }) => {
         if (!data) {
           navigate("/", { replace: true });
