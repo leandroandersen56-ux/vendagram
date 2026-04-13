@@ -14,14 +14,18 @@ export default function AuthCallback() {
     let isMounted = true;
     let finished = false;
 
+    const url = new URL(window.location.href);
+    const params = url.searchParams;
+
+    // Check for redirect destination from URL params or localStorage
+    const redirectTo = params.get("redirect") || localStorage.getItem("auth_redirect") || "/";
+    localStorage.removeItem("auth_redirect");
+
     const finish = () => {
       if (!isMounted || finished) return;
       finished = true;
-      navigate("/", { replace: true });
+      navigate(redirectTo, { replace: true });
     };
-
-    const url = new URL(window.location.href);
-    const params = url.searchParams;
     const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
 
     const oauthError = params.get("error") || hashParams.get("error");
