@@ -186,7 +186,7 @@ export default function MoreMenu({ open, onClose }: MoreMenuProps) {
                   Política de privacidade
                 </button>
                 <button className="w-full text-left py-3 text-[13px] text-[#666]" onClick={() => handleNav("/sobre")}>
-                  Sobre a Froiv
+                  Sobre a Froiv by Top Login
                 </button>
                 {isAuthenticated && (
                   <button
