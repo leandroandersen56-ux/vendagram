@@ -54,6 +54,15 @@ import HowEscrowWorks from "./pages/help/HowEscrowWorks.tsx";
 import WithdrawalsPayments from "./pages/help/WithdrawalsPayments.tsx";
 import HowToList from "./pages/help/HowToList.tsx";
 
+// Partners
+import PartnerGuard from "./pages/partners/PartnerGuard.tsx";
+import PartnerLayout from "./pages/partners/PartnerLayout.tsx";
+import PartnerDashboard from "./pages/partners/PartnerDashboard.tsx";
+import PartnerRevenue from "./pages/partners/PartnerRevenue.tsx";
+import PartnerPerformance from "./pages/partners/PartnerPerformance.tsx";
+import PartnerWithdrawal from "./pages/partners/PartnerWithdrawal.tsx";
+import PartnerAccount from "./pages/partners/PartnerAccount.tsx";
+
 // Super Admin
 import SuperAdminGuard from "./pages/trynda/SuperAdminGuard.tsx";
 import SuperAdminLayout from "./pages/trynda/SuperAdminLayout.tsx";

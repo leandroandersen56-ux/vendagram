@@ -47,7 +47,7 @@ export default function PartnerPerformance() {
       const { data: listingsData } = listingIds.length > 0
         ? await supabase.from("listings").select("id, category").in("id", listingIds)
         : { data: [] };
-      const catMap = new Map(listingsData?.map((l) => [l.id, l.category]) ?? []);
+      const catMap = new Map<string, string>((listingsData ?? []).map((l: any) => [l.id as string, l.category as string]));
       const platformCounts: Record<string, { count: number; total: number }> = {};
       completedTx.forEach((t) => {
         const cat = catMap.get(t.listing_id) ?? "other";
