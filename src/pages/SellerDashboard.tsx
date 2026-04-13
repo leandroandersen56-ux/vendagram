@@ -92,7 +92,7 @@ export default function SellerDashboard() {
       </div>
 
       {/* Content */}
-      <div className="p-4 sm:container sm:mx-auto sm:py-6">
+      <div className="p-4 sm:container sm:mx-auto sm:pt-10 sm:pb-6">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
