@@ -82,8 +82,8 @@ export default function PartnerDashboard() {
   const platformFee = gmv * 0.10;
 
   const kpis = [
-    { label: "Faturamento Total da Plataforma", value: formatBRL(gmv), icon: TrendingUp, color: "#0ea5e9" },
-    { label: `Sua Participação (${partner.profit_percent}%)`, value: formatBRL(partnerShare), icon: DollarSign, color: "#10B981", sub: `Baseado em ${partner.profit_percent}% do faturamento` },
+    { label: "Total em Produtos Disponíveis", value: formatBRL(gmv), icon: TrendingUp, color: "#0ea5e9", sub: "Soma dos anúncios ativos" },
+    { label: `Sua Participação (${partner.profit_percent}%)`, value: formatBRL(partnerShare), icon: DollarSign, color: "#10B981", sub: `Baseado em ${partner.profit_percent}% sobre vendas` },
     { label: "Lucro da Plataforma (5%)", value: formatBRL(platformShare), icon: Building2, color: "#F59E0B", sub: "Parcela operacional Froiv" },
     { label: "Disponível para Saque", value: formatBRL(available), icon: Wallet, color: "#10B981", action: true },
   ];
