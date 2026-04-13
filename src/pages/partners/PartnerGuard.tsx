@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase-custom-client";
-import logoWhite from "@/assets/logo-froiv-white.svg";
+import logoWhite from "@/assets/logo-froiv-white.png";
 import { toast } from "sonner";
 
 export interface PartnerData {

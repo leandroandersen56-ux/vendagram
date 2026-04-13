@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import logoWhite from "@/assets/logo-froiv-white.svg";
+import logoWhite from "@/assets/logo-froiv-white.png";
 import {
   BarChart3, Users, ShoppingBag, DollarSign, Scale, Banknote,
   Bell, Mail, HardDrive, Settings, Shield, Globe, LogOut, Menu, X,

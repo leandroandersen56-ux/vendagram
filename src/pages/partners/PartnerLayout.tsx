@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabase-custom-client";
 import { usePartner } from "./PartnerGuard";
-import logoWhite from "@/assets/logo-froiv-white.svg";
+import logoWhite from "@/assets/logo-froiv-white.png";
 import {
   BarChart3, DollarSign, TrendingUp, Wallet, User, LogOut, Menu, X, ChevronRight
 } from "lucide-react";
