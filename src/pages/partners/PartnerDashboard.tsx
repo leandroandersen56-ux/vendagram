@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase-custom-client";
 import { usePartner } from "./PartnerGuard";
-import { TrendingUp, DollarSign, Building2, Wallet } from "lucide-react";
+import { TrendingUp, DollarSign, Building2, Wallet, Package, Eye } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 import { format, subDays } from "date-fns";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +14,7 @@ export default function PartnerDashboard() {
   const navigate = useNavigate();
   const pct = partner.profit_percent / 100;
 
+  // Total em produtos disponíveis (soma de anúncios ativos)
   const { data: gmv = 0 } = useQuery({
     queryKey: ["partner-gmv"],
     queryFn: async () => {
@@ -22,6 +23,19 @@ export default function PartnerDashboard() {
         .select("price, stock")
         .eq("status", "active");
       return data?.reduce((s, t) => s + Number(t.price) * (Number(t.stock) || 1), 0) ?? 0;
+    },
+    refetchInterval: 60_000,
+  });
+
+  // Faturamento real = soma de transações completadas
+  const { data: totalSales = 0 } = useQuery({
+    queryKey: ["partner-total-sales"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("transactions")
+        .select("amount")
+        .eq("status", "completed");
+      return data?.reduce((s, t) => s + Number(t.amount), 0) ?? 0;
     },
     refetchInterval: 60_000,
   });
@@ -50,6 +64,21 @@ export default function PartnerDashboard() {
     },
   });
 
+  // Lista de produtos disponíveis
+  const { data: activeListings = [] } = useQuery({
+    queryKey: ["partner-active-listings"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("listings")
+        .select("id, title, price, stock, category, views_count, created_at")
+        .eq("status", "active")
+        .order("created_at", { ascending: false })
+        .limit(50);
+      return data ?? [];
+    },
+    refetchInterval: 60_000,
+  });
+
   const { data: chartData } = useQuery({
     queryKey: ["partner-chart-30d"],
     queryFn: async () => {
@@ -70,23 +99,39 @@ export default function PartnerDashboard() {
       });
       return Object.entries(byDay).map(([name, valor]) => ({
         name,
-        gmv: valor,
+        vendas: valor,
         lucro: valor * pct,
       }));
     },
   });
 
-  const partnerShare = gmv * pct;
-  const platformShare = gmv * 0.05;
+  // Cálculos baseados em vendas reais (não em produtos disponíveis)
+  const partnerShare = totalSales * pct;
+  const platformShare = totalSales * 0.05;
   const available = Math.max(0, partnerShare - withdrawn);
-  const platformFee = gmv * 0.10;
+  const platformFee = totalSales * 0.10;
 
   const kpis = [
     { label: "Total em Produtos Disponíveis", value: formatBRL(gmv), icon: TrendingUp, color: "#0ea5e9", sub: "Soma dos anúncios ativos" },
-    { label: `Sua Participação (${partner.profit_percent}%)`, value: formatBRL(partnerShare), icon: DollarSign, color: "#10B981", sub: `Baseado em ${partner.profit_percent}% sobre vendas` },
-    { label: "Lucro da Plataforma (5%)", value: formatBRL(platformShare), icon: Building2, color: "#F59E0B", sub: "Parcela operacional Froiv" },
+    { label: `Sua Participação (${partner.profit_percent}%)`, value: formatBRL(partnerShare), icon: DollarSign, color: "#10B981", sub: `Baseado em ${partner.profit_percent}% sobre vendas realizadas` },
+    { label: "Lucro da Plataforma (5%)", value: formatBRL(platformShare), icon: Building2, color: "#F59E0B", sub: "Parcela operacional sobre vendas" },
     { label: "Disponível para Saque", value: formatBRL(available), icon: Wallet, color: "#10B981", action: true },
   ];
+
+  const categoryLabels: Record<string, string> = {
+    free_fire: "Free Fire",
+    instagram: "Instagram",
+    tiktok: "TikTok",
+    facebook: "Facebook",
+    youtube: "YouTube",
+    valorant: "Valorant",
+    fortnite: "Fortnite",
+    roblox: "Roblox",
+    clash_royale: "Clash Royale",
+    kwai: "Kwai",
+    twitter: "Twitter/X",
+    other: "Outro",
+  };
 
   return (
     <div className="space-y-6">
@@ -117,13 +162,13 @@ export default function PartnerDashboard() {
         ))}
       </div>
 
-      {/* Split card */}
+      {/* Split card — baseado em vendas reais */}
       <div className="bg-gradient-to-r from-[#0ea5e9] to-[#0369a1] rounded-xl p-6 text-white">
         <h3 className="font-bold text-lg mb-4 flex items-center gap-2">💰 Split de Receita — Como funciona</h3>
         <div className="space-y-2 text-sm">
           <div className="flex justify-between">
-            <span>Total em Produtos:</span>
-            <span className="font-bold">{formatBRL(gmv)}</span>
+            <span>Total Vendido:</span>
+            <span className="font-bold">{formatBRL(totalSales)}</span>
           </div>
           <div className="h-px bg-white/20" />
           <div className="flex justify-between">
@@ -147,9 +192,50 @@ export default function PartnerDashboard() {
         </div>
       </div>
 
-      {/* Chart */}
+      {/* Produtos Disponíveis */}
       <div className="bg-[#142952] rounded-xl border border-[rgba(14,165,233,0.15)] p-5">
-        <h3 className="text-sm font-semibold text-[#7DD3FC] mb-4">Faturamento — últimos 30 dias</h3>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-sm font-semibold text-[#7DD3FC] flex items-center gap-2">
+            <Package className="h-4 w-4" />
+            Produtos Disponíveis ({activeListings.length})
+          </h3>
+        </div>
+        {activeListings.length === 0 ? (
+          <p className="text-[#7DD3FC]/50 text-sm text-center py-8">Nenhum produto ativo no momento</p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-[#7DD3FC]/70 text-[11px] uppercase tracking-wider border-b border-[rgba(14,165,233,0.1)]">
+                  <th className="text-left py-2 pr-3">Produto</th>
+                  <th className="text-left py-2 pr-3">Categoria</th>
+                  <th className="text-right py-2 pr-3">Preço</th>
+                  <th className="text-center py-2 pr-3">Estoque</th>
+                  <th className="text-center py-2">Views</th>
+                </tr>
+              </thead>
+              <tbody>
+                {activeListings.map((listing) => (
+                  <tr key={listing.id} className="border-b border-[rgba(14,165,233,0.05)] hover:bg-[rgba(14,165,233,0.05)] transition-colors">
+                    <td className="py-3 pr-3 text-[#F0F9FF] font-medium max-w-[200px] truncate">{listing.title}</td>
+                    <td className="py-3 pr-3 text-[#7DD3FC]/80">{categoryLabels[listing.category] || listing.category}</td>
+                    <td className="py-3 pr-3 text-[#F0F9FF] text-right font-semibold">{formatBRL(Number(listing.price))}</td>
+                    <td className="py-3 pr-3 text-center text-[#7DD3FC]">{listing.stock}</td>
+                    <td className="py-3 text-center text-[#7DD3FC]/70 flex items-center justify-center gap-1">
+                      <Eye className="h-3 w-3" />
+                      {listing.views_count}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {/* Chart — vendas reais */}
+      <div className="bg-[#142952] rounded-xl border border-[rgba(14,165,233,0.15)] p-5">
+        <h3 className="text-sm font-semibold text-[#7DD3FC] mb-4">Vendas — últimos 30 dias</h3>
         <ResponsiveContainer width="100%" height={250}>
           <AreaChart data={chartData ?? []}>
             <defs>
@@ -167,9 +253,9 @@ export default function PartnerDashboard() {
             <YAxis tick={{ fill: "#7DD3FC", fontSize: 10 }} tickFormatter={(v) => `R$${(v / 1000).toFixed(0)}k`} />
             <Tooltip
               contentStyle={{ background: "#0f2040", border: "1px solid rgba(14,165,233,0.2)", borderRadius: 8, color: "#F0F9FF" }}
-              formatter={(v: number, name: string) => [formatBRL(v), name === "gmv" ? "GMV" : "Sua Participação"]}
+              formatter={(v: number, name: string) => [formatBRL(v), name === "vendas" ? "Vendas" : "Sua Participação"]}
             />
-            <Area type="monotone" dataKey="gmv" stroke="#0ea5e9" fill="url(#partnerGrad)" strokeWidth={2} />
+            <Area type="monotone" dataKey="vendas" stroke="#0ea5e9" fill="url(#partnerGrad)" strokeWidth={2} />
             <Area type="monotone" dataKey="lucro" stroke="#10B981" fill="url(#profitGrad)" strokeWidth={2} strokeDasharray="5 5" />
           </AreaChart>
         </ResponsiveContainer>
