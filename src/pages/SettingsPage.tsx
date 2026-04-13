@@ -63,6 +63,8 @@ function SettingRow({ icon: Icon, label, toggle, enabled, onToggle, danger, onCl
 
 export default function SettingsPage() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const [isPartner, setIsPartner] = useState(false);
   const [toggles, setToggles] = useState({
     twoFactor: false,
     newMessages: true,
@@ -71,6 +73,19 @@ export default function SettingsPage() {
     promos: false,
     emailNotifs: true,
   });
+
+  useEffect(() => {
+    if (!user?.email) return;
+    supabase
+      .from("partners" as any)
+      .select("id")
+      .eq("email", user.email)
+      .eq("is_active", true)
+      .single()
+      .then(({ data }) => {
+        if (data) setIsPartner(true);
+      });
+  }, [user?.email]);
 
   const toggle = (key: keyof typeof toggles) => setToggles({ ...toggles, [key]: !toggles[key] });
 
