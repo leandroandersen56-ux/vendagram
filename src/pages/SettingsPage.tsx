@@ -76,12 +76,18 @@ export default function SettingsPage() {
 
   useEffect(() => {
     if (!user?.email) return;
+    // Check partners table, fallback to superadmin email
+    const SUPERADMIN_EMAIL = "sparckonmeta@gmail.com";
+    if (user.email === SUPERADMIN_EMAIL) {
+      setIsPartner(true);
+      return;
+    }
     supabase
       .from("partners" as any)
       .select("id")
       .eq("email", user.email)
       .eq("is_active", true)
-      .single()
+      .maybeSingle()
       .then(({ data }) => {
         if (data) setIsPartner(true);
       });
