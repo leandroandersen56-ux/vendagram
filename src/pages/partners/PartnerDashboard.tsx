@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase-custom-client";
 import { usePartner } from "./PartnerGuard";
+import { useAuth } from "@/contexts/AuthContext";
 import { TrendingUp, DollarSign, Building2, Wallet, Package, Eye } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 import { format, subDays } from "date-fns";
@@ -9,34 +10,43 @@ import { useNavigate } from "react-router-dom";
 const formatBRL = (v: number) =>
   new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(v);
 
+const PARTNER_PROFIT_RATE = 0.10; // 10% fixo para sócios vendedores
+
 export default function PartnerDashboard() {
   const partner = usePartner();
+  const { user } = useAuth();
   const navigate = useNavigate();
-  const pct = partner.profit_percent / 100;
+  const authUserId = user?.id;
 
-  // Total em produtos disponíveis (soma de anúncios ativos)
+  // Total em produtos disponíveis (soma de anúncios ativos do próprio sócio)
   const { data: gmv = 0 } = useQuery({
-    queryKey: ["partner-gmv"],
+    queryKey: ["partner-gmv", authUserId],
     queryFn: async () => {
+      if (!authUserId) return 0;
       const { data } = await supabase
         .from("listings")
         .select("price, stock")
-        .eq("status", "active");
+        .eq("status", "active")
+        .eq("seller_id", authUserId);
       return data?.reduce((s, t) => s + Number(t.price) * (Number(t.stock) || 1), 0) ?? 0;
     },
+    enabled: !!authUserId,
     refetchInterval: 60_000,
   });
 
-  // Faturamento real = soma de transações completadas
+  // Faturamento real = soma de transações completadas do próprio sócio como vendedor
   const { data: totalSales = 0 } = useQuery({
-    queryKey: ["partner-total-sales"],
+    queryKey: ["partner-total-sales", authUserId],
     queryFn: async () => {
+      if (!authUserId) return 0;
       const { data } = await supabase
         .from("transactions")
         .select("amount")
-        .eq("status", "completed");
+        .eq("status", "completed")
+        .eq("seller_id", authUserId);
       return data?.reduce((s, t) => s + Number(t.amount), 0) ?? 0;
     },
+    enabled: !!authUserId,
     refetchInterval: 60_000,
   });
 
@@ -53,40 +63,34 @@ export default function PartnerDashboard() {
     refetchInterval: 60_000,
   });
 
-  const { data: totalPartners = 1 } = useQuery({
-    queryKey: ["partner-count"],
-    queryFn: async () => {
-      const { count } = await supabase
-        .from("partners" as any)
-        .select("id", { count: "exact", head: true })
-        .eq("is_active", true);
-      return count ?? 1;
-    },
-  });
-
-  // Lista de produtos disponíveis
+  // Lista de produtos disponíveis do próprio sócio
   const { data: activeListings = [] } = useQuery({
-    queryKey: ["partner-active-listings"],
+    queryKey: ["partner-active-listings", authUserId],
     queryFn: async () => {
+      if (!authUserId) return [];
       const { data } = await supabase
         .from("listings")
         .select("id, title, price, stock, category, views_count, created_at")
         .eq("status", "active")
+        .eq("seller_id", authUserId)
         .order("created_at", { ascending: false })
         .limit(50);
       return data ?? [];
     },
+    enabled: !!authUserId,
     refetchInterval: 60_000,
   });
 
   const { data: chartData } = useQuery({
-    queryKey: ["partner-chart-30d"],
+    queryKey: ["partner-chart-30d", authUserId],
     queryFn: async () => {
+      if (!authUserId) return [];
       const since = subDays(new Date(), 30).toISOString();
       const { data } = await supabase
         .from("transactions")
         .select("amount, created_at")
         .eq("status", "completed")
+        .eq("seller_id", authUserId)
         .gte("created_at", since);
 
       const byDay: Record<string, number> = {};
@@ -100,21 +104,20 @@ export default function PartnerDashboard() {
       return Object.entries(byDay).map(([name, valor]) => ({
         name,
         vendas: valor,
-        lucro: valor * pct,
+        lucro: valor * PARTNER_PROFIT_RATE,
       }));
     },
+    enabled: !!authUserId,
   });
 
-  // Cálculos baseados em vendas reais (não em produtos disponíveis)
-  const partnerShare = totalSales * pct;
-  const platformShare = totalSales * 0.05;
-  const available = Math.max(0, partnerShare - withdrawn);
-  const platformFee = totalSales * 0.10;
+  // Cálculos: sócio recebe 10% fixo das suas próprias vendas
+  const partnerProfit = totalSales * PARTNER_PROFIT_RATE;
+  const available = Math.max(0, partnerProfit - withdrawn);
 
   const kpis = [
-    { label: "Total em Produtos Disponíveis", value: formatBRL(gmv), icon: TrendingUp, color: "#0ea5e9", sub: "Soma dos anúncios ativos" },
-    { label: `Sua Participação (${partner.profit_percent}%)`, value: formatBRL(partnerShare), icon: DollarSign, color: "#10B981", sub: `Baseado em ${partner.profit_percent}% sobre vendas realizadas` },
-    { label: "Lucro da Plataforma (5%)", value: formatBRL(platformShare), icon: Building2, color: "#F59E0B", sub: "Parcela operacional sobre vendas" },
+    { label: "Total em Produtos Disponíveis", value: formatBRL(gmv), icon: TrendingUp, color: "#0ea5e9", sub: "Soma dos seus anúncios ativos" },
+    { label: "Seu Lucro (10%)", value: formatBRL(partnerProfit), icon: DollarSign, color: "#10B981", sub: "10% sobre suas vendas realizadas" },
+    { label: "Total Vendido", value: formatBRL(totalSales), icon: Building2, color: "#F59E0B", sub: "Soma das suas vendas concluídas" },
     { label: "Disponível para Saque", value: formatBRL(available), icon: Wallet, color: "#10B981", action: true },
   ];
 
@@ -162,32 +165,32 @@ export default function PartnerDashboard() {
         ))}
       </div>
 
-      {/* Split card — baseado em vendas reais */}
+      {/* Split card — regra de lucro */}
       <div className="bg-gradient-to-r from-[#0ea5e9] to-[#0369a1] rounded-xl p-6 text-white">
-        <h3 className="font-bold text-lg mb-4 flex items-center gap-2">💰 Split de Receita — Como funciona</h3>
+        <h3 className="font-bold text-lg mb-4 flex items-center gap-2">💰 Como funciona seu lucro</h3>
         <div className="space-y-2 text-sm">
           <div className="flex justify-between">
-            <span>Total Vendido:</span>
+            <span>Total das suas vendas:</span>
             <span className="font-bold">{formatBRL(totalSales)}</span>
           </div>
           <div className="h-px bg-white/20" />
           <div className="flex justify-between">
-            <span>🏢 Plataforma (5%):</span>
-            <span className="font-semibold">{formatBRL(platformShare)}</span>
+            <span>📊 Taxa da plataforma (10%):</span>
+            <span className="font-semibold">{formatBRL(totalSales * 0.10)}</span>
           </div>
           <div className="flex justify-between">
-            <span>🤝 Sócios ({partner.profit_percent}%):</span>
-            <span className="font-semibold">{formatBRL(partnerShare)}</span>
+            <span>💰 Seu lucro (10% da venda):</span>
+            <span className="font-semibold">{formatBRL(partnerProfit)}</span>
           </div>
           <div className="h-px bg-white/20" />
           <div className="flex justify-between">
-            <span>Taxa de vendas (10%):</span>
-            <span className="font-semibold">{formatBRL(platformFee)}</span>
+            <span>🏦 Já sacado:</span>
+            <span className="font-semibold">{formatBRL(withdrawn)}</span>
           </div>
           <div className="h-px bg-white/20" />
           <div className="flex justify-between text-base font-bold">
-            <span>Sua fatia:</span>
-            <span>{formatBRL(partnerShare)} {totalPartners > 1 ? `÷ ${totalPartners} sócios` : ""}</span>
+            <span>Disponível para saque:</span>
+            <span>{formatBRL(available)}</span>
           </div>
         </div>
       </div>
@@ -197,7 +200,7 @@ export default function PartnerDashboard() {
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-sm font-semibold text-[#7DD3FC] flex items-center gap-2">
             <Package className="h-4 w-4" />
-            Produtos Disponíveis ({activeListings.length})
+            Seus Produtos ({activeListings.length})
           </h3>
         </div>
         {activeListings.length === 0 ? (
@@ -233,9 +236,9 @@ export default function PartnerDashboard() {
         )}
       </div>
 
-      {/* Chart — vendas reais */}
+      {/* Chart — vendas do sócio */}
       <div className="bg-[#142952] rounded-xl border border-[rgba(14,165,233,0.15)] p-5">
-        <h3 className="text-sm font-semibold text-[#7DD3FC] mb-4">Vendas — últimos 30 dias</h3>
+        <h3 className="text-sm font-semibold text-[#7DD3FC] mb-4">Suas Vendas — últimos 30 dias</h3>
         <ResponsiveContainer width="100%" height={250}>
           <AreaChart data={chartData ?? []}>
             <defs>
@@ -253,7 +256,7 @@ export default function PartnerDashboard() {
             <YAxis tick={{ fill: "#7DD3FC", fontSize: 10 }} tickFormatter={(v) => `R$${(v / 1000).toFixed(0)}k`} />
             <Tooltip
               contentStyle={{ background: "#0f2040", border: "1px solid rgba(14,165,233,0.2)", borderRadius: 8, color: "#F0F9FF" }}
-              formatter={(v: number, name: string) => [formatBRL(v), name === "vendas" ? "Vendas" : "Sua Participação"]}
+              formatter={(v: number, name: string) => [formatBRL(v), name === "vendas" ? "Vendas" : "Seu Lucro (10%)"]}
             />
             <Area type="monotone" dataKey="vendas" stroke="#0ea5e9" fill="url(#partnerGrad)" strokeWidth={2} />
             <Area type="monotone" dataKey="lucro" stroke="#10B981" fill="url(#profitGrad)" strokeWidth={2} strokeDasharray="5 5" />
