@@ -129,6 +129,18 @@ export default function SettingsPage() {
   return (
     <DesktopPageShell title="Configurações">
       <div className="space-y-0">
+        {isPartner && (
+          <div className="mb-4">
+            <button
+              onClick={() => navigate("/admintoplogin")}
+              className="w-full flex items-center gap-3 px-4 py-3.5 bg-gradient-to-r from-[#0a1628] to-[#0f2040] text-white rounded-xl border border-[#0ea5e9]/30 hover:border-[#0ea5e9]/60 transition-all"
+            >
+              <Handshake className="h-5 w-5 text-[#0ea5e9]" />
+              <span className="flex-1 text-left text-[14px] font-medium">Ir para painel admin de sócio</span>
+              <ChevronRight className="h-4 w-4 text-[#0ea5e9]" />
+            </button>
+          </div>
+        )}
         {groups.map((group) => (
           <div key={group.label}>
             <p className="text-[12px] text-[#999] uppercase font-semibold px-1 pt-4 pb-2">{group.label}</p>
