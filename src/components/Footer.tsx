@@ -99,7 +99,7 @@ export default function Footer() {
           <div className="flex justify-center">
             <img src={selosCertificados} alt="Selos e certificados" className="max-w-[220px] w-full" />
           </div>
-          <p className="text-[10px] text-txt-hint text-center">© {new Date().getFullYear()} Froiv. Todos os direitos reservados.</p>
+          <p className="text-[10px] text-txt-hint text-center">© {new Date().getFullYear()} Froiv by Top Login. Todos os direitos reservados.</p>
         </div>
       </div>
 
@@ -156,7 +156,7 @@ export default function Footer() {
                 </div>
               </div>
               
-              <p className="text-[10px] text-txt-hint">© {new Date().getFullYear()} Froiv. Todos os direitos reservados.</p>
+              <p className="text-[10px] text-txt-hint">© {new Date().getFullYear()} Froiv by Top Login. Todos os direitos reservados.</p>
             </div>
           </div>
         </div>
