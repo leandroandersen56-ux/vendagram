@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase-custom-client";
 import { usePartner } from "./PartnerGuard";
+import { useAuth } from "@/contexts/AuthContext";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 import { subDays, format } from "date-fns";
 import { Download } from "lucide-react";
@@ -27,6 +28,8 @@ type Period = "7d" | "30d" | "90d";
 
 export default function PartnerRevenue() {
   const partner = usePartner();
+  const { user } = useAuth();
+  const authUserId = user?.id;
   const pct = partner.profit_percent / 100;
   const [period, setPeriod] = useState<Period>("30d");
 
@@ -34,12 +37,14 @@ export default function PartnerRevenue() {
   const since = subDays(new Date(), days).toISOString();
 
   const { data: sales = [] } = useQuery({
-    queryKey: ["partner-sales", period],
+    queryKey: ["partner-sales", period, authUserId],
     queryFn: async () => {
+      if (!authUserId) return [];
       const { data } = await supabase
         .from("transactions")
         .select("amount, created_at, listing_id, status")
         .eq("status", "completed")
+        .eq("seller_id", authUserId)
         .gte("created_at", since)
         .order("created_at", { ascending: false });
       if (!data?.length) return [];
@@ -60,6 +65,7 @@ export default function PartnerRevenue() {
         };
       });
     },
+    enabled: !!authUserId,
   });
 
   // By platform
