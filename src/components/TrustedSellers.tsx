@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Star, ShieldCheck, Award } from "lucide-react";
 import { VerifiedBadge } from "@/components/VerifiedBadge";
+import { supabase } from "@/integrations/supabase/client";
 import { getSellerProfilePath } from "@/lib/getSellerProfilePath";
 import defaultAvatar from "@/assets/default-avatar.png";
 
@@ -63,40 +64,32 @@ export default function TrustedSellers() {
         const CLOUD_URL = import.meta.env.VITE_SUPABASE_URL;
         const CLOUD_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
-        const partnersResponse = await fetch(`${CLOUD_URL}/functions/v1/admin-create-listing`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${CLOUD_KEY}`,
-          },
-          body: JSON.stringify({
-            action: "query",
-            table: "partners",
-            filters: { is_active: true },
-            select: "name, email",
-          }),
-        });
+        // 1. Buscar partners do Cloud DB via supabase client (RLS permite anon SELECT)
+        const { data: partnersData, error: partnersError } = await supabase
+          .from("partners")
+          .select("name, email")
+          .eq("is_active", true);
 
-        if (!partnersResponse.ok) {
-          throw new Error(`partners fetch failed: ${partnersResponse.status}`);
+        if (partnersError) {
+          console.log("[TrustedSellers] erro ao buscar partners via client:", partnersError.message);
         }
 
-        const partnersJson = await partnersResponse.json();
-        const activePartners = Array.isArray(partnersJson.data)
-          ? partnersJson.data.filter(
-              (partner: { email?: string }) =>
-                typeof partner.email === "string" &&
-                partner.email.toLowerCase() !== SUPERADMIN_EMAIL
+        const activePartners = Array.isArray(partnersData)
+          ? partnersData.filter(
+              (p) => typeof p.email === "string" && p.email.toLowerCase() !== SUPERADMIN_EMAIL
             )
           : [];
 
-        if (!activePartners.length) {
-          console.log("[TrustedSellers] nenhum partner retornado; mantendo fallback atual");
-          return;
-        }
+        // Se não encontrou nenhum partner, usar lista estática
+        const partnerList = activePartners.length > 0
+          ? activePartners
+          : STATIC_PARTNERS.map((p) => ({ name: p.name, email: p.email }));
 
+        console.log("[TrustedSellers] partners encontrados:", partnerList.length);
+
+        // 2. Enriquecer com profiles via edge function (banco pessoal, bypassa RLS)
         const enrichedSellers = await Promise.all(
-          activePartners.map(async (partner: { name?: string; email: string }) => {
+          partnerList.map(async (partner: { name?: string; email: string }) => {
             const fallback = FALLBACK_BY_EMAIL.get(partner.email.toLowerCase());
 
             try {
