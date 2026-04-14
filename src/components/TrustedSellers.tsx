@@ -5,6 +5,7 @@ import { VerifiedBadge } from "@/components/VerifiedBadge";
 import { supabase } from "@/integrations/supabase/client";
 import { getSellerProfilePath } from "@/lib/getSellerProfilePath";
 import defaultAvatar from "@/assets/default-avatar.png";
+import { TRUSTED_SELLER_LIST, getTrustedSellerByEmail } from "@/lib/trusted-sellers";
 
 interface TrustedSeller {
   name: string;
@@ -19,16 +20,16 @@ interface TrustedSeller {
 
 const SUPERADMIN_EMAIL = "sparckonmeta@gmail.com";
 
-const STATIC_PARTNERS: TrustedSeller[] = [
-  { name: "ADM GB", username: null, userId: null, email: "vg786674@gmail.com", avatar: null, sales: 0, rating: 4.8, profileIdentifier: "vg786674@gmail.com" },
-  { name: "ADM GL", username: null, userId: "beccd2b1-0a31-4fd5-9701-4dce5eaa125c", email: "contabanco743@gmail.com", avatar: null, sales: 0, rating: 4.8, profileIdentifier: "beccd2b1-0a31-4fd5-9701-4dce5eaa125c" },
-  { name: "Eduardo Klunck", username: null, userId: "d7f85dfb-0f1d-4c58-9a64-0544ec5b158d", email: "eduardoklunck95@gmail.com", avatar: null, sales: 0, rating: 4.8, profileIdentifier: "d7f85dfb-0f1d-4c58-9a64-0544ec5b158d" },
-  { name: "Theus Klunck", username: null, userId: "73740fcc-5a53-4a10-8645-eeb76ec7642b", email: "costawlc7@gmail.com", avatar: null, sales: 0, rating: 4.8, profileIdentifier: "73740fcc-5a53-4a10-8645-eeb76ec7642b" },
-];
-
-const FALLBACK_BY_EMAIL = new Map(
-  STATIC_PARTNERS.map((seller) => [seller.email.toLowerCase(), seller])
-);
+const STATIC_PARTNERS: TrustedSeller[] = TRUSTED_SELLER_LIST.map((seller) => ({
+  name: seller.name,
+  username: seller.username,
+  userId: seller.userId,
+  email: seller.email,
+  avatar: seller.avatarUrl,
+  sales: seller.sales,
+  rating: seller.rating,
+  profileIdentifier: seller.slug,
+}));
 
 function normalizeTrustedSeller(
   seller: Partial<TrustedSeller> & { email?: string; name?: string },
@@ -48,7 +49,7 @@ function normalizeTrustedSeller(
       typeof seller.rating === "number" && seller.rating > 0
         ? seller.rating
         : (fallback?.rating ?? 4.8),
-    profileIdentifier: seller.profileIdentifier || seller.userId || seller.username || safeEmail,
+    profileIdentifier: seller.profileIdentifier || fallback?.profileIdentifier || seller.userId || seller.username || safeEmail,
   };
 }
 
@@ -66,7 +67,6 @@ export default function TrustedSellers() {
         const CLOUD_URL = import.meta.env.VITE_SUPABASE_URL;
         const CLOUD_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
-        // 1. Buscar partners do Cloud DB via supabase client (RLS permite anon SELECT)
         const { data: partnersData, error: partnersError } = await supabase
           .from("partners")
           .select("name, email")
@@ -82,17 +82,32 @@ export default function TrustedSellers() {
             )
           : [];
 
-        // Se não encontrou nenhum partner, usar lista estática
         const partnerList = activePartners.length > 0
           ? activePartners
           : STATIC_PARTNERS.map((p) => ({ name: p.name, email: p.email }));
 
         console.log("[TrustedSellers] partners encontrados:", partnerList.length);
 
-        // 2. Enriquecer com profiles via edge function (banco pessoal, bypassa RLS)
         const enrichedSellers = await Promise.all(
           partnerList.map(async (partner: { name?: string; email: string }) => {
-            const fallback = FALLBACK_BY_EMAIL.get(partner.email.toLowerCase());
+            const knownSeller = getTrustedSellerByEmail(partner.email);
+
+            if (knownSeller) {
+              console.log("[TrustedSellers] fallback estável aplicado:", knownSeller.slug);
+              return normalizeTrustedSeller(
+                {
+                  name: knownSeller.name,
+                  username: knownSeller.username,
+                  userId: knownSeller.userId,
+                  email: knownSeller.email,
+                  avatar: knownSeller.avatarUrl,
+                  sales: knownSeller.sales,
+                  rating: knownSeller.rating,
+                  profileIdentifier: knownSeller.slug,
+                },
+                undefined
+              );
+            }
 
             try {
               const profileResponse = await fetch(`${CLOUD_URL}/functions/v1/admin-create-listing`, {
@@ -116,28 +131,22 @@ export default function TrustedSellers() {
               const profileJson = await profileResponse.json();
               const profile = Array.isArray(profileJson.data) ? profileJson.data[0] : null;
 
-              return normalizeTrustedSeller(
-                {
-                  name: profile?.name || partner.name,
-                  username: typeof profile?.username === "string" ? profile.username.trim() : fallback?.username || null,
-                  userId: profile?.user_id || fallback?.userId || null,
-                  email: profile?.email || partner.email,
-                  avatar: profile?.avatar_url || null,
-                  sales: Number(profile?.total_sales || 0),
-                  rating: Number(profile?.avg_rating || 0),
-                  profileIdentifier: (typeof profile?.username === "string" && profile.username.trim()) || profile?.user_id || fallback?.userId || partner.email,
-                },
-                fallback
-              );
+              return normalizeTrustedSeller({
+                name: profile?.name || partner.name,
+                username: typeof profile?.username === "string" ? profile.username.trim() : null,
+                userId: profile?.user_id || null,
+                email: profile?.email || partner.email,
+                avatar: profile?.avatar_url || null,
+                sales: Number(profile?.total_sales || 0),
+                rating: Number(profile?.avg_rating || 0),
+                profileIdentifier: (typeof profile?.username === "string" && profile.username.trim()) || profile?.user_id || partner.email,
+              });
             } catch (error) {
-              console.log("[TrustedSellers] fallback por parceiro", partner.email, error);
-              return normalizeTrustedSeller(
-                {
-                  name: partner.name,
-                  email: partner.email,
-                },
-                fallback
-              );
+              console.log("[TrustedSellers] fallback por parceiro desconhecido", partner.email, error);
+              return normalizeTrustedSeller({
+                name: partner.name,
+                email: partner.email,
+              });
             }
           })
         );
@@ -197,8 +206,7 @@ export default function TrustedSellers() {
           <div className="scrollbar-hide flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory sm:grid sm:grid-cols-2 sm:overflow-visible sm:pb-0 lg:grid-cols-4">
             {visibleSellers.map((seller, index) => {
               const stableKey = seller.userId || seller.username || seller.email || `trusted-seller-${index}`;
-              const profileLink =
-                getSellerProfilePath(seller.profileIdentifier || seller.userId || seller.email) || "/marketplace";
+              const profileLink = getSellerProfilePath(seller.profileIdentifier) || "/marketplace";
 
               return (
                 <Link
