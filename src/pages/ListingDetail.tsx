@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { formatBRL, getPlatform } from "@/lib/mock-data";
+import { getSellerProfilePath } from "@/lib/getSellerProfilePath";
 import PlatformIcon from "@/components/PlatformIcon";
 import { supabase } from "@/integrations/supabase/client";
 import { fetchSellerProfile } from "@/lib/fetch-seller-profile";
@@ -118,7 +119,7 @@ export default function ListingDetail() {
   const screenshots = (listing.screenshots || []).filter((s: string) => s);
   const allImages = screenshots;
 
-  const officialUrl = `https://www.froiv.com/listing/${listing.id}`;
+  const sellerProfilePath = getSellerProfilePath(seller?.username || seller?.user_id || listing?.seller_id);
 
   const handleShare = () => {
     const message = `🎮 ${listing.title}\n💰 ${formatBRL(listing.price)}\n🔒 Compra segura no Froiv by Top Login\n${officialUrl}`;
@@ -256,7 +257,7 @@ export default function ListingDetail() {
                       <span className="text-[hsl(var(--border))]">|</span>
                       <span className="text-[hsl(var(--txt-secondary))]">{sellerSales} vendas</span>
                       <span className="text-[hsl(var(--border))]">|</span>
-                      <button className="text-primary font-medium hover:underline" onClick={() => seller?.username ? navigate(`/perfil/${seller.username}`) : toast.info("Vendedor sem perfil público")}>Ver avaliações →</button>
+                      <button className="text-primary font-medium hover:underline" onClick={() => sellerProfilePath ? navigate(sellerProfilePath) : toast.info("Vendedor sem perfil público")}>Ver avaliações →</button>
                     </div>
                   </div>
 
@@ -313,7 +314,7 @@ export default function ListingDetail() {
                     sales={sellerSales}
                     avatarUrl={seller?.avatar_url || undefined}
                     isVerified={seller?.is_verified || false}
-                    onViewProfile={() => seller?.username ? navigate(`/perfil/${seller.username}`) : toast.info("Vendedor sem perfil público")}
+                    onViewProfile={() => sellerProfilePath ? navigate(sellerProfilePath) : toast.info("Vendedor sem perfil público")}
                     onMessage={() => toast.info("Inicie uma compra para conversar com o vendedor")}
                   />
                 </div>
