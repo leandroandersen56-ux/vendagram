@@ -114,7 +114,7 @@ function AppRoutes() {
       <ScrollToTop />
       <AuthModal />
       <BottomNav />
-      <WhatsAppFloatingButton />
+      
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<Index />} />
