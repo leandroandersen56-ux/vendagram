@@ -2,13 +2,17 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Star, ShieldCheck, Award } from "lucide-react";
 import { VerifiedBadge } from "@/components/VerifiedBadge";
+import { supabase } from "@/integrations/supabase/client";
 import { getSellerProfilePath } from "@/lib/getSellerProfilePath";
 import defaultAvatar from "@/assets/default-avatar.png";
 
-const SUPERADMIN_EMAIL = "sparckonmeta@gmail.com";
-
-const CLOUD_URL = import.meta.env.VITE_SUPABASE_URL;
-const CLOUD_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+// Sócios fixos — controlados aqui. Superadmin não aparece.
+const PARTNER_LIST = [
+  { email: "vg786674@gmail.com", name: "ADM GB", fallbackUsername: "GB VENDAS" },
+  { email: "contabanco743@gmail.com", name: "ADM GL", fallbackUsername: "contabanco" },
+  { email: "eduardoklunck95@gmail.com", name: "Eduardo Klunck", fallbackUsername: "eduardo" },
+  { email: "costawlc7@gmail.com", name: "Theus Klunck", fallbackUsername: "theus" },
+];
 
 interface TrustedSeller {
   name: string;
@@ -20,60 +24,43 @@ interface TrustedSeller {
   rating: number;
 }
 
-async function queryTable(table: string, filters: Record<string, any> = {}, select = "*") {
-  try {
-    const res = await fetch(`${CLOUD_URL}/functions/v1/admin-create-listing`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${CLOUD_KEY}`,
-      },
-      body: JSON.stringify({ action: "query", table, filters, select }),
-    });
-    const json = await res.json();
-    return json.data || [];
-  } catch {
-    return [];
-  }
-}
-
 export default function TrustedSellers() {
-  const [sellers, setSellers] = useState<TrustedSeller[]>([]);
+  const [sellers, setSellers] = useState<TrustedSeller[]>(
+    PARTNER_LIST.map((p) => ({
+      name: p.name,
+      username: p.fallbackUsername,
+      userId: null,
+      email: p.email,
+      avatar: null,
+      sales: 0,
+      rating: 4.8,
+    }))
+  );
 
   useEffect(() => {
-    async function load() {
+    async function loadProfiles() {
       try {
-        // 1. Buscar sócios ativos via edge function (bypassa RLS)
-        const partners: any[] = await queryTable("partners", { is_active: true }, "name,email");
+        const emails = PARTNER_LIST.map((p) => p.email.toLowerCase());
 
-        if (!partners.length) return;
+        // Try to enrich with real profile data
+        const { data: profiles } = await supabase
+          .from("profiles")
+          .select("user_id, username, name, avatar_url, total_sales, avg_rating, email")
+          .in("email", emails);
 
-        const activePartners = partners.filter(
-          (p) => p.email.toLowerCase() !== SUPERADMIN_EMAIL
-        );
-
-        if (!activePartners.length) return;
-
-        // 2. Buscar profiles correspondentes
-        const emails = activePartners.map((p) => p.email.toLowerCase());
-        const profiles: any[] = [];
-        for (const email of emails) {
-          const rows = await queryTable("profiles", { email }, "user_id,username,name,avatar_url,total_sales,avg_rating,email");
-          if (rows.length) profiles.push(rows[0]);
-        }
+        if (!profiles?.length) return;
 
         const profileMap = new Map<string, any>();
         profiles.forEach((p) => {
           if (p.email) profileMap.set(p.email.toLowerCase(), p);
         });
 
-        // 3. Combinar dados
         setSellers(
-          activePartners.map((partner) => {
+          PARTNER_LIST.map((partner) => {
             const profile = profileMap.get(partner.email.toLowerCase());
             return {
               name: profile?.name || partner.name,
-              username: profile?.username || partner.email.split("@")[0],
+              username: profile?.username || partner.fallbackUsername,
               userId: profile?.user_id || null,
               email: partner.email,
               avatar: profile?.avatar_url || null,
@@ -83,13 +70,12 @@ export default function TrustedSellers() {
           })
         );
       } catch (err) {
-        console.error("Error loading trusted sellers:", err);
+        console.error("Error loading trusted seller profiles:", err);
+        // Fallback static data already set — cards still show
       }
     }
-    load();
+    loadProfiles();
   }, []);
-
-  if (!sellers.length) return null;
 
   return (
     <section className="py-4">
