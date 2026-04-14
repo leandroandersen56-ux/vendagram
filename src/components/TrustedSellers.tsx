@@ -6,13 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { getSellerProfilePath } from "@/lib/getSellerProfilePath";
 import defaultAvatar from "@/assets/default-avatar.png";
 
-// Sócios fixos — controlados aqui. Superadmin não aparece.
-const PARTNER_LIST = [
-  { email: "vg786674@gmail.com", name: "ADM GB", fallbackUsername: "GB VENDAS" },
-  { email: "contabanco743@gmail.com", name: "ADM GL", fallbackUsername: "contabanco" },
-  { email: "eduardoklunck95@gmail.com", name: "Eduardo Klunck", fallbackUsername: "eduardo" },
-  { email: "costawlc7@gmail.com", name: "Theus Klunck", fallbackUsername: "theus" },
-];
+const SUPERADMIN_EMAIL = "sparckonmeta@gmail.com";
 
 interface TrustedSeller {
   name: string;
@@ -25,66 +19,79 @@ interface TrustedSeller {
 }
 
 export default function TrustedSellers() {
-  const [sellers, setSellers] = useState<TrustedSeller[]>(
-    PARTNER_LIST.map((p) => ({
-      name: p.name,
-      username: p.fallbackUsername,
-      userId: null,
-      email: p.email,
-      avatar: null,
-      sales: 0,
-      rating: 4.8,
-    }))
-  );
+  const [sellers, setSellers] = useState<TrustedSeller[]>([]);
 
   useEffect(() => {
-    async function loadProfiles() {
+    async function load() {
       try {
+        const { data: partners } = await supabase
+          .from("partners")
+          .select("name, email")
+          .eq("is_active", true);
+
+        if (!partners?.length) return;
+
+        const activePartners = partners.filter(
+          (p) => p.email.toLowerCase() !== SUPERADMIN_EMAIL
+        );
+
+        if (!activePartners.length) return;
+
         const CLOUD_URL = import.meta.env.VITE_SUPABASE_URL;
         const CLOUD_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
-        // Fetch each partner profile via edge function (bypasses RLS)
-        const results = await Promise.all(
-          PARTNER_LIST.map(async (partner) => {
+        const enrichedPartners = await Promise.all(
+          activePartners.map(async (partner) => {
             try {
               const res = await fetch(`${CLOUD_URL}/functions/v1/admin-create-listing`, {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
-                  "Authorization": `Bearer ${CLOUD_KEY}`,
+                  Authorization: `Bearer ${CLOUD_KEY}`,
                 },
                 body: JSON.stringify({
                   action: "query",
                   table: "profiles",
                   filters: { email: partner.email },
-                  select: "user_id,username,name,avatar_url,total_sales,avg_rating,email",
+                  select: "user_id, username, name, avatar_url, total_sales, avg_rating, email",
                 }),
               });
+
               const json = await res.json();
-              return { partner, profile: json.data?.[0] || null };
+              const profile = json.data?.[0] ?? null;
+
+              return {
+                name: profile?.name || partner.name,
+                username: profile?.username || null,
+                userId: profile?.user_id || null,
+                email: partner.email,
+                avatar: profile?.avatar_url || null,
+                sales: profile?.total_sales || 0,
+                rating: profile?.avg_rating || 4.8,
+              };
             } catch {
-              return { partner, profile: null };
+              return {
+                name: partner.name,
+                username: null,
+                userId: null,
+                email: partner.email,
+                avatar: null,
+                sales: 0,
+                rating: 4.8,
+              };
             }
           })
         );
 
-        setSellers(
-          results.map(({ partner, profile }) => ({
-            name: profile?.name || partner.name,
-            username: profile?.username || partner.fallbackUsername,
-            userId: profile?.user_id || null,
-            email: partner.email,
-            avatar: profile?.avatar_url || null,
-            sales: profile?.total_sales || 0,
-            rating: profile?.avg_rating || 4.8,
-          }))
-        );
+        setSellers(enrichedPartners);
       } catch (err) {
-        console.error("Error loading trusted seller profiles:", err);
+        console.error("Error loading trusted sellers:", err);
       }
     }
-    loadProfiles();
+    load();
   }, []);
+
+  if (!sellers.length) return null;
 
   return (
     <section className="py-4">
@@ -101,7 +108,7 @@ export default function TrustedSellers() {
 
           <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 snap-x snap-mandatory sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:overflow-visible sm:pb-0">
             {sellers.map((seller) => {
-              const profileLink = getSellerProfilePath(seller.username || seller.userId)
+              const profileLink = getSellerProfilePath(seller.username || seller.userId || seller.email)
                 ?? "/marketplace";
               return (
                 <Link

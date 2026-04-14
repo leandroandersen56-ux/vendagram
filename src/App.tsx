@@ -101,8 +101,9 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 }
 
 function VendedorRedirect() {
-  const { identifier } = useParams();
-  return <Navigate to={identifier ? `/perfil/${identifier}` : "/marketplace"} replace />;
+  const { identifier, id } = useParams();
+  const value = identifier || id;
+  return <Navigate to={value ? `/perfil/${value}` : "/marketplace"} replace />;
 }
 
 function AppRoutes() {
@@ -163,7 +164,7 @@ function AppRoutes() {
         <Route path="/vendedor/novo" element={<ProtectedRoute><CreateListingPanel /></ProtectedRoute>} />
         <Route path="/vendedor/verificacao" element={<ProtectedRoute><PanelVerification /></ProtectedRoute>} />
         <Route path="/vendedor/editar/:id" element={<ProtectedRoute><EditListingPanel /></ProtectedRoute>} />
-        <Route path="/vendedor/:id" element={<VendedorRedirect />} />
+        <Route path="/vendedor/:identifier" element={<VendedorRedirect />} />
 
         {/* Redirects from old panel routes */}
         <Route path="/painel" element={<Navigate to="/vendedor" replace />} />
