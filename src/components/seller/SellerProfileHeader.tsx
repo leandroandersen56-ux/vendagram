@@ -48,6 +48,7 @@ export default function SellerProfileHeader({ seller, listingsCount, avgRating, 
   const { isFollowing, followersCount, followingCount, loading: followLoading, toggleFollow } = useFollow(seller.user_id);
   const coverInputRef = useRef<HTMLInputElement>(null);
   const [coverUrl, setCoverUrl] = useState<string | null>(seller.cover_url || null);
+  const [avatarSrc, setAvatarSrc] = useState<string>(seller.avatar_url || defaultAvatar);
   const [uploading, setUploading] = useState(false);
   const [isPartnerByEmail, setIsPartnerByEmail] = useState(false);
 
@@ -71,6 +72,11 @@ export default function SellerProfileHeader({ seller, listingsCount, avgRating, 
         });
     }
   }, [seller.email]);
+
+  useEffect(() => {
+    setCoverUrl(seller.cover_url || null);
+    setAvatarSrc(seller.avatar_url || defaultAvatar);
+  }, [seller.cover_url, seller.avatar_url]);
 
   const isVerifiedProfile = seller.is_verified || isPartnerByEmail;
   const rep = isPartnerByEmail
@@ -147,7 +153,14 @@ export default function SellerProfileHeader({ seller, listingsCount, avgRating, 
         {/* Avatar row */}
         <div className="flex items-end gap-3 sm:gap-4 -mt-10 sm:-mt-14 mb-4">
           <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-full border-4 border-card bg-muted flex items-center justify-center text-2xl sm:text-3xl font-semibold text-foreground shrink-0 overflow-hidden shadow-md">
-            <img src={seller.avatar_url || defaultAvatar} alt={seller.name || "Vendedor"} className="h-full w-full rounded-full object-cover" />
+            <img
+              src={avatarSrc}
+              alt={seller.name || "Vendedor"}
+              className="h-full w-full rounded-full object-cover"
+              onError={() => {
+                if (avatarSrc !== defaultAvatar) setAvatarSrc(defaultAvatar);
+              }}
+            />
           </div>
           <div className="flex-1 min-w-0 pt-12 sm:pt-14">
             <div className="flex items-center gap-1.5 flex-wrap">
