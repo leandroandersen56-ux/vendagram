@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { formatBRL } from "@/hooks/useAdminStats";
 import { Search, ChevronLeft, ChevronRight, X, Eye, Ban, DollarSign, Mail, LogIn } from "lucide-react";
+import { VerifiedBadge } from "@/components/VerifiedBadge";
 import { toast } from "sonner";
 
 export default function SuperAdminUsers() {
@@ -142,7 +143,7 @@ export default function SuperAdminUsers() {
                           {(user.name || "?")[0].toUpperCase()}
                         </div>
                         <div>
-                          <p className="text-white text-sm font-medium">{user.name || "—"}</p>
+                          <p className="text-white text-sm font-medium flex items-center gap-1">{user.name || "—"} {user.is_verified && <VerifiedBadge size={14} />}</p>
                           {user.username && <p className="text-gray-500 text-xs">@{user.username}</p>}
                         </div>
                       </div>
