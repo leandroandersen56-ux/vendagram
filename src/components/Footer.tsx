@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { MessageCircle } from "lucide-react";
 import logoFroiv from "@/assets/logo-froiv-footer.png";
+import logoTopLogin from "@/assets/logo-top-login.png";
 import selosCertificados from "@/assets/selos-certificados.png";
 import amexIcon from "@/assets/amex-icon.svg";
 import eloIcon from "@/assets/elo-icon.png";
@@ -68,8 +69,12 @@ export default function Footer() {
       {/* Mobile */}
       <div className="sm:hidden pb-16">
         <div className="px-4 py-6 space-y-6">
-          <div className="flex items-center justify-center mb-12">
+          <div className="flex flex-col items-center justify-center mb-12 gap-1">
             <img src={logoFroiv} alt="Froiv" className="h-8" />
+            <div className="flex items-center gap-1.5">
+              <span className="text-[10px] text-txt-hint">by</span>
+              <img src={logoTopLogin} alt="Top Login" className="h-4" />
+            </div>
           </div>
           <div className="flex items-center justify-center gap-5">
             <a href="#" className="text-primary hover:text-primary/80 transition-colors" aria-label="Instagram"><SocialIcon type="instagram" size={26} /></a>
@@ -108,7 +113,11 @@ export default function Footer() {
         <div className="container mx-auto px-4 py-12">
           <div className="grid grid-cols-4 gap-8">
             <div>
-              <img src={logoFroiv} alt="Froiv" className="h-9 mb-3" />
+              <img src={logoFroiv} alt="Froiv" className="h-9 mb-1" />
+              <div className="flex items-center gap-1.5 mb-3">
+                <span className="text-[10px] text-txt-hint">by</span>
+                <img src={logoTopLogin} alt="Top Login" className="h-4" />
+              </div>
               <p className="text-[12px] text-txt-secondary leading-relaxed mb-5 max-w-[220px]">
                 A plataforma mais segura para comprar e vender contas digitais com escrow automático.
               </p>
