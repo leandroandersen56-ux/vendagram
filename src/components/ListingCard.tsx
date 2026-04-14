@@ -82,7 +82,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
 
           {/* Price */}
           <div className="mt-2">
-            <p className="text-[16px] font-medium text-txt-primary leading-none tracking-tight">
+            <p className="text-[18px] font-normal text-txt-primary leading-none tracking-tight">
               {formatBRL(listing.price)}
             </p>
           </div>
