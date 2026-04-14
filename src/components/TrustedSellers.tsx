@@ -3,9 +3,10 @@ import { Star, ShieldCheck, Award } from "lucide-react";
 import { VerifiedBadge } from "@/components/VerifiedBadge";
 
 const TRUSTED_SELLERS = [
-  { name: "ADM GB", username: "gb_vendas", userId: "af11290b-014b-43db-aca1-ed1a12ab1707", avatar: "https://yzwncktlibdfycqhvlqg.supabase.co/storage/v1/object/public/avatars/af11290b-014b-43db-aca1-ed1a12ab1707/avatar.jpeg?t=1776109088807", sales: 89, rating: 4.8, reviews: 32, badge: "Platinum" },
-  { name: "Eduardo Klunck", username: "edu_accounts", userId: "d7f85dfb-0f1d-4c58-9a64-0544ec5b158d", avatar: null, sales: 54, rating: 4.8, reviews: 19, badge: "Platinum" },
+  { name: "ADM GB", username: "GB VENDAS", userId: "af11290b-014b-43db-aca1-ed1a12ab1707", avatar: "https://yzwncktlibdfycqhvlqg.supabase.co/storage/v1/object/public/avatars/af11290b-014b-43db-aca1-ed1a12ab1707/avatar.jpeg?t=1776109088807", sales: 89, rating: 4.8, reviews: 32, badge: "Platinum" },
   { name: "ADM GL", username: "contabanco", userId: "beccd2b1-0a31-4fd5-9701-4dce5eaa125c", avatar: "https://yzwncktlibdfycqhvlqg.supabase.co/storage/v1/object/public/avatars/beccd2b1-0a31-4fd5-9701-4dce5eaa125c/avatar.png?t=1776120747125", sales: 42, rating: 4.6, reviews: 15, badge: "Platinum" },
+  { name: "Eduardo Klunck", username: "eduardo", userId: "d7f85dfb-0f1d-4c58-9a64-0544ec5b158d", avatar: null, sales: 54, rating: 4.8, reviews: 19, badge: "Platinum" },
+  { name: "Chagas", username: "chagas", userId: "59448516-12a9-4993-a569-a3e06dc27c1b", avatar: null, sales: 38, rating: 4.7, reviews: 14, badge: "Platinum" },
 ];
 
 const BADGE_STYLES: Record<string, string> = {
