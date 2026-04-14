@@ -237,11 +237,9 @@ export default function TrustedSellers() {
                   <div className="flex flex-col items-center rounded-xl border border-border bg-background p-4 text-center transition-all hover:border-primary/30 hover:shadow-sm">
                     <div className="relative mb-2.5">
                       <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border-2 border-primary/20 bg-muted text-lg font-semibold text-foreground transition-colors group-hover:border-primary/40">
-                        <img
-                          src={seller.avatar || defaultAvatar}
+                        <TrustedSellerAvatar
+                          src={seller.avatar}
                           alt={seller.name}
-                          className="h-full w-full rounded-full object-cover"
-                          loading="lazy"
                         />
                       </div>
                     </div>
