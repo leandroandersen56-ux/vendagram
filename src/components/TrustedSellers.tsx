@@ -116,7 +116,7 @@ export default function TrustedSellers() {
                           className="h-full w-full rounded-full object-cover"
                         />
                       </div>
-                      <VerifiedBadge size={18} className="absolute -bottom-0.5 -right-0.5" />
+                      
                     </div>
 
                     {/* Name */}
