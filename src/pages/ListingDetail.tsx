@@ -244,7 +244,17 @@ export default function ListingDetail() {
                     {listing.seller_id === "00000000-0000-0000-0000-000000000001" && (
                       <span className="inline-block mt-1 bg-black/80 text-white text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">Anúncio Demo</span>
                     )}
-                    <div className="flex items-center flex-wrap gap-x-2 gap-y-1 mt-2 text-[13px]">
+                  </div>
+                  <ProductGallery
+                    images={allImages}
+                    title={listing.title}
+                    category={listing.category}
+                    verified={sellerSales >= 5}
+                    isDemo={listing.seller_id === "00000000-0000-0000-0000-000000000001"}
+                  />
+                  {/* Stars / sales / reviews line below gallery */}
+                  <div className="px-4 pt-3 pb-0">
+                    <div className="flex items-center flex-wrap gap-x-2 gap-y-1 text-[13px]">
                       <div className="flex items-center gap-1.5">
                         <PartialStars rating={sellerRating} size="h-3.5 w-3.5" />
                         <span className="font-semibold text-primary">{sellerRating.toFixed(1)}</span>
@@ -255,13 +265,6 @@ export default function ListingDetail() {
                       <button className="text-primary font-medium hover:underline" onClick={() => sellerProfilePath ? navigate(sellerProfilePath) : toast.info("Vendedor sem perfil público")}>Ver avaliações →</button>
                     </div>
                   </div>
-                  <ProductGallery
-                    images={allImages}
-                    title={listing.title}
-                    category={listing.category}
-                    verified={sellerSales >= 5}
-                    isDemo={listing.seller_id === "00000000-0000-0000-0000-000000000001"}
-                  />
 
                   {/* Buy Box */}
                   <div ref={buyBoxRef} className="px-4 py-3 border-t border-[hsl(var(--border))]">
