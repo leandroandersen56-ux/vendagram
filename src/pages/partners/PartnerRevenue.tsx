@@ -7,6 +7,8 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGri
 import { subDays, format } from "date-fns";
 import { Download } from "lucide-react";
 
+const PARTNER_LISTING_CUTOFF = "2026-04-13T00:00:00.000Z";
+
 const formatBRL = (v: number) =>
   new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(v);
 
@@ -40,22 +42,28 @@ export default function PartnerRevenue() {
     queryKey: ["partner-sales", period, authUserId],
     queryFn: async () => {
       if (!authUserId) return [];
+
+      // Busca apenas listings criados a partir do cutoff
+      const { data: eligibleListings } = await supabase
+        .from("listings")
+        .select("id, title, category")
+        .eq("seller_id", authUserId)
+        .gte("created_at", PARTNER_LISTING_CUTOFF);
+
+      if (!eligibleListings?.length) return [];
+      const eligibleIds = eligibleListings.map((l) => l.id);
+
       const { data } = await supabase
         .from("transactions")
         .select("amount, created_at, listing_id, status")
         .eq("status", "completed")
         .eq("seller_id", authUserId)
         .gte("created_at", since)
+        .in("listing_id", eligibleIds)
         .order("created_at", { ascending: false });
       if (!data?.length) return [];
 
-      const listingIds = [...new Set(data.map((t) => t.listing_id))];
-      const { data: listings } = await supabase
-        .from("listings")
-        .select("id, title, category")
-        .in("id", listingIds);
-
-      const listingMap = new Map(listings?.map((l) => [l.id, l]) ?? []);
+      const listingMap = new Map(eligibleListings.map((l) => [l.id, l]));
       return data.map((t) => {
         const listing = listingMap.get(t.listing_id);
         return {

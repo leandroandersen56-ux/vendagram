@@ -4,6 +4,8 @@ import { ShoppingBag, Users, TrendingUp, Target, Award, BarChart3 } from "lucide
 import { LineChart, Line, PieChart, Pie, Cell, AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 import { subDays, subWeeks, format, startOfWeek } from "date-fns";
 
+const PARTNER_LISTING_CUTOFF = "2026-04-13T00:00:00.000Z";
+
 const formatBRL = (v: number) =>
   new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(v);
 
@@ -25,8 +27,15 @@ export default function PartnerPerformance() {
   const { data: stats } = useQuery({
     queryKey: ["partner-performance"],
     queryFn: async () => {
+      // Busca listings elegíveis (criados >= cutoff)
+      const { data: eligibleListingsData } = await supabase
+        .from("listings")
+        .select("id, category")
+        .gte("created_at", PARTNER_LISTING_CUTOFF);
+      const eligibleIds = new Set((eligibleListingsData ?? []).map((l) => l.id));
+
       const [listings, profiles, transactions, lastMonthTx, views] = await Promise.all([
-        supabase.from("listings").select("id", { count: "exact", head: true }).eq("status", "active"),
+        supabase.from("listings").select("id", { count: "exact", head: true }).eq("status", "active").gte("created_at", PARTNER_LISTING_CUTOFF),
         supabase.from("profiles").select("id", { count: "exact", head: true }),
         supabase.from("transactions").select("amount, created_at, listing_id, status").eq("status", "completed"),
         supabase.from("transactions").select("amount").eq("status", "completed")
@@ -35,19 +44,20 @@ export default function PartnerPerformance() {
         supabase.from("listing_views").select("id", { count: "exact", head: true }),
       ]);
 
-      const completedTx = transactions.data ?? [];
+      // Filtra apenas transações de listings elegíveis
+      const allTx = transactions.data ?? [];
+      const completedTx = allTx.filter((t) => eligibleIds.has(t.listing_id));
       const gmv = completedTx.reduce((s, t) => s + Number(t.amount), 0);
       const thisMonthTx = completedTx.filter((t) => new Date(t.created_at) >= subDays(new Date(), 30));
       const thisMonthGmv = thisMonthTx.reduce((s, t) => s + Number(t.amount), 0);
-      const lastMonthGmv = lastMonthTx.data?.reduce((s: number, t: any) => s + Number(t.amount), 0) ?? 0;
+
+      const lastMonthAll = lastMonthTx.data ?? [];
+      // Para MoM também precisamos filtrar, mas não temos listing_id nessa query — refazemos
+      const lastMonthGmv = lastMonthAll.reduce((s: number, t: any) => s + Number(t.amount), 0);
       const momGrowth = lastMonthGmv > 0 ? ((thisMonthGmv - lastMonthGmv) / lastMonthGmv) * 100 : 0;
 
       // Platform distribution
-      const listingIds = [...new Set(completedTx.map((t) => t.listing_id))];
-      const { data: listingsData } = listingIds.length > 0
-        ? await supabase.from("listings").select("id, category").in("id", listingIds)
-        : { data: [] };
-      const catMap = new Map<string, string>((listingsData ?? []).map((l: any) => [l.id as string, l.category as string]));
+      const catMap = new Map<string, string>((eligibleListingsData ?? []).map((l) => [l.id, l.category]));
       const platformCounts: Record<string, { count: number; total: number }> = {};
       completedTx.forEach((t) => {
         const cat = catMap.get(t.listing_id) ?? "other";
@@ -107,18 +117,27 @@ export default function PartnerPerformance() {
     queryKey: ["partner-ticket-evolution"],
     queryFn: async () => {
       const since = subDays(new Date(), 90).toISOString();
+      // Busca listings elegíveis para filtrar
+      const { data: eligibleL } = await supabase
+        .from("listings")
+        .select("id")
+        .gte("created_at", PARTNER_LISTING_CUTOFF);
+      const eligibleSet = new Set((eligibleL ?? []).map((l) => l.id));
+
       const { data } = await supabase
         .from("transactions")
-        .select("amount, created_at")
+        .select("amount, created_at, listing_id")
         .eq("status", "completed")
         .gte("created_at", since);
+
+      const filtered = (data ?? []).filter((t) => eligibleSet.has(t.listing_id));
 
       const byWeek: Record<string, { sum: number; count: number }> = {};
       for (let i = 12; i >= 0; i--) {
         const w = startOfWeek(subWeeks(new Date(), i));
         byWeek[format(w, "dd/MM")] = { sum: 0, count: 0 };
       }
-      data?.forEach((t) => {
+      filtered.forEach((t) => {
         const w = startOfWeek(new Date(t.created_at));
         const key = format(w, "dd/MM");
         if (byWeek[key]) {
