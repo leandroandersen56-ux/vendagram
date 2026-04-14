@@ -4,10 +4,10 @@ import { VerifiedBadge } from "@/components/VerifiedBadge";
 
 const TRUSTED_SELLERS = [
   { name: "Sparckon", username: "sparckon", userId: "b78c563a-41eb-4933-9b4d-b53e3cd62dfb", avatar: "https://tqfvhfrbeolnvjpcfckl.supabase.co/storage/v1/object/public/avatars/sparckon-avatar.jpg", sales: 156, rating: 4.9, reviews: 47, badge: "Platinum" },
-  { name: "ADM GB", username: "adm_gb", userId: null, avatar: null, sales: 89, rating: 4.8, reviews: 32, badge: "Platinum" },
+  { name: "ADM GB", username: "adm_gb", userId: "af11290b-014b-43db-aca1-ed1a12ab1707", avatar: null, sales: 89, rating: 4.8, reviews: 32, badge: "Platinum" },
   { name: "Costa", username: "costa_digital", userId: null, avatar: null, sales: 67, rating: 4.7, reviews: 24, badge: "Platinum" },
-  { name: "Eduardo", username: "edu_accounts", userId: null, avatar: null, sales: 54, rating: 4.8, reviews: 19, badge: "Platinum" },
-  { name: "Conta Banco", username: "contabanco", userId: null, avatar: null, sales: 42, rating: 4.6, reviews: 15, badge: "Platinum" },
+  { name: "Eduardo Klunck", username: "edu_accounts", userId: "d7f85dfb-0f1d-4c58-9a64-0544ec5b158d", avatar: null, sales: 54, rating: 4.8, reviews: 19, badge: "Platinum" },
+  { name: "ADM GL", username: "contabanco", userId: "beccd2b1-0a31-4fd5-9701-4dce5eaa125c", avatar: null, sales: 42, rating: 4.6, reviews: 15, badge: "Platinum" },
 ];
 
 const BADGE_STYLES: Record<string, string> = {
