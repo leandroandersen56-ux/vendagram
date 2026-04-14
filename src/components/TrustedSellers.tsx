@@ -49,7 +49,8 @@ export default function TrustedSellers() {
 
                     {/* Name */}
                     <div className="flex items-center gap-1 mb-0.5">
-                      <span className="text-sm font-semibold text-foreground truncate max-w-[120px]">{seller.name}</span>
+                      <span className="text-sm font-semibold text-foreground truncate max-w-[100px]">{seller.name}</span>
+                      <VerifiedBadge size={14} />
                     </div>
                     <span className="text-[11px] text-muted-foreground mb-2">@{seller.username}</span>
 
