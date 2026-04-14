@@ -134,6 +134,12 @@ export default function SellerProfileHeader({ seller, listingsCount, avgRating, 
             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iYSIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIxIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDUpIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCBmaWxsPSJ1cmwoI2EpIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIi8+PC9zdmc+')] opacity-50" />
           </div>
         )}
+        {/* Froiv 3D logo overlay on default/verified cover */}
+        {effectiveCover === sellerCoverMain && (
+          <div className="absolute inset-0 flex items-center justify-end pr-6 sm:pr-12 pointer-events-none">
+            <img src={froiv3dLogo} alt="" className="h-20 sm:h-28 w-auto drop-shadow-2xl opacity-90" />
+          </div>
+        )}
         {isOwnProfile && (
           <>
             <input ref={coverInputRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handleCoverUpload} />
