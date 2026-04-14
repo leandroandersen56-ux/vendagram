@@ -6,7 +6,7 @@ const corsHeaders = {
 };
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
-const FROM = "Froiv <onboarding@resend.dev>";
+const FROM = "Froiv <noreply@froiv.com>";
 
 const LOGO_URL = "https://vendagram.lovable.app/logo-froiv-white.svg";
 const SITE_URL = "https://vendagram.lovable.app";
