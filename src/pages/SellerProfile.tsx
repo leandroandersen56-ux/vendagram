@@ -11,19 +11,73 @@ import { supabase } from "@/integrations/supabase/client";
 import { fetchSellerProfile } from "@/lib/fetch-seller-profile";
 import type { Listing } from "@/lib/mock-data";
 
+/* ── Hardcoded trusted seller profiles ── */
+const TRUSTED_SELLERS: Record<string, any> = {
+  "contabanco": {
+    user_id: "beccd2b1-0a31-4fd5-9701-4dce5eaa125c",
+    username: "contabanco",
+    name: "ADM GL",
+    avatar_url: "https://yzwncktlibdfycqhvlqg.supabase.co/storage/v1/object/public/avatars/beccd2b1-0a31-4fd5-9701-4dce5eaa125c/avatar.png",
+    bio: "Vendedor verificado da plataforma Froiv.",
+    is_verified: true,
+    avg_rating: 4.8,
+    total_reviews: 0,
+    total_sales: 0,
+    total_purchases: 0,
+    created_at: "2024-12-01T00:00:00Z",
+  },
+  "gb vendas": {
+    user_id: "gb-vendas-static",
+    username: "gb vendas",
+    name: "ADM GB",
+    avatar_url: null,
+    bio: "Vendedor verificado da plataforma Froiv.",
+    is_verified: true,
+    avg_rating: 4.8,
+    total_reviews: 0,
+    total_sales: 0,
+    total_purchases: 0,
+    created_at: "2024-12-01T00:00:00Z",
+  },
+  "eduardo": {
+    user_id: "d7f85dfb-0f1d-4c58-9a64-0544ec5b158d",
+    username: "eduardo",
+    name: "Eduardo Klunck",
+    avatar_url: null,
+    bio: "Vendedor verificado da plataforma Froiv.",
+    is_verified: true,
+    avg_rating: 4.8,
+    total_reviews: 0,
+    total_sales: 0,
+    total_purchases: 0,
+    created_at: "2024-12-01T00:00:00Z",
+  },
+  "theus": {
+    user_id: "73740fcc-5a53-4a10-8645-eeb76ec7642b",
+    username: "theus",
+    name: "Theus Klunck",
+    avatar_url: null,
+    bio: "Vendedor verificado da plataforma Froiv.",
+    is_verified: true,
+    avg_rating: 4.8,
+    total_reviews: 0,
+    total_sales: 0,
+    total_purchases: 0,
+    created_at: "2024-12-01T00:00:00Z",
+  },
+};
+
+// Also map by user_id for /vendedor/:id routes
+const TRUSTED_SELLERS_BY_ID: Record<string, any> = {};
+for (const v of Object.values(TRUSTED_SELLERS)) {
+  TRUSTED_SELLERS_BY_ID[v.user_id] = v;
+}
+
 export default function SellerProfile() {
   const { username, id } = useParams();
   const rawIdentifier = decodeURIComponent((username || id || "").trim());
   const normalizedIdentifier = rawIdentifier.toLowerCase().trim();
-  const TRUSTED_SELLER_ALIASES: Record<string, string> = {
-    "contabanco": "contabanco743@gmail.com",
-    "gb vendas": "vg786674@gmail.com",
-    "gb_vendas": "vg786674@gmail.com",
-    "gb-vendas": "vg786674@gmail.com",
-    "eduardo": "eduardoklunck95@gmail.com",
-    "theus": "costawlc7@gmail.com",
-  };
-  const identifier = TRUSTED_SELLER_ALIASES[normalizedIdentifier] || rawIdentifier;
+
   const [seller, setSeller] = useState<any>(null);
   const [listings, setListings] = useState<Listing[]>([]);
   const [reviews, setReviews] = useState<any[]>([]);
@@ -37,10 +91,39 @@ export default function SellerProfile() {
       setListings([]);
       setReviews([]);
 
-      const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(identifier);
+      // 1. Check hardcoded trusted sellers first (instant, never fails)
+      const hardcoded = TRUSTED_SELLERS[normalizedIdentifier] || TRUSTED_SELLERS_BY_ID[rawIdentifier];
+      if (hardcoded) {
+        console.log("[SellerProfile] using hardcoded profile:", hardcoded.name);
+        setSeller(hardcoded);
+        // Try to load listings/reviews from DB (best-effort)
+        try {
+          const [listingsRes, reviewsRes] = await Promise.all([
+            (supabase.from("listings") as any).select("*").eq("seller_id", hardcoded.user_id).eq("status", "active").order("created_at", { ascending: false }),
+            (supabase.from("reviews") as any).select("*").eq("reviewed_id", hardcoded.user_id).order("created_at", { ascending: false }).limit(20),
+          ]);
+          if (listingsRes.data) {
+            setListings(listingsRes.data.map((row: any) => ({
+              id: row.id, sellerId: row.seller_id, sellerName: hardcoded.name,
+              sellerRating: hardcoded.avg_rating || 5, sellerSales: hardcoded.total_sales || 0,
+              platform: row.category, title: row.title, description: row.description || "",
+              price: Number(row.price), status: row.status, screenshots: row.screenshots || [],
+              fields: row.highlights || {}, createdAt: row.created_at,
+            })));
+          }
+          if (reviewsRes.data) setReviews(reviewsRes.data);
+        } catch (e) {
+          console.log("[SellerProfile] listings/reviews fetch failed (non-critical):", e);
+        }
+        setLoading(false);
+        return;
+      }
+
+      // 2. Dynamic lookup for non-hardcoded sellers
+      const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(rawIdentifier);
       const candidateFilters: Record<string, string>[] = isUUID
-        ? [{ user_id: identifier }]
-        : [{ username: identifier }, { user_id: identifier }, { email: identifier }];
+        ? [{ user_id: rawIdentifier }]
+        : [{ username: rawIdentifier }];
 
       let profile: any | null = null;
       for (const filters of candidateFilters) {
@@ -56,8 +139,8 @@ export default function SellerProfile() {
       setSeller(profile);
 
       const [listingsRes, reviewsRes] = await Promise.all([
-        supabase.from("listings").select("*").eq("seller_id", profile.user_id).eq("status", "active").order("created_at", { ascending: false }),
-        supabase.from("reviews").select("*").eq("reviewed_id", profile.user_id).order("created_at", { ascending: false }).limit(20),
+        (supabase.from("listings") as any).select("*").eq("seller_id", profile.user_id).eq("status", "active").order("created_at", { ascending: false }),
+        (supabase.from("reviews") as any).select("*").eq("reviewed_id", profile.user_id).order("created_at", { ascending: false }).limit(20),
       ]);
 
       if (listingsRes.data) {
@@ -73,8 +156,8 @@ export default function SellerProfile() {
       if (reviewsRes.data) setReviews(reviewsRes.data);
       setLoading(false);
     }
-    if (identifier) load();
-  }, [identifier]);
+    if (rawIdentifier) load();
+  }, [rawIdentifier, normalizedIdentifier]);
 
   if (loading) {
     return (
