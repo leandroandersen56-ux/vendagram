@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate, useParams } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -100,6 +100,11 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+function VendedorRedirect() {
+  const { identifier } = useParams();
+  return <Navigate to={identifier ? `/perfil/${identifier}` : "/marketplace"} replace />;
+}
+
 function AppRoutes() {
   useMessageToasts();
   return (
@@ -128,6 +133,7 @@ function AppRoutes() {
         <Route path="/ajuda/como-anunciar" element={<HowToList />} />
         <Route path="/busca" element={<SearchResults />} />
         <Route path="/perfil/:username" element={<SellerProfile />} />
+        <Route path="/perfil/:id" element={<SellerProfile />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/termos" element={<TermsPage />} />
@@ -157,7 +163,7 @@ function AppRoutes() {
         <Route path="/vendedor/novo" element={<ProtectedRoute><CreateListingPanel /></ProtectedRoute>} />
         <Route path="/vendedor/verificacao" element={<ProtectedRoute><PanelVerification /></ProtectedRoute>} />
         <Route path="/vendedor/editar/:id" element={<ProtectedRoute><EditListingPanel /></ProtectedRoute>} />
-        <Route path="/vendedor/:id" element={<SellerProfile />} />
+        <Route path="/vendedor/:id" element={<VendedorRedirect />} />
 
         {/* Redirects from old panel routes */}
         <Route path="/painel" element={<Navigate to="/vendedor" replace />} />
