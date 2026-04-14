@@ -46,7 +46,7 @@ export default function SellerDashboard() {
   const activeLabel = TABS.find(t => t.id === activeTab)?.label || "Painel";
 
   return (
-    <div className="min-h-screen bg-[#F5F5F5] pb-20 sm:pb-0">
+    <div className="min-h-screen bg-[#F5F5F5] pb-20 sm:pb-0 sm:pt-14">
       {/* Mobile header */}
       <div className="sm:hidden bg-primary px-4 py-3.5 flex items-center justify-between">
         <img src={logoWhite} alt="Froiv" className="h-6" />
