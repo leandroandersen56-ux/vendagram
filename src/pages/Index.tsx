@@ -26,7 +26,9 @@ import bannerSocialFacebook from "@/assets/banner-facebook.jpg";
 import bannerSocialTiktok from "@/assets/banners/banner-social-tiktok.jpg";
 import bannerInstagram from "@/assets/banner-instagram.jpg";
 import bannerHeroOffers from "@/assets/banner-hero-offers.jpg";
-import bannerPartnership from "@/assets/banner-partnership-hero-v2.jpg";
+import bannerPartnershipBg from "@/assets/banner-partnership-bg.jpg";
+import logoTopLogin from "@/assets/logo-top-login.png";
+import froivIcon3d from "@/assets/froiv-icon-3d.png";
 
 
 import catMinecraft from "@/assets/categories/minecraft.jpg";
@@ -49,7 +51,7 @@ const BANNERS = [
   { img: bannerHeroOffers, title: "Apenas 10% de Taxa\nem Cada Venda", subtitle: "A menor taxa do mercado.\nNegocie direto, sem mensalidade\ne sem custos ocultos", cta: "Começar agora", link: "/marketplace", objectPosition: "right 30%" },
   { img: bannerSecurityHero, title: "Compre e Venda\nContas Digitais\ncom Segurança", subtitle: "Redes sociais e jogos\ncom escrow integrado", cta: "Explorar", link: "/marketplace", objectPosition: "right 40%" },
   { img: bannerHeroSecurity, title: "Só Liberamos o Valor\nApós Sua Confirmação", subtitle: "Pagamento protegido\ncom sistema escrow", cta: "Saiba mais", link: "/ajuda/como-funciona-escrow", objectPosition: "right 40%" },
-  { img: bannerPartnership, title: "", subtitle: "", cta: "Explorar", link: "/marketplace", objectPosition: "center" },
+  { img: bannerPartnershipBg, title: "A Plataforma Mais\nConfiável do Brasil", subtitle: "Garantia e segurança da\nAgência Top Login", cta: "Explorar", link: "/marketplace", objectPosition: "right 30%", partnership: true },
 ];
 
 const QUICK_CATEGORIES = [
@@ -234,8 +236,25 @@ export default function Index() {
               {BANNERS.map((b, i) => (
                 <div key={i} className={`absolute inset-0 transition-opacity duration-500 ${i === bannerIdx ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
                   <img src={b.img} alt={b.title} className="w-full h-full object-cover" style={b.objectPosition ? { objectPosition: b.objectPosition } : undefined} {...(i === 0 ? {} : { loading: "lazy" as const })} />
-                  {b.title && <div className="absolute inset-y-0 left-0 w-3/5 bg-gradient-to-r from-black/70 via-black/40 to-transparent pointer-events-none" />}
-                  {b.title ? <div className="absolute inset-0 flex items-center pointer-events-none">
+                  {b.title && !b.partnership && <div className="absolute inset-y-0 left-0 w-3/5 bg-gradient-to-r from-black/70 via-black/40 to-transparent pointer-events-none" />}
+                  {b.partnership ? (
+                    <div className="absolute inset-0 flex items-center pointer-events-none">
+                      <div className="px-5 sm:px-8 md:px-12 max-w-sm md:max-w-lg">
+                        <h2 className="text-white text-base sm:text-xl md:text-3xl lg:text-4xl font-bold leading-tight whitespace-pre-line sm:whitespace-normal drop-shadow-lg">{b.title}</h2>
+                        <p className="text-white/80 text-[11px] sm:text-sm md:text-base lg:text-lg mt-1 md:mt-2 whitespace-pre-line drop-shadow">{b.subtitle}</p>
+                        <div className="flex items-center gap-2 sm:gap-3 mt-3 md:mt-4">
+                          <img src={logoTopLogin} alt="Agência Top Login" className="h-6 sm:h-8 md:h-10 object-contain drop-shadow-lg" />
+                          <span className="text-white/50 text-xs sm:text-sm font-light">by</span>
+                          <img src={froivIcon3d} alt="Froiv" className="h-6 sm:h-8 md:h-10 object-contain drop-shadow-lg" />
+                        </div>
+                        <Link to={b.link} className="pointer-events-auto">
+                          <button className="mt-3 md:mt-4 text-[11px] sm:text-xs md:text-sm font-semibold text-white border border-white/40 rounded-lg px-3 md:px-5 py-1.5 md:py-2 hover:bg-white/10 transition-colors">
+                            {b.cta} →
+                          </button>
+                        </Link>
+                      </div>
+                    </div>
+                  ) : b.title ? <div className="absolute inset-0 flex items-center pointer-events-none">
                     <div className="px-5 sm:px-8 md:px-12 max-w-sm md:max-w-lg">
                       <h2 className="text-white text-base sm:text-xl md:text-3xl lg:text-4xl font-semibold leading-tight whitespace-pre-line sm:whitespace-normal">{b.title}</h2>
                       <p className="text-white/80 text-[11px] sm:text-sm md:text-base lg:text-lg mt-1 md:mt-2 whitespace-pre-line">{b.subtitle}</p>
