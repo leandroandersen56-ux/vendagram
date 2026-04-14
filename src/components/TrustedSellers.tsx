@@ -89,7 +89,7 @@ export default function TrustedSellers() {
           <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 snap-x snap-mandatory sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:overflow-visible sm:pb-0">
             {sellers.map((seller) => {
               const profileLink = seller.userId
-                ? `/vendedor/${seller.userId}`
+                ? `/perfil/${seller.username}`
                 : "/marketplace";
               return (
                 <Link
