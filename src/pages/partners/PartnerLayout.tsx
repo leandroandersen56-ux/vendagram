@@ -6,6 +6,7 @@ import logoWhite from "@/assets/logo-froiv-white.png";
 import {
   BarChart3, DollarSign, TrendingUp, Wallet, User, LogOut, Menu, X, ChevronRight
 } from "lucide-react";
+import { VerifiedBadge } from "@/components/VerifiedBadge";
 
 const navItems = [
   { label: "Dashboard", icon: BarChart3, path: "/admintoplogin" },
@@ -99,7 +100,7 @@ export default function PartnerLayout() {
               <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
               <span className="text-[10px] text-emerald-400 hidden sm:inline">Online</span>
             </div>
-            <span className="text-sm text-[#F0F9FF] hidden sm:inline">{partner.name}</span>
+            <span className="text-sm text-[#F0F9FF] hidden sm:inline flex items-center gap-1">{partner.name} <VerifiedBadge size={16} /></span>
             <div className="h-8 w-8 rounded-full bg-[#0ea5e9] flex items-center justify-center text-white text-xs font-bold">
               {partner.name?.charAt(0)?.toUpperCase() || "S"}
             </div>
