@@ -11,7 +11,6 @@ import { Card } from "@/components/ui/card";
 import { PLATFORMS } from "@/lib/mock-data";
 import PlatformIcon from "@/components/PlatformIcon";
 import { useToast } from "@/hooks/use-toast";
-import { supabase as customSupabase } from "@/lib/supabase-custom-client";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { moderateText, getModerationMessage } from "@/lib/content-moderation";
@@ -38,6 +37,35 @@ const fileToBase64 = (file: File) =>
     reader.onerror = () => reject(new Error("Falha ao ler imagem"));
     reader.readAsDataURL(file);
   });
+
+const uploadImage = async (file: File) => {
+  const image = await fileToBase64(file);
+
+  const response = await fetch(
+    `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/upload-image`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+        Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+      },
+      body: JSON.stringify({
+        image,
+        filename: file.name,
+        mimeType: file.type,
+      }),
+    }
+  );
+
+  const payload = await response.json().catch(() => null);
+
+  if (!response.ok || !payload?.url) {
+    throw new Error(payload?.error || payload?.details || "Falha ao enviar imagem");
+  }
+
+  return payload.url as string;
+};
 
 // ── Config por plataforma ──────────────────────────────────────
 const FEATURES: Record<string, string[]> = {
@@ -250,19 +278,7 @@ export default function CreateListing() {
     if (screenshots.length > 0) {
       try {
         const uploadPromises = screenshots.map(async (s) => {
-          const image = await fileToBase64(s.file);
-          const { data, error } = await customSupabase.functions.invoke("upload-image", {
-            body: { image, filename: s.file.name, mimeType: s.file.type },
-          });
-          if (error) {
-            // Fallback: try Lovable Cloud instance
-            const { data: d2, error: e2 } = await supabase.functions.invoke("upload-image", {
-              body: { image, filename: s.file.name, mimeType: s.file.type },
-            });
-            if (e2) throw new Error(e2.message || "Upload failed");
-            return d2.url as string;
-          }
-          return data.url as string;
+          return await uploadImage(s.file);
         });
         screenshotUrls = await Promise.all(uploadPromises);
       } catch (uploadErr: any) {
