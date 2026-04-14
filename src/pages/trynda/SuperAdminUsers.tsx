@@ -12,7 +12,6 @@ const PARTNER_EMAILS = [
   "vg786674@gmail.com",
   "costawlc7@gmail.com",
   "eduardoklunck95@gmail.com",
-  "cauachagasquadros@gmail.com",
 ];
 
 const isPartnerVerified = (email?: string | null) =>
