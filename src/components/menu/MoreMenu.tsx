@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Home, Store, HelpCircle, ShoppingCart, Package, Bell, Heart, HelpCircleIcon,
   Star, Clock, Gamepad2, Smartphone, Tag, Link2, Receipt, Settings, LogOut,
-  ChevronRight, Shield, Wallet
+  ChevronRight, Shield, Wallet, MessageCircle
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { VerifiedBadge } from "@/components/VerifiedBadge";
@@ -178,7 +178,19 @@ export default function MoreMenu({ open, onClose }: MoreMenuProps) {
                 </div>
               ))}
 
-              {/* Footer links */}
+              {/* WhatsApp Support */}
+              <div className="px-5 pt-3">
+                <a
+                  href="https://wa.me/5519988499681?text=Ol%C3%A1%2C%20preciso%20de%20ajuda%20na%20Froiv!"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 w-full h-12 rounded-xl bg-[#25D366] hover:bg-[#1fb855] text-white text-sm font-semibold transition-all active:scale-[0.98]"
+                  onClick={onClose}
+                >
+                  <MessageCircle className="h-5 w-5" />
+                  Fale conosco no WhatsApp
+                </a>
+              </div>
               <div className="border-t border-[#F0F0F0] mt-2 pt-2 px-5 pb-4">
                 <button className="w-full text-left py-3 text-[13px] text-[#666]" onClick={() => handleNav("/termos")}>
                   Termos e condições

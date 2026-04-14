@@ -283,10 +283,10 @@ export default function ListingDetail() {
                       href="https://wa.me/5519988499681?text=Ol%C3%A1%2C%20tenho%20uma%20d%C3%BAvida%20sobre%20um%20produto%20na%20Froiv!"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-1.5 mt-3 text-[12px] text-[hsl(var(--txt-hint))] hover:text-[#25D366] transition-colors"
+                      className="flex items-center justify-center gap-2 mt-3 w-full h-11 rounded-xl bg-[#25D366] hover:bg-[#1fb855] text-white text-sm font-semibold transition-all active:scale-[0.98]"
                     >
-                      <MessageCircle className="h-3.5 w-3.5" />
-                      Dúvidas? Fale conosco no WhatsApp
+                      <MessageCircle className="h-4 w-4" />
+                      Fale conosco no WhatsApp
                     </a>
                   </div>
 
@@ -454,10 +454,10 @@ export default function ListingDetail() {
                         href="https://wa.me/5519988499681?text=Ol%C3%A1%2C%20tenho%20uma%20d%C3%BAvida%20sobre%20um%20produto%20na%20Froiv!"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center justify-center gap-1.5 mt-3 text-[12px] text-[hsl(var(--txt-hint))] hover:text-[#25D366] transition-colors"
+                        className="flex items-center justify-center gap-2 mt-3 w-full h-11 rounded-xl bg-[#25D366] hover:bg-[#1fb855] text-white text-sm font-semibold transition-all active:scale-[0.98]"
                       >
-                        <MessageCircle className="h-3.5 w-3.5" />
-                        Dúvidas? Fale conosco no WhatsApp
+                        <MessageCircle className="h-4 w-4" />
+                        Fale conosco no WhatsApp
                       </a>
                     </div>
                   </div>
