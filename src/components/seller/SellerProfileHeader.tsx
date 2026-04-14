@@ -18,14 +18,12 @@ const TRUSTED_PARTNER_IDENTIFIERS = new Set([
   "af11290b-014b-43db-aca1-ed1a12ab1707",
   "beccd2b1-0a31-4fd5-9701-4dce5eaa125c",
   "d7f85dfb-0f1d-4c58-9a64-0544ec5b158d",
-  "59448516-12a9-4993-a569-a3e06dc27c1b",
   "sparckon",
   "gb vendas",
   "contabanco",
   "adm gb",
   "adm gl",
   "eduardo klunck",
-  "chagas",
 ]);
 
 function getRepLevel(sales: number, isVerified: boolean) {
