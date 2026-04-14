@@ -312,7 +312,7 @@ export default function Navbar() {
                         {user?.name?.[0]?.toUpperCase() || "U"}
                       </div>
                       <div className="min-w-0">
-                        <p className="text-sm font-semibold truncate">{user?.name || "Usuário"}</p>
+                        <p className="text-sm font-semibold truncate flex items-center gap-1">{user?.name || "Usuário"} {user?.isVerified && <VerifiedBadge size={16} />}</p>
                         <p className="text-[11px] text-white/70 truncate">{user?.email}</p>
                       </div>
                     </div>
@@ -385,7 +385,7 @@ export default function Navbar() {
                         {user?.name?.[0]?.toUpperCase() || "U"}
                       </div>
                       <div className="min-w-0">
-                        <p className="text-sm font-semibold truncate">{user?.name || "Usuário"}</p>
+                        <p className="text-sm font-semibold truncate flex items-center gap-1">{user?.name || "Usuário"} {user?.isVerified && <VerifiedBadge size={16} />}</p>
                         <p className="text-[11px] text-white/70 truncate">{user?.email}</p>
                       </div>
                     </div>
