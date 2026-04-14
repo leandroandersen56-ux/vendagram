@@ -8,13 +8,18 @@ export async function fetchSellerProfile(
   filters: Record<string, string>
 ): Promise<any | null> {
   try {
-    let q = supabase.from("public_profiles").select("*");
+    // Build query manually to avoid deep type instantiation
+    const key = Object.keys(filters)[0];
+    const val = filters[key];
 
-    for (const [col, val] of Object.entries(filters)) {
-      q = q.eq(col, val);
-    }
+    if (!key || !val) return null;
 
-    const { data, error } = await q.limit(1).maybeSingle();
+    const { data, error } = await supabase
+      .from("public_profiles")
+      .select("user_id,username,name,avatar_url,cover_url,bio,is_verified,avg_rating,total_reviews,total_sales,total_purchases,created_at,referral_code")
+      .eq(key as any, val)
+      .limit(1)
+      .maybeSingle();
 
     if (error) {
       console.error("fetchSellerProfile query error:", error);
