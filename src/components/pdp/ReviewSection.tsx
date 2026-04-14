@@ -110,12 +110,7 @@ export default function ReviewSection({ sellerId, sellerName, rating, totalSales
           <div className="text-center">
             <p className="text-4xl font-semibold text-[hsl(var(--txt-primary))]">{rating.toFixed(1)}</p>
             <div className="flex gap-0.5 mt-1 justify-center">
-              {[1, 2, 3, 4, 5].map((s) => (
-                <Star
-                  key={s}
-                  className={`h-3.5 w-3.5 ${s <= Math.round(rating) ? "text-amber-400 fill-amber-400" : "text-[hsl(var(--border))]"}`}
-                />
-              ))}
+              <PartialStars rating={rating} size="h-3.5 w-3.5" />
             </div>
             <p className="text-[11px] text-[hsl(var(--txt-hint))] mt-1">{totalReviews || totalSales} avaliações</p>
           </div>

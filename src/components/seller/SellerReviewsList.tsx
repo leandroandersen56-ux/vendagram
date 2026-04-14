@@ -35,9 +35,7 @@ export default function SellerReviewsList({ reviews }: Props) {
             <div>
               <p className="text-sm font-medium text-foreground">{(r.profiles as any)?.name || BRAZILIAN_NAMES[index % BRAZILIAN_NAMES.length]}</p>
               <div className="flex gap-0.5">
-                {[1, 2, 3, 4, 5].map((s) => (
-                  <Star key={s} className={`h-3 w-3 ${s <= r.rating ? "text-[#FFB800] fill-[#FFB800]" : "text-muted-foreground/30"}`} />
-                ))}
+                <PartialStars rating={r.rating} size="h-3 w-3" />
               </div>
             </div>
             <span className="ml-auto text-xs text-muted-foreground">

@@ -251,8 +251,8 @@ export default function ListingDetail() {
                       <span className="inline-block mt-1 bg-black/80 text-white text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">Anúncio Demo</span>
                     )}
                     <div className="flex items-center flex-wrap gap-x-2 gap-y-1 mt-2 text-[13px]">
-                      <div className="flex items-center gap-1">
-                        <Star className="h-3.5 w-3.5 text-amber-400 fill-amber-400" />
+                      <div className="flex items-center gap-1.5">
+                        <PartialStars rating={sellerRating} size="h-3.5 w-3.5" />
                         <span className="font-semibold text-primary">{sellerRating.toFixed(1)}</span>
                       </div>
                       <span className="text-[hsl(var(--border))]">|</span>
@@ -419,8 +419,8 @@ export default function ListingDetail() {
                         </div>
                       </div>
                       <div className="flex items-center flex-wrap gap-x-2 gap-y-1 mt-2 text-[13px]">
-                        <div className="flex items-center gap-1">
-                          <Star className="h-3.5 w-3.5 text-amber-400 fill-amber-400" />
+                        <div className="flex items-center gap-1.5">
+                          <PartialStars rating={sellerRating} size="h-3.5 w-3.5" />
                           <span className="font-semibold text-primary">{sellerRating.toFixed(1)}</span>
                         </div>
                         <span className="text-[hsl(var(--border))]">|</span>
