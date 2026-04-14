@@ -177,6 +177,35 @@ function getEmailBody(type: string, data: Record<string, any>): { subject: strin
         `),
       };
 
+    case "credentials_needed":
+      return {
+        subject: `🔑 Envie as credenciais! ${data.buyer_name} comprou "${data.title}"`,
+        html: wrapTemplate(`
+          <h2 style="color:#111;font-size:20px;margin:0 0 16px">Envie as credenciais agora! 🔑</h2>
+          <p style="color:#555;font-size:14px;line-height:1.6"><strong>${data.buyer_name}</strong> comprou <strong>${data.title}</strong>.</p>
+          <table style="width:100%;margin:16px 0;border-collapse:collapse">
+            <tr><td style="padding:8px 0;color:#888;font-size:13px">Valor da venda</td><td style="padding:8px 0;text-align:right;font-weight:600;color:#111;font-size:14px">${fmt(data.amount)}</td></tr>
+            <tr><td style="padding:8px 0;color:#888;font-size:13px">Taxa Froiv (10%)</td><td style="padding:8px 0;text-align:right;color:#888;font-size:14px">-${fmt(data.fee)}</td></tr>
+            <tr style="border-top:1px solid #E8E8E8"><td style="padding:12px 0;font-weight:700;color:#111;font-size:14px">Você recebe</td><td style="padding:12px 0;text-align:right;font-weight:700;color:#2D6FF0;font-size:16px">${fmt(data.net)}</td></tr>
+          </table>
+          <p style="color:#FF6900;font-size:13px;font-weight:600">⚠️ Envie os dados de acesso pelo chat o mais rápido possível!</p>
+          ${btn("💬 Abrir chat", `${SITE_URL}/compras/${data.transaction_id}`)}
+        `),
+      };
+
+    case "credentials_delivered":
+      return {
+        subject: `🔑 Suas credenciais de acesso — ${data.title}`,
+        html: wrapTemplate(`
+          <h2 style="color:#111;font-size:20px;margin:0 0 16px">Credenciais recebidas! 🔑</h2>
+          <p style="color:#555;font-size:14px;line-height:1.6">Sua compra de <strong>${data.title}</strong> foi confirmada. Seus dados de acesso estão disponíveis.</p>
+          ${btn("📦 Ver credenciais", `${SITE_URL}/compras/${data.transaction_id}`)}
+          <div style="background:#FFF8E0;border:1px solid #FFD700;border-radius:8px;padding:12px;margin-top:16px">
+            <p style="color:#666;font-size:12px;margin:0">⚠️ Troque a senha imediatamente após o primeiro acesso. Você tem <strong>24h</strong> para verificar a conta antes do pagamento ser liberado ao vendedor.</p>
+          </div>
+        `),
+      };
+
     case "welcome":
       return {
         subject: "🎉 Email confirmado! Bem-vindo à Froiv",
