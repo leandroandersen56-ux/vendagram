@@ -231,7 +231,7 @@ export default function Index() {
 
       <div className="pb-16 sm:pb-0" style={{ paddingTop: 'calc(56px + var(--pwa-banner-offset, 0px))' }}>
         {/* === BANNER CAROUSEL === */}
-        <section className="pt-3 md:pt-6">
+        <section className="pt-3 md:pt-6 bg-white">
           <div className="container mx-auto">
             <div className="relative overflow-hidden rounded-xl h-[180px] md:h-[340px]">
               {BANNERS.map((b, i) => (
