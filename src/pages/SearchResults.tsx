@@ -78,7 +78,11 @@ export default function SearchResults() {
       q = q.limit(50);
 
       const { data, error } = await q;
-      if (!error && data) setResults(data);
+      if (!error && data) {
+        setResults(data);
+        const stats = await fetchSellerStats(data.map((r: any) => r.seller_id));
+        setSellerStatsMap(stats);
+      }
     } catch (err) {
       console.error(err);
     } finally {
