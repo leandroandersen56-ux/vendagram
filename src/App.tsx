@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes, Navigate, useParams } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -9,88 +10,95 @@ import ScrollToTop from "@/components/ScrollToTop";
 import { useMessageToasts } from "@/hooks/useMessageToasts";
 import PWAInstallBanner from "@/components/PWAInstallBanner";
 import BottomNav from "@/components/BottomNav";
-import WhatsAppFloatingButton from "@/components/WhatsAppButton";
+
+// Critical routes — loaded eagerly
 import Index from "./pages/Index.tsx";
 import Marketplace from "./pages/Marketplace.tsx";
 import ListingDetail from "./pages/ListingDetail.tsx";
-import TransactionFlow from "./pages/TransactionFlow.tsx";
-import Checkout from "./pages/Checkout.tsx";
-import Cart from "./pages/Cart.tsx";
-import Favorites from "./pages/Favorites.tsx";
-import Dashboard from "./pages/Dashboard.tsx";
-import PanelVerification from "./pages/panel/PanelVerification.tsx";
-import CreateListingPanel from "./pages/panel/CreateListingPanel.tsx";
-import EditListingPanel from "./pages/panel/EditListingPanel.tsx";
-import NotFound from "./pages/NotFound.tsx";
-import Purchases from "./pages/Purchases.tsx";
-import OrderDetail from "./pages/OrderDetail.tsx";
-import Notifications from "./pages/Notifications.tsx";
-import Questions from "./pages/Questions.tsx";
-import Reviews from "./pages/Reviews.tsx";
-import SellerDashboard from "./pages/SellerDashboard.tsx";
-import WalletPage from "./pages/WalletPage.tsx";
-import Affiliates from "./pages/Affiliates.tsx";
-import SettingsPage from "./pages/SettingsPage.tsx";
-import HelpPage from "./pages/HelpPage.tsx";
-import SearchResults from "./pages/SearchResults.tsx";
-import SellerProfile from "./pages/SellerProfile.tsx";
-import ViewHistory from "./pages/ViewHistory.tsx";
-import AuthCallback from "./pages/AuthCallback.tsx";
-import ResetPassword from "./pages/ResetPassword.tsx";
-import TermsPage from "./pages/TermsPage.tsx";
-import PrivacyPage from "./pages/PrivacyPage.tsx";
-import AboutPage from "./pages/AboutPage.tsx";
-import ContactPage from "./pages/ContactPage.tsx";
-import EditProfile from "./pages/settings/EditProfile.tsx";
-import ChangePassword from "./pages/settings/ChangePassword.tsx";
-import PixKeys from "./pages/settings/PixKeys.tsx";
-import DeleteAccount from "./pages/settings/DeleteAccount.tsx";
-import TwoFactorSetup from "./pages/settings/TwoFactorSetup.tsx";
-import AccessHistory from "./pages/settings/AccessHistory.tsx";
-import PurchaseProblems from "./pages/help/PurchaseProblems.tsx";
-import DataNotReceived from "./pages/help/DataNotReceived.tsx";
-import OpenDispute from "./pages/help/OpenDispute.tsx";
-import HowEscrowWorks from "./pages/help/HowEscrowWorks.tsx";
-import WithdrawalsPayments from "./pages/help/WithdrawalsPayments.tsx";
-import HowToList from "./pages/help/HowToList.tsx";
+
+// Lazy-loaded routes
+const TransactionFlow = lazy(() => import("./pages/TransactionFlow.tsx"));
+const Checkout = lazy(() => import("./pages/Checkout.tsx"));
+const Cart = lazy(() => import("./pages/Cart.tsx"));
+const Favorites = lazy(() => import("./pages/Favorites.tsx"));
+const Dashboard = lazy(() => import("./pages/Dashboard.tsx"));
+const PanelVerification = lazy(() => import("./pages/panel/PanelVerification.tsx"));
+const CreateListingPanel = lazy(() => import("./pages/panel/CreateListingPanel.tsx"));
+const EditListingPanel = lazy(() => import("./pages/panel/EditListingPanel.tsx"));
+const NotFound = lazy(() => import("./pages/NotFound.tsx"));
+const Purchases = lazy(() => import("./pages/Purchases.tsx"));
+const OrderDetail = lazy(() => import("./pages/OrderDetail.tsx"));
+const Notifications = lazy(() => import("./pages/Notifications.tsx"));
+const Questions = lazy(() => import("./pages/Questions.tsx"));
+const Reviews = lazy(() => import("./pages/Reviews.tsx"));
+const SellerDashboard = lazy(() => import("./pages/SellerDashboard.tsx"));
+const WalletPage = lazy(() => import("./pages/WalletPage.tsx"));
+const Affiliates = lazy(() => import("./pages/Affiliates.tsx"));
+const SettingsPage = lazy(() => import("./pages/SettingsPage.tsx"));
+const HelpPage = lazy(() => import("./pages/HelpPage.tsx"));
+const SearchResults = lazy(() => import("./pages/SearchResults.tsx"));
+const SellerProfile = lazy(() => import("./pages/SellerProfile.tsx"));
+const ViewHistory = lazy(() => import("./pages/ViewHistory.tsx"));
+const AuthCallback = lazy(() => import("./pages/AuthCallback.tsx"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword.tsx"));
+const TermsPage = lazy(() => import("./pages/TermsPage.tsx"));
+const PrivacyPage = lazy(() => import("./pages/PrivacyPage.tsx"));
+const AboutPage = lazy(() => import("./pages/AboutPage.tsx"));
+const ContactPage = lazy(() => import("./pages/ContactPage.tsx"));
+const EditProfile = lazy(() => import("./pages/settings/EditProfile.tsx"));
+const ChangePassword = lazy(() => import("./pages/settings/ChangePassword.tsx"));
+const PixKeys = lazy(() => import("./pages/settings/PixKeys.tsx"));
+const DeleteAccount = lazy(() => import("./pages/settings/DeleteAccount.tsx"));
+const TwoFactorSetup = lazy(() => import("./pages/settings/TwoFactorSetup.tsx"));
+const AccessHistory = lazy(() => import("./pages/settings/AccessHistory.tsx"));
+const PurchaseProblems = lazy(() => import("./pages/help/PurchaseProblems.tsx"));
+const DataNotReceived = lazy(() => import("./pages/help/DataNotReceived.tsx"));
+const OpenDispute = lazy(() => import("./pages/help/OpenDispute.tsx"));
+const HowEscrowWorks = lazy(() => import("./pages/help/HowEscrowWorks.tsx"));
+const WithdrawalsPayments = lazy(() => import("./pages/help/WithdrawalsPayments.tsx"));
+const HowToList = lazy(() => import("./pages/help/HowToList.tsx"));
 
 // Partners
-import PartnerGuard from "./pages/partners/PartnerGuard.tsx";
-import PartnerLayout from "./pages/partners/PartnerLayout.tsx";
-import PartnerDashboard from "./pages/partners/PartnerDashboard.tsx";
-import PartnerRevenue from "./pages/partners/PartnerRevenue.tsx";
-import PartnerPerformance from "./pages/partners/PartnerPerformance.tsx";
-import PartnerWithdrawal from "./pages/partners/PartnerWithdrawal.tsx";
-import PartnerAccount from "./pages/partners/PartnerAccount.tsx";
+const PartnerGuard = lazy(() => import("./pages/partners/PartnerGuard.tsx"));
+const PartnerLayout = lazy(() => import("./pages/partners/PartnerLayout.tsx"));
+const PartnerDashboard = lazy(() => import("./pages/partners/PartnerDashboard.tsx"));
+const PartnerRevenue = lazy(() => import("./pages/partners/PartnerRevenue.tsx"));
+const PartnerPerformance = lazy(() => import("./pages/partners/PartnerPerformance.tsx"));
+const PartnerWithdrawal = lazy(() => import("./pages/partners/PartnerWithdrawal.tsx"));
+const PartnerAccount = lazy(() => import("./pages/partners/PartnerAccount.tsx"));
 
 // Super Admin
-import SuperAdminGuard from "./pages/trynda/SuperAdminGuard.tsx";
-import SuperAdminLayout from "./pages/trynda/SuperAdminLayout.tsx";
-import SuperAdminDashboard from "./pages/trynda/SuperAdminDashboard.tsx";
-import SuperAdminUsers from "./pages/trynda/SuperAdminUsers.tsx";
-import SuperAdminListings from "./pages/trynda/SuperAdminListings.tsx";
-import SuperAdminFinancial from "./pages/trynda/SuperAdminFinancial.tsx";
-import SuperAdminDisputes from "./pages/trynda/SuperAdminDisputes.tsx";
-import SuperAdminWithdrawals from "./pages/trynda/SuperAdminWithdrawals.tsx";
-import SuperAdminNotifications from "./pages/trynda/SuperAdminNotifications.tsx";
-import SuperAdminEmails from "./pages/trynda/SuperAdminEmails.tsx";
-import SuperAdminStorage from "./pages/trynda/SuperAdminStorage.tsx";
-import SuperAdminConfig from "./pages/trynda/SuperAdminConfig.tsx";
-import SuperAdminSecurity from "./pages/trynda/SuperAdminSecurity.tsx";
-import SuperAdminOrders from "./pages/trynda/SuperAdminOrders.tsx";
-import SuperAdminPartners from "./pages/trynda/SuperAdminPartners.tsx";
+const SuperAdminGuard = lazy(() => import("./pages/trynda/SuperAdminGuard.tsx"));
+const SuperAdminLayout = lazy(() => import("./pages/trynda/SuperAdminLayout.tsx"));
+const SuperAdminDashboard = lazy(() => import("./pages/trynda/SuperAdminDashboard.tsx"));
+const SuperAdminUsers = lazy(() => import("./pages/trynda/SuperAdminUsers.tsx"));
+const SuperAdminListings = lazy(() => import("./pages/trynda/SuperAdminListings.tsx"));
+const SuperAdminFinancial = lazy(() => import("./pages/trynda/SuperAdminFinancial.tsx"));
+const SuperAdminDisputes = lazy(() => import("./pages/trynda/SuperAdminDisputes.tsx"));
+const SuperAdminWithdrawals = lazy(() => import("./pages/trynda/SuperAdminWithdrawals.tsx"));
+const SuperAdminNotifications = lazy(() => import("./pages/trynda/SuperAdminNotifications.tsx"));
+const SuperAdminEmails = lazy(() => import("./pages/trynda/SuperAdminEmails.tsx"));
+const SuperAdminStorage = lazy(() => import("./pages/trynda/SuperAdminStorage.tsx"));
+const SuperAdminConfig = lazy(() => import("./pages/trynda/SuperAdminConfig.tsx"));
+const SuperAdminSecurity = lazy(() => import("./pages/trynda/SuperAdminSecurity.tsx"));
+const SuperAdminOrders = lazy(() => import("./pages/trynda/SuperAdminOrders.tsx"));
+const SuperAdminPartners = lazy(() => import("./pages/trynda/SuperAdminPartners.tsx"));
 
 const queryClient = new QueryClient();
+
+function LazyFallback() {
+  return (
+    <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary" />
+    </div>
+  );
+}
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading, openAuth } = useAuth();
   
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
-      </div>
-    );
+    return <LazyFallback />;
   }
   
   if (!isAuthenticated) {
@@ -115,99 +123,101 @@ function AppRoutes() {
       <AuthModal />
       <BottomNav />
       
-      <Routes>
-        {/* Public routes */}
-        <Route path="/" element={<Index />} />
-        <Route path="/marketplace" element={<Marketplace />} />
-        <Route path="/listing/:id" element={<ListingDetail />} />
-        <Route path="/anuncio/:id" element={<ListingDetail />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/favoritos" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
-        <Route path="/checkout/:listingId" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
-        <Route path="/transaction/:listingId" element={<TransactionFlow />} />
-        <Route path="/ajuda" element={<HelpPage />} />
-        <Route path="/ajuda/problemas-compra" element={<PurchaseProblems />} />
-        <Route path="/ajuda/dados-nao-recebidos" element={<DataNotReceived />} />
-        <Route path="/ajuda/abrir-disputa" element={<OpenDispute />} />
-        <Route path="/ajuda/escrow" element={<HowEscrowWorks />} />
-        <Route path="/ajuda/saques-pagamentos" element={<WithdrawalsPayments />} />
-        <Route path="/ajuda/como-anunciar" element={<HowToList />} />
-        <Route path="/busca" element={<SearchResults />} />
-        <Route path="/perfil/:username" element={<SellerProfile />} />
-        <Route path="/perfil/:id" element={<SellerProfile />} />
-        <Route path="/auth/callback" element={<AuthCallback />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/termos" element={<TermsPage />} />
-        <Route path="/privacidade" element={<PrivacyPage />} />
-        <Route path="/sobre" element={<AboutPage />} />
-        <Route path="/contato" element={<ContactPage />} />
+      <Suspense fallback={<LazyFallback />}>
+        <Routes>
+          {/* Public routes */}
+          <Route path="/" element={<Index />} />
+          <Route path="/marketplace" element={<Marketplace />} />
+          <Route path="/listing/:id" element={<ListingDetail />} />
+          <Route path="/anuncio/:id" element={<ListingDetail />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/favoritos" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
+          <Route path="/checkout/:listingId" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
+          <Route path="/transaction/:listingId" element={<TransactionFlow />} />
+          <Route path="/ajuda" element={<HelpPage />} />
+          <Route path="/ajuda/problemas-compra" element={<PurchaseProblems />} />
+          <Route path="/ajuda/dados-nao-recebidos" element={<DataNotReceived />} />
+          <Route path="/ajuda/abrir-disputa" element={<OpenDispute />} />
+          <Route path="/ajuda/escrow" element={<HowEscrowWorks />} />
+          <Route path="/ajuda/saques-pagamentos" element={<WithdrawalsPayments />} />
+          <Route path="/ajuda/como-anunciar" element={<HowToList />} />
+          <Route path="/busca" element={<SearchResults />} />
+          <Route path="/perfil/:username" element={<SellerProfile />} />
+          <Route path="/perfil/:id" element={<SellerProfile />} />
+          <Route path="/auth/callback" element={<AuthCallback />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/termos" element={<TermsPage />} />
+          <Route path="/privacidade" element={<PrivacyPage />} />
+          <Route path="/sobre" element={<AboutPage />} />
+          <Route path="/contato" element={<ContactPage />} />
 
-        {/* User pages (protected) */}
-        <Route path="/compras" element={<ProtectedRoute><Purchases /></ProtectedRoute>} />
-        <Route path="/compras/:id" element={<ProtectedRoute><OrderDetail /></ProtectedRoute>} />
-        <Route path="/notificacoes" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
-        <Route path="/perguntas" element={<ProtectedRoute><Questions /></ProtectedRoute>} />
-        <Route path="/avaliacoes" element={<ProtectedRoute><Reviews /></ProtectedRoute>} />
-        <Route path="/carteira" element={<ProtectedRoute><WalletPage /></ProtectedRoute>} />
-        <Route path="/afiliados" element={<ProtectedRoute><Affiliates /></ProtectedRoute>} />
-        <Route path="/configuracoes" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
-        <Route path="/configuracoes/perfil" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
-        <Route path="/configuracoes/senha" element={<ProtectedRoute><ChangePassword /></ProtectedRoute>} />
-        <Route path="/configuracoes/pix" element={<ProtectedRoute><PixKeys /></ProtectedRoute>} />
-        <Route path="/configuracoes/acessos" element={<ProtectedRoute><AccessHistory /></ProtectedRoute>} />
-        <Route path="/configuracoes/2fa" element={<ProtectedRoute><TwoFactorSetup /></ProtectedRoute>} />
-        <Route path="/configuracoes/excluir" element={<ProtectedRoute><DeleteAccount /></ProtectedRoute>} />
-        <Route path="/historico" element={<ProtectedRoute><ViewHistory /></ProtectedRoute>} />
+          {/* User pages (protected) */}
+          <Route path="/compras" element={<ProtectedRoute><Purchases /></ProtectedRoute>} />
+          <Route path="/compras/:id" element={<ProtectedRoute><OrderDetail /></ProtectedRoute>} />
+          <Route path="/notificacoes" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
+          <Route path="/perguntas" element={<ProtectedRoute><Questions /></ProtectedRoute>} />
+          <Route path="/avaliacoes" element={<ProtectedRoute><Reviews /></ProtectedRoute>} />
+          <Route path="/carteira" element={<ProtectedRoute><WalletPage /></ProtectedRoute>} />
+          <Route path="/afiliados" element={<ProtectedRoute><Affiliates /></ProtectedRoute>} />
+          <Route path="/configuracoes" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
+          <Route path="/configuracoes/perfil" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
+          <Route path="/configuracoes/senha" element={<ProtectedRoute><ChangePassword /></ProtectedRoute>} />
+          <Route path="/configuracoes/pix" element={<ProtectedRoute><PixKeys /></ProtectedRoute>} />
+          <Route path="/configuracoes/acessos" element={<ProtectedRoute><AccessHistory /></ProtectedRoute>} />
+          <Route path="/configuracoes/2fa" element={<ProtectedRoute><TwoFactorSetup /></ProtectedRoute>} />
+          <Route path="/configuracoes/excluir" element={<ProtectedRoute><DeleteAccount /></ProtectedRoute>} />
+          <Route path="/historico" element={<ProtectedRoute><ViewHistory /></ProtectedRoute>} />
 
-        {/* Seller Dashboard - unified */}
-        <Route path="/vendedor" element={<ProtectedRoute><SellerDashboard /></ProtectedRoute>} />
-        <Route path="/vendedor/novo" element={<ProtectedRoute><CreateListingPanel /></ProtectedRoute>} />
-        <Route path="/vendedor/verificacao" element={<ProtectedRoute><PanelVerification /></ProtectedRoute>} />
-        <Route path="/vendedor/editar/:id" element={<ProtectedRoute><EditListingPanel /></ProtectedRoute>} />
-        <Route path="/vendedor/:identifier" element={<VendedorRedirect />} />
+          {/* Seller Dashboard - unified */}
+          <Route path="/vendedor" element={<ProtectedRoute><SellerDashboard /></ProtectedRoute>} />
+          <Route path="/vendedor/novo" element={<ProtectedRoute><CreateListingPanel /></ProtectedRoute>} />
+          <Route path="/vendedor/verificacao" element={<ProtectedRoute><PanelVerification /></ProtectedRoute>} />
+          <Route path="/vendedor/editar/:id" element={<ProtectedRoute><EditListingPanel /></ProtectedRoute>} />
+          <Route path="/vendedor/:identifier" element={<VendedorRedirect />} />
 
-        {/* Redirects from old panel routes */}
-        <Route path="/painel" element={<Navigate to="/vendedor" replace />} />
-        <Route path="/painel/anuncios" element={<Navigate to="/vendedor" state={{ tab: "anuncios" }} replace />} />
-        <Route path="/painel/anuncios/novo" element={<Navigate to="/vendedor/novo" replace />} />
-        <Route path="/painel/anuncios/editar/:id" element={<Navigate to="/vendedor/editar/:id" replace />} />
-        <Route path="/painel/transacoes" element={<Navigate to="/vendedor" state={{ tab: "transacoes" }} replace />} />
-        <Route path="/painel/carteira" element={<Navigate to="/vendedor" state={{ tab: "carteira" }} replace />} />
-        <Route path="/painel/perfil" element={<Navigate to="/vendedor" state={{ tab: "perfil" }} replace />} />
-        <Route path="/painel/verificacao" element={<Navigate to="/vendedor/verificacao" replace />} />
-        <Route path="/painel/notificacoes" element={<Navigate to="/notificacoes" replace />} />
+          {/* Redirects from old panel routes */}
+          <Route path="/painel" element={<Navigate to="/vendedor" replace />} />
+          <Route path="/painel/anuncios" element={<Navigate to="/vendedor" state={{ tab: "anuncios" }} replace />} />
+          <Route path="/painel/anuncios/novo" element={<Navigate to="/vendedor/novo" replace />} />
+          <Route path="/painel/anuncios/editar/:id" element={<Navigate to="/vendedor/editar/:id" replace />} />
+          <Route path="/painel/transacoes" element={<Navigate to="/vendedor" state={{ tab: "transacoes" }} replace />} />
+          <Route path="/painel/carteira" element={<Navigate to="/vendedor" state={{ tab: "carteira" }} replace />} />
+          <Route path="/painel/perfil" element={<Navigate to="/vendedor" state={{ tab: "perfil" }} replace />} />
+          <Route path="/painel/verificacao" element={<Navigate to="/vendedor/verificacao" replace />} />
+          <Route path="/painel/notificacoes" element={<Navigate to="/notificacoes" replace />} />
 
-        {/* Partners */}
-        <Route path="/admintoplogin" element={<PartnerGuard><PartnerLayout /></PartnerGuard>}>
-          <Route index element={<PartnerDashboard />} />
-          <Route path="faturamento" element={<PartnerRevenue />} />
-          <Route path="desempenho" element={<PartnerPerformance />} />
-          <Route path="saque" element={<PartnerWithdrawal />} />
-          <Route path="conta" element={<PartnerAccount />} />
-        </Route>
+          {/* Partners */}
+          <Route path="/admintoplogin" element={<PartnerGuard><PartnerLayout /></PartnerGuard>}>
+            <Route index element={<PartnerDashboard />} />
+            <Route path="faturamento" element={<PartnerRevenue />} />
+            <Route path="desempenho" element={<PartnerPerformance />} />
+            <Route path="saque" element={<PartnerWithdrawal />} />
+            <Route path="conta" element={<PartnerAccount />} />
+          </Route>
 
-        {/* Admin */}
-        <Route path="/admin" element={<Dashboard />} />
+          {/* Admin */}
+          <Route path="/admin" element={<Dashboard />} />
 
-        {/* Super Admin */}
-        <Route path="/trynda" element={<SuperAdminGuard><SuperAdminLayout /></SuperAdminGuard>}>
-          <Route index element={<SuperAdminDashboard />} />
-          <Route path="usuarios" element={<SuperAdminUsers />} />
-          <Route path="anuncios" element={<SuperAdminListings />} />
-          <Route path="financeiro" element={<SuperAdminFinancial />} />
-          <Route path="disputas" element={<SuperAdminDisputes />} />
-          <Route path="saques" element={<SuperAdminWithdrawals />} />
-          <Route path="notificacoes" element={<SuperAdminNotifications />} />
-          <Route path="emails" element={<SuperAdminEmails />} />
-          <Route path="storage" element={<SuperAdminStorage />} />
-          <Route path="config" element={<SuperAdminConfig />} />
-          <Route path="seguranca" element={<SuperAdminSecurity />} />
-          <Route path="pedidos-externos" element={<SuperAdminOrders />} />
-          <Route path="socios" element={<SuperAdminPartners />} />
-        </Route>
+          {/* Super Admin */}
+          <Route path="/trynda" element={<SuperAdminGuard><SuperAdminLayout /></SuperAdminGuard>}>
+            <Route index element={<SuperAdminDashboard />} />
+            <Route path="usuarios" element={<SuperAdminUsers />} />
+            <Route path="anuncios" element={<SuperAdminListings />} />
+            <Route path="financeiro" element={<SuperAdminFinancial />} />
+            <Route path="disputas" element={<SuperAdminDisputes />} />
+            <Route path="saques" element={<SuperAdminWithdrawals />} />
+            <Route path="notificacoes" element={<SuperAdminNotifications />} />
+            <Route path="emails" element={<SuperAdminEmails />} />
+            <Route path="storage" element={<SuperAdminStorage />} />
+            <Route path="config" element={<SuperAdminConfig />} />
+            <Route path="seguranca" element={<SuperAdminSecurity />} />
+            <Route path="pedidos-externos" element={<SuperAdminOrders />} />
+            <Route path="socios" element={<SuperAdminPartners />} />
+          </Route>
 
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
     </>
   );
 }

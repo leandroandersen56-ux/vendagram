@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { getTrustedSellerByIdentifier, toTrustedSellerProfile } from "@/lib/trusted-sellers";
 
 const CLOUD_URL = import.meta.env.VITE_SUPABASE_URL;
 const CLOUD_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
@@ -6,8 +7,9 @@ const LOCAL_PROFILE_SELECT = "user_id,username,name,avatar_url,bio,is_verified,a
 
 /**
  * Fetch a seller's public profile.
- * 1) Try the project's own DB when the filter is supported locally
- * 2) Fallback to external/personal DB via edge function
+ * 1) Check trusted-sellers cache (instant, no network)
+ * 2) Try the project's own DB
+ * 3) Fallback to external DB via edge function
  */
 export async function fetchSellerProfile(
   filters: Record<string, string>
@@ -16,6 +18,12 @@ export async function fetchSellerProfile(
   const val = filters[key];
 
   if (!key || !val) return null;
+
+  // Fast path: check trusted sellers first (no network call)
+  const trusted = getTrustedSellerByIdentifier(val);
+  if (trusted) {
+    return toTrustedSellerProfile(trusted);
+  }
 
   if (key === "username" || key === "user_id") {
     try {
@@ -26,7 +34,6 @@ export async function fetchSellerProfile(
         .maybeSingle();
 
       if (!error && data) {
-        console.log("[fetchSellerProfile] found in project DB:", data.name);
         return data;
       }
     } catch (e) {
@@ -52,13 +59,7 @@ export async function fetchSellerProfile(
     if (!res.ok) throw new Error(`edge fn failed: ${res.status}`);
 
     const json = await res.json();
-    const profile = json.data?.[0] || null;
-
-    if (profile) {
-      console.log("[fetchSellerProfile] found in external DB:", profile.name);
-    }
-
-    return profile;
+    return json.data?.[0] || null;
   } catch (e) {
     console.error("[fetchSellerProfile] external DB error:", e);
     return null;

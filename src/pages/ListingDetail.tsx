@@ -54,8 +54,10 @@ export default function ListingDetail() {
 
       if (!error && data) {
         setListing(data);
-        const profile = await fetchSellerProfile({ user_id: data.seller_id });
-        if (profile) setSeller(profile);
+        // Fetch seller profile without blocking render
+        fetchSellerProfile({ user_id: data.seller_id }).then((profile) => {
+          if (profile) setSeller(profile);
+        });
       }
       setLoading(false);
     }
