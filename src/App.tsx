@@ -157,6 +157,7 @@ function AppRoutes() {
         <Route path="/vendedor/novo" element={<ProtectedRoute><CreateListingPanel /></ProtectedRoute>} />
         <Route path="/vendedor/verificacao" element={<ProtectedRoute><PanelVerification /></ProtectedRoute>} />
         <Route path="/vendedor/editar/:id" element={<ProtectedRoute><EditListingPanel /></ProtectedRoute>} />
+        <Route path="/vendedor/:id" element={<SellerProfile />} />
 
         {/* Redirects from old panel routes */}
         <Route path="/painel" element={<Navigate to="/vendedor" replace />} />
