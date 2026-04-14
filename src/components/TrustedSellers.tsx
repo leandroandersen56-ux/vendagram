@@ -119,13 +119,13 @@ export default function TrustedSellers() {
               return normalizeTrustedSeller(
                 {
                   name: profile?.name || partner.name,
-                  username: profile?.username || fallback?.username || null,
-                  userId: profile?.user_id || null,
+                  username: typeof profile?.username === "string" ? profile.username.trim() : fallback?.username || null,
+                  userId: profile?.user_id || fallback?.userId || null,
                   email: profile?.email || partner.email,
                   avatar: profile?.avatar_url || null,
                   sales: Number(profile?.total_sales || 0),
                   rating: Number(profile?.avg_rating || 0),
-                  profileIdentifier: profile?.username || profile?.user_id || partner.email,
+                  profileIdentifier: (typeof profile?.username === "string" && profile.username.trim()) || profile?.user_id || fallback?.userId || partner.email,
                 },
                 fallback
               );
