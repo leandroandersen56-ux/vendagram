@@ -13,7 +13,17 @@ import type { Listing } from "@/lib/mock-data";
 
 export default function SellerProfile() {
   const { username, id } = useParams();
-  const identifier = decodeURIComponent((username || id || "").trim());
+  const rawIdentifier = decodeURIComponent((username || id || "").trim());
+  const normalizedIdentifier = rawIdentifier.toLowerCase().trim();
+  const TRUSTED_SELLER_ALIASES: Record<string, string> = {
+    "contabanco": "contabanco743@gmail.com",
+    "gb vendas": "vg786674@gmail.com",
+    "gb_vendas": "vg786674@gmail.com",
+    "gb-vendas": "vg786674@gmail.com",
+    "eduardo": "eduardoklunck95@gmail.com",
+    "theus": "costawlc7@gmail.com",
+  };
+  const identifier = TRUSTED_SELLER_ALIASES[normalizedIdentifier] || rawIdentifier;
   const [seller, setSeller] = useState<any>(null);
   const [listings, setListings] = useState<Listing[]>([]);
   const [reviews, setReviews] = useState<any[]>([]);

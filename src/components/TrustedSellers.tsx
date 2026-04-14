@@ -20,10 +20,10 @@ interface TrustedSeller {
 const SUPERADMIN_EMAIL = "sparckonmeta@gmail.com";
 
 const STATIC_PARTNERS: TrustedSeller[] = [
-  { name: "ADM GB", username: "gb_vendas", userId: null, email: "vg786674@gmail.com", avatar: null, sales: 0, rating: 4.8, profileIdentifier: "vg786674@gmail.com" },
-  { name: "ADM GL", username: "contabanco", userId: null, email: "contabanco743@gmail.com", avatar: null, sales: 0, rating: 4.8, profileIdentifier: "contabanco743@gmail.com" },
-  { name: "Eduardo Klunck", username: "eduardo", userId: null, email: "eduardoklunck95@gmail.com", avatar: null, sales: 0, rating: 4.8, profileIdentifier: "eduardoklunck95@gmail.com" },
-  { name: "Theus Klunck", username: "theus", userId: null, email: "costawlc7@gmail.com", avatar: null, sales: 0, rating: 4.8, profileIdentifier: "costawlc7@gmail.com" },
+  { name: "ADM GB", username: null, userId: null, email: "vg786674@gmail.com", avatar: null, sales: 0, rating: 4.8, profileIdentifier: "vg786674@gmail.com" },
+  { name: "ADM GL", username: null, userId: "beccd2b1-0a31-4fd5-9701-4dce5eaa125c", email: "contabanco743@gmail.com", avatar: null, sales: 0, rating: 4.8, profileIdentifier: "beccd2b1-0a31-4fd5-9701-4dce5eaa125c" },
+  { name: "Eduardo Klunck", username: null, userId: "d7f85dfb-0f1d-4c58-9a64-0544ec5b158d", email: "eduardoklunck95@gmail.com", avatar: null, sales: 0, rating: 4.8, profileIdentifier: "d7f85dfb-0f1d-4c58-9a64-0544ec5b158d" },
+  { name: "Theus Klunck", username: null, userId: "73740fcc-5a53-4a10-8645-eeb76ec7642b", email: "costawlc7@gmail.com", avatar: null, sales: 0, rating: 4.8, profileIdentifier: "73740fcc-5a53-4a10-8645-eeb76ec7642b" },
 ];
 
 const FALLBACK_BY_EMAIL = new Map(
