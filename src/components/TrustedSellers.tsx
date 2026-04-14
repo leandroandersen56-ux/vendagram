@@ -40,38 +40,47 @@ export default function TrustedSellers() {
   useEffect(() => {
     async function loadProfiles() {
       try {
-        const emails = PARTNER_LIST.map((p) => p.email.toLowerCase());
+        const CLOUD_URL = import.meta.env.VITE_SUPABASE_URL;
+        const CLOUD_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
-        // Try to enrich with real profile data
-        const { data: profiles } = await supabase
-          .from("profiles")
-          .select("user_id, username, name, avatar_url, total_sales, avg_rating, email")
-          .in("email", emails);
-
-        if (!profiles?.length) return;
-
-        const profileMap = new Map<string, any>();
-        profiles.forEach((p) => {
-          if (p.email) profileMap.set(p.email.toLowerCase(), p);
-        });
+        // Fetch each partner profile via edge function (bypasses RLS)
+        const results = await Promise.all(
+          PARTNER_LIST.map(async (partner) => {
+            try {
+              const res = await fetch(`${CLOUD_URL}/functions/v1/admin-create-listing`, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "Authorization": `Bearer ${CLOUD_KEY}`,
+                },
+                body: JSON.stringify({
+                  action: "query",
+                  table: "profiles",
+                  filters: { email: partner.email },
+                  select: "user_id,username,name,avatar_url,total_sales,avg_rating,email",
+                }),
+              });
+              const json = await res.json();
+              return { partner, profile: json.data?.[0] || null };
+            } catch {
+              return { partner, profile: null };
+            }
+          })
+        );
 
         setSellers(
-          PARTNER_LIST.map((partner) => {
-            const profile = profileMap.get(partner.email.toLowerCase());
-            return {
-              name: profile?.name || partner.name,
-              username: profile?.username || partner.fallbackUsername,
-              userId: profile?.user_id || null,
-              email: partner.email,
-              avatar: profile?.avatar_url || null,
-              sales: profile?.total_sales || 0,
-              rating: profile?.avg_rating || 4.8,
-            };
-          })
+          results.map(({ partner, profile }) => ({
+            name: profile?.name || partner.name,
+            username: profile?.username || partner.fallbackUsername,
+            userId: profile?.user_id || null,
+            email: partner.email,
+            avatar: profile?.avatar_url || null,
+            sales: profile?.total_sales || 0,
+            rating: profile?.avg_rating || 4.8,
+          }))
         );
       } catch (err) {
         console.error("Error loading trusted seller profiles:", err);
-        // Fallback static data already set — cards still show
       }
     }
     loadProfiles();
