@@ -239,13 +239,6 @@ export default function Index() {
                   {b.title && !b.partnership && <div className="absolute inset-y-0 left-0 w-3/5 bg-gradient-to-r from-black/70 via-black/40 to-transparent pointer-events-none" />}
                   {b.partnership ? (
                     <>
-                      {/* Logos over the girl (right side) */}
-                      <div className="absolute right-4 sm:right-8 md:right-16 top-1/2 -translate-y-1/2 flex flex-col items-center gap-2 sm:gap-3 z-10 pointer-events-none">
-                        <img src={froivIcon3d} alt="Froiv" className="h-12 sm:h-16 md:h-24 object-contain drop-shadow-2xl" />
-                        <span className="text-white/60 text-[10px] sm:text-xs font-light tracking-widest uppercase">powered by</span>
-                        <img src={logoTopLoginWhite} alt="Agência Top Login" className="h-6 sm:h-8 md:h-12 object-contain drop-shadow-2xl" />
-                      </div>
-                      {/* Native text on the left */}
                       <div className="absolute inset-y-0 left-0 w-3/5 bg-gradient-to-r from-[#0B1A3E]/90 via-[#0B1A3E]/50 to-transparent pointer-events-none" />
                       <div className="absolute inset-0 flex items-center pointer-events-none">
                         <div className="px-5 sm:px-8 md:px-12 max-w-xs sm:max-w-sm md:max-w-lg">
