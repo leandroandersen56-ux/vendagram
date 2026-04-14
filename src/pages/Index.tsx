@@ -238,22 +238,27 @@ export default function Index() {
                   <img src={b.img} alt={b.title} className="w-full h-full object-cover" style={b.objectPosition ? { objectPosition: b.objectPosition } : undefined} {...(i === 0 ? {} : { loading: "lazy" as const })} />
                   {b.title && !b.partnership && <div className="absolute inset-y-0 left-0 w-3/5 bg-gradient-to-r from-black/70 via-black/40 to-transparent pointer-events-none" />}
                   {b.partnership ? (
-                    <div className="absolute inset-0 flex items-center pointer-events-none">
-                      <div className="px-5 sm:px-8 md:px-12 max-w-sm md:max-w-lg">
-                        <h2 className="text-white text-base sm:text-xl md:text-3xl lg:text-4xl font-bold leading-tight whitespace-pre-line sm:whitespace-normal drop-shadow-lg">{b.title}</h2>
-                        <p className="text-white/80 text-[11px] sm:text-sm md:text-base lg:text-lg mt-1 md:mt-2 whitespace-pre-line drop-shadow">{b.subtitle}</p>
-                        <div className="flex items-center gap-2 sm:gap-3 mt-3 md:mt-4">
-                          <img src={logoTopLogin} alt="Agência Top Login" className="h-6 sm:h-8 md:h-10 object-contain drop-shadow-lg" />
-                          <span className="text-white/50 text-xs sm:text-sm font-light">by</span>
-                          <img src={froivIcon3d} alt="Froiv" className="h-6 sm:h-8 md:h-10 object-contain drop-shadow-lg" />
-                        </div>
-                        <Link to={b.link} className="pointer-events-auto">
-                          <button className="mt-3 md:mt-4 text-[11px] sm:text-xs md:text-sm font-semibold text-white border border-white/40 rounded-lg px-3 md:px-5 py-1.5 md:py-2 hover:bg-white/10 transition-colors">
-                            {b.cta} →
-                          </button>
-                        </Link>
+                    <>
+                      {/* Logos over the girl (right side) */}
+                      <div className="absolute right-4 sm:right-8 md:right-16 top-1/2 -translate-y-1/2 flex flex-col items-center gap-2 sm:gap-3 z-10 pointer-events-none">
+                        <img src={froivIcon3d} alt="Froiv" className="h-12 sm:h-16 md:h-24 object-contain drop-shadow-2xl" />
+                        <span className="text-white/60 text-[10px] sm:text-xs font-light tracking-widest uppercase">powered by</span>
+                        <img src={logoTopLoginWhite} alt="Agência Top Login" className="h-6 sm:h-8 md:h-12 object-contain drop-shadow-2xl" />
                       </div>
-                    </div>
+                      {/* Native text on the left */}
+                      <div className="absolute inset-y-0 left-0 w-3/5 bg-gradient-to-r from-[#0B1A3E]/90 via-[#0B1A3E]/50 to-transparent pointer-events-none" />
+                      <div className="absolute inset-0 flex items-center pointer-events-none">
+                        <div className="px-5 sm:px-8 md:px-12 max-w-xs sm:max-w-sm md:max-w-lg">
+                          <h2 className="text-white text-base sm:text-xl md:text-3xl lg:text-4xl font-bold leading-tight whitespace-pre-line sm:whitespace-normal drop-shadow-lg">{b.title}</h2>
+                          <p className="text-white/80 text-[11px] sm:text-sm md:text-base lg:text-lg mt-1 md:mt-2 whitespace-pre-line drop-shadow">{b.subtitle}</p>
+                          <Link to={b.link} className="pointer-events-auto">
+                            <button className="mt-3 md:mt-4 text-[11px] sm:text-xs md:text-sm font-semibold text-white border border-white/40 rounded-lg px-3 md:px-5 py-1.5 md:py-2 hover:bg-white/10 transition-colors">
+                              {b.cta} →
+                            </button>
+                          </Link>
+                        </div>
+                      </div>
+                    </>
                   ) : b.title ? <div className="absolute inset-0 flex items-center pointer-events-none">
                     <div className="px-5 sm:px-8 md:px-12 max-w-sm md:max-w-lg">
                       <h2 className="text-white text-base sm:text-xl md:text-3xl lg:text-4xl font-semibold leading-tight whitespace-pre-line sm:whitespace-normal">{b.title}</h2>
