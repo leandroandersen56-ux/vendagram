@@ -6,6 +6,17 @@ import { Search, ChevronLeft, ChevronRight, X, Eye, Ban, DollarSign, Mail, LogIn
 import { VerifiedBadge } from "@/components/VerifiedBadge";
 import { toast } from "sonner";
 
+const PARTNER_EMAILS = [
+  "sparckonmeta@gmail.com",
+  "contabanco743@gmail.com",
+  "vg786674@gmail.com",
+  "costawlc7@gmail.com",
+  "eduardoklunck95@gmail.com",
+];
+
+const isPartnerVerified = (email?: string | null) =>
+  !!email && PARTNER_EMAILS.includes(email.toLowerCase());
+
 export default function SuperAdminUsers() {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(0);
@@ -143,7 +154,7 @@ export default function SuperAdminUsers() {
                           {(user.name || "?")[0].toUpperCase()}
                         </div>
                         <div>
-                          <p className="text-white text-sm font-medium flex items-center gap-1">{user.name || "—"} {user.is_verified && <VerifiedBadge size={14} />}</p>
+                          <p className="text-white text-sm font-medium flex items-center gap-1">{user.name || "—"} {(user.is_verified || isPartnerVerified(user.email)) && <VerifiedBadge size={14} />}</p>
                           {user.username && <p className="text-gray-500 text-xs">@{user.username}</p>}
                         </div>
                       </div>
