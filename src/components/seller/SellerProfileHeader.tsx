@@ -3,6 +3,7 @@ import { Star, Package, Calendar, Users, Award } from "lucide-react";
 import { VerifiedBadge } from "@/components/VerifiedBadge";
 import { Button } from "@/components/ui/button";
 import sellerCoverMain from "@/assets/seller-cover-main.jpg";
+import defaultAvatar from "@/assets/default-avatar.png";
 
 const REP_SEGMENTS = [
   { color: "bg-destructive" },
@@ -71,11 +72,7 @@ export default function SellerProfileHeader({ seller, listingsCount, avgRating, 
         {/* Avatar row — overlaps banner */}
         <div className="flex items-end gap-3 sm:gap-4 -mt-10 sm:-mt-14 mb-4">
           <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-full border-4 border-card bg-muted flex items-center justify-center text-2xl sm:text-3xl font-semibold text-foreground shrink-0 overflow-hidden shadow-md">
-            {seller.avatar_url ? (
-              <img src={seller.avatar_url} alt="" className="h-full w-full rounded-full object-cover" />
-            ) : (
-              <span>{seller.name?.[0]?.toUpperCase() || "?"}</span>
-            )}
+            <img src={seller.avatar_url || defaultAvatar} alt={seller.name || "Vendedor"} className="h-full w-full rounded-full object-cover" />
           </div>
           <div className="flex-1 min-w-0 pt-12 sm:pt-14">
             <div className="flex items-center gap-1.5 flex-wrap">
