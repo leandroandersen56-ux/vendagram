@@ -46,8 +46,9 @@ export default function SellerProfile() {
       if (reviewsRes.data) setReviews(reviewsRes.data);
       setLoading(false);
     }
-    if (username) load();
-  }, [username]);
+    const identifier = id || username;
+    if (identifier) load();
+  }, [username, id]);
 
   if (loading) {
     return (
