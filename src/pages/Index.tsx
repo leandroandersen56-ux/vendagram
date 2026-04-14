@@ -15,6 +15,7 @@ import ListingCard from "@/components/ListingCard";
 import PlatformIcon from "@/components/PlatformIcon";
 import { PLATFORMS, type Listing } from "@/lib/mock-data";
 import { supabase } from "@/integrations/supabase/client";
+import { fetchSellerStats } from "@/lib/enrich-listings";
 import useEmblaCarousel from "embla-carousel-react";
 
 import bannerHero1 from "@/assets/banner-hero.png";

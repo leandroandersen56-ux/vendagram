@@ -7,6 +7,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ListingCard from "@/components/ListingCard";
 import { supabase } from "@/integrations/supabase/client";
+import { fetchSellerStats } from "@/lib/enrich-listings";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
 const PLATFORMS = [
