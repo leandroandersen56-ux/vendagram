@@ -117,18 +117,27 @@ export default function PartnerPerformance() {
     queryKey: ["partner-ticket-evolution"],
     queryFn: async () => {
       const since = subDays(new Date(), 90).toISOString();
+      // Busca listings elegíveis para filtrar
+      const { data: eligibleL } = await supabase
+        .from("listings")
+        .select("id")
+        .gte("created_at", PARTNER_LISTING_CUTOFF);
+      const eligibleSet = new Set((eligibleL ?? []).map((l) => l.id));
+
       const { data } = await supabase
         .from("transactions")
-        .select("amount, created_at")
+        .select("amount, created_at, listing_id")
         .eq("status", "completed")
         .gte("created_at", since);
+
+      const filtered = (data ?? []).filter((t) => eligibleSet.has(t.listing_id));
 
       const byWeek: Record<string, { sum: number; count: number }> = {};
       for (let i = 12; i >= 0; i--) {
         const w = startOfWeek(subWeeks(new Date(), i));
         byWeek[format(w, "dd/MM")] = { sum: 0, count: 0 };
       }
-      data?.forEach((t) => {
+      filtered.forEach((t) => {
         const w = startOfWeek(new Date(t.created_at));
         const key = format(w, "dd/MM");
         if (byWeek[key]) {
