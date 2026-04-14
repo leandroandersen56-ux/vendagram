@@ -53,6 +53,26 @@ function normalizeTrustedSeller(
   };
 }
 
+function TrustedSellerAvatar({ src, alt }: { src: string | null; alt: string }) {
+  const [avatarSrc, setAvatarSrc] = useState(src || defaultAvatar);
+
+  useEffect(() => {
+    setAvatarSrc(src || defaultAvatar);
+  }, [src]);
+
+  return (
+    <img
+      src={avatarSrc}
+      alt={alt}
+      className="h-full w-full rounded-full object-cover"
+      loading="lazy"
+      onError={() => {
+        if (avatarSrc !== defaultAvatar) setAvatarSrc(defaultAvatar);
+      }}
+    />
+  );
+}
+
 export default function TrustedSellers() {
   const [sellers, setSellers] = useState<TrustedSeller[]>(STATIC_PARTNERS);
   const lastStableSellersRef = useRef<TrustedSeller[]>(STATIC_PARTNERS);

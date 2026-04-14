@@ -48,6 +48,7 @@ export default function SellerProfileHeader({ seller, listingsCount, avgRating, 
   const { isFollowing, followersCount, followingCount, loading: followLoading, toggleFollow } = useFollow(seller.user_id);
   const coverInputRef = useRef<HTMLInputElement>(null);
   const [coverUrl, setCoverUrl] = useState<string | null>(seller.cover_url || null);
+  const [avatarSrc, setAvatarSrc] = useState<string>(seller.avatar_url || defaultAvatar);
   const [uploading, setUploading] = useState(false);
   const [isPartnerByEmail, setIsPartnerByEmail] = useState(false);
 
