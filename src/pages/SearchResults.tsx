@@ -36,6 +36,7 @@ export default function SearchResults() {
   const [results, setResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchInput, setSearchInput] = useState(query);
+  const [sellerStatsMap, setSellerStatsMap] = useState<Record<string, { rating: number; sales: number; name: string }>>({});
 
   // Filters
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
