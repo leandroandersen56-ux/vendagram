@@ -29,7 +29,7 @@ export default function TrustedSellers() {
             </span>
           </div>
 
-          <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 snap-x snap-mandatory sm:grid sm:grid-cols-3 sm:overflow-visible sm:pb-0">
+          <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 snap-x snap-mandatory sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:overflow-visible sm:pb-0">
             {TRUSTED_SELLERS.map((seller) => {
               const profileLink = seller.userId ? `/vendedor/${seller.userId}` : "/marketplace";
               return (
