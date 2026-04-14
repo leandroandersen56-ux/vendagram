@@ -81,7 +81,7 @@ export default function SellerProfileHeader({ seller, listingsCount, avgRating, 
           <div className="flex-1 min-w-0 pt-12 sm:pt-14">
             <div className="flex items-center gap-1.5 flex-wrap">
               <h1 className="text-base sm:text-xl font-semibold text-foreground truncate leading-tight">{seller.name || "Vendedor"}</h1>
-              {seller.is_verified && <VerifiedBadge size={20} />}
+              {isVerifiedProfile && <VerifiedBadge size={20} />}
             </div>
             <p className="text-xs sm:text-sm text-muted-foreground">@{seller.username || "usuario"}</p>
           </div>
