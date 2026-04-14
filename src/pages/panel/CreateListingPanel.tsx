@@ -15,6 +15,29 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { moderateText, getModerationMessage } from "@/lib/content-moderation";
 
+const fileToBase64 = (file: File) =>
+  new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      if (typeof reader.result !== "string") {
+        reject(new Error("Falha ao preparar imagem"));
+        return;
+      }
+
+      const [, base64 = ""] = reader.result.split(",");
+      if (!base64) {
+        reject(new Error("Falha ao converter imagem"));
+        return;
+      }
+
+      resolve(base64);
+    };
+
+    reader.onerror = () => reject(new Error("Falha ao ler imagem"));
+    reader.readAsDataURL(file);
+  });
+
 // ── Config por plataforma ──────────────────────────────────────
 const FEATURES: Record<string, string[]> = {
   free_fire: [
@@ -226,10 +249,13 @@ export default function CreateListing() {
     if (screenshots.length > 0) {
       try {
         const uploadPromises = screenshots.map(async (s) => {
-          const formData = new FormData();
-          formData.append("image", s.file);
+          const image = await fileToBase64(s.file);
           const { data, error } = await supabase.functions.invoke("upload-image", {
-            body: formData,
+            body: {
+              image,
+              filename: s.file.name,
+              mimeType: s.file.type,
+            },
           });
           if (error) throw new Error(error.message || "Upload failed");
           return data.url as string;
