@@ -167,21 +167,20 @@ export default function Index() {
         .order("created_at", { ascending: false });
 
       if (!error && data && data.length > 0) {
-        const mapped: Listing[] = data.map((row) => ({
-          id: row.id, sellerId: row.seller_id, sellerName: "Vendedor",
-          sellerRating: parseFloat((4.5 + Math.random() * 0.5).toFixed(1)),
-          sellerSales: 0, platform: row.category, title: row.title,
-          description: row.description || "", price: Number(row.price),
-          status: row.status as Listing["status"], screenshots: row.screenshots || [],
-          fields: (row.highlights && typeof row.highlights === "object" && !Array.isArray(row.highlights))
-            ? (row.highlights as Record<string, string | number | boolean>) : {},
-          createdAt: row.created_at,
-        }));
-
-        const GAME_PLATFORMS = ["free_fire", "valorant", "fortnite", "roblox", "clash_royale"];
-        const isGamePlatform = (p: string) => GAME_PLATFORMS.includes(p);
-        const dbGames = mapped.filter((l) => isGamePlatform(l.platform));
-        const dbSocial = mapped.filter((l) => !isGamePlatform(l.platform));
+        const stats = await fetchSellerStats(data.map((r) => r.seller_id));
+        const mapped: Listing[] = data.map((row) => {
+          const s = stats[row.seller_id];
+          return {
+            id: row.id, sellerId: row.seller_id, sellerName: s?.name || "Vendedor",
+            sellerRating: s?.rating ?? 4.8,
+            sellerSales: s?.sales ?? 0, platform: row.category, title: row.title,
+            description: row.description || "", price: Number(row.price),
+            status: row.status as Listing["status"], screenshots: row.screenshots || [],
+            fields: (row.highlights && typeof row.highlights === "object" && !Array.isArray(row.highlights))
+              ? (row.highlights as Record<string, string | number | boolean>) : {},
+            createdAt: row.created_at,
+          };
+        });
         setListings(mapped);
       } else {
         setListings([]);
