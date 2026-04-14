@@ -1,10 +1,11 @@
 import { useState, useRef } from "react";
 import { motion } from "framer-motion";
-import { Star, Package, Calendar, Users, Award, Camera } from "lucide-react";
+import { Star, Package, Calendar, Users, Award, Camera, UserPlus, UserCheck } from "lucide-react";
 import { VerifiedBadge } from "@/components/VerifiedBadge";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useFollow } from "@/hooks/useFollow";
 import { toast } from "sonner";
 import sellerCoverMain from "@/assets/seller-cover-main.jpg";
 import defaultAvatar from "@/assets/default-avatar.png";
@@ -46,8 +47,9 @@ interface Props {
 }
 
 export default function SellerProfileHeader({ seller, listingsCount, avgRating, reviewsCount }: Props) {
-  const { user } = useAuth();
+  const { user, openAuth } = useAuth();
   const isOwnProfile = user?.id === seller.user_id;
+  const { isFollowing, followersCount, followingCount, loading: followLoading, toggleFollow } = useFollow(seller.user_id);
   const coverInputRef = useRef<HTMLInputElement>(null);
   const [coverUrl, setCoverUrl] = useState<string | null>(seller.cover_url || null);
   const [uploading, setUploading] = useState(false);
@@ -65,33 +67,20 @@ export default function SellerProfileHeader({ seller, listingsCount, avgRating, 
   async function handleCoverUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file || !user) return;
-
     if (file.size > 5 * 1024 * 1024) {
       toast.error("Imagem muito grande. Máximo 5MB.");
       return;
     }
-
     setUploading(true);
     try {
       const ext = file.name.split(".").pop() || "jpg";
       const path = `${user.id}/cover.${ext}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from("avatars")
-        .upload(path, file, { upsert: true });
-
+      const { error: uploadError } = await supabase.storage.from("avatars").upload(path, file, { upsert: true });
       if (uploadError) throw uploadError;
-
       const { data: urlData } = supabase.storage.from("avatars").getPublicUrl(path);
       const publicUrl = `${urlData.publicUrl}?t=${Date.now()}`;
-
-      const { error: updateError } = await supabase
-        .from("profiles")
-        .update({ cover_url: publicUrl } as any)
-        .eq("user_id", user.id);
-
+      const { error: updateError } = await supabase.from("profiles").update({ cover_url: publicUrl } as any).eq("user_id", user.id);
       if (updateError) throw updateError;
-
       setCoverUrl(publicUrl);
       toast.success("Capa atualizada!");
     } catch (err: any) {
@@ -100,6 +89,14 @@ export default function SellerProfileHeader({ seller, listingsCount, avgRating, 
     } finally {
       setUploading(false);
     }
+  }
+
+  function handleFollowClick() {
+    if (!user) {
+      openAuth();
+      return;
+    }
+    toggleFollow();
   }
 
   const effectiveCover = coverUrl || (isVerifiedProfile ? sellerCoverMain : null);
@@ -115,17 +112,9 @@ export default function SellerProfileHeader({ seller, listingsCount, avgRating, 
             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iYSIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIxIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDUpIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCBmaWxsPSJ1cmwoI2EpIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIi8+PC9zdmc+')] opacity-50" />
           </div>
         )}
-
-        {/* Edit cover button — only for own profile */}
         {isOwnProfile && (
           <>
-            <input
-              ref={coverInputRef}
-              type="file"
-              accept="image/jpeg,image/png,image/webp"
-              className="hidden"
-              onChange={handleCoverUpload}
-            />
+            <input ref={coverInputRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handleCoverUpload} />
             <button
               onClick={() => coverInputRef.current?.click()}
               disabled={uploading}
@@ -140,7 +129,7 @@ export default function SellerProfileHeader({ seller, listingsCount, avgRating, 
 
       {/* Profile card */}
       <div className="bg-card border border-border rounded-b-2xl px-4 sm:px-6 pb-5 relative">
-        {/* Avatar row — overlaps banner */}
+        {/* Avatar row */}
         <div className="flex items-end gap-3 sm:gap-4 -mt-10 sm:-mt-14 mb-4">
           <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-full border-4 border-card bg-muted flex items-center justify-center text-2xl sm:text-3xl font-semibold text-foreground shrink-0 overflow-hidden shadow-md">
             <img src={seller.avatar_url || defaultAvatar} alt={seller.name || "Vendedor"} className="h-full w-full rounded-full object-cover" />
@@ -153,9 +142,31 @@ export default function SellerProfileHeader({ seller, listingsCount, avgRating, 
             <p className="text-xs sm:text-sm text-muted-foreground">@{seller.username || "usuario"}</p>
           </div>
           <div className="pt-12 sm:pt-14 shrink-0">
-            <Button variant="outline" size="sm" className="rounded-full text-xs font-semibold border-primary text-primary hover:bg-primary/5 h-8 px-4">
-              Seguir
-            </Button>
+            {!isOwnProfile && (
+              <Button
+                variant={isFollowing ? "secondary" : "outline"}
+                size="sm"
+                onClick={handleFollowClick}
+                disabled={followLoading}
+                className={`rounded-full text-xs font-semibold h-8 px-4 gap-1.5 ${
+                  isFollowing
+                    ? "bg-primary/10 text-primary border-primary/20 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/20"
+                    : "border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                }`}
+              >
+                {isFollowing ? (
+                  <>
+                    <UserCheck className="h-3.5 w-3.5" />
+                    Seguindo
+                  </>
+                ) : (
+                  <>
+                    <UserPlus className="h-3.5 w-3.5" />
+                    Seguir
+                  </>
+                )}
+              </Button>
+            )}
           </div>
         </div>
 
@@ -163,7 +174,10 @@ export default function SellerProfileHeader({ seller, listingsCount, avgRating, 
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs sm:text-sm text-muted-foreground mb-3">
           <span className="flex items-center gap-1">
             <Users className="h-3.5 w-3.5" />
-            <strong className="text-foreground font-semibold">{seller.total_sales || 0}</strong> vendas
+            <strong className="text-foreground font-semibold">{followersCount}</strong> seguidores
+          </span>
+          <span className="flex items-center gap-1">
+            <strong className="text-foreground font-semibold">{followingCount}</strong> seguindo
           </span>
           <span className="flex items-center gap-1">
             <Package className="h-3.5 w-3.5" />
