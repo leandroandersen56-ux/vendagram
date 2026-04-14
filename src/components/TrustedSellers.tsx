@@ -14,15 +14,16 @@ interface TrustedSeller {
   avatar: string | null;
   sales: number;
   rating: number;
+  profileIdentifier: string;
 }
 
 const SUPERADMIN_EMAIL = "sparckonmeta@gmail.com";
 
 const STATIC_PARTNERS: TrustedSeller[] = [
-  { name: "ADM GB", username: "gb_vendas", userId: null, email: "vg786674@gmail.com", avatar: null, sales: 0, rating: 4.8 },
-  { name: "ADM GL", username: "contabanco", userId: null, email: "contabanco743@gmail.com", avatar: null, sales: 0, rating: 4.8 },
-  { name: "Eduardo Klunck", username: "eduardo", userId: null, email: "eduardoklunck95@gmail.com", avatar: null, sales: 0, rating: 4.8 },
-  { name: "Theus Klunck", username: "theus", userId: null, email: "costawlc7@gmail.com", avatar: null, sales: 0, rating: 4.8 },
+  { name: "ADM GB", username: "gb_vendas", userId: null, email: "vg786674@gmail.com", avatar: null, sales: 0, rating: 4.8, profileIdentifier: "vg786674@gmail.com" },
+  { name: "ADM GL", username: "contabanco", userId: null, email: "contabanco743@gmail.com", avatar: null, sales: 0, rating: 4.8, profileIdentifier: "contabanco743@gmail.com" },
+  { name: "Eduardo Klunck", username: "eduardo", userId: null, email: "eduardoklunck95@gmail.com", avatar: null, sales: 0, rating: 4.8, profileIdentifier: "eduardoklunck95@gmail.com" },
+  { name: "Theus Klunck", username: "theus", userId: null, email: "costawlc7@gmail.com", avatar: null, sales: 0, rating: 4.8, profileIdentifier: "costawlc7@gmail.com" },
 ];
 
 const FALLBACK_BY_EMAIL = new Map(
@@ -47,6 +48,7 @@ function normalizeTrustedSeller(
       typeof seller.rating === "number" && seller.rating > 0
         ? seller.rating
         : (fallback?.rating ?? 4.8),
+    profileIdentifier: seller.profileIdentifier || seller.userId || seller.username || safeEmail,
   };
 }
 
@@ -123,6 +125,7 @@ export default function TrustedSellers() {
                   avatar: profile?.avatar_url || null,
                   sales: Number(profile?.total_sales || 0),
                   rating: Number(profile?.avg_rating || 0),
+                  profileIdentifier: profile?.username || profile?.user_id || partner.email,
                 },
                 fallback
               );
@@ -195,7 +198,7 @@ export default function TrustedSellers() {
             {visibleSellers.map((seller, index) => {
               const stableKey = seller.userId || seller.username || seller.email || `trusted-seller-${index}`;
               const profileLink =
-                getSellerProfilePath(seller.username || seller.userId || seller.email) || "/marketplace";
+                getSellerProfilePath(seller.profileIdentifier || seller.userId || seller.email) || "/marketplace";
 
               return (
                 <Link
