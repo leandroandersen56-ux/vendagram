@@ -31,27 +31,27 @@ export default function BuyBox({ price, originalPrice, stock = 1, onBuy, onOffer
       <div className="mb-4">
         {originalPrice && (
           <div className="flex items-center gap-2 mb-0.5">
-            <span className="text-sm text-[hsl(var(--txt-hint))] line-through">R$ {originalPrice}</span>
+            <span className="text-[13px] text-[hsl(var(--txt-hint))] line-through font-light">R$ {originalPrice}</span>
             {discount > 0 && (
-              <span className="bg-[hsl(var(--warning))] text-[hsl(var(--txt-primary))] text-xs font-semibold px-2 py-0.5 rounded">
+              <span className="text-[hsl(var(--success))] text-[13px] font-medium">
                 {discount}% OFF
               </span>
             )}
           </div>
         )}
 
-        <p className="text-[28px] font-semibold text-[hsl(var(--txt-primary))] leading-tight tracking-tight">
+        <p className="text-[30px] font-light text-[hsl(var(--txt-primary))] leading-tight tracking-tight">
           {formatBRL(totalPrice)}
         </p>
         {isMultiStock && quantity > 1 && (
-          <p className="text-[12px] text-[hsl(var(--txt-hint))] mt-0.5">{formatBRL(price)} cada</p>
+          <p className="text-[12px] text-[hsl(var(--txt-hint))] mt-0.5 font-light">{formatBRL(price)} cada</p>
         )}
 
-        <p className="text-[13px] text-[hsl(var(--txt-secondary))] mt-1">
-          em <span className="font-semibold">6x</span> de <span className="font-semibold">R$ {installment}</span> sem juros
+        <p className="text-[13px] text-[hsl(var(--txt-hint))] mt-1 font-light">
+          em <span className="font-normal">6x</span> de <span className="font-normal">R$ {installment}</span> sem juros
         </p>
 
-        <div className="flex items-center gap-1.5 mt-2 text-[13px] text-[hsl(var(--success))] font-semibold">
+        <div className="flex items-center gap-1.5 mt-1.5 text-[13px] text-[hsl(var(--success))] font-medium">
           <Tag className="h-3.5 w-3.5" />
           <span>3% OFF no Pix → {pixPrice}</span>
         </div>
