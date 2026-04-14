@@ -11,6 +11,7 @@ import { Card } from "@/components/ui/card";
 import { PLATFORMS } from "@/lib/mock-data";
 import PlatformIcon from "@/components/PlatformIcon";
 import { useToast } from "@/hooks/use-toast";
+import { supabase as customSupabase } from "@/lib/supabase-custom-client";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { moderateText, getModerationMessage } from "@/lib/content-moderation";
@@ -250,14 +251,17 @@ export default function CreateListing() {
       try {
         const uploadPromises = screenshots.map(async (s) => {
           const image = await fileToBase64(s.file);
-          const { data, error } = await supabase.functions.invoke("upload-image", {
-            body: {
-              image,
-              filename: s.file.name,
-              mimeType: s.file.type,
-            },
+          const { data, error } = await customSupabase.functions.invoke("upload-image", {
+            body: { image, filename: s.file.name, mimeType: s.file.type },
           });
-          if (error) throw new Error(error.message || "Upload failed");
+          if (error) {
+            // Fallback: try Lovable Cloud instance
+            const { data: d2, error: e2 } = await supabase.functions.invoke("upload-image", {
+              body: { image, filename: s.file.name, mimeType: s.file.type },
+            });
+            if (e2) throw new Error(e2.message || "Upload failed");
+            return d2.url as string;
+          }
           return data.url as string;
         });
         screenshotUrls = await Promise.all(uploadPromises);
