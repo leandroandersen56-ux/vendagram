@@ -10,6 +10,9 @@ import { useNavigate } from "react-router-dom";
 const formatBRL = (v: number) =>
   new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(v);
 
+// Apenas vendas de listings criados a partir desta data contam para sócios
+const PARTNER_LISTING_CUTOFF = "2026-04-13T00:00:00.000Z";
+
 const PARTNER_PROFIT_RATE = 0.10; // 10% fixo para sócios vendedores
 
 export default function PartnerDashboard() {
@@ -35,18 +38,35 @@ export default function PartnerDashboard() {
   });
 
   // Faturamento real = soma de transações completadas do próprio sócio como vendedor
-  const { data: totalSales = 0 } = useQuery({
-    queryKey: ["partner-total-sales", authUserId],
+  // Busca listings elegíveis (criados >= cutoff)
+  const { data: eligibleListingIds = [] } = useQuery({
+    queryKey: ["partner-eligible-listings", authUserId],
     queryFn: async () => {
-      if (!authUserId) return 0;
+      if (!authUserId) return [];
+      const { data } = await supabase
+        .from("listings")
+        .select("id")
+        .eq("seller_id", authUserId)
+        .gte("created_at", PARTNER_LISTING_CUTOFF);
+      return data?.map((l) => l.id) ?? [];
+    },
+    enabled: !!authUserId,
+    refetchInterval: 60_000,
+  });
+
+  const { data: totalSales = 0 } = useQuery({
+    queryKey: ["partner-total-sales", authUserId, eligibleListingIds],
+    queryFn: async () => {
+      if (!authUserId || eligibleListingIds.length === 0) return 0;
       const { data } = await supabase
         .from("transactions")
         .select("amount")
         .eq("status", "completed")
-        .eq("seller_id", authUserId);
+        .eq("seller_id", authUserId)
+        .in("listing_id", eligibleListingIds);
       return data?.reduce((s, t) => s + Number(t.amount), 0) ?? 0;
     },
-    enabled: !!authUserId,
+    enabled: !!authUserId && eligibleListingIds.length > 0,
     refetchInterval: 60_000,
   });
 
@@ -82,16 +102,17 @@ export default function PartnerDashboard() {
   });
 
   const { data: chartData } = useQuery({
-    queryKey: ["partner-chart-30d", authUserId],
+    queryKey: ["partner-chart-30d", authUserId, eligibleListingIds],
     queryFn: async () => {
-      if (!authUserId) return [];
+      if (!authUserId || eligibleListingIds.length === 0) return [];
       const since = subDays(new Date(), 30).toISOString();
       const { data } = await supabase
         .from("transactions")
         .select("amount, created_at")
         .eq("status", "completed")
         .eq("seller_id", authUserId)
-        .gte("created_at", since);
+        .gte("created_at", since)
+        .in("listing_id", eligibleListingIds);
 
       const byDay: Record<string, number> = {};
       for (let i = 29; i >= 0; i--) {
@@ -107,7 +128,7 @@ export default function PartnerDashboard() {
         lucro: valor * PARTNER_PROFIT_RATE,
       }));
     },
-    enabled: !!authUserId,
+    enabled: !!authUserId && eligibleListingIds.length > 0,
   });
 
   // Cálculos: sócio recebe 10% fixo das suas próprias vendas
