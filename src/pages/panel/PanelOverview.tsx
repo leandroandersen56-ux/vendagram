@@ -82,9 +82,9 @@ export default function PanelOverview() {
   ];
 
   const walletActions = [
-    { label: "Depositar", icon: ArrowDown, gradient: "from-emerald-500 to-green-600", onClick: () => setShowDeposit(true) },
-    { label: "Transferir", icon: ArrowRight, gradient: "from-blue-500 to-indigo-600", onClick: () => setShowTransfer(true) },
-    { label: "Sacar", icon: ArrowUp, gradient: "from-violet-500 to-purple-600", onClick: () => setShowWithdraw(true) },
+    { label: "Depositar", icon: ArrowDown, gradient: "from-[#3483fa] to-[#2968c8]", onClick: () => setShowDeposit(true) },
+    { label: "Transferir", icon: ArrowRight, gradient: "from-[#3483fa] to-[#2968c8]", onClick: () => setShowTransfer(true) },
+    { label: "Sacar", icon: ArrowUp, gradient: "from-[#3483fa] to-[#2968c8]", onClick: () => setShowWithdraw(true) },
   ];
 
   if (loading) {
