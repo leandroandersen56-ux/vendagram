@@ -1,7 +1,11 @@
+import { useState, useRef } from "react";
 import { motion } from "framer-motion";
-import { Star, Package, Calendar, Users, Award } from "lucide-react";
+import { Star, Package, Calendar, Users, Award, Camera } from "lucide-react";
 import { VerifiedBadge } from "@/components/VerifiedBadge";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 import sellerCoverMain from "@/assets/seller-cover-main.jpg";
 import defaultAvatar from "@/assets/default-avatar.png";
 
@@ -42,6 +46,12 @@ interface Props {
 }
 
 export default function SellerProfileHeader({ seller, listingsCount, avgRating, reviewsCount }: Props) {
+  const { user } = useAuth();
+  const isOwnProfile = user?.id === seller.user_id;
+  const coverInputRef = useRef<HTMLInputElement>(null);
+  const [coverUrl, setCoverUrl] = useState<string | null>(seller.cover_url || null);
+  const [uploading, setUploading] = useState(false);
+
   const normalizedUsername = seller.username?.toLowerCase?.() || "";
   const normalizedName = seller.name?.toLowerCase?.() || "";
   const isPartnerAdminProfile = TRUSTED_PARTNER_IDENTIFIERS.has(seller.user_id) || TRUSTED_PARTNER_IDENTIFIERS.has(normalizedUsername) || TRUSTED_PARTNER_IDENTIFIERS.has(normalizedName);
@@ -52,16 +62,79 @@ export default function SellerProfileHeader({ seller, listingsCount, avgRating, 
   const memberSince = new Date(seller.created_at).toLocaleDateString("pt-BR", { month: "long", year: "numeric" });
   const positiveRate = Math.min(98, 85 + Math.floor((seller.total_sales || 0) * 0.5));
 
+  async function handleCoverUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Imagem muito grande. Máximo 5MB.");
+      return;
+    }
+
+    setUploading(true);
+    try {
+      const ext = file.name.split(".").pop() || "jpg";
+      const path = `${user.id}/cover.${ext}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("avatars")
+        .upload(path, file, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      const { data: urlData } = supabase.storage.from("avatars").getPublicUrl(path);
+      const publicUrl = `${urlData.publicUrl}?t=${Date.now()}`;
+
+      const { error: updateError } = await supabase
+        .from("profiles")
+        .update({ cover_url: publicUrl } as any)
+        .eq("user_id", user.id);
+
+      if (updateError) throw updateError;
+
+      setCoverUrl(publicUrl);
+      toast.success("Capa atualizada!");
+    } catch (err: any) {
+      console.error(err);
+      toast.error("Erro ao enviar imagem de capa.");
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  const effectiveCover = coverUrl || (isVerifiedProfile ? sellerCoverMain : null);
+
   return (
     <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
       {/* Cover banner */}
-      <div className="h-32 sm:h-40 rounded-t-2xl relative overflow-hidden">
-        {isVerifiedProfile ? (
-          <img src={sellerCoverMain} alt="" className="w-full h-full object-cover" />
+      <div className="h-32 sm:h-40 rounded-t-2xl relative overflow-hidden group">
+        {effectiveCover ? (
+          <img src={effectiveCover} alt="" className="w-full h-full object-cover" />
         ) : (
           <div className="w-full h-full bg-gradient-to-r from-primary via-[#1A4BC4] to-primary">
             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iYSIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIxIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDUpIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCBmaWxsPSJ1cmwoI2EpIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIi8+PC9zdmc+')] opacity-50" />
           </div>
+        )}
+
+        {/* Edit cover button — only for own profile */}
+        {isOwnProfile && (
+          <>
+            <input
+              ref={coverInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              className="hidden"
+              onChange={handleCoverUpload}
+            />
+            <button
+              onClick={() => coverInputRef.current?.click()}
+              disabled={uploading}
+              className="absolute bottom-2 right-2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity disabled:opacity-50"
+              title="Alterar capa"
+            >
+              <Camera className="h-4 w-4" />
+            </button>
+          </>
         )}
       </div>
 

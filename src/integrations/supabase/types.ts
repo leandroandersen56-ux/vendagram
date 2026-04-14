@@ -700,6 +700,7 @@ export type Database = {
           avg_rating: number
           bio: string | null
           cnpj: string | null
+          cover_url: string | null
           cpf: string | null
           created_at: string
           email: string | null
@@ -723,6 +724,7 @@ export type Database = {
           avg_rating?: number
           bio?: string | null
           cnpj?: string | null
+          cover_url?: string | null
           cpf?: string | null
           created_at?: string
           email?: string | null
@@ -746,6 +748,7 @@ export type Database = {
           avg_rating?: number
           bio?: string | null
           cnpj?: string | null
+          cover_url?: string | null
           cpf?: string | null
           created_at?: string
           email?: string | null
@@ -1224,6 +1227,7 @@ export type Database = {
           avatar_url: string | null
           avg_rating: number | null
           bio: string | null
+          cover_url: string | null
           created_at: string | null
           id: string | null
           is_verified: boolean | null
@@ -1239,6 +1243,7 @@ export type Database = {
           avatar_url?: string | null
           avg_rating?: number | null
           bio?: string | null
+          cover_url?: string | null
           created_at?: string | null
           id?: string | null
           is_verified?: boolean | null
@@ -1254,6 +1259,7 @@ export type Database = {
           avatar_url?: string | null
           avg_rating?: number | null
           bio?: string | null
+          cover_url?: string | null
           created_at?: string | null
           id?: string | null
           is_verified?: boolean | null
