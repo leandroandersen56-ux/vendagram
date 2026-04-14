@@ -459,6 +459,9 @@ export default function Index() {
           </div>
         </section>
 
+        {/* === TRUSTED SELLERS === */}
+        <TrustedSellers />
+
         {/* === LISTINGS BY CATEGORY === */}
         <section className="py-2">
           <div className="container mx-auto">
