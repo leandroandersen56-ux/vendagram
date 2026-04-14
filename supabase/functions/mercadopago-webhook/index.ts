@@ -30,19 +30,54 @@ async function sendWhatsAppNotification(supabaseUrl: string, supabaseKey: string
   }
 }
 
+function createSupabaseClient() {
+  // Try personal instance first, fall back to Cloud
+  const personalUrl = Deno.env.get("PERSONAL_SUPABASE_URL");
+  const personalKey = Deno.env.get("PERSONAL_SUPABASE_SERVICE_ROLE_KEY");
+  const cloudUrl = Deno.env.get("SUPABASE_URL")!;
+  const cloudKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+
+  const clients = [];
+
+  if (personalUrl && personalKey) {
+    clients.push({ label: "personal", client: createClient(personalUrl, personalKey) });
+  }
+  clients.push({ label: "cloud", client: createClient(cloudUrl, cloudKey) });
+
+  return { clients, cloudUrl, cloudKey };
+}
+
+async function findTransaction(clients: Array<{label: string; client: any}>, transactionId: string) {
+  for (const { label, client } of clients) {
+    try {
+      const { data: tx, error } = await client
+        .from("transactions")
+        .select("*")
+        .eq("id", transactionId)
+        .eq("status", "pending_payment")
+        .single();
+
+      if (!error && tx) {
+        console.log(`Transaction found via ${label} client`);
+        return { tx, client, label };
+      }
+      if (error) {
+        console.log(`${label} client error: ${error.message}`);
+      }
+    } catch (e) {
+      console.log(`${label} client exception: ${e}`);
+    }
+  }
+  return null;
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { status: 200 });
   }
 
   try {
-    // Use personal Supabase for DB, Cloud for edge functions (email etc)
-    const personalUrl = Deno.env.get("PERSONAL_SUPABASE_URL") || Deno.env.get("SUPABASE_URL")!;
-    const personalKey = Deno.env.get("PERSONAL_SUPABASE_SERVICE_ROLE_KEY") || Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const cloudUrl = Deno.env.get("SUPABASE_URL")!;
-    const cloudKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    
-    const supabase = createClient(personalUrl, personalKey);
+    const { clients, cloudUrl, cloudKey } = createSupabaseClient();
 
     const MERCADOPAGO_ACCESS_TOKEN = Deno.env.get("MERCADOPAGO_ACCESS_TOKEN")?.trim();
     if (!MERCADOPAGO_ACCESS_TOKEN) {
@@ -78,17 +113,14 @@ Deno.serve(async (req) => {
       console.log(`Payment ${paymentId} status: ${payment.status} for transaction: ${transactionId}`);
 
       if (payment.status === "approved") {
-        const { data: tx, error: txFetchError } = await supabase
-          .from("transactions")
-          .select("*")
-          .eq("id", transactionId)
-          .eq("status", "pending_payment")
-          .single();
+        const result = await findTransaction(clients, transactionId);
 
-        if (txFetchError || !tx) {
-          console.log("Transaction not found or already processed:", txFetchError?.message);
+        if (!result) {
+          console.log("Transaction not found or already processed in any client");
           return new Response("ok", { status: 200 });
         }
+
+        const { tx, client: supabase } = result;
 
         const { error: updateError } = await supabase
           .from("transactions")
@@ -181,13 +213,15 @@ Deno.serve(async (req) => {
 
         // WhatsApp notification to seller
         await sendWhatsAppNotification(cloudUrl, cloudKey, transactionId, "payment_confirmed");
-
-        await supabase
-          .from("transactions")
-          .update({ status: "cancelled", cancelled_at: new Date().toISOString() })
-          .eq("id", transactionId)
-          .eq("status", "pending_payment");
-
+      } else if (payment.status === "cancelled" || payment.status === "rejected") {
+        // Cancel the transaction in any available client
+        for (const { client } of clients) {
+          await client
+            .from("transactions")
+            .update({ status: "cancelled", cancelled_at: new Date().toISOString() })
+            .eq("id", transactionId)
+            .eq("status", "pending_payment");
+        }
         console.log(`Transaction ${transactionId} cancelled due to payment ${payment.status}`);
       }
     }

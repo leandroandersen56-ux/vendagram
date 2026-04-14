@@ -201,17 +201,17 @@ export default function Checkout() {
         .select("status")
         .eq("id", transactionId)
         .single();
-      if (tx && tx.status === "paid") {
+      if (tx && (tx.status === "paid" || tx.status === "transfer_in_progress" || tx.status === "credentials_sent" || tx.status === "completed")) {
         setPaymentStatus("approved");
         toast({ title: "Pagamento confirmado! ✅", description: "Redirecionando para a transação..." });
         clearInterval(interval);
-        setTimeout(() => navigate(`/transaction/${listing?.id}`), 2000);
+        setTimeout(() => navigate(`/compras/${transactionId}`), 2500);
       } else if (tx && tx.status === "cancelled") {
         setPaymentStatus("cancelled");
         toast({ title: "Pagamento cancelado", variant: "destructive" });
         clearInterval(interval);
       }
-    }, 5000);
+    }, 4000);
     return () => clearInterval(interval);
   }, [transactionId, paymentStatus, navigate, listing, toast]);
 
