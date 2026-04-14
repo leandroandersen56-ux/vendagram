@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Star, ShieldCheck, Award } from "lucide-react";
 import { VerifiedBadge } from "@/components/VerifiedBadge";
+import defaultAvatar from "@/assets/default-avatar.png";
 
 const TRUSTED_SELLERS = [
   { name: "ADM GB", username: "GB VENDAS", userId: "af11290b-014b-43db-aca1-ed1a12ab1707", avatar: "https://yzwncktlibdfycqhvlqg.supabase.co/storage/v1/object/public/avatars/af11290b-014b-43db-aca1-ed1a12ab1707/avatar.jpeg?t=1776109088807", sales: 89, rating: 4.8, reviews: 32, badge: "Platinum" },
@@ -42,11 +43,7 @@ export default function TrustedSellers() {
                     {/* Avatar */}
                     <div className="relative mb-2.5">
                       <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center text-lg font-semibold text-foreground overflow-hidden border-2 border-primary/20 group-hover:border-primary/40 transition-colors">
-                        {seller.avatar ? (
-                          <img src={seller.avatar} alt={seller.name} className="h-full w-full rounded-full object-cover" />
-                        ) : (
-                          <span>{seller.name[0].toUpperCase()}</span>
-                        )}
+                        <img src={seller.avatar || defaultAvatar} alt={seller.name} className="h-full w-full rounded-full object-cover" />
                       </div>
                       <VerifiedBadge size={18} className="absolute -bottom-0.5 -right-0.5" />
                     </div>
