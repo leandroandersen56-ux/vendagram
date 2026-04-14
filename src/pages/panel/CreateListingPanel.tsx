@@ -11,7 +11,7 @@ import { Card } from "@/components/ui/card";
 import { PLATFORMS } from "@/lib/mock-data";
 import PlatformIcon from "@/components/PlatformIcon";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabase-custom-client";
 import { useAuth } from "@/contexts/AuthContext";
 import { moderateText, getModerationMessage } from "@/lib/content-moderation";
 
