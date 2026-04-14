@@ -12,7 +12,7 @@ import { fetchSellerProfile } from "@/lib/fetch-seller-profile";
 import type { Listing } from "@/lib/mock-data";
 
 export default function SellerProfile() {
-  const { username } = useParams();
+  const { username, id } = useParams();
   const [seller, setSeller] = useState<any>(null);
   const [listings, setListings] = useState<Listing[]>([]);
   const [reviews, setReviews] = useState<any[]>([]);
@@ -22,7 +22,8 @@ export default function SellerProfile() {
   useEffect(() => {
     async function load() {
       setLoading(true);
-      const profile = await fetchSellerProfile({ username: username! });
+      const filters = id ? { user_id: id } : { username: username! };
+      const profile = await fetchSellerProfile(filters);
 
       if (!profile) { setLoading(false); return; }
       setSeller(profile);
