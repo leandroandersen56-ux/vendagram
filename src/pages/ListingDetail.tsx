@@ -204,15 +204,8 @@ export default function ListingDetail() {
               <div className="lg:col-span-3 space-y-4">
                 {/* Gallery + Info unified card (mobile) */}
                 <div className="lg:hidden bg-white rounded-xl border border-[hsl(var(--border))] overflow-hidden">
-                  <ProductGallery
-                    images={allImages}
-                    title={listing.title}
-                    category={listing.category}
-                    verified={sellerSales >= 5}
-                    isDemo={listing.seller_id === "00000000-0000-0000-0000-000000000001"}
-                  />
-                  {/* Info */}
-                  <div className="p-4 pb-0">
+                  {/* Title & badges above gallery on mobile */}
+                  <div className="p-4 pb-3">
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex flex-wrap items-center gap-1.5 mb-2 flex-1">
                         <span className={`text-[10px] font-semibold px-2 py-0.5 rounded ${PLATFORM_BADGE_COLORS[listing.category] || "bg-[hsl(var(--muted))] text-[hsl(var(--txt-primary))]"}`}>
@@ -262,6 +255,13 @@ export default function ListingDetail() {
                       <button className="text-primary font-medium hover:underline" onClick={() => sellerProfilePath ? navigate(sellerProfilePath) : toast.info("Vendedor sem perfil público")}>Ver avaliações →</button>
                     </div>
                   </div>
+                  <ProductGallery
+                    images={allImages}
+                    title={listing.title}
+                    category={listing.category}
+                    verified={sellerSales >= 5}
+                    isDemo={listing.seller_id === "00000000-0000-0000-0000-000000000001"}
+                  />
 
                   {/* Buy Box */}
                   <div ref={buyBoxRef} className="px-4 py-3 border-t border-[hsl(var(--border))]">
