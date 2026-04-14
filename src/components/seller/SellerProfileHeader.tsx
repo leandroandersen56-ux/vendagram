@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Star, Package, Calendar, Users, Award, Camera, UserPlus, UserCheck } from "lucide-react";
 import { VerifiedBadge } from "@/components/VerifiedBadge";
@@ -18,17 +18,13 @@ const REP_SEGMENTS = [
   { color: "bg-[hsl(var(--success))]" },
 ];
 
-const TRUSTED_PARTNER_IDENTIFIERS = new Set([
-  "b78c563a-41eb-4933-9b4d-b53e3cd62dfb",
-  "af11290b-014b-43db-aca1-ed1a12ab1707",
-  "beccd2b1-0a31-4fd5-9701-4dce5eaa125c",
-  "d7f85dfb-0f1d-4c58-9a64-0544ec5b158d",
-  "sparckon",
-  "gb vendas",
-  "contabanco",
-  "adm gb",
-  "adm gl",
-  "eduardo klunck",
+// Known admin/partner emails — always Platinum + verified
+const PARTNER_EMAILS = new Set([
+  "sparckonmeta@gmail.com",
+  "vg786674@gmail.com",
+  "contabanco743@gmail.com",
+  "eduardoklunck95@gmail.com",
+  "costawlc7@gmail.com",
 ]);
 
 function getRepLevel(sales: number, isVerified: boolean) {
@@ -53,12 +49,31 @@ export default function SellerProfileHeader({ seller, listingsCount, avgRating, 
   const coverInputRef = useRef<HTMLInputElement>(null);
   const [coverUrl, setCoverUrl] = useState<string | null>(seller.cover_url || null);
   const [uploading, setUploading] = useState(false);
+  const [isPartnerByEmail, setIsPartnerByEmail] = useState(false);
 
-  const normalizedUsername = seller.username?.toLowerCase?.() || "";
-  const normalizedName = seller.name?.toLowerCase?.() || "";
-  const isPartnerAdminProfile = TRUSTED_PARTNER_IDENTIFIERS.has(seller.user_id) || TRUSTED_PARTNER_IDENTIFIERS.has(normalizedUsername) || TRUSTED_PARTNER_IDENTIFIERS.has(normalizedName);
-  const isVerifiedProfile = seller.is_verified || isPartnerAdminProfile;
-  const rep = isPartnerAdminProfile
+  // Check if seller is a partner by email (works even without hardcoded UUIDs)
+  useEffect(() => {
+    const sellerEmail = seller.email?.toLowerCase?.() || "";
+    if (PARTNER_EMAILS.has(sellerEmail)) {
+      setIsPartnerByEmail(true);
+      return;
+    }
+    // Also check partners table dynamically
+    if (sellerEmail) {
+      supabase
+        .from("partners" as any)
+        .select("id")
+        .eq("email", sellerEmail)
+        .eq("is_active", true)
+        .maybeSingle()
+        .then(({ data }) => {
+          if (data) setIsPartnerByEmail(true);
+        });
+    }
+  }, [seller.email]);
+
+  const isVerifiedProfile = seller.is_verified || isPartnerByEmail;
+  const rep = isPartnerByEmail
     ? { label: "Platinum", color: "text-primary", idx: 4, badge: "bg-primary/10 text-primary border-primary/20" }
     : getRepLevel(seller.total_sales || 0, isVerifiedProfile);
   const memberSince = new Date(seller.created_at).toLocaleDateString("pt-BR", { month: "long", year: "numeric" });
