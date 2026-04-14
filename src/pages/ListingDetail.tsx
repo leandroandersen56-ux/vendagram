@@ -205,7 +205,7 @@ export default function ListingDetail() {
                 {/* Gallery + Info unified card (mobile) */}
                 <div className="lg:hidden bg-white rounded-xl border border-[hsl(var(--border))] overflow-hidden">
                   {/* Title & badges above gallery on mobile */}
-                  <div className="p-4 pb-3">
+                  <div className="px-4 pt-3 pb-1.5">
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex flex-wrap items-center gap-1.5 mb-2 flex-1">
                         <span className={`text-[10px] font-semibold px-2 py-0.5 rounded ${PLATFORM_BADGE_COLORS[listing.category] || "bg-[hsl(var(--muted))] text-[hsl(var(--txt-primary))]"}`}>
