@@ -78,7 +78,7 @@ export default function SellerCenter() {
         </button>
       } />
 
-      <div className="px-4 pt-5 space-y-5">
+      <div className="px-4 pt-16 space-y-5">
         {loading ? (
           <div className="flex justify-center py-16"><Loader2 className="h-7 w-7 animate-spin text-primary" /></div>
         ) : (
