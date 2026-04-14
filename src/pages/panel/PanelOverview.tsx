@@ -82,9 +82,9 @@ export default function PanelOverview() {
   ];
 
   const walletActions = [
-    { label: "Depositar", icon: ArrowDown, color: "text-success", bg: "bg-success/10", onClick: () => setShowDeposit(true) },
-    { label: "Transferir", icon: ArrowRight, color: "text-info", bg: "bg-info/10", onClick: () => setShowTransfer(true) },
-    { label: "Sacar", icon: ArrowUp, color: "text-primary", bg: "bg-primary/10", onClick: () => setShowWithdraw(true) },
+    { label: "Depositar", icon: ArrowDown, gradient: "from-emerald-500 to-green-600", onClick: () => setShowDeposit(true) },
+    { label: "Transferir", icon: ArrowRight, gradient: "from-blue-500 to-indigo-600", onClick: () => setShowTransfer(true) },
+    { label: "Sacar", icon: ArrowUp, gradient: "from-violet-500 to-purple-600", onClick: () => setShowWithdraw(true) },
   ];
 
   if (loading) {
@@ -149,15 +149,15 @@ export default function PanelOverview() {
             <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Disponível</p>
             <p className="text-2xl font-semibold text-success mt-0.5 tabular-nums">{formatBRL(balance)}</p>
 
-            <div className="flex items-center justify-around mt-4 pt-3 border-t border-border">
+            <div className="flex items-center justify-around mt-5 pt-4 border-t border-border">
               {walletActions.map((action) => (
                 <button
                   key={action.label}
                   onClick={action.onClick}
-                  className="flex flex-col items-center gap-1.5 active:scale-95 transition-transform"
+                  className="flex flex-col items-center gap-2 active:scale-95 transition-all hover:scale-105"
                 >
-                  <div className={`h-11 w-11 rounded-full flex items-center justify-center shadow-sm border border-border/60`} style={{ background: 'hsl(var(--primary) / 0.12)' }}>
-                    <action.icon className="h-5 w-5 text-primary" />
+                  <div className={`h-12 w-12 rounded-2xl bg-gradient-to-br ${action.gradient} flex items-center justify-center shadow-md`}>
+                    <action.icon className="h-5 w-5 text-white" strokeWidth={2.5} />
                   </div>
                   <span className="text-[11px] font-semibold text-foreground">{action.label}</span>
                 </button>
