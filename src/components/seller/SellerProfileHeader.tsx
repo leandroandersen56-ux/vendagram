@@ -9,6 +9,7 @@ import { useFollow } from "@/hooks/useFollow";
 import { toast } from "sonner";
 import sellerCoverMain from "@/assets/seller-cover-main.jpg";
 import defaultAvatar from "@/assets/default-avatar.png";
+import froiv3dLogo from "@/assets/froiv-3d-logo.png";
 
 const REP_SEGMENTS = [
   { color: "bg-destructive" },
