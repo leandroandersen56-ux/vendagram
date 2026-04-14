@@ -1,4 +1,5 @@
-import { Star, MessageCircle, User, CheckCircle2, Package, ShieldCheck, Award } from "lucide-react";
+import { Star, MessageCircle, User, Package, ShieldCheck, Award } from "lucide-react";
+import { VerifiedBadge } from "@/components/VerifiedBadge";
 import { Button } from "@/components/ui/button";
 
 interface SellerCardProps {
@@ -30,7 +31,7 @@ export default function SellerCard({ name, rating, sales, avatarUrl, isVerified,
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5">
             <p className="text-sm font-semibold text-foreground truncate">{name}</p>
-            {isVerified && <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />}
+            {isVerified && <VerifiedBadge size={16} />}
           </div>
           <p className="text-xs text-muted-foreground">+{sales} vendas</p>
         </div>
