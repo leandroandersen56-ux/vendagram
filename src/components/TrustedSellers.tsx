@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { CheckCircle2, Star, ShieldCheck, Award } from "lucide-react";
+import { Star, ShieldCheck, Award } from "lucide-react";
+import { VerifiedBadge } from "@/components/VerifiedBadge";
 
 const TRUSTED_SELLERS = [
   { name: "Sparckon", username: "sparckon", userId: "b78c563a-41eb-4933-9b4d-b53e3cd62dfb", avatar: "https://tqfvhfrbeolnvjpcfckl.supabase.co/storage/v1/object/public/avatars/sparckon-avatar.jpg", sales: 156, rating: 4.9, reviews: 47, badge: "Platinum" },
@@ -48,7 +49,7 @@ export default function TrustedSellers() {
                           <span>{seller.name[0].toUpperCase()}</span>
                         )}
                       </div>
-                      <CheckCircle2 className="absolute -bottom-0.5 -right-0.5 h-5 w-5 text-primary bg-card rounded-full" />
+                      <VerifiedBadge size={18} className="absolute -bottom-0.5 -right-0.5" />
                     </div>
 
                     {/* Name */}
