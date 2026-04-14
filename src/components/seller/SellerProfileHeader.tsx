@@ -9,6 +9,7 @@ import { useFollow } from "@/hooks/useFollow";
 import { toast } from "sonner";
 import sellerCoverMain from "@/assets/seller-cover-main.jpg";
 import defaultAvatar from "@/assets/default-avatar.png";
+import froiv3dLogo from "@/assets/froiv-3d-logo.png";
 
 const REP_SEGMENTS = [
   { color: "bg-destructive" },
@@ -131,6 +132,12 @@ export default function SellerProfileHeader({ seller, listingsCount, avgRating, 
         ) : (
           <div className="w-full h-full bg-gradient-to-r from-primary via-[#1A4BC4] to-primary">
             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iYSIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIxIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDUpIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCBmaWxsPSJ1cmwoI2EpIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIi8+PC9zdmc+')] opacity-50" />
+          </div>
+        )}
+        {/* Froiv 3D logo overlay on default/verified cover */}
+        {effectiveCover === sellerCoverMain && (
+          <div className="absolute inset-0 flex items-center justify-end pr-6 sm:pr-12 pointer-events-none">
+            <img src={froiv3dLogo} alt="" className="h-20 sm:h-28 w-auto drop-shadow-2xl opacity-90" />
           </div>
         )}
         {isOwnProfile && (
