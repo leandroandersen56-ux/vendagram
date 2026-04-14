@@ -28,6 +28,7 @@ import AccountSpecs from "@/components/pdp/AccountSpecs";
 import StickyBuyBar from "@/components/pdp/StickyBuyBar";
 import ReviewSection from "@/components/pdp/ReviewSection";
 import RelatedProducts from "@/components/pdp/RelatedProducts";
+import PartialStars from "@/components/PartialStars";
 
 export default function ListingDetail() {
   const { id } = useParams();
