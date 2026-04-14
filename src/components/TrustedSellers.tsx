@@ -1,19 +1,9 @@
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Star, ShieldCheck, Award } from "lucide-react";
 import { VerifiedBadge } from "@/components/VerifiedBadge";
 import { getSellerProfilePath } from "@/lib/getSellerProfilePath";
 import defaultAvatar from "@/assets/default-avatar.png";
-
-const SUPERADMIN_EMAIL = "sparckonmeta@gmail.com";
-
-// Fallback estático — SEMPRE renderiza mesmo se toda busca falhar
-const STATIC_PARTNERS: TrustedSeller[] = [
-  { name: "ADM GB", username: "GB VENDAS", userId: null, email: "vg786674@gmail.com", avatar: null, sales: 0, rating: 4.8 },
-  { name: "ADM GL", username: "contabanco", userId: null, email: "contabanco743@gmail.com", avatar: null, sales: 0, rating: 4.8 },
-  { name: "Eduardo Klunck", username: "eduardo", userId: null, email: "eduardoklunck95@gmail.com", avatar: null, sales: 0, rating: 4.8 },
-  { name: "Theus Klunck", username: "theus", userId: null, email: "costawlc7@gmail.com", avatar: null, sales: 0, rating: 4.8 },
-];
 
 interface TrustedSeller {
   name: string;
@@ -25,142 +15,237 @@ interface TrustedSeller {
   rating: number;
 }
 
+const SUPERADMIN_EMAIL = "sparckonmeta@gmail.com";
+
+const STATIC_PARTNERS: TrustedSeller[] = [
+  { name: "ADM GB", username: "gb_vendas", userId: null, email: "vg786674@gmail.com", avatar: null, sales: 0, rating: 4.8 },
+  { name: "ADM GL", username: "contabanco", userId: null, email: "contabanco743@gmail.com", avatar: null, sales: 0, rating: 4.8 },
+  { name: "Eduardo Klunck", username: "eduardo", userId: null, email: "eduardoklunck95@gmail.com", avatar: null, sales: 0, rating: 4.8 },
+  { name: "Theus Klunck", username: "theus", userId: null, email: "costawlc7@gmail.com", avatar: null, sales: 0, rating: 4.8 },
+];
+
+const FALLBACK_BY_EMAIL = new Map(
+  STATIC_PARTNERS.map((seller) => [seller.email.toLowerCase(), seller])
+);
+
+function normalizeTrustedSeller(
+  seller: Partial<TrustedSeller> & { email?: string; name?: string },
+  fallback?: TrustedSeller
+): TrustedSeller {
+  const safeEmail = seller.email || fallback?.email || "parceiro@froiv.com";
+  const emailUsername = safeEmail.split("@")[0] || "parceiro";
+
+  return {
+    name: seller.name || fallback?.name || "Vendedor confiável",
+    username: seller.username || fallback?.username || emailUsername,
+    userId: seller.userId || fallback?.userId || null,
+    email: safeEmail,
+    avatar: seller.avatar || fallback?.avatar || null,
+    sales: typeof seller.sales === "number" ? seller.sales : (fallback?.sales ?? 0),
+    rating:
+      typeof seller.rating === "number" && seller.rating > 0
+        ? seller.rating
+        : (fallback?.rating ?? 4.8),
+  };
+}
+
 export default function TrustedSellers() {
-  // Inicia com fallback estático — cards SEMPRE visíveis desde o primeiro render
   const [sellers, setSellers] = useState<TrustedSeller[]>(STATIC_PARTNERS);
+  const lastStableSellersRef = useRef<TrustedSeller[]>(STATIC_PARTNERS);
 
   useEffect(() => {
+    let cancelled = false;
+
+    console.log("[TrustedSellers] fallback ativado no primeiro render", STATIC_PARTNERS);
+
     async function load() {
       try {
         const CLOUD_URL = import.meta.env.VITE_SUPABASE_URL;
         const CLOUD_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
-        // Buscar parceiros ativos via edge function (bypass RLS)
-        let partnerList: { name: string; email: string }[] = [];
-        try {
-          const pRes = await fetch(`${CLOUD_URL}/functions/v1/admin-create-listing`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json", Authorization: `Bearer ${CLOUD_KEY}` },
-            body: JSON.stringify({ action: "query", table: "partners", filters: { is_active: true }, select: "name, email" }),
-          });
-          const pJson = await pRes.json();
-          if (pJson.data?.length) {
-            partnerList = pJson.data.filter((p: any) => p.email.toLowerCase() !== SUPERADMIN_EMAIL);
-          }
-        } catch {
-          // Se falhar, usa a lista estática
+        const partnersResponse = await fetch(`${CLOUD_URL}/functions/v1/admin-create-listing`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${CLOUD_KEY}`,
+          },
+          body: JSON.stringify({
+            action: "query",
+            table: "partners",
+            filters: { is_active: true },
+            select: "name, email",
+          }),
+        });
+
+        if (!partnersResponse.ok) {
+          throw new Error(`partners fetch failed: ${partnersResponse.status}`);
         }
 
-        // Se não encontrou parceiros no banco, mantém o fallback
-        if (!partnerList.length) {
-          partnerList = STATIC_PARTNERS.map((p) => ({ name: p.name, email: p.email }));
+        const partnersJson = await partnersResponse.json();
+        const activePartners = Array.isArray(partnersJson.data)
+          ? partnersJson.data.filter(
+              (partner: { email?: string }) =>
+                typeof partner.email === "string" &&
+                partner.email.toLowerCase() !== SUPERADMIN_EMAIL
+            )
+          : [];
+
+        if (!activePartners.length) {
+          console.log("[TrustedSellers] nenhum partner retornado; mantendo fallback atual");
+          return;
         }
 
-        // Enriquecer cada parceiro com dados do profile
-        const enriched = await Promise.all(
-          partnerList.map(async (partner) => {
+        const enrichedSellers = await Promise.all(
+          activePartners.map(async (partner: { name?: string; email: string }) => {
+            const fallback = FALLBACK_BY_EMAIL.get(partner.email.toLowerCase());
+
             try {
-              const res = await fetch(`${CLOUD_URL}/functions/v1/admin-create-listing`, {
+              const profileResponse = await fetch(`${CLOUD_URL}/functions/v1/admin-create-listing`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json", Authorization: `Bearer ${CLOUD_KEY}` },
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${CLOUD_KEY}`,
+                },
                 body: JSON.stringify({
                   action: "query",
                   table: "profiles",
                   filters: { email: partner.email },
-                  select: "user_id,username,name,avatar_url,total_sales,avg_rating",
+                  select: "user_id,username,name,avatar_url,total_sales,avg_rating,email",
                 }),
               });
-              const json = await res.json();
-              const profile = json.data?.[0] ?? null;
-              return {
-                name: profile?.name || partner.name,
-                username: profile?.username || null,
-                userId: profile?.user_id || null,
-                email: partner.email,
-                avatar: profile?.avatar_url || null,
-                sales: profile?.total_sales || 0,
-                rating: profile?.avg_rating || 4.8,
-              };
-            } catch {
-              return {
-                name: partner.name,
-                username: null,
-                userId: null,
-                email: partner.email,
-                avatar: null,
-                sales: 0,
-                rating: 4.8,
-              };
+
+              if (!profileResponse.ok) {
+                throw new Error(`profile fetch failed: ${profileResponse.status}`);
+              }
+
+              const profileJson = await profileResponse.json();
+              const profile = Array.isArray(profileJson.data) ? profileJson.data[0] : null;
+
+              return normalizeTrustedSeller(
+                {
+                  name: profile?.name || partner.name,
+                  username: profile?.username || fallback?.username || null,
+                  userId: profile?.user_id || null,
+                  email: profile?.email || partner.email,
+                  avatar: profile?.avatar_url || null,
+                  sales: Number(profile?.total_sales || 0),
+                  rating: Number(profile?.avg_rating || 0),
+                },
+                fallback
+              );
+            } catch (error) {
+              console.log("[TrustedSellers] fallback por parceiro", partner.email, error);
+              return normalizeTrustedSeller(
+                {
+                  name: partner.name,
+                  email: partner.email,
+                },
+                fallback
+              );
             }
           })
         );
 
-        setSellers(enriched);
-      } catch (err) {
-        console.error("Error enriching trusted sellers:", err);
-        // Fallback já está no state — não faz nada
+        const safeSellers = enrichedSellers.filter(
+          (seller) => Boolean(seller.email || seller.username || seller.userId)
+        );
+
+        if (!safeSellers.length) {
+          console.log("[TrustedSellers] lista vazia após enrich; mantendo fallback atual");
+          return;
+        }
+
+        console.log("[TrustedSellers] sellers carregados", safeSellers);
+        lastStableSellersRef.current = safeSellers;
+
+        if (!cancelled) {
+          setSellers(safeSellers);
+        }
+      } catch (error) {
+        console.error("[TrustedSellers] erro no fetch; mantendo estado atual", error);
       }
     }
+
     load();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
+
+  const visibleSellers = useMemo(() => {
+    if (Array.isArray(sellers) && sellers.length > 0) {
+      return sellers;
+    }
+
+    if (lastStableSellersRef.current.length > 0) {
+      return lastStableSellersRef.current;
+    }
+
+    return STATIC_PARTNERS;
+  }, [sellers]);
 
   return (
     <section className="py-4">
       <div className="container mx-auto">
         <div className="bg-card rounded-2xl border border-border p-4 sm:p-5">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-[15px] font-semibold text-txt-primary flex items-center gap-1.5">
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="flex items-center gap-1.5 text-[15px] font-semibold text-txt-primary">
               <ShieldCheck className="h-4 w-4 text-primary" /> Vendedores Verificados
             </h2>
-            <span className="text-[11px] font-semibold bg-primary/10 text-primary px-2.5 py-1 rounded-full flex items-center gap-1">
+            <span className="flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-semibold text-primary">
               <Award className="h-3 w-3" /> Confiáveis
             </span>
           </div>
 
-          <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 snap-x snap-mandatory sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:overflow-visible sm:pb-0">
-            {sellers.map((seller) => {
-              const profileLink = getSellerProfilePath(seller.username || seller.userId || seller.email) ?? "/marketplace";
+          <div className="scrollbar-hide flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory sm:grid sm:grid-cols-2 sm:overflow-visible sm:pb-0 lg:grid-cols-4">
+            {visibleSellers.map((seller, index) => {
+              const stableKey = seller.userId || seller.username || seller.email || `trusted-seller-${index}`;
+              const profileLink =
+                getSellerProfilePath(seller.username || seller.userId || seller.email) || "/marketplace";
+
               return (
                 <Link
-                  key={seller.email}
+                  key={stableKey}
                   to={profileLink}
-                  className="flex-shrink-0 w-[160px] sm:w-auto snap-start group"
+                  className="group w-[160px] flex-shrink-0 snap-start sm:w-auto"
                 >
-                  <div className="flex flex-col items-center text-center p-4 rounded-xl border border-border bg-background hover:border-primary/30 hover:shadow-sm transition-all">
+                  <div className="flex flex-col items-center rounded-xl border border-border bg-background p-4 text-center transition-all hover:border-primary/30 hover:shadow-sm">
                     <div className="relative mb-2.5">
-                      <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center text-lg font-semibold text-foreground overflow-hidden border-2 border-primary/20 group-hover:border-primary/40 transition-colors">
+                      <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border-2 border-primary/20 bg-muted text-lg font-semibold text-foreground transition-colors group-hover:border-primary/40">
                         <img
                           src={seller.avatar || defaultAvatar}
                           alt={seller.name}
                           className="h-full w-full rounded-full object-cover"
+                          loading="lazy"
                         />
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-1 mb-0.5">
-                      <span className="text-sm font-semibold text-foreground truncate max-w-[100px]">
+                    <div className="mb-0.5 flex items-center gap-1">
+                      <span className="max-w-[100px] truncate text-sm font-semibold text-foreground">
                         {seller.name}
                       </span>
                       <VerifiedBadge size={14} />
                     </div>
-                    <span className="text-[11px] text-muted-foreground mb-2">
+                    <span className="mb-2 text-[11px] text-muted-foreground">
                       @{seller.username || seller.email.split("@")[0]}
                     </span>
 
-                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full border mb-2.5 bg-primary/10 text-primary border-primary/20">
+                    <span className="mb-2.5 rounded-full border border-primary/20 bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
                       Froiv Platinum
                     </span>
 
-                    <div className="flex items-center justify-center gap-3 text-[11px] text-muted-foreground w-full">
+                    <div className="flex w-full items-center justify-center gap-3 text-[11px] text-muted-foreground">
                       <span className="flex items-center gap-0.5">
-                        <Star className="h-3 w-3 text-[#FFB800] fill-[#FFB800]" />
-                        <strong className="text-foreground font-semibold">
+                        <Star className="h-3 w-3 fill-[#FFB800] text-[#FFB800]" />
+                        <strong className="font-semibold text-foreground">
                           {seller.rating > 0 ? Number(seller.rating).toFixed(1) : "5.0"}
                         </strong>
                       </span>
-                      <span className="w-px h-3 bg-border" />
+                      <span className="h-3 w-px bg-border" />
                       <span>
-                        <strong className="text-foreground font-semibold">{seller.sales}</strong>{" "}vendas
+                        <strong className="font-semibold text-foreground">{seller.sales}</strong> vendas
                       </span>
                     </div>
                   </div>
