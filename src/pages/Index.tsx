@@ -29,6 +29,7 @@ import bannerHeroOffers from "@/assets/banner-hero-offers.jpg";
 import bannerPartnershipBg from "@/assets/banner-partnership-bg.jpg";
 import logoTopLoginWhite from "@/assets/logo-top-login-white.png";
 import froivIcon3d from "@/assets/froiv-icon-3d.png";
+import TrustedSellers from "@/components/TrustedSellers";
 
 
 import catMinecraft from "@/assets/categories/minecraft.jpg";
