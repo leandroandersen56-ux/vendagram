@@ -5,6 +5,8 @@ import { VerifiedBadge } from "@/components/VerifiedBadge";
 import { supabase } from "@/integrations/supabase/client";
 import defaultAvatar from "@/assets/default-avatar.png";
 
+const SUPERADMIN_EMAIL = "sparckonmeta@gmail.com";
+
 interface TrustedSeller {
   name: string;
   username: string;
@@ -13,43 +15,30 @@ interface TrustedSeller {
   avatar: string | null;
   sales: number;
   rating: number;
-  badge: string;
 }
 
-// Fallback estático — usado enquanto carrega ou se a query falhar
-const PARTNER_EMAILS = [
-  { email: "vg786674@gmail.com", name: "ADM GB", fallbackUsername: "GB VENDAS" },
-  { email: "contabanco743@gmail.com", name: "ADM GL", fallbackUsername: "contabanco" },
-  { email: "eduardoklunck95@gmail.com", name: "Eduardo Klunck", fallbackUsername: "eduardo" },
-  { email: "costawlc7@gmail.com", name: "Theus Klunck", fallbackUsername: "theus" },
-];
-
-const BADGE_STYLES: Record<string, string> = {
-  Platinum: "bg-primary/10 text-primary border-primary/20",
-  Gold: "bg-amber-50 text-amber-700 border-amber-200",
-  Silver: "bg-muted text-muted-foreground border-border",
-};
-
 export default function TrustedSellers() {
-  const [sellers, setSellers] = useState<TrustedSeller[]>(
-    PARTNER_EMAILS.map((p) => ({
-      name: p.name,
-      username: p.fallbackUsername,
-      userId: null,
-      email: p.email,
-      avatar: null,
-      sales: 0,
-      rating: 4.8,
-      badge: "Platinum",
-    }))
-  );
+  const [sellers, setSellers] = useState<TrustedSeller[]>([]);
 
   useEffect(() => {
-    async function loadProfiles() {
+    async function load() {
       try {
-        const emails = PARTNER_EMAILS.map((p) => p.email.toLowerCase());
+        // 1. Buscar sócios ativos da tabela partners (excluir superadmin)
+        const { data: partners } = await supabase
+          .from("partners")
+          .select("name, email")
+          .eq("is_active", true);
 
-        // Fetch profiles matching partner emails
+        if (!partners?.length) return;
+
+        const activePartners = partners.filter(
+          (p) => p.email.toLowerCase() !== SUPERADMIN_EMAIL
+        );
+
+        if (!activePartners.length) return;
+
+        // 2. Buscar profiles correspondentes
+        const emails = activePartners.map((p) => p.email.toLowerCase());
         const { data: profiles } = await supabase
           .from("profiles")
           .select("user_id, username, name, avatar_url, total_sales, avg_rating, email")
@@ -60,18 +49,18 @@ export default function TrustedSellers() {
           if (p.email) profileMap.set(p.email.toLowerCase(), p);
         });
 
+        // 3. Combinar dados
         setSellers(
-          PARTNER_EMAILS.map((partner) => {
+          activePartners.map((partner) => {
             const profile = profileMap.get(partner.email.toLowerCase());
             return {
               name: profile?.name || partner.name,
-              username: profile?.username || partner.fallbackUsername,
+              username: profile?.username || partner.email.split("@")[0],
               userId: profile?.user_id || null,
               email: partner.email,
               avatar: profile?.avatar_url || null,
               sales: profile?.total_sales || 0,
               rating: profile?.avg_rating || 4.8,
-              badge: "Platinum",
             };
           })
         );
@@ -79,8 +68,10 @@ export default function TrustedSellers() {
         console.error("Error loading trusted sellers:", err);
       }
     }
-    loadProfiles();
+    load();
   }, []);
+
+  if (!sellers.length) return null;
 
   return (
     <section className="py-4">
@@ -116,7 +107,6 @@ export default function TrustedSellers() {
                           className="h-full w-full rounded-full object-cover"
                         />
                       </div>
-                      
                     </div>
 
                     {/* Name */}
@@ -131,10 +121,8 @@ export default function TrustedSellers() {
                     </span>
 
                     {/* Badge */}
-                    <span
-                      className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border mb-2.5 ${BADGE_STYLES[seller.badge]}`}
-                    >
-                      Froiv {seller.badge}
+                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full border mb-2.5 bg-primary/10 text-primary border-primary/20">
+                      Froiv Platinum
                     </span>
 
                     {/* Stats */}
