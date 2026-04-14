@@ -136,8 +136,8 @@ export default function SellerProfileHeader({ seller, listingsCount, avgRating, 
         )}
         {/* Froiv 3D logo overlay on default/verified cover */}
         {effectiveCover === sellerCoverMain && (
-          <div className="absolute inset-0 flex items-center justify-end pr-6 sm:pr-12 pointer-events-none">
-            <img src={froiv3dLogo} alt="" className="h-20 sm:h-28 w-auto drop-shadow-2xl opacity-90" />
+          <div className="absolute inset-0 flex items-center justify-end pr-4 sm:pr-8 pointer-events-none">
+            <img src={froiv3dLogo} alt="" className="h-28 sm:h-36 w-auto drop-shadow-2xl opacity-90" />
           </div>
         )}
         {isOwnProfile && (
