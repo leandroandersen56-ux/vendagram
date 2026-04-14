@@ -73,7 +73,7 @@ export default function Footer() {
             <img src={logoFroiv} alt="Froiv" className="h-8" />
             <div className="flex items-center gap-1.5">
               <span className="text-[10px] text-txt-hint">by</span>
-              <img src={logoTopLogin} alt="Top Login" className="h-4" />
+              <img src={logoTopLogin} alt="Top Login" className="h-6" />
             </div>
           </div>
           <div className="flex items-center justify-center gap-5">
@@ -116,7 +116,7 @@ export default function Footer() {
               <img src={logoFroiv} alt="Froiv" className="h-9 mb-1" />
               <div className="flex items-center gap-1.5 mb-3">
                 <span className="text-[10px] text-txt-hint">by</span>
-                <img src={logoTopLogin} alt="Top Login" className="h-4" />
+                <img src={logoTopLogin} alt="Top Login" className="h-6" />
               </div>
               <p className="text-[12px] text-txt-secondary leading-relaxed mb-5 max-w-[220px]">
                 A plataforma mais segura para comprar e vender contas digitais com escrow automático.
