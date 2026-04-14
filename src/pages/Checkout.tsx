@@ -291,6 +291,7 @@ export default function Checkout() {
         expiration_date: data.expiration_date,
       });
       setPaymentStatus("pending");
+      window.scrollTo({ top: 0, behavior: "smooth" });
       toast({ title: "Pix gerado!", description: "Escaneie o QR Code ou copie o código para pagar." });
     } catch (err: any) {
       console.error("Pix error:", err);
