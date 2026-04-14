@@ -3,10 +3,10 @@ import { CheckCircle2, Star, ShieldCheck, Award } from "lucide-react";
 
 const TRUSTED_SELLERS = [
   { name: "Sparckon", username: "sparckon", userId: "b78c563a-41eb-4933-9b4d-b53e3cd62dfb", avatar: "https://tqfvhfrbeolnvjpcfckl.supabase.co/storage/v1/object/public/avatars/sparckon-avatar.jpg", sales: 156, rating: 4.9, reviews: 47, badge: "Platinum" },
-  { name: "VG", username: "vg_contas", userId: null, avatar: null, sales: 89, rating: 4.8, reviews: 32, badge: "Gold" },
-  { name: "Costa", username: "costa_digital", userId: null, avatar: null, sales: 67, rating: 4.7, reviews: 24, badge: "Gold" },
-  { name: "Eduardo", username: "edu_accounts", userId: null, avatar: null, sales: 54, rating: 4.8, reviews: 19, badge: "Silver" },
-  { name: "Conta Banco", username: "contabanco", userId: null, avatar: null, sales: 42, rating: 4.6, reviews: 15, badge: "Silver" },
+  { name: "VG", username: "vg_contas", userId: null, avatar: null, sales: 89, rating: 4.8, reviews: 32, badge: "Platinum" },
+  { name: "Costa", username: "costa_digital", userId: null, avatar: null, sales: 67, rating: 4.7, reviews: 24, badge: "Platinum" },
+  { name: "Eduardo", username: "edu_accounts", userId: null, avatar: null, sales: 54, rating: 4.8, reviews: 19, badge: "Platinum" },
+  { name: "Conta Banco", username: "contabanco", userId: null, avatar: null, sales: 42, rating: 4.6, reviews: 15, badge: "Platinum" },
 ];
 
 const BADGE_STYLES: Record<string, string> = {
