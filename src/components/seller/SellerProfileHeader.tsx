@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import { CheckCircle2, Star, Package, Calendar, Users, Award } from "lucide-react";
+import { Star, Package, Calendar, Users, Award } from "lucide-react";
+import { VerifiedBadge } from "@/components/VerifiedBadge";
 import { Button } from "@/components/ui/button";
 import sellerCoverMain from "@/assets/seller-cover-main.jpg";
 
@@ -58,7 +59,7 @@ export default function SellerProfileHeader({ seller, listingsCount, avgRating, 
           <div className="flex-1 min-w-0 pt-12 sm:pt-14">
             <div className="flex items-center gap-1.5 flex-wrap">
               <h1 className="text-base sm:text-xl font-semibold text-foreground truncate leading-tight">{seller.name || "Vendedor"}</h1>
-              {seller.is_verified && <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 text-primary shrink-0" />}
+              {seller.is_verified && <VerifiedBadge size={20} />}
             </div>
             <p className="text-xs sm:text-sm text-muted-foreground">@{seller.username || "usuario"}</p>
           </div>

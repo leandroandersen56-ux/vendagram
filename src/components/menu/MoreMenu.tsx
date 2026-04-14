@@ -7,6 +7,7 @@ import {
   ChevronRight, Shield, Wallet
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { VerifiedBadge } from "@/components/VerifiedBadge";
 import { Badge } from "@/components/ui/badge";
 
 interface MoreMenuProps {
@@ -119,7 +120,7 @@ export default function MoreMenu({ open, onClose }: MoreMenuProps) {
                 <div className="flex-1 min-w-0">
                   {isAuthenticated ? (
                     <>
-                      <p className="text-white font-semibold text-base truncate">{user?.name}</p>
+                      <p className="text-white font-semibold text-base truncate flex items-center gap-1">{user?.name} {user?.isVerified && <VerifiedBadge size={16} />}</p>
                       <p className="text-white/75 text-[13px]">Meu perfil <ChevronRight className="inline h-3 w-3" /></p>
                     </>
                   ) : (

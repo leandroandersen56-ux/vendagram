@@ -7,6 +7,7 @@ interface User {
   name: string;
   email: string;
   avatar?: string;
+  isVerified?: boolean;
 }
 
 interface AuthContextType {
@@ -41,13 +42,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [authRedirect, setAuthRedirect] = useState<string | null>(null);
   const [authRole, setAuthRole] = useState<"buyer" | "seller" | null>(null);
 
+  const fetchVerifiedStatus = async (userId: string) => {
+    const { data } = await supabase
+      .from("profiles" as any)
+      .select("is_verified")
+      .eq("user_id", userId)
+      .single();
+    return !!(data as any)?.is_verified;
+  };
+
   useEffect(() => {
     let isMounted = true;
 
-    const syncUser = (session: Session | null) => {
+    const syncUser = async (session: Session | null) => {
       if (!isMounted) return;
-      setUser(session?.user ? mapSupabaseUser(session.user) : null);
-      setIsLoading(false);
+      if (session?.user) {
+        const mapped = mapSupabaseUser(session.user);
+        setUser(mapped);
+        setIsLoading(false);
+        // Fetch verified status async
+        const isVerified = await fetchVerifiedStatus(session.user.id);
+        if (isMounted) {
+          setUser(prev => prev ? { ...prev, isVerified } : prev);
+        }
+      } else {
+        setUser(null);
+        setIsLoading(false);
+      }
     };
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {

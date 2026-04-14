@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Search, Bell, User, LogOut, LayoutDashboard, ShoppingBag, ShoppingCart, Loader2, Heart, Wallet, Settings, HelpCircle } from "lucide-react";
+import { VerifiedBadge } from "@/components/VerifiedBadge";
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
@@ -311,7 +312,7 @@ export default function Navbar() {
                         {user?.name?.[0]?.toUpperCase() || "U"}
                       </div>
                       <div className="min-w-0">
-                        <p className="text-sm font-semibold truncate">{user?.name || "Usuário"}</p>
+                        <p className="text-sm font-semibold truncate flex items-center gap-1">{user?.name || "Usuário"} {user?.isVerified && <VerifiedBadge size={16} />}</p>
                         <p className="text-[11px] text-white/70 truncate">{user?.email}</p>
                       </div>
                     </div>
@@ -384,7 +385,7 @@ export default function Navbar() {
                         {user?.name?.[0]?.toUpperCase() || "U"}
                       </div>
                       <div className="min-w-0">
-                        <p className="text-sm font-semibold truncate">{user?.name || "Usuário"}</p>
+                        <p className="text-sm font-semibold truncate flex items-center gap-1">{user?.name || "Usuário"} {user?.isVerified && <VerifiedBadge size={16} />}</p>
                         <p className="text-[11px] text-white/70 truncate">{user?.email}</p>
                       </div>
                     </div>
