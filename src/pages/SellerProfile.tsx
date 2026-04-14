@@ -26,6 +26,22 @@ export default function SellerProfile() {
       const profile = await fetchSellerProfile(filters);
 
       if (!profile) { setLoading(false); return; }
+
+      // Also fetch email from profiles table for partner detection
+      try {
+        const CLOUD_URL = import.meta.env.VITE_SUPABASE_URL;
+        const CLOUD_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+        const emailRes = await fetch(`${CLOUD_URL}/functions/v1/admin-create-listing`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${CLOUD_KEY}` },
+          body: JSON.stringify({ action: "query", table: "profiles", filters: { user_id: profile.user_id }, select: "email" }),
+        });
+        const emailJson = await emailRes.json();
+        if (emailJson.data?.[0]?.email) {
+          profile.email = emailJson.data[0].email;
+        }
+      } catch {}
+
       setSeller(profile);
 
       const [listingsRes, reviewsRes] = await Promise.all([
