@@ -7,6 +7,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ListingCard from "@/components/ListingCard";
 import { supabase } from "@/integrations/supabase/client";
+import { fetchSellerStats } from "@/lib/enrich-listings";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
 const PLATFORMS = [
@@ -35,6 +36,7 @@ export default function SearchResults() {
   const [results, setResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchInput, setSearchInput] = useState(query);
+  const [sellerStatsMap, setSellerStatsMap] = useState<Record<string, { rating: number; sales: number; name: string }>>({});
 
   // Filters
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
@@ -76,7 +78,11 @@ export default function SearchResults() {
       q = q.limit(50);
 
       const { data, error } = await q;
-      if (!error && data) setResults(data);
+      if (!error && data) {
+        setResults(data);
+        const stats = await fetchSellerStats(data.map((r: any) => r.seller_id));
+        setSellerStatsMap(stats);
+      }
     } catch (err) {
       console.error(err);
     } finally {
@@ -288,9 +294,9 @@ export default function SearchResults() {
                         platform: listing.category,
                         screenshots: listing.screenshots,
                         sellerId: listing.seller_id,
-                        sellerName: "",
-                        sellerRating: 0,
-                        sellerSales: 0,
+                        sellerName: (sellerStatsMap[listing.seller_id]?.name) || "",
+                        sellerRating: (sellerStatsMap[listing.seller_id]?.rating) ?? 4.8,
+                        sellerSales: (sellerStatsMap[listing.seller_id]?.sales) ?? 0,
                         description: listing.description || "",
                         status: listing.status,
                         fields: listing.highlights || {},

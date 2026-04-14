@@ -4,6 +4,7 @@ import { Package } from "lucide-react";
 import { formatBRL, type Listing } from "@/lib/mock-data";
 import ListingCard from "@/components/ListingCard";
 import { supabase } from "@/integrations/supabase/client";
+import { fetchSellerStats } from "@/lib/enrich-listings";
 
 interface RelatedProductsProps {
   currentId: string;
@@ -16,7 +17,6 @@ export default function RelatedProducts({ currentId, category }: RelatedProducts
 
   useEffect(() => {
     async function fetchRelated() {
-      // Only fetch listings from the same category
       const { data } = await supabase
         .from("public_listings")
         .select("*")
@@ -26,23 +26,27 @@ export default function RelatedProducts({ currentId, category }: RelatedProducts
         .limit(6);
 
       if (data && data.length > 0) {
+        const stats = await fetchSellerStats(data.filter(d => d.seller_id).map(d => d.seller_id!));
         const mapped: Listing[] = data
           .filter((d) => d.id)
-          .map((d) => ({
-            id: d.id!,
-            sellerId: d.seller_id || "",
-            sellerName: "",
-            sellerRating: 0,
-            sellerSales: 0,
-            platform: d.category || "other",
-            title: d.title || "",
-            description: d.description || "",
-            price: d.price || 0,
-            status: (d.status as any) || "active",
-            screenshots: d.screenshots || [],
-            fields: {},
-            createdAt: d.created_at || "",
-          }));
+          .map((d) => {
+            const s = d.seller_id ? stats[d.seller_id] : undefined;
+            return {
+              id: d.id!,
+              sellerId: d.seller_id || "",
+              sellerName: s?.name || "",
+              sellerRating: s?.rating ?? 4.8,
+              sellerSales: s?.sales ?? 0,
+              platform: d.category || "other",
+              title: d.title || "",
+              description: d.description || "",
+              price: d.price || 0,
+              status: (d.status as any) || "active",
+              screenshots: d.screenshots || [],
+              fields: {},
+              createdAt: d.created_at || "",
+            };
+          });
         setDbListings(mapped);
       }
       setLoaded(true);
