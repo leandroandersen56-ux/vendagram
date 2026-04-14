@@ -1,4 +1,5 @@
 import { Star, ThumbsUp, User } from "lucide-react";
+import PartialStars from "@/components/PartialStars";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 

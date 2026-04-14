@@ -1,4 +1,5 @@
 import { Star, Package } from "lucide-react";
+import PartialStars from "@/components/PartialStars";
 
 const BRAZILIAN_NAMES = [
   "Lucas Silva", "Maria Oliveira", "Pedro Santos", "Ana Costa",
