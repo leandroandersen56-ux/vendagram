@@ -17,47 +17,80 @@ Deno.serve(async (req) => {
       );
     }
 
-    const formData = await req.formData();
-    const imageFile = formData.get("image");
+    let imageBase64 = "";
+    let fileName = "upload";
+    let mimeType = "";
 
-    if (!imageFile || !(imageFile instanceof File)) {
+    const contentType = req.headers.get("content-type") || "";
+
+    if (contentType.includes("multipart/form-data")) {
+      const formData = await req.formData();
+      const imageFile = formData.get("image");
+
+      if (!imageFile || !(imageFile instanceof File)) {
+        return new Response(
+          JSON.stringify({ error: "No image file provided" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
+      if (imageFile.size > 32 * 1024 * 1024) {
+        return new Response(
+          JSON.stringify({ error: "Image too large. Max 32MB." }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
+      const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp"];
+      if (!allowedTypes.includes(imageFile.type)) {
+        return new Response(
+          JSON.stringify({ error: "Invalid file type. Allowed: JPEG, PNG, GIF, WebP, BMP" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
+      const arrayBuffer = await imageFile.arrayBuffer();
+      const uint8Array = new Uint8Array(arrayBuffer);
+      let binary = "";
+      for (let i = 0; i < uint8Array.length; i++) {
+        binary += String.fromCharCode(uint8Array[i]);
+      }
+
+      imageBase64 = btoa(binary);
+      fileName = imageFile.name.replace(/\.[^.]+$/, "") || "upload";
+      mimeType = imageFile.type;
+    } else if (contentType.includes("application/json")) {
+      const body = await req.json();
+      imageBase64 = typeof body?.image === "string" ? body.image : "";
+      fileName = typeof body?.filename === "string" ? body.filename.replace(/\.[^.]+$/, "") : "upload";
+      mimeType = typeof body?.mimeType === "string" ? body.mimeType : "";
+
+      if (!imageBase64) {
+        return new Response(
+          JSON.stringify({ error: "No image payload provided" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
+      const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp"];
+      if (!allowedTypes.includes(mimeType)) {
+        return new Response(
+          JSON.stringify({ error: "Invalid file type. Allowed: JPEG, PNG, GIF, WebP, BMP" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+    } else {
       return new Response(
-        JSON.stringify({ error: "No image file provided" }),
+        JSON.stringify({ error: "Unsupported content type" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
-
-    // Validate file size (max 32MB for ImgBB)
-    if (imageFile.size > 32 * 1024 * 1024) {
-      return new Response(
-        JSON.stringify({ error: "Image too large. Max 32MB." }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
-    // Validate file type
-    const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp"];
-    if (!allowedTypes.includes(imageFile.type)) {
-      return new Response(
-        JSON.stringify({ error: "Invalid file type. Allowed: JPEG, PNG, GIF, WebP, BMP" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
-    // Convert to base64
-    const arrayBuffer = await imageFile.arrayBuffer();
-    const uint8Array = new Uint8Array(arrayBuffer);
-    let binary = "";
-    for (let i = 0; i < uint8Array.length; i++) {
-      binary += String.fromCharCode(uint8Array[i]);
-    }
-    const base64 = btoa(binary);
 
     // Upload to ImgBB
     const imgbbForm = new FormData();
     imgbbForm.append("key", IMGBB_API_KEY);
-    imgbbForm.append("image", base64);
-    imgbbForm.append("name", imageFile.name.replace(/\.[^.]+$/, ""));
+    imgbbForm.append("image", imageBase64);
+    imgbbForm.append("name", fileName);
 
     const imgbbResponse = await fetch("https://api.imgbb.com/1/upload", {
       method: "POST",
