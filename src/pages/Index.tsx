@@ -723,7 +723,7 @@ export default function Index() {
         </section>
 
         {/* === HOW IT WORKS === */}
-        <section className="py-8 bg-muted">
+        <section className="py-8">
           <div className="container mx-auto">
             <h2 className="text-[16px] font-semibold text-txt-primary text-center mb-1">Como funciona</h2>
             <p className="text-[11px] text-txt-hint text-center mb-5">Compre contas digitais com segurança em 4 passos</p>
@@ -757,7 +757,7 @@ export default function Index() {
         {/* === TRUST BANNER === */}
         <section className="py-8">
           <div className="container mx-auto">
-            <div className="rounded-xl bg-muted/60 border border-border p-6 sm:p-8">
+            <div className="rounded-xl bg-card border border-border p-6 sm:p-8">
               <h2 className="text-center text-[15px] sm:text-lg font-semibold text-txt-primary mb-6">Por que escolher a Froiv?</h2>
               <div className="grid grid-cols-3 gap-4 sm:gap-6">
                 {[
