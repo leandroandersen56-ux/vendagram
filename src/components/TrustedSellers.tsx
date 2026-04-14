@@ -24,7 +24,6 @@ export default function TrustedSellers() {
   useEffect(() => {
     async function load() {
       try {
-        // 1. Buscar sócios ativos da tabela partners (excluir superadmin)
         const { data: partners } = await supabase
           .from("partners")
           .select("name, email")
@@ -38,33 +37,53 @@ export default function TrustedSellers() {
 
         if (!activePartners.length) return;
 
-        // 2. Buscar profiles correspondentes
-        const emails = activePartners.map((p) => p.email.toLowerCase());
-        const { data: profiles } = await supabase
-          .from("profiles")
-          .select("user_id, username, name, avatar_url, total_sales, avg_rating, email")
-          .in("email", emails);
+        const CLOUD_URL = import.meta.env.VITE_SUPABASE_URL;
+        const CLOUD_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
-        const profileMap = new Map<string, any>();
-        profiles?.forEach((p) => {
-          if (p.email) profileMap.set(p.email.toLowerCase(), p);
-        });
+        const enrichedPartners = await Promise.all(
+          activePartners.map(async (partner) => {
+            try {
+              const res = await fetch(`${CLOUD_URL}/functions/v1/admin-create-listing`, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${CLOUD_KEY}`,
+                },
+                body: JSON.stringify({
+                  action: "query",
+                  table: "profiles",
+                  filters: { email: partner.email },
+                  select: "user_id, username, name, avatar_url, total_sales, avg_rating, email",
+                }),
+              });
 
-        // 3. Combinar dados
-        setSellers(
-          activePartners.map((partner) => {
-            const profile = profileMap.get(partner.email.toLowerCase());
-            return {
-              name: profile?.name || partner.name,
-              username: profile?.username || partner.email.split("@")[0],
-              userId: profile?.user_id || null,
-              email: partner.email,
-              avatar: profile?.avatar_url || null,
-              sales: profile?.total_sales || 0,
-              rating: profile?.avg_rating || 4.8,
-            };
+              const json = await res.json();
+              const profile = json.data?.[0] ?? null;
+
+              return {
+                name: profile?.name || partner.name,
+                username: profile?.username || null,
+                userId: profile?.user_id || null,
+                email: partner.email,
+                avatar: profile?.avatar_url || null,
+                sales: profile?.total_sales || 0,
+                rating: profile?.avg_rating || 4.8,
+              };
+            } catch {
+              return {
+                name: partner.name,
+                username: null,
+                userId: null,
+                email: partner.email,
+                avatar: null,
+                sales: 0,
+                rating: 4.8,
+              };
+            }
           })
         );
+
+        setSellers(enrichedPartners);
       } catch (err) {
         console.error("Error loading trusted sellers:", err);
       }
@@ -89,7 +108,7 @@ export default function TrustedSellers() {
 
           <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 snap-x snap-mandatory sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:overflow-visible sm:pb-0">
             {sellers.map((seller) => {
-              const profileLink = getSellerProfilePath(seller.username || seller.userId)
+              const profileLink = getSellerProfilePath(seller.username || seller.userId || seller.email)
                 ?? "/marketplace";
               return (
                 <Link
