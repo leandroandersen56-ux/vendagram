@@ -113,7 +113,7 @@ export default function SellerProfileHeader({ seller, listingsCount, avgRating, 
         )}
 
         {/* Reputation badge */}
-        {seller.is_verified && rep.badge && (
+        {isVerifiedProfile && rep.badge && (
           <div className={`inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-semibold px-3 py-1.5 rounded-full border mb-3 ${rep.badge}`}>
             <Award className="h-3.5 w-3.5" />
             Froiv {rep.label}
