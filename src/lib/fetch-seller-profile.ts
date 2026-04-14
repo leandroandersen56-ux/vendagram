@@ -45,7 +45,7 @@ export async function fetchSellerProfile(
         action: "query",
         table: "profiles",
         filters,
-        select: "user_id,username,name,email,avatar_url,cover_url,bio,is_verified,avg_rating,total_reviews,total_sales,total_purchases,created_at,referral_code",
+        select: "user_id,username,name,email,avatar_url,bio,is_verified,avg_rating,total_reviews,total_sales,total_purchases,created_at,referral_code",
       }),
     });
 
