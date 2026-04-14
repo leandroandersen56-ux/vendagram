@@ -2,7 +2,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 const CLOUD_URL = import.meta.env.VITE_SUPABASE_URL;
 const CLOUD_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
-const LOCAL_PROFILE_SELECT = "user_id,username,name,avatar_url,cover_url,bio,is_verified,avg_rating,total_reviews,total_sales,total_purchases,created_at,referral_code";
+const LOCAL_PROFILE_SELECT = "user_id,username,name,avatar_url,bio,is_verified,avg_rating,total_reviews,total_sales,total_purchases,created_at,referral_code";
 
 /**
  * Fetch a seller's public profile.
@@ -45,7 +45,7 @@ export async function fetchSellerProfile(
         action: "query",
         table: "profiles",
         filters,
-        select: "user_id,username,name,email,avatar_url,cover_url,bio,is_verified,avg_rating,total_reviews,total_sales,total_purchases,created_at,referral_code",
+        select: "user_id,username,name,email,avatar_url,bio,is_verified,avg_rating,total_reviews,total_sales,total_purchases,created_at,referral_code",
       }),
     });
 
