@@ -8,7 +8,7 @@ const corsHeaders = {
 // DB lives on personal instance — ALWAYS
 const DB_URL = "https://yzwncktlibdfycqhvlqg.supabase.co";
 const UAZAPI_BASE_URL = "https://ipazua.uazapi.com";
-const UAZAPI_INSTANCE_ID = "c3bf5e66-6076-4ed0-b17c-21b47c776bce";
+const UAZAPI_INSTANCE_ID = "c433e432-781e-4f03-a8fc-d9e3cb1c6f4a";
 const RESEND_API_KEY_NAME = "RESEND_API_KEY";
 const FROM_EMAIL = "Froiv <onboarding@resend.dev>";
 const SITE_URL = "https://froiv.com";
