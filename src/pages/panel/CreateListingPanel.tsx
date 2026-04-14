@@ -434,19 +434,19 @@ export default function CreateListing() {
 
         {/* Content */}
         <div className="pb-[180px]">
-          <div className="px-5 pt-5 pb-2">
-            <h2 className="text-[22px] font-semibold text-[#111]" style={{ letterSpacing: '-0.5px' }}>
+          <div className="max-w-3xl mx-auto px-5 pt-5 sm:pt-10 pb-2">
+            <h2 className="text-[22px] sm:text-2xl font-semibold text-[#111]" style={{ letterSpacing: '-0.5px' }}>
               O que você quer vender?
             </h2>
             <p className="text-sm text-[#888] mt-1">Escolha a plataforma para começar</p>
           </div>
 
-          <div className="px-4">
+          <div className="max-w-3xl mx-auto px-4 sm:px-5">
             {/* Redes Sociais */}
             <p className="text-[11px] font-semibold text-[#999] uppercase tracking-[0.8px] mt-4 mb-[10px] flex items-center gap-1.5">
               <Smartphone className="h-3.5 w-3.5 text-primary" /> Redes Sociais
             </p>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {socialPlatforms.map(p => <PlatformCard key={p.id} p={p} />)}
             </div>
 
@@ -454,7 +454,7 @@ export default function CreateListing() {
             <p className="text-[11px] font-semibold text-[#999] uppercase tracking-[0.8px] mt-4 mb-[10px] flex items-center gap-1.5">
               <Gamepad2 className="h-3.5 w-3.5 text-primary" /> Contas de Jogos
             </p>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {gamePlatforms.map(p => <PlatformCard key={p.id} p={p} />)}
             </div>
           </div>
