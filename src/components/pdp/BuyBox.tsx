@@ -40,7 +40,7 @@ export default function BuyBox({ price, originalPrice, stock = 1, onBuy, onOffer
           </div>
         )}
 
-        <p className="text-[30px] font-light text-[hsl(var(--txt-primary))] leading-tight tracking-tight">
+        <p className="text-[32px] font-normal text-[hsl(var(--txt-primary))] leading-tight tracking-tight">
           {formatBRL(totalPrice)}
         </p>
         {isMultiStock && quantity > 1 && (
