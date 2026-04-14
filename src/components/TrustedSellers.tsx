@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Star, ShieldCheck, Award } from "lucide-react";
 import { VerifiedBadge } from "@/components/VerifiedBadge";
 import { supabase } from "@/integrations/supabase/client";
+import { getSellerProfilePath } from "@/lib/getSellerProfilePath";
 import defaultAvatar from "@/assets/default-avatar.png";
 
 const SUPERADMIN_EMAIL = "sparckonmeta@gmail.com";
@@ -88,9 +89,8 @@ export default function TrustedSellers() {
 
           <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 snap-x snap-mandatory sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:overflow-visible sm:pb-0">
             {sellers.map((seller) => {
-              const profileLink = seller.userId
-                ? `/perfil/${seller.username}`
-                : "/marketplace";
+              const profileLink = getSellerProfilePath(seller.username || seller.userId)
+                ?? "/marketplace";
               return (
                 <Link
                   key={seller.email}
