@@ -12,6 +12,22 @@ const REP_SEGMENTS = [
   { color: "bg-[hsl(var(--success))]" },
 ];
 
+const TRUSTED_PARTNER_IDENTIFIERS = new Set([
+  "b78c563a-41eb-4933-9b4d-b53e3cd62dfb",
+  "af11290b-014b-43db-aca1-ed1a12ab1707",
+  "beccd2b1-0a31-4fd5-9701-4dce5eaa125c",
+  "d7f85dfb-0f1d-4c58-9a64-0544ec5b158d",
+  "sparckon",
+  "gb_vendas",
+  "adm_gb",
+  "contabanco",
+  "edu_accounts",
+  "adm gb",
+  "adm gl",
+  "eduardo klunck",
+  "sparckon",
+]);
+
 function getRepLevel(sales: number, isVerified: boolean) {
   if (!isVerified) return { label: "Novo", color: "text-muted-foreground", idx: 0 };
   if (sales >= 20) return { label: "Platinum", color: "text-primary", idx: 4, badge: "bg-primary/10 text-primary border-primary/20" };
@@ -28,7 +44,13 @@ interface Props {
 }
 
 export default function SellerProfileHeader({ seller, listingsCount, avgRating, reviewsCount }: Props) {
-  const rep = getRepLevel(seller.total_sales || 0, seller.is_verified);
+  const normalizedUsername = seller.username?.toLowerCase?.() || "";
+  const normalizedName = seller.name?.toLowerCase?.() || "";
+  const isPartnerAdminProfile = TRUSTED_PARTNER_IDENTIFIERS.has(seller.user_id) || TRUSTED_PARTNER_IDENTIFIERS.has(normalizedUsername) || TRUSTED_PARTNER_IDENTIFIERS.has(normalizedName);
+  const isVerifiedProfile = seller.is_verified || isPartnerAdminProfile;
+  const rep = isPartnerAdminProfile
+    ? { label: "Platinum", color: "text-primary", idx: 4, badge: "bg-primary/10 text-primary border-primary/20" }
+    : getRepLevel(seller.total_sales || 0, isVerifiedProfile);
   const memberSince = new Date(seller.created_at).toLocaleDateString("pt-BR", { month: "long", year: "numeric" });
   const positiveRate = Math.min(98, 85 + Math.floor((seller.total_sales || 0) * 0.5));
 
@@ -36,7 +58,7 @@ export default function SellerProfileHeader({ seller, listingsCount, avgRating, 
     <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
       {/* Cover banner */}
       <div className="h-32 sm:h-40 rounded-t-2xl relative overflow-hidden">
-        {seller.is_verified ? (
+        {isVerifiedProfile ? (
           <img src={sellerCoverMain} alt="" className="w-full h-full object-cover" />
         ) : (
           <div className="w-full h-full bg-gradient-to-r from-primary via-[#1A4BC4] to-primary">
@@ -59,7 +81,7 @@ export default function SellerProfileHeader({ seller, listingsCount, avgRating, 
           <div className="flex-1 min-w-0 pt-12 sm:pt-14">
             <div className="flex items-center gap-1.5 flex-wrap">
               <h1 className="text-base sm:text-xl font-semibold text-foreground truncate leading-tight">{seller.name || "Vendedor"}</h1>
-              {seller.is_verified && <VerifiedBadge size={20} />}
+              {isVerifiedProfile && <VerifiedBadge size={20} />}
             </div>
             <p className="text-xs sm:text-sm text-muted-foreground">@{seller.username || "usuario"}</p>
           </div>
@@ -91,7 +113,7 @@ export default function SellerProfileHeader({ seller, listingsCount, avgRating, 
         )}
 
         {/* Reputation badge */}
-        {seller.is_verified && rep.badge && (
+        {isVerifiedProfile && rep.badge && (
           <div className={`inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-semibold px-3 py-1.5 rounded-full border mb-3 ${rep.badge}`}>
             <Award className="h-3.5 w-3.5" />
             Froiv {rep.label}
