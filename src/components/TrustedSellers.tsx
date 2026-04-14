@@ -2,11 +2,13 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Star, ShieldCheck, Award } from "lucide-react";
 import { VerifiedBadge } from "@/components/VerifiedBadge";
-import { supabase } from "@/integrations/supabase/client";
 import { getSellerProfilePath } from "@/lib/getSellerProfilePath";
 import defaultAvatar from "@/assets/default-avatar.png";
 
 const SUPERADMIN_EMAIL = "sparckonmeta@gmail.com";
+
+const CLOUD_URL = import.meta.env.VITE_SUPABASE_URL;
+const CLOUD_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
 interface TrustedSeller {
   name: string;
@@ -18,19 +20,33 @@ interface TrustedSeller {
   rating: number;
 }
 
+async function queryTable(table: string, filters: Record<string, any> = {}, select = "*") {
+  try {
+    const res = await fetch(`${CLOUD_URL}/functions/v1/admin-create-listing`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${CLOUD_KEY}`,
+      },
+      body: JSON.stringify({ action: "query", table, filters, select }),
+    });
+    const json = await res.json();
+    return json.data || [];
+  } catch {
+    return [];
+  }
+}
+
 export default function TrustedSellers() {
   const [sellers, setSellers] = useState<TrustedSeller[]>([]);
 
   useEffect(() => {
     async function load() {
       try {
-        // 1. Buscar sócios ativos da tabela partners (excluir superadmin)
-        const { data: partners } = await supabase
-          .from("partners")
-          .select("name, email")
-          .eq("is_active", true);
+        // 1. Buscar sócios ativos via edge function (bypassa RLS)
+        const partners: any[] = await queryTable("partners", { is_active: true }, "name,email");
 
-        if (!partners?.length) return;
+        if (!partners.length) return;
 
         const activePartners = partners.filter(
           (p) => p.email.toLowerCase() !== SUPERADMIN_EMAIL
@@ -40,13 +56,14 @@ export default function TrustedSellers() {
 
         // 2. Buscar profiles correspondentes
         const emails = activePartners.map((p) => p.email.toLowerCase());
-        const { data: profiles } = await supabase
-          .from("profiles")
-          .select("user_id, username, name, avatar_url, total_sales, avg_rating, email")
-          .in("email", emails);
+        const profiles: any[] = [];
+        for (const email of emails) {
+          const rows = await queryTable("profiles", { email }, "user_id,username,name,avatar_url,total_sales,avg_rating,email");
+          if (rows.length) profiles.push(rows[0]);
+        }
 
         const profileMap = new Map<string, any>();
-        profiles?.forEach((p) => {
+        profiles.forEach((p) => {
           if (p.email) profileMap.set(p.email.toLowerCase(), p);
         });
 
