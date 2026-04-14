@@ -1,5 +1,18 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.100.0";
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+};
+
+const PRODUCTION_SUPABASE_URL = Deno.env.get("PERSONAL_SUPABASE_URL")?.trim() || "https://yzwncktlibdfycqhvlqg.supabase.co";
+
+type SupabaseClientEntry = {
+  label: string;
+  client: ReturnType<typeof createClient>;
+};
+
 async function sendEmailNotification(supabaseUrl: string, supabaseKey: string, type: string, to: string, data: Record<string, any>) {
   try {
     await fetch(`${supabaseUrl}/functions/v1/send-email`, {
@@ -31,23 +44,32 @@ async function sendWhatsAppNotification(supabaseUrl: string, supabaseKey: string
 }
 
 function createSupabaseClient() {
-  // Try personal instance first, fall back to Cloud
-  const personalUrl = Deno.env.get("PERSONAL_SUPABASE_URL");
-  const personalKey = Deno.env.get("PERSONAL_SUPABASE_SERVICE_ROLE_KEY");
-  const cloudUrl = Deno.env.get("SUPABASE_URL")!;
-  const cloudKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  const personalKey = Deno.env.get("PERSONAL_SUPABASE_SERVICE_ROLE_KEY")?.trim();
+  const cloudUrl = Deno.env.get("SUPABASE_URL")?.trim();
+  const cloudKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")?.trim();
 
-  const clients = [];
+  const clients: SupabaseClientEntry[] = [];
 
-  if (personalUrl && personalKey) {
-    clients.push({ label: "personal", client: createClient(personalUrl, personalKey) });
+  if (personalKey) {
+    clients.push({ label: "production", client: createClient(PRODUCTION_SUPABASE_URL, personalKey) });
   }
-  clients.push({ label: "cloud", client: createClient(cloudUrl, cloudKey) });
 
-  return { clients, cloudUrl, cloudKey };
+  if (cloudUrl && cloudKey) {
+    clients.push({ label: "cloud", client: createClient(cloudUrl, cloudKey) });
+  }
+
+  if (!clients.length) {
+    throw new Error("No Supabase service role credentials configured");
+  }
+
+  return {
+    clients,
+    cloudUrl: cloudUrl || PRODUCTION_SUPABASE_URL,
+    cloudKey: cloudKey || personalKey!,
+  };
 }
 
-async function findTransaction(clients: Array<{label: string; client: any}>, transactionId: string) {
+async function findTransaction(clients: SupabaseClientEntry[], transactionId: string) {
   for (const { label, client } of clients) {
     try {
       const { data: tx, error } = await client
@@ -55,7 +77,7 @@ async function findTransaction(clients: Array<{label: string; client: any}>, tra
         .select("*")
         .eq("id", transactionId)
         .eq("status", "pending_payment")
-        .single();
+        .maybeSingle();
 
       if (!error && tx) {
         console.log(`Transaction found via ${label} client`);
@@ -71,9 +93,134 @@ async function findTransaction(clients: Array<{label: string; client: any}>, tra
   return null;
 }
 
+async function finalizeApprovedTransaction(
+  supabase: ReturnType<typeof createClient>,
+  transactionId: string,
+  tx: Record<string, any>,
+  cloudUrl: string,
+  cloudKey: string,
+) {
+  const { data: updatedRows, error: updateError } = await supabase
+    .from("transactions")
+    .update({ status: "paid", paid_at: new Date().toISOString() })
+    .eq("id", transactionId)
+    .eq("status", "pending_payment")
+    .select("id");
+
+  if (updateError) {
+    console.error("Failed to update transaction:", updateError);
+    return new Response("error", { status: 500, headers: corsHeaders });
+  }
+
+  if (!updatedRows?.length) {
+    console.log(`Transaction ${transactionId} already processed`);
+    return new Response("ok", { status: 200, headers: corsHeaders });
+  }
+
+  console.log(`Transaction ${transactionId} marked as paid`);
+
+  const sellerReceives = Number(tx.seller_receives);
+  const { error: walletError } = await supabase.rpc("increment_wallet", {
+    user_uuid: tx.seller_id,
+    field: "pending",
+    amount: sellerReceives,
+  });
+
+  if (walletError) {
+    console.error("Failed to increment seller wallet:", walletError);
+    return new Response("error", { status: 500, headers: corsHeaders });
+  }
+
+  console.log(`Seller ${tx.seller_id} pending +${sellerReceives} (atomic)`);
+
+  const [{ data: listing }, { data: buyerProfile }, { data: sellerProfile }] = await Promise.all([
+    supabase.from("listings").select("title, category").eq("id", tx.listing_id).maybeSingle(),
+    supabase.from("profiles").select("email, name").eq("user_id", tx.buyer_id).maybeSingle(),
+    supabase.from("profiles").select("email, name").eq("user_id", tx.seller_id).maybeSingle(),
+  ]);
+
+  const amount = Number(tx.amount);
+  const amountFormatted = `R$ ${amount.toFixed(2).replace(".", ",")}`;
+  const buyerName = buyerProfile?.name || "Comprador";
+  const listingTitle = listing?.title || "Conta Digital";
+
+  const criticalUpdate = await supabase
+    .from("transactions")
+    .update({
+      status: "transfer_in_progress",
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", transactionId);
+
+  if (criticalUpdate.error) {
+    console.error("Failed to move transaction to transfer_in_progress:", criticalUpdate.error);
+    return new Response("error", { status: 500, headers: corsHeaders });
+  }
+
+  try {
+    await supabase.from("transaction_messages").insert({
+      transaction_id: transactionId,
+      sender_id: tx.seller_id,
+      is_system: true,
+      allow_sensitive_data: true,
+      message: `✅ Pagamento confirmado! Olá, ${buyerName}.\n\nSeu pagamento de ${amountFormatted} foi processado com sucesso.\n\nAguarde enquanto o vendedor envia as credenciais de acesso da conta.\n\n🔒 Este chat é protegido pelo Escrow Froiv.`,
+    });
+
+    await supabase.from("notifications").insert([
+      {
+        user_id: tx.buyer_id,
+        title: "💬 Chat aberto com o vendedor",
+        body: "Seu chat com o vendedor foi aberto. Aguarde as credenciais de acesso.",
+        link: `/compras/${transactionId}`,
+      },
+      {
+        user_id: tx.seller_id,
+        title: "🔑 Envie as credenciais pelo chat!",
+        body: `${buyerName} comprou "${listingTitle}". Acesse o chat e envie os dados de acesso agora.`,
+        link: `/compras/${transactionId}`,
+      },
+    ]);
+
+    if (buyerProfile?.email) {
+      await sendEmailNotification(cloudUrl, cloudKey, "purchase_confirmed", buyerProfile.email, {
+        amount,
+        title: listingTitle,
+        transaction_id: transactionId,
+      });
+    }
+
+    if (sellerProfile?.email) {
+      await sendEmailNotification(cloudUrl, cloudKey, "credentials_needed", sellerProfile.email, {
+        amount,
+        fee: Number(tx.platform_fee),
+        net: sellerReceives,
+        title: listingTitle,
+        transaction_id: transactionId,
+        buyer_name: buyerName,
+      });
+    }
+
+    await sendWhatsAppNotification(cloudUrl, cloudKey, transactionId, "payment_confirmed");
+  } catch (notificationError) {
+    console.error("Post-payment notifications failed:", notificationError);
+  }
+
+  return new Response("ok", { status: 200, headers: corsHeaders });
+}
+
+async function cancelPendingTransaction(clients: SupabaseClientEntry[], transactionId: string) {
+  for (const { client } of clients) {
+    await client
+      .from("transactions")
+      .update({ status: "cancelled", cancelled_at: new Date().toISOString() })
+      .eq("id", transactionId)
+      .eq("status", "pending_payment");
+  }
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response("ok", { status: 200 });
+    return new Response("ok", { status: 200, headers: corsHeaders });
   }
 
   try {
@@ -116,120 +263,22 @@ Deno.serve(async (req) => {
         const result = await findTransaction(clients, transactionId);
 
         if (!result) {
-          console.log("Transaction not found or already processed in any client");
-          return new Response("ok", { status: 200 });
+          console.log("Transaction not found in pending state; webhook already processed or transaction is in another status");
+          return new Response("ok", { status: 200, headers: corsHeaders });
         }
 
         const { tx, client: supabase } = result;
-
-        const { error: updateError } = await supabase
-          .from("transactions")
-          .update({ status: "paid", paid_at: new Date().toISOString() })
-          .eq("id", transactionId)
-          .eq("status", "pending_payment");
-
-        if (updateError) {
-          console.error("Failed to update transaction:", updateError);
-          return new Response("error", { status: 500 });
-        }
-
-        console.log(`Transaction ${transactionId} marked as paid`);
-
-        const sellerReceives = Number(tx.seller_receives);
-
-        await supabase.rpc("increment_wallet", {
-          user_uuid: tx.seller_id,
-          field: "pending",
-          amount: sellerReceives,
-        });
-        console.log(`Seller ${tx.seller_id} pending +${sellerReceives} (atomic)`);
-
-        const { data: listing } = await supabase
-          .from("listings")
-          .select("title, category")
-          .eq("id", tx.listing_id)
-          .single();
-
-        const { data: buyerProfile } = await supabase
-          .from("profiles")
-          .select("email, name")
-          .eq("user_id", tx.buyer_id)
-          .single();
-
-        const { data: sellerProfile } = await supabase
-          .from("profiles")
-          .select("email, name")
-          .eq("user_id", tx.seller_id)
-          .single();
-
-        const amount = Number(tx.amount);
-        const amountFormatted = `R$ ${amount.toFixed(2).replace(".", ",")}`;
-        const buyerName = buyerProfile?.name || "Comprador";
-        const listingTitle = listing?.title || "Conta Digital";
-
-        // Insert system message to open the chat
-        await supabase.from("transaction_messages").insert({
-          transaction_id: transactionId,
-          sender_id: tx.seller_id,
-          is_system: true,
-          allow_sensitive_data: true,
-          message: `✅ Pagamento confirmado! Olá, ${buyerName}.\n\nSeu pagamento de ${amountFormatted} foi processado com sucesso.\n\nAguarde enquanto o vendedor envia as credenciais de acesso da conta.\n\n🔒 Este chat é protegido pelo Escrow Froiv.`,
-        });
-
-        // Update transaction to transfer_in_progress
-        await supabase.from("transactions").update({
-          status: "transfer_in_progress",
-          updated_at: new Date().toISOString(),
-        }).eq("id", transactionId);
-
-        // Notifications
-        await supabase.from("notifications").insert({
-          user_id: tx.buyer_id,
-          title: "💬 Chat aberto com o vendedor",
-          body: "Seu chat com o vendedor foi aberto. Aguarde as credenciais de acesso.",
-          link: `/compras/${transactionId}`,
-        });
-
-        await supabase.from("notifications").insert({
-          user_id: tx.seller_id,
-          title: "🔑 Envie as credenciais pelo chat!",
-          body: `${buyerName} comprou "${listingTitle}". Acesse o chat e envie os dados de acesso agora.`,
-          link: `/compras/${transactionId}`,
-        });
-
-        // Emails via Cloud edge function
-        if (buyerProfile?.email) {
-          await sendEmailNotification(cloudUrl, cloudKey, "purchase_confirmed", buyerProfile.email, {
-            amount, title: listingTitle, transaction_id: transactionId,
-          });
-        }
-        if (sellerProfile?.email) {
-          await sendEmailNotification(cloudUrl, cloudKey, "credentials_needed", sellerProfile.email, {
-            amount, fee: Number(tx.platform_fee), net: sellerReceives,
-            title: listingTitle, transaction_id: transactionId,
-            buyer_name: buyerName,
-          });
-        }
-
-        // WhatsApp notification to seller
-        await sendWhatsAppNotification(cloudUrl, cloudKey, transactionId, "payment_confirmed");
+        return await finalizeApprovedTransaction(supabase, transactionId, tx, cloudUrl, cloudKey);
       } else if (payment.status === "cancelled" || payment.status === "rejected") {
-        // Cancel the transaction in any available client
-        for (const { client } of clients) {
-          await client
-            .from("transactions")
-            .update({ status: "cancelled", cancelled_at: new Date().toISOString() })
-            .eq("id", transactionId)
-            .eq("status", "pending_payment");
-        }
+        await cancelPendingTransaction(clients, transactionId);
         console.log(`Transaction ${transactionId} cancelled due to payment ${payment.status}`);
       }
     }
 
-    return new Response("ok", { status: 200 });
+    return new Response("ok", { status: 200, headers: corsHeaders });
 
   } catch (error) {
     console.error("Webhook error:", error);
-    return new Response("error", { status: 500 });
+    return new Response("error", { status: 500, headers: corsHeaders });
   }
 });

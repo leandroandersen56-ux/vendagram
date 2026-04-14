@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
@@ -52,6 +52,8 @@ const PAYMENT_METHODS = [
   { id: "pix", label: "Pix", icon: <QrCode className="h-5 w-5" />, description: "Aprovação instantânea" },
   { id: "card", label: "Cartão de crédito", icon: <CreditCard className="h-5 w-5" />, description: "Parcelamento em até 12x" },
 ];
+
+const SUCCESS_TRANSACTION_STATUSES = ["paid", "transfer_in_progress", "credentials_sent", "completed"] as const;
 
 declare global {
   interface Window {
@@ -182,7 +184,7 @@ export default function Checkout() {
         .from("listings")
         .select("*")
         .eq("id", listingId)
-        .single();
+        .maybeSingle();
       if (error || !data) { setLoading(false); return; }
       setListing(data);
       const profile = await fetchSellerProfile({ user_id: data.seller_id });
@@ -192,28 +194,90 @@ export default function Checkout() {
     fetchData();
   }, [listingId]);
 
+  const handlePaymentApproved = useCallback((confirmedTransactionId: string) => {
+    setPaymentStatus("approved");
+    toast({ title: "Pagamento confirmado! ✅", description: "Redirecionando para a transação..." });
+    window.setTimeout(() => navigate(`/compras/${confirmedTransactionId}`), 2500);
+  }, [navigate, toast]);
+
+  const handlePaymentCancelled = useCallback(() => {
+    setPaymentStatus("cancelled");
+    toast({ title: "Pagamento cancelado", variant: "destructive" });
+  }, [toast]);
+
   // Poll payment status
   useEffect(() => {
-    if (!transactionId || paymentStatus === "approved") return;
-    const interval = setInterval(async () => {
-      const { data: tx } = await supabase
-        .from("transactions")
-        .select("status")
-        .eq("id", transactionId)
-        .single();
-      if (tx && (tx.status === "paid" || tx.status === "transfer_in_progress" || tx.status === "credentials_sent" || tx.status === "completed")) {
-        setPaymentStatus("approved");
-        toast({ title: "Pagamento confirmado! ✅", description: "Redirecionando para a transação..." });
-        clearInterval(interval);
-        setTimeout(() => navigate(`/compras/${transactionId}`), 2500);
-      } else if (tx && tx.status === "cancelled") {
-        setPaymentStatus("cancelled");
-        toast({ title: "Pagamento cancelado", variant: "destructive" });
-        clearInterval(interval);
+    if (!transactionId || paymentStatus === "approved" || paymentStatus === "cancelled") return;
+
+    let cancelled = false;
+    let timeoutId: number | undefined;
+    let attempts = 0;
+
+    const isSuccessfulStatus = (status?: string | null) =>
+      Boolean(status && SUCCESS_TRANSACTION_STATUSES.includes(status as typeof SUCCESS_TRANSACTION_STATUSES[number]));
+
+    const pollPaymentStatus = async () => {
+      if (cancelled) return;
+      attempts += 1;
+
+      try {
+        const { data: tx } = await supabase
+          .from("transactions")
+          .select("status")
+          .eq("id", transactionId)
+          .maybeSingle();
+
+        if (isSuccessfulStatus(tx?.status)) {
+          handlePaymentApproved(transactionId);
+          return;
+        }
+
+        if (tx?.status === "cancelled") {
+          handlePaymentCancelled();
+          return;
+        }
+
+        if (paymentMethod === "pix" && paymentStatus === "pending") {
+          const sync = await callPaymentFunction<{
+            transaction_status?: string | null;
+            payment_status?: string | null;
+          }>("check-payment-status", {
+            body: {
+              transaction_id: transactionId,
+              payment_id: pixData?.payment_id,
+            },
+          });
+
+          if (isSuccessfulStatus(sync.transaction_status) || sync.payment_status === "approved") {
+            handlePaymentApproved(transactionId);
+            return;
+          }
+
+          if (
+            sync.transaction_status === "cancelled" ||
+            sync.payment_status === "cancelled" ||
+            sync.payment_status === "rejected"
+          ) {
+            handlePaymentCancelled();
+            return;
+          }
+        }
+      } catch (error) {
+        console.error("Payment polling error:", error);
       }
-    }, 4000);
-    return () => clearInterval(interval);
-  }, [transactionId, paymentStatus, navigate, listing, toast]);
+
+      if (!cancelled && attempts < 45) {
+        timeoutId = window.setTimeout(pollPaymentStatus, 4000);
+      }
+    };
+
+    timeoutId = window.setTimeout(pollPaymentStatus, 4000);
+
+    return () => {
+      cancelled = true;
+      if (timeoutId) window.clearTimeout(timeoutId);
+    };
+  }, [transactionId, paymentStatus, paymentMethod, pixData?.payment_id, handlePaymentApproved, handlePaymentCancelled]);
 
   const platformFee = listing ? Number(listing.price) * 0.10 : 0;
   const total = listing ? Number(listing.price) : 0;
@@ -371,7 +435,7 @@ export default function Checkout() {
       if (data.status === "approved") {
         setPaymentStatus("approved");
         toast({ title: "Pagamento aprovado! ✅" });
-        setTimeout(() => navigate(`/transaction/${listing?.id}`), 2000);
+        setTimeout(() => navigate(`/compras/${tx.id}`), 2000);
       } else if (data.status === "in_process") {
         setPaymentStatus("pending");
         toast({ title: "Pagamento em análise", description: "Acompanhe o status na página da transação." });
