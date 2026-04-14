@@ -24,7 +24,7 @@ Deno.serve(async (req) => {
     let fileName = "upload";
     let mimeType = "";
 
-    const contentType = req.headers.get("content-type") || "";
+    const contentType = (req.headers.get("content-type") || "").toLowerCase();
 
     if (contentType.includes("multipart/form-data")) {
       const formData = await req.formData();
@@ -53,8 +53,24 @@ Deno.serve(async (req) => {
       imageBase64 = btoa(binary);
       fileName = imageFile.name.replace(/\.[^.]+$/, "") || "upload";
       mimeType = imageFile.type;
-    } else if (contentType.includes("application/json")) {
-      const body = await req.json();
+    } else {
+      let body: Record<string, unknown> | null = null;
+
+      try {
+        body = await req.json();
+      } catch {
+        try {
+          const rawText = await req.text();
+          body = rawText ? JSON.parse(rawText) : null;
+        } catch {
+          body = null;
+        }
+      }
+
+      if (!body || typeof body !== "object") {
+        return jsonResponse({ ok: false, error: "Invalid request body" });
+      }
+
       imageBase64 = typeof body?.image === "string" ? body.image : "";
       fileName = typeof body?.filename === "string" ? body.filename.replace(/\.[^.]+$/, "") : "upload";
       mimeType = typeof body?.mimeType === "string" ? body.mimeType : "";
@@ -67,8 +83,6 @@ Deno.serve(async (req) => {
       if (!allowedTypes.includes(mimeType)) {
         return jsonResponse({ ok: false, error: "Invalid file type. Allowed: JPEG, PNG, GIF, WebP, BMP" });
       }
-    } else {
-      return jsonResponse({ ok: false, error: "Unsupported content type" });
     }
 
     // Upload to ImgBB
