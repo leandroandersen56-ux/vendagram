@@ -700,6 +700,7 @@ export type Database = {
           avg_rating: number
           bio: string | null
           cnpj: string | null
+          cover_url: string | null
           cpf: string | null
           created_at: string
           email: string | null
@@ -723,6 +724,7 @@ export type Database = {
           avg_rating?: number
           bio?: string | null
           cnpj?: string | null
+          cover_url?: string | null
           cpf?: string | null
           created_at?: string
           email?: string | null
@@ -746,6 +748,7 @@ export type Database = {
           avg_rating?: number
           bio?: string | null
           cnpj?: string | null
+          cover_url?: string | null
           cpf?: string | null
           created_at?: string
           email?: string | null
