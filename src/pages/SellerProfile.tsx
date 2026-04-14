@@ -13,6 +13,7 @@ import type { Listing } from "@/lib/mock-data";
 
 export default function SellerProfile() {
   const { username, id } = useParams();
+  const identifier = id || username;
   const [seller, setSeller] = useState<any>(null);
   const [listings, setListings] = useState<Listing[]>([]);
   const [reviews, setReviews] = useState<any[]>([]);
@@ -22,8 +23,17 @@ export default function SellerProfile() {
   useEffect(() => {
     async function load() {
       setLoading(true);
-      const filters = id ? { user_id: id } : { username: username! };
-      const profile = await fetchSellerProfile(filters);
+
+      // Detect if identifier is a UUID
+      const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(identifier || "");
+      const filters = isUUID ? { user_id: identifier! } : { username: identifier! };
+
+      let profile = await fetchSellerProfile(filters);
+
+      // Fallback: if not found by username, try as user_id anyway
+      if (!profile && !isUUID) {
+        profile = await fetchSellerProfile({ user_id: identifier! });
+      }
 
       if (!profile) { setLoading(false); return; }
 
@@ -62,9 +72,8 @@ export default function SellerProfile() {
       if (reviewsRes.data) setReviews(reviewsRes.data);
       setLoading(false);
     }
-    const identifier = id || username;
     if (identifier) load();
-  }, [username, id]);
+  }, [identifier]);
 
   if (loading) {
     return (
