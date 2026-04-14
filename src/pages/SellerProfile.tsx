@@ -13,7 +13,7 @@ import type { Listing } from "@/lib/mock-data";
 
 export default function SellerProfile() {
   const { username, id } = useParams();
-  const identifier = (username || id || "").trim();
+  const identifier = decodeURIComponent((username || id || "").trim());
   const [seller, setSeller] = useState<any>(null);
   const [listings, setListings] = useState<Listing[]>([]);
   const [reviews, setReviews] = useState<any[]>([]);
@@ -23,34 +23,25 @@ export default function SellerProfile() {
   useEffect(() => {
     async function load() {
       setLoading(true);
+      setSeller(null);
+      setListings([]);
+      setReviews([]);
 
       const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(identifier);
-      let profile = await fetchSellerProfile(isUUID ? { user_id: identifier } : { username: identifier });
+      const candidateFilters: Record<string, string>[] = isUUID
+        ? [{ user_id: identifier }]
+        : [{ username: identifier }, { user_id: identifier }, { email: identifier }];
 
-      if (!profile && !isUUID) {
-        profile = await fetchSellerProfile({ user_id: identifier });
+      let profile: any | null = null;
+      for (const filters of candidateFilters) {
+        profile = await fetchSellerProfile(filters);
+        if (profile) break;
       }
 
-      if (!profile && !isUUID) {
-        profile = await fetchSellerProfile({ email: identifier });
+      if (!profile) {
+        setLoading(false);
+        return;
       }
-
-      if (!profile) { setLoading(false); return; }
-
-      // Also fetch email from profiles table for partner detection
-      try {
-        const CLOUD_URL = import.meta.env.VITE_SUPABASE_URL;
-        const CLOUD_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
-        const emailRes = await fetch(`${CLOUD_URL}/functions/v1/admin-create-listing`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${CLOUD_KEY}` },
-          body: JSON.stringify({ action: "query", table: "profiles", filters: { user_id: profile.user_id }, select: "email" }),
-        });
-        const emailJson = await emailRes.json();
-        if (emailJson.data?.[0]?.email) {
-          profile.email = emailJson.data[0].email;
-        }
-      } catch {}
 
       setSeller(profile);
 
