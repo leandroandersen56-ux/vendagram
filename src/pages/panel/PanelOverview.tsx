@@ -154,12 +154,12 @@ export default function PanelOverview() {
                 <button
                   key={action.label}
                   onClick={action.onClick}
-                  className="flex flex-col items-center gap-1 active:scale-95 transition-transform"
+                  className="flex flex-col items-center gap-1.5 active:scale-95 transition-transform"
                 >
-                  <div className={`h-10 w-10 rounded-full ${action.bg} flex items-center justify-center`}>
-                    <action.icon className={`h-4 w-4 ${action.color}`} />
+                  <div className={`h-11 w-11 rounded-full flex items-center justify-center shadow-sm border border-border/60`} style={{ background: 'hsl(var(--primary) / 0.12)' }}>
+                    <action.icon className="h-5 w-5 text-primary" />
                   </div>
-                  <span className="text-[10px] font-medium text-muted-foreground">{action.label}</span>
+                  <span className="text-[11px] font-semibold text-foreground">{action.label}</span>
                 </button>
               ))}
             </div>
