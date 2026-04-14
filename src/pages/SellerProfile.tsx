@@ -9,74 +9,12 @@ import SellerProfileHeader from "@/components/seller/SellerProfileHeader";
 import SellerReviewsList from "@/components/seller/SellerReviewsList";
 import { supabase } from "@/integrations/supabase/client";
 import { fetchSellerProfile } from "@/lib/fetch-seller-profile";
+import { getTrustedSellerByIdentifier, toTrustedSellerProfile } from "@/lib/trusted-sellers";
 import type { Listing } from "@/lib/mock-data";
-
-/* ── Hardcoded trusted seller profiles ── */
-const TRUSTED_SELLERS: Record<string, any> = {
-  "contabanco": {
-    user_id: "beccd2b1-0a31-4fd5-9701-4dce5eaa125c",
-    username: "contabanco",
-    name: "ADM GL",
-    avatar_url: "https://yzwncktlibdfycqhvlqg.supabase.co/storage/v1/object/public/avatars/beccd2b1-0a31-4fd5-9701-4dce5eaa125c/avatar.png",
-    bio: "Vendedor verificado da plataforma Froiv.",
-    is_verified: true,
-    avg_rating: 4.8,
-    total_reviews: 0,
-    total_sales: 0,
-    total_purchases: 0,
-    created_at: "2024-12-01T00:00:00Z",
-  },
-  "gb vendas": {
-    user_id: "gb-vendas-static",
-    username: "gb vendas",
-    name: "ADM GB",
-    avatar_url: null,
-    bio: "Vendedor verificado da plataforma Froiv.",
-    is_verified: true,
-    avg_rating: 4.8,
-    total_reviews: 0,
-    total_sales: 0,
-    total_purchases: 0,
-    created_at: "2024-12-01T00:00:00Z",
-  },
-  "eduardo": {
-    user_id: "d7f85dfb-0f1d-4c58-9a64-0544ec5b158d",
-    username: "eduardo",
-    name: "Eduardo Klunck",
-    avatar_url: null,
-    bio: "Vendedor verificado da plataforma Froiv.",
-    is_verified: true,
-    avg_rating: 4.8,
-    total_reviews: 0,
-    total_sales: 0,
-    total_purchases: 0,
-    created_at: "2024-12-01T00:00:00Z",
-  },
-  "theus": {
-    user_id: "73740fcc-5a53-4a10-8645-eeb76ec7642b",
-    username: "theus",
-    name: "Theus Klunck",
-    avatar_url: null,
-    bio: "Vendedor verificado da plataforma Froiv.",
-    is_verified: true,
-    avg_rating: 4.8,
-    total_reviews: 0,
-    total_sales: 0,
-    total_purchases: 0,
-    created_at: "2024-12-01T00:00:00Z",
-  },
-};
-
-// Also map by user_id for /vendedor/:id routes
-const TRUSTED_SELLERS_BY_ID: Record<string, any> = {};
-for (const v of Object.values(TRUSTED_SELLERS)) {
-  TRUSTED_SELLERS_BY_ID[v.user_id] = v;
-}
 
 export default function SellerProfile() {
   const { username, id } = useParams();
   const rawIdentifier = decodeURIComponent((username || id || "").trim());
-  const normalizedIdentifier = rawIdentifier.toLowerCase().trim();
 
   const [seller, setSeller] = useState<any>(null);
   const [listings, setListings] = useState<Listing[]>([]);
@@ -91,39 +29,62 @@ export default function SellerProfile() {
       setListings([]);
       setReviews([]);
 
-      // 1. Check hardcoded trusted sellers first (instant, never fails)
-      const hardcoded = TRUSTED_SELLERS[normalizedIdentifier] || TRUSTED_SELLERS_BY_ID[rawIdentifier];
-      if (hardcoded) {
-        console.log("[SellerProfile] using hardcoded profile:", hardcoded.name);
-        setSeller(hardcoded);
-        // Try to load listings/reviews from DB (best-effort)
+      const trustedSeller = getTrustedSellerByIdentifier(rawIdentifier);
+      if (trustedSeller) {
+        const stableProfile = toTrustedSellerProfile(trustedSeller);
+        console.log("[SellerProfile] using trusted seller fallback:", trustedSeller.slug);
+        setSeller(stableProfile);
+
         try {
           const [listingsRes, reviewsRes] = await Promise.all([
-            (supabase.from("listings") as any).select("*").eq("seller_id", hardcoded.user_id).eq("status", "active").order("created_at", { ascending: false }),
-            (supabase.from("reviews") as any).select("*").eq("reviewed_id", hardcoded.user_id).order("created_at", { ascending: false }).limit(20),
+            (supabase.from("listings") as any)
+              .select("*")
+              .eq("seller_id", trustedSeller.userId)
+              .eq("status", "active")
+              .order("created_at", { ascending: false }),
+            (supabase.from("reviews") as any)
+              .select("*")
+              .eq("reviewed_id", trustedSeller.userId)
+              .order("created_at", { ascending: false })
+              .limit(20),
           ]);
+
           if (listingsRes.data) {
-            setListings(listingsRes.data.map((row: any) => ({
-              id: row.id, sellerId: row.seller_id, sellerName: hardcoded.name,
-              sellerRating: hardcoded.avg_rating || 5, sellerSales: hardcoded.total_sales || 0,
-              platform: row.category, title: row.title, description: row.description || "",
-              price: Number(row.price), status: row.status, screenshots: row.screenshots || [],
-              fields: row.highlights || {}, createdAt: row.created_at,
-            })));
+            setListings(
+              listingsRes.data.map((row: any) => ({
+                id: row.id,
+                sellerId: row.seller_id,
+                sellerName: stableProfile.name,
+                sellerRating: stableProfile.avg_rating || 5,
+                sellerSales: stableProfile.total_sales || 0,
+                platform: row.category,
+                title: row.title,
+                description: row.description || "",
+                price: Number(row.price),
+                status: row.status,
+                screenshots: row.screenshots || [],
+                fields: row.highlights || {},
+                createdAt: row.created_at,
+              }))
+            );
           }
+
           if (reviewsRes.data) setReviews(reviewsRes.data);
-        } catch (e) {
-          console.log("[SellerProfile] listings/reviews fetch failed (non-critical):", e);
+        } catch (error) {
+          console.log("[SellerProfile] erro ao carregar listagens/avaliações do fallback", error);
         }
+
         setLoading(false);
         return;
       }
 
-      // 2. Dynamic lookup for non-hardcoded sellers
       const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(rawIdentifier);
+      const looksLikeEmail = rawIdentifier.includes("@");
       const candidateFilters: Record<string, string>[] = isUUID
         ? [{ user_id: rawIdentifier }]
-        : [{ username: rawIdentifier }];
+        : looksLikeEmail
+          ? [{ email: rawIdentifier }]
+          : [{ username: rawIdentifier }, { user_id: rawIdentifier }];
 
       let profile: any | null = null;
       for (const filters of candidateFilters) {
@@ -139,25 +100,44 @@ export default function SellerProfile() {
       setSeller(profile);
 
       const [listingsRes, reviewsRes] = await Promise.all([
-        (supabase.from("listings") as any).select("*").eq("seller_id", profile.user_id).eq("status", "active").order("created_at", { ascending: false }),
-        (supabase.from("reviews") as any).select("*").eq("reviewed_id", profile.user_id).order("created_at", { ascending: false }).limit(20),
+        (supabase.from("listings") as any)
+          .select("*")
+          .eq("seller_id", profile.user_id)
+          .eq("status", "active")
+          .order("created_at", { ascending: false }),
+        (supabase.from("reviews") as any)
+          .select("*")
+          .eq("reviewed_id", profile.user_id)
+          .order("created_at", { ascending: false })
+          .limit(20),
       ]);
 
       if (listingsRes.data) {
-        setListings(listingsRes.data.map((row: any) => ({
-          id: row.id, sellerId: row.seller_id, sellerName: profile.name || "Vendedor",
-          sellerRating: profile.avg_rating || 5, sellerSales: profile.total_sales || 0,
-          platform: row.category, title: row.title, description: row.description || "",
-          price: Number(row.price), status: row.status, screenshots: row.screenshots || [],
-          fields: row.highlights || {}, createdAt: row.created_at,
-        })));
+        setListings(
+          listingsRes.data.map((row: any) => ({
+            id: row.id,
+            sellerId: row.seller_id,
+            sellerName: profile.name || "Vendedor",
+            sellerRating: profile.avg_rating || 5,
+            sellerSales: profile.total_sales || 0,
+            platform: row.category,
+            title: row.title,
+            description: row.description || "",
+            price: Number(row.price),
+            status: row.status,
+            screenshots: row.screenshots || [],
+            fields: row.highlights || {},
+            createdAt: row.created_at,
+          }))
+        );
       }
 
       if (reviewsRes.data) setReviews(reviewsRes.data);
       setLoading(false);
     }
+
     if (rawIdentifier) load();
-  }, [rawIdentifier, normalizedIdentifier]);
+  }, [rawIdentifier]);
 
   if (loading) {
     return (
@@ -191,7 +171,7 @@ export default function SellerProfile() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Navbar />
-      <div className="pb-16 sm:pb-0" style={{ paddingTop: 'calc(56px + var(--pwa-banner-offset, 0px))' }}>
+      <div className="pb-16 sm:pb-0" style={{ paddingTop: "calc(56px + var(--pwa-banner-offset, 0px))" }}>
         <div className="container mx-auto px-4 py-4 max-w-3xl">
           <SellerProfileHeader
             seller={seller}
@@ -200,17 +180,18 @@ export default function SellerProfile() {
             reviewsCount={reviews.length}
           />
 
-          {/* Tabs */}
           <div className="flex gap-0 bg-card rounded-xl border border-border overflow-hidden mt-4 mb-4">
             {(["listings", "reviews"] as const).map((t) => (
-              <button key={t} onClick={() => setTab(t)}
-                className={`flex-1 py-3 text-sm font-medium transition-colors ${tab === t ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted/50"}`}>
+              <button
+                key={t}
+                onClick={() => setTab(t)}
+                className={`flex-1 py-3 text-sm font-medium transition-colors ${tab === t ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted/50"}`}
+              >
                 {t === "listings" ? `Anúncios (${listings.length})` : `Avaliações (${reviews.length})`}
               </button>
             ))}
           </div>
 
-          {/* Tab content */}
           {tab === "listings" && (
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               {listings.length === 0 ? (
@@ -218,7 +199,9 @@ export default function SellerProfile() {
                   <Package className="h-10 w-10 mx-auto mb-3 opacity-40" />
                   <p className="font-medium">Nenhum anúncio ativo</p>
                 </div>
-              ) : listings.map((l) => <ListingCard key={l.id} listing={l} />)}
+              ) : (
+                listings.map((listing) => <ListingCard key={listing.id} listing={listing} />)
+              )}
             </div>
           )}
 
