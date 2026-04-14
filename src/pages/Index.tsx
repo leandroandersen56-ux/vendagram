@@ -26,6 +26,7 @@ import bannerSocialFacebook from "@/assets/banner-facebook.jpg";
 import bannerSocialTiktok from "@/assets/banners/banner-social-tiktok.jpg";
 import bannerInstagram from "@/assets/banner-instagram.jpg";
 import bannerHeroOffers from "@/assets/banner-hero-offers.jpg";
+import bannerPartnership from "@/assets/banner-partnership-hero-v2.jpg";
 
 
 import catMinecraft from "@/assets/categories/minecraft.jpg";
@@ -48,6 +49,7 @@ const BANNERS = [
   { img: bannerHeroOffers, title: "Apenas 10% de Taxa\nem Cada Venda", subtitle: "A menor taxa do mercado.\nNegocie direto, sem mensalidade\ne sem custos ocultos", cta: "Começar agora", link: "/marketplace", objectPosition: "right 30%" },
   { img: bannerSecurityHero, title: "Compre e Venda\nContas Digitais\ncom Segurança", subtitle: "Redes sociais e jogos\ncom escrow integrado", cta: "Explorar", link: "/marketplace", objectPosition: "right 40%" },
   { img: bannerHeroSecurity, title: "Só Liberamos o Valor\nApós Sua Confirmação", subtitle: "Pagamento protegido\ncom sistema escrow", cta: "Saiba mais", link: "/ajuda/como-funciona-escrow", objectPosition: "right 40%" },
+  { img: bannerPartnership, title: "", subtitle: "", cta: "Explorar", link: "/marketplace", objectPosition: "center" },
 ];
 
 const QUICK_CATEGORIES = [
@@ -232,8 +234,8 @@ export default function Index() {
               {BANNERS.map((b, i) => (
                 <div key={i} className={`absolute inset-0 transition-opacity duration-500 ${i === bannerIdx ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
                   <img src={b.img} alt={b.title} className="w-full h-full object-cover" style={b.objectPosition ? { objectPosition: b.objectPosition } : undefined} {...(i === 0 ? {} : { loading: "lazy" as const })} />
-                  <div className="absolute inset-y-0 left-0 w-3/5 bg-gradient-to-r from-black/70 via-black/40 to-transparent pointer-events-none" />
-                  <div className="absolute inset-0 flex items-center pointer-events-none">
+                  {b.title && <div className="absolute inset-y-0 left-0 w-3/5 bg-gradient-to-r from-black/70 via-black/40 to-transparent pointer-events-none" />}
+                  {b.title ? <div className="absolute inset-0 flex items-center pointer-events-none">
                     <div className="px-5 sm:px-8 md:px-12 max-w-sm md:max-w-lg">
                       <h2 className="text-white text-base sm:text-xl md:text-3xl lg:text-4xl font-semibold leading-tight whitespace-pre-line sm:whitespace-normal">{b.title}</h2>
                       <p className="text-white/80 text-[11px] sm:text-sm md:text-base lg:text-lg mt-1 md:mt-2 whitespace-pre-line">{b.subtitle}</p>
@@ -243,7 +245,7 @@ export default function Index() {
                         </button>
                       </Link>
                     </div>
-                  </div>
+                  </div> : <Link to={b.link} className="absolute inset-0" />}
                   {/* Progress bar */}
                   {i === bannerIdx && (
                     <div className="absolute top-0 left-0 right-0 h-0.5 bg-white/20">
