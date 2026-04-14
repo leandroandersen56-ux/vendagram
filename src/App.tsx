@@ -10,6 +10,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import { useMessageToasts } from "@/hooks/useMessageToasts";
 import PWAInstallBanner from "@/components/PWAInstallBanner";
 import BottomNav from "@/components/BottomNav";
+import WhatsAppFloatingButton from "@/components/WhatsAppButton";
 
 // Critical routes — loaded eagerly
 import Index from "./pages/Index.tsx";
