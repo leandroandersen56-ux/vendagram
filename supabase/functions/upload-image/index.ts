@@ -3,6 +3,12 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+const jsonResponse = (body: Record<string, unknown>) =>
+  new Response(JSON.stringify(body), {
+    status: 200,
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
+  });
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -11,10 +17,7 @@ Deno.serve(async (req) => {
   try {
     const IMGBB_API_KEY = Deno.env.get("IMGBB_API_KEY");
     if (!IMGBB_API_KEY) {
-      return new Response(
-        JSON.stringify({ error: "IMGBB_API_KEY not configured" }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return jsonResponse({ ok: false, error: "IMGBB_API_KEY not configured" });
     }
 
     let imageBase64 = "";
@@ -28,25 +31,16 @@ Deno.serve(async (req) => {
       const imageFile = formData.get("image");
 
       if (!imageFile || !(imageFile instanceof File)) {
-        return new Response(
-          JSON.stringify({ error: "No image file provided" }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+        return jsonResponse({ ok: false, error: "No image file provided" });
       }
 
       if (imageFile.size > 32 * 1024 * 1024) {
-        return new Response(
-          JSON.stringify({ error: "Image too large. Max 32MB." }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+        return jsonResponse({ ok: false, error: "Image too large. Max 32MB." });
       }
 
       const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp"];
       if (!allowedTypes.includes(imageFile.type)) {
-        return new Response(
-          JSON.stringify({ error: "Invalid file type. Allowed: JPEG, PNG, GIF, WebP, BMP" }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+        return jsonResponse({ ok: false, error: "Invalid file type. Allowed: JPEG, PNG, GIF, WebP, BMP" });
       }
 
       const arrayBuffer = await imageFile.arrayBuffer();
@@ -66,24 +60,15 @@ Deno.serve(async (req) => {
       mimeType = typeof body?.mimeType === "string" ? body.mimeType : "";
 
       if (!imageBase64) {
-        return new Response(
-          JSON.stringify({ error: "No image payload provided" }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+        return jsonResponse({ ok: false, error: "No image payload provided" });
       }
 
       const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp"];
       if (!allowedTypes.includes(mimeType)) {
-        return new Response(
-          JSON.stringify({ error: "Invalid file type. Allowed: JPEG, PNG, GIF, WebP, BMP" }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+        return jsonResponse({ ok: false, error: "Invalid file type. Allowed: JPEG, PNG, GIF, WebP, BMP" });
       }
     } else {
-      return new Response(
-        JSON.stringify({ error: "Unsupported content type" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return jsonResponse({ ok: false, error: "Unsupported content type" });
     }
 
     // Upload to ImgBB
@@ -100,27 +85,19 @@ Deno.serve(async (req) => {
     if (!imgbbResponse.ok) {
       const errText = await imgbbResponse.text();
       console.error("ImgBB error:", errText);
-      return new Response(
-        JSON.stringify({ error: "Failed to upload to image hosting" }),
-        { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return jsonResponse({ ok: false, error: "Failed to upload to image hosting", details: errText });
     }
 
     const result = await imgbbResponse.json();
 
-    return new Response(
-      JSON.stringify({
-        url: result.data.url,
-        thumb: result.data.thumb?.url || result.data.url,
-        delete_url: result.data.delete_url,
-      }),
-      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return jsonResponse({
+      ok: true,
+      url: result.data.url,
+      thumb: result.data.thumb?.url || result.data.url,
+      delete_url: result.data.delete_url,
+    });
   } catch (error) {
     console.error("Upload error:", error);
-    return new Response(
-      JSON.stringify({ error: "Internal server error" }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return jsonResponse({ ok: false, error: error instanceof Error ? error.message : "Internal server error" });
   }
 });
