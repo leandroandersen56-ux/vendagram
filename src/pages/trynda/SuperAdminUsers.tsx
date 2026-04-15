@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { supabase as prodSupabase } from "@/lib/supabase-custom-client";
 import { formatBRL } from "@/hooks/useAdminStats";
-import { Search, ChevronLeft, ChevronRight, X, Eye, Ban, DollarSign, Mail, LogIn } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight, X, Eye, Ban, DollarSign, Mail, LogIn, Trash2 } from "lucide-react";
 import { VerifiedBadge } from "@/components/VerifiedBadge";
 import { toast } from "sonner";
 
