@@ -44,6 +44,7 @@ export default function MoreMenu({ open, onClose }: MoreMenuProps) {
       label: "Minha atividade",
       items: [
         { icon: ShoppingCart, label: "Minhas Compras", path: "/compras" },
+        { icon: Key, label: "Meus Acessos", path: "/meus-acessos", badge: { text: "NOVO", color: "bg-primary text-white" } },
         { icon: Package, label: "Minhas Vendas", path: "/vendedor", badge: { text: "NOVO", color: "bg-primary text-white" } },
         { icon: Bell, label: "Notificações", path: "/notificacoes", badge: { text: "1", color: "bg-destructive text-white" } },
         { icon: Heart, label: "Favoritos", path: "/favoritos" },
