@@ -5,7 +5,6 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-// DB lives on personal instance — ALWAYS
 const DB_URL = "https://yzwncktlibdfycqhvlqg.supabase.co";
 const UAZAPI_BASE_URL = "https://ipazua.uazapi.com";
 const RESEND_API_KEY_NAME = "RESEND_API_KEY";
@@ -18,6 +17,32 @@ function getAdmin() {
   return createClient(DB_URL, key);
 }
 
+function normalizeEmail(value?: string | null) {
+  const email = value?.trim().toLowerCase();
+  return email || null;
+}
+
+function normalizeBrazilianPhone(value?: string | null) {
+  if (!value) return null;
+
+  const digits = value.replace(/\D/g, "").replace(/^0+/, "");
+  if (!digits) return null;
+
+  if (digits.startsWith("55") && (digits.length === 12 || digits.length === 13)) {
+    return digits;
+  }
+
+  if (digits.length === 10 || digits.length === 11) {
+    return `55${digits}`;
+  }
+
+  if (digits.length >= 12) {
+    return digits;
+  }
+
+  return null;
+}
+
 async function sendWhatsApp(token: string, phone: string, text: string) {
   try {
     console.log(`[WA] Sending to ${phone}, token length: ${token?.length}, url: ${UAZAPI_BASE_URL}/send/text`);
@@ -25,7 +50,7 @@ async function sendWhatsApp(token: string, phone: string, text: string) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "token": token,
+        token,
       },
       body: JSON.stringify({ number: phone, text }),
     });
@@ -73,7 +98,7 @@ async function sendEmail(to: string, subject: string, body: string) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${resendKey}`,
+        Authorization: `Bearer ${resendKey}`,
       },
       body: JSON.stringify({ from: FROM_EMAIL, to: [to], subject, html: wrapEmail(subject, body) }),
     });
@@ -98,7 +123,6 @@ Deno.serve(async (req) => {
     const body = await req.json();
     const results = { whatsapp: false, email: false, buyer_whatsapp: false, buyer_email: false };
 
-    // ── Mode 1: notification_id (triggered by DB trigger on notification insert) ──
     if (body.notification_id) {
       const { data: notif, error: nErr } = await admin
         .from("notifications")
@@ -109,7 +133,8 @@ Deno.serve(async (req) => {
       if (nErr || !notif) {
         console.error("Notification not found:", nErr);
         return new Response(JSON.stringify({ error: "Notification not found" }), {
-          status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 404,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
 
@@ -119,28 +144,25 @@ Deno.serve(async (req) => {
         .eq("user_id", notif.user_id)
         .single();
 
-      const phone = profile?.whatsapp || profile?.phone;
-      const email = profile?.email;
+      const phone = normalizeBrazilianPhone(profile?.whatsapp || profile?.phone);
+      const email = normalizeEmail(profile?.email);
       const link = notif.link ? `${SITE_URL}${notif.link}` : SITE_URL;
       const whatsappMsg = `📢 *Froiv*\n\n*${notif.title}*\n${notif.body}\n\n🔗 ${link}`;
       const emailSubject = notif.title.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, "").trim();
 
       if (phone && uazapiToken) {
-        const cleanPhone = phone.replace(/\D/g, "");
-        if (cleanPhone.length >= 10) {
-          results.whatsapp = await sendWhatsApp(uazapiToken, cleanPhone, whatsappMsg);
-        }
+        results.whatsapp = await sendWhatsApp(uazapiToken, phone, whatsappMsg);
       }
       if (email) {
         results.email = await sendEmail(email, emailSubject || "Notificação Froiv", `${notif.title}\n\n${notif.body}\n\nAcesse: ${link}`);
       }
 
       return new Response(JSON.stringify({ success: true, ...results }), {
-        status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 200,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // ── Mode 2: user_id + message (direct call) ──
     if (body.user_id && body.message) {
       const { data: profile, error: pErr } = await admin
         .from("profiles")
@@ -150,24 +172,23 @@ Deno.serve(async (req) => {
 
       console.log(`[MODE2] Profile:`, JSON.stringify(profile), `Error:`, pErr?.message);
 
-      const phone = profile?.whatsapp || profile?.phone;
+      const phone = normalizeBrazilianPhone(profile?.whatsapp || profile?.phone || body.phone);
+      const email = normalizeEmail(profile?.email || body.email);
+
       if (phone && uazapiToken) {
-        const cleanPhone = phone.replace(/\D/g, "");
-        console.log(`[MODE2] Sending WA to: ${cleanPhone}`);
-        if (cleanPhone.length >= 10) {
-          results.whatsapp = await sendWhatsApp(uazapiToken, cleanPhone, body.message);
-        }
+        console.log(`[MODE2] Sending WA to: ${phone}`);
+        results.whatsapp = await sendWhatsApp(uazapiToken, phone, body.message);
       }
-      if (profile?.email) {
-        results.email = await sendEmail(profile.email, body.subject || "Notificação Froiv", body.message);
+      if (email) {
+        results.email = await sendEmail(email, body.subject || "Notificação Froiv", body.message);
       }
 
       return new Response(JSON.stringify({ success: true, ...results }), {
-        status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 200,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // ── Mode 3: transaction_id + type (payment_confirmed — notify BOTH buyer and seller) ──
     if (body.transaction_id) {
       const { data: tx, error: txErr } = await admin
         .from("transactions")
@@ -177,7 +198,8 @@ Deno.serve(async (req) => {
 
       if (txErr || !tx) {
         return new Response(JSON.stringify({ error: "Transaction not found" }), {
-          status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 404,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
 
@@ -195,7 +217,6 @@ Deno.serve(async (req) => {
       const netStr = `R$ ${net.toFixed(2).replace(".", ",")}`;
       const txLink = `${SITE_URL}/compras/${body.transaction_id}`;
 
-      // Check if credentials were auto-delivered
       const { data: creds } = await admin
         .from("credentials")
         .select("data_encrypted")
@@ -220,19 +241,18 @@ Deno.serve(async (req) => {
         }
       }
 
-      // ── SELLER notification ──
-      const sellerPhone = sellerProfile?.whatsapp || sellerProfile?.phone;
+      const sellerPhone = normalizeBrazilianPhone(body.seller_phone || sellerProfile?.whatsapp || sellerProfile?.phone);
+      const sellerEmail = normalizeEmail(body.seller_email || sellerProfile?.email);
       const sellerWhatsMsg = hasCredentials
         ? `🎉 *Venda realizada na Froiv!*\n\n📦 *${listing?.title || "Conta"}*\n💰 Você recebe: ${netStr}\n👤 Comprador: ${buyerName}\n\n✅ Credenciais entregues automaticamente.\n💰 Valor ficará em custódia por 24h.\n\n🔗 ${txLink}`
         : `🎉 *Nova venda na Froiv!*\n\n📦 *${listing?.title || "Conta"}*\n💰 Você recebe: ${netStr}\n👤 Comprador: ${buyerName}\n\n⚡ Envie as credenciais pelo chat AGORA.\n🔗 ${txLink}`;
 
       if (sellerPhone && uazapiToken) {
-        const clean = sellerPhone.replace(/\D/g, "");
-        if (clean.length >= 10) results.whatsapp = await sendWhatsApp(uazapiToken, clean, sellerWhatsMsg);
+        results.whatsapp = await sendWhatsApp(uazapiToken, sellerPhone, sellerWhatsMsg);
       }
-      if (sellerProfile?.email) {
+      if (sellerEmail) {
         results.email = await sendEmail(
-          sellerProfile.email,
+          sellerEmail,
           hasCredentials ? `💰 Venda realizada — ${listing?.title}` : `🔑 Envie as credenciais — ${listing?.title}`,
           hasCredentials
             ? `Você vendeu "${listing?.title}" por ${amountStr}!\n\nVocê receberá: ${netStr}\nComprador: ${buyerName}\n\nCredenciais entregues automaticamente. O valor ficará em custódia por 24h.\n\n${txLink}`
@@ -240,35 +260,31 @@ Deno.serve(async (req) => {
         );
       }
 
-      // ── BUYER notification ──
-      const buyerPhone = buyerProfile?.whatsapp || buyerProfile?.phone;
+      const buyerPhone = normalizeBrazilianPhone(body.buyer_phone || buyerProfile?.whatsapp || buyerProfile?.phone);
+      const buyerEmail = normalizeEmail(body.buyer_email || buyerProfile?.email);
 
       if (hasCredentials && credentialsText) {
-        // Send credentials to buyer via WhatsApp and Email
         const buyerWhatsMsg = `✅ *Froiv — Dados de Acesso*\n\nOlá ${buyerName}!\n\nSua compra de *${listing?.title}* foi confirmada.\n\n🔑 *Credenciais:*\n${credentialsText}\n\n⚠️ Troque a senha após o primeiro acesso.\n📦 Verifique a conta em até 24h.\n\n🔗 ${txLink}`;
 
         if (buyerPhone && uazapiToken) {
-          const clean = buyerPhone.replace(/\D/g, "");
-          if (clean.length >= 10) results.buyer_whatsapp = await sendWhatsApp(uazapiToken, clean, buyerWhatsMsg);
+          results.buyer_whatsapp = await sendWhatsApp(uazapiToken, buyerPhone, buyerWhatsMsg);
         }
-        if (buyerProfile?.email) {
+        if (!body.skip_buyer_email && buyerEmail) {
           results.buyer_email = await sendEmail(
-            buyerProfile.email,
+            buyerEmail,
             `🔑 Credenciais de acesso — ${listing?.title}`,
             `Olá ${buyerName}!\n\nSua compra de "${listing?.title}" foi confirmada. Aqui estão seus dados:\n\n${credentialsText}\n\n⚠️ Troque a senha imediatamente após o primeiro acesso.\n📦 Verifique a conta em até 24h antes do pagamento ser liberado.\n\n${txLink}`,
           );
         }
       } else {
-        // No credentials yet — just notify buyer that chat is open
         const buyerWhatsMsg = `✅ *Froiv — Pagamento Confirmado*\n\nOlá ${buyerName}!\n\nSeu pagamento de ${amountStr} para *${listing?.title}* foi confirmado.\n\n💬 O vendedor ${sellerName} foi notificado e enviará os dados de acesso pelo chat.\n\n🔗 ${txLink}`;
 
         if (buyerPhone && uazapiToken) {
-          const clean = buyerPhone.replace(/\D/g, "");
-          if (clean.length >= 10) results.buyer_whatsapp = await sendWhatsApp(uazapiToken, clean, buyerWhatsMsg);
+          results.buyer_whatsapp = await sendWhatsApp(uazapiToken, buyerPhone, buyerWhatsMsg);
         }
-        if (buyerProfile?.email) {
+        if (!body.skip_buyer_email && buyerEmail) {
           results.buyer_email = await sendEmail(
-            buyerProfile.email,
+            buyerEmail,
             `✅ Pagamento confirmado — ${listing?.title}`,
             `Olá ${buyerName}!\n\nSeu pagamento de ${amountStr} para "${listing?.title}" foi confirmado.\n\n💬 O vendedor foi notificado e enviará os dados de acesso pelo chat em breve.\n\n🔒 Escrow Froiv protege seu pagamento.\n\n${txLink}`,
           );
@@ -278,17 +294,20 @@ Deno.serve(async (req) => {
       console.log(`Notifications sent for tx ${body.transaction_id}:`, JSON.stringify(results));
 
       return new Response(JSON.stringify({ success: true, ...results }), {
-        status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 200,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
     return new Response(JSON.stringify({ error: "Provide notification_id, user_id+message, or transaction_id" }), {
-      status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 400,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (error) {
     console.error("notify-whatsapp error:", error);
     return new Response(JSON.stringify({ error: error.message }), {
-      status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 });

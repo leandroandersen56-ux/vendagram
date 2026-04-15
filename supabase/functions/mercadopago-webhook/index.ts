@@ -6,7 +6,6 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
-// DB lives on the personal instance — ALWAYS
 const DB_URL = "https://yzwncktlibdfycqhvlqg.supabase.co";
 
 function getSupabase() {
@@ -15,11 +14,9 @@ function getSupabase() {
   return createClient(DB_URL, key);
 }
 
-// Edge functions (send-email, notify-whatsapp) run on the Cloud instance
 function getEdgeFunctionsBase() {
   const cloudUrl = Deno.env.get("SUPABASE_URL")?.trim();
   const cloudKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")?.trim();
-  // fallback to personal if cloud not available
   return {
     url: cloudUrl || DB_URL,
     key: cloudKey || Deno.env.get("PERSONAL_SUPABASE_SERVICE_ROLE_KEY")!.trim(),
@@ -29,13 +26,72 @@ function getEdgeFunctionsBase() {
 async function callEdgeFunction(name: string, body: Record<string, unknown>) {
   const { url, key } = getEdgeFunctionsBase();
   try {
-    await fetch(`${url}/functions/v1/${name}`, {
+    const response = await fetch(`${url}/functions/v1/${name}`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
       body: JSON.stringify(body),
     });
+
+    const responseText = await response.text();
+    if (!response.ok) {
+      console.error(`Edge function ${name} failed with ${response.status}: ${responseText}`);
+    }
+
+    return {
+      ok: response.ok,
+      status: response.status,
+      body: responseText,
+    };
   } catch (e) {
     console.error(`Edge function ${name} failed:`, e);
+    return {
+      ok: false,
+      status: 0,
+      body: e instanceof Error ? e.message : String(e),
+    };
+  }
+}
+
+function normalizeEmail(value?: string | null) {
+  const email = value?.trim().toLowerCase();
+  return email || null;
+}
+
+function normalizeBrazilianPhone(value?: string | null) {
+  if (!value) return null;
+
+  const digits = value.replace(/\D/g, "").replace(/^0+/, "");
+  if (!digits) return null;
+
+  if (digits.startsWith("55") && (digits.length === 12 || digits.length === 13)) {
+    return digits;
+  }
+
+  if (digits.length === 10 || digits.length === 11) {
+    return `55${digits}`;
+  }
+
+  if (digits.length >= 12) {
+    return digits;
+  }
+
+  return null;
+}
+
+function buildCredentialsText(rawCredentials?: string | null) {
+  if (!rawCredentials) return "";
+
+  try {
+    const parsed = JSON.parse(rawCredentials);
+    const parts: string[] = [];
+    if (parsed.email) parts.push(`Email: ${parsed.email}`);
+    if (parsed.login || parsed.username) parts.push(`Login: ${parsed.login || parsed.username}`);
+    if (parsed.password || parsed.senha) parts.push(`Senha: ${parsed.password || parsed.senha}`);
+    if (parsed.twofa || parsed["2fa"]) parts.push(`2FA: ${parsed.twofa || parsed["2fa"]}`);
+    if (parsed.notes || parsed.observacoes) parts.push(`Obs: ${parsed.notes || parsed.observacoes}`);
+    return parts.join("\n");
+  } catch {
+    return rawCredentials;
   }
 }
 
@@ -46,7 +102,6 @@ async function deliverPrefilledCredentials(
   listingTitle: string,
   buyerName: string,
 ) {
-  // Check if listing has prefilled_credentials
   const { data: listing } = await supabase
     .from("listings")
     .select("prefilled_credentials")
@@ -55,20 +110,17 @@ async function deliverPrefilledCredentials(
 
   if (!listing?.prefilled_credentials) return false;
 
-  // Insert into credentials table
   await supabase.from("credentials").insert({
     transaction_id: transactionId,
     data_encrypted: listing.prefilled_credentials,
     delivered_at: new Date().toISOString(),
   });
 
-  // Move to credentials_sent
   await supabase
     .from("transactions")
     .update({ status: "credentials_sent", updated_at: new Date().toISOString() })
     .eq("id", transactionId);
 
-  // System message in chat
   await supabase.from("transaction_messages").insert({
     transaction_id: transactionId,
     sender_id: tx.seller_id as string,
@@ -101,7 +153,6 @@ Deno.serve(async (req) => {
     const paymentId = body.data?.id;
     if (!paymentId) return new Response("ok", { status: 200, headers: corsHeaders });
 
-    // Fetch payment from Mercado Pago
     const mpRes = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
       headers: { Authorization: `Bearer ${MP_TOKEN}` },
     });
@@ -117,7 +168,6 @@ Deno.serve(async (req) => {
     console.log(`Payment ${paymentId} status=${payment.status} tx=${transactionId}`);
 
     if (payment.status === "approved") {
-      // Atomically update only if still pending_payment
       const { data: updated, error: updErr } = await supabase
         .from("transactions")
         .update({ status: "paid", paid_at: new Date().toISOString() })
@@ -139,7 +189,6 @@ Deno.serve(async (req) => {
       const tx = updated;
       const sellerReceives = Number(tx.seller_receives);
 
-      // Increment wallet
       const { error: walletErr } = await supabase.rpc("increment_wallet", {
         user_uuid: tx.seller_id,
         field: "pending",
@@ -147,7 +196,6 @@ Deno.serve(async (req) => {
       });
       if (walletErr) console.error("Wallet error:", walletErr);
 
-      // Fetch profiles and listing
       const [{ data: listing }, { data: buyer }, { data: seller }] = await Promise.all([
         supabase.from("listings").select("title, category, prefilled_credentials").eq("id", tx.listing_id).maybeSingle(),
         supabase.from("profiles").select("email, name, phone, whatsapp").eq("user_id", tx.buyer_id).maybeSingle(),
@@ -158,12 +206,24 @@ Deno.serve(async (req) => {
       const buyerName = buyer?.name || "Comprador";
       const amount = Number(tx.amount);
       const amountFmt = `R$ ${amount.toFixed(2).replace(".", ",")}`;
+      const buyerEmail = normalizeEmail(buyer?.email) || normalizeEmail(payment?.payer?.email);
+      const sellerEmail = normalizeEmail(seller?.email);
+      const buyerPhone = normalizeBrazilianPhone(buyer?.whatsapp || buyer?.phone);
+      const credentialsText = buildCredentialsText(listing?.prefilled_credentials);
 
-      // Try auto-deliver if prefilled_credentials exist
+      if (buyerEmail && buyer?.email !== buyerEmail) {
+        const { error: syncBuyerEmailError } = await supabase
+          .from("profiles")
+          .update({ email: buyerEmail })
+          .eq("user_id", tx.buyer_id);
+        if (syncBuyerEmailError) {
+          console.error("Failed to sync buyer email:", syncBuyerEmailError);
+        }
+      }
+
       const autoDelivered = await deliverPrefilledCredentials(supabase, transactionId, tx, listingTitle, buyerName);
 
       if (!autoDelivered) {
-        // Manual flow: move to transfer_in_progress, open chat
         await supabase
           .from("transactions")
           .update({ status: "transfer_in_progress", updated_at: new Date().toISOString() })
@@ -178,7 +238,6 @@ Deno.serve(async (req) => {
         });
       }
 
-      // Notifications for both
       await supabase.from("notifications").insert([
         {
           user_id: tx.buyer_id,
@@ -198,18 +257,28 @@ Deno.serve(async (req) => {
         },
       ]);
 
-      // Email notifications
-      if (buyer?.email) {
-        await callEdgeFunction("send-email", {
-          type: "purchase_confirmed",
-          to: buyer.email,
-          data: { amount, title: listingTitle, transaction_id: transactionId },
+      if (buyerEmail) {
+        const buyerEmailResult = await callEdgeFunction("send-email", {
+          type: autoDelivered ? "credentials_delivered" : "purchase_confirmed",
+          to: buyerEmail,
+          data: {
+            amount,
+            title: listingTitle,
+            transaction_id: transactionId,
+            credentials_text: autoDelivered ? credentialsText : undefined,
+          },
         });
+        if (!buyerEmailResult.ok) {
+          console.error("Buyer email failed:", buyerEmailResult);
+        }
+      } else {
+        console.error(`Buyer email missing for transaction ${transactionId}`);
       }
-      if (seller?.email) {
-        await callEdgeFunction("send-email", {
+
+      if (!autoDelivered && sellerEmail) {
+        const sellerEmailResult = await callEdgeFunction("send-email", {
           type: "credentials_needed",
-          to: seller.email,
+          to: sellerEmail,
           data: {
             amount,
             fee: Number(tx.platform_fee),
@@ -219,13 +288,21 @@ Deno.serve(async (req) => {
             buyer_name: buyerName,
           },
         });
+        if (!sellerEmailResult.ok) {
+          console.error("Seller email failed:", sellerEmailResult);
+        }
       }
 
-      // WhatsApp notification
-      await callEdgeFunction("notify-whatsapp", {
+      const notifyResult = await callEdgeFunction("notify-whatsapp", {
         transaction_id: transactionId,
         type: "payment_confirmed",
+        buyer_phone: buyerPhone,
+        buyer_email: buyerEmail,
+        skip_buyer_email: true,
       });
+      if (!notifyResult.ok) {
+        console.error("Notify WhatsApp failed:", notifyResult);
+      }
 
       console.log(`Transaction ${transactionId} processed successfully. Auto-delivered: ${autoDelivered}`);
     } else if (payment.status === "cancelled" || payment.status === "rejected") {

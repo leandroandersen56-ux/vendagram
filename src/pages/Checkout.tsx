@@ -68,6 +68,14 @@ function normalizeCpf(value: string) {
   return value.replace(/\D/g, "");
 }
 
+function normalizePhone(value: string) {
+  const digits = value.replace(/\D/g, "").replace(/^0+/, "");
+  if (!digits) return "";
+  if (digits.startsWith("55") && (digits.length === 12 || digits.length === 13)) return digits;
+  if (digits.length === 10 || digits.length === 11) return `55${digits}`;
+  return digits.length >= 12 ? digits : "";
+}
+
 function isValidCPF(value: string) {
   const cpf = normalizeCpf(value);
   if (cpf.length !== 11 || new Set(cpf).size === 1) return false;
@@ -124,7 +132,6 @@ export default function Checkout() {
   const [submitting, setSubmitting] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("pix");
 
-  // Pix state
   const [pixData, setPixData] = useState<{
     qr_code: string | null;
     qr_code_base64: string | null;
@@ -135,7 +142,6 @@ export default function Checkout() {
   const [paymentStatus, setPaymentStatus] = useState<string>("idle");
   const [copied, setCopied] = useState(false);
 
-  // Card state
   const [mpPublicKey, setMpPublicKey] = useState<string | null>(null);
   const [mpReady, setMpReady] = useState(false);
   const [cardNumber, setCardNumber] = useState("");
@@ -145,7 +151,6 @@ export default function Checkout() {
   const [cardHolder, setCardHolder] = useState("");
   const [installments, setInstallments] = useState("1");
 
-  // Form fields
   const [nome, setNome] = useState(user?.name?.split(" ")[0] || "");
   const [sobrenome, setSobrenome] = useState(user?.name?.split(" ").slice(1).join(" ") || "");
   const [cpf, setCpf] = useState("");
@@ -153,7 +158,6 @@ export default function Checkout() {
   const [telefone, setTelefone] = useState("");
   const [promoCode, setPromoCode] = useState("");
 
-  // Load MP public key and SDK
   useEffect(() => {
     async function loadMPKey() {
       try {
@@ -185,7 +189,10 @@ export default function Checkout() {
         .select("*")
         .eq("id", listingId)
         .maybeSingle();
-      if (error || !data) { setLoading(false); return; }
+      if (error || !data) {
+        setLoading(false);
+        return;
+      }
       setListing(data);
       const profile = await fetchSellerProfile({ user_id: data.seller_id });
       if (profile) setSeller(profile);
@@ -193,6 +200,29 @@ export default function Checkout() {
     }
     fetchData();
   }, [listingId]);
+
+  useEffect(() => {
+    if (!user?.id) return;
+
+    supabase
+      .from("profiles")
+      .select("name, email, phone, whatsapp")
+      .eq("user_id", user.id)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (!data) return;
+
+        const resolvedName = data.name?.trim() || user.name || "";
+        if (resolvedName) {
+          const [firstName = "", ...rest] = resolvedName.split(/\s+/);
+          setNome((prev) => prev || firstName);
+          setSobrenome((prev) => prev || rest.join(" "));
+        }
+
+        setEmail((prev) => prev || data.email || user.email || "");
+        setTelefone((prev) => prev || data.whatsapp || data.phone || "");
+      });
+  }, [user?.id, user?.email, user?.name]);
 
   const handlePaymentApproved = useCallback((confirmedTransactionId: string) => {
     setPaymentStatus("approved");
@@ -205,7 +235,6 @@ export default function Checkout() {
     toast({ title: "Pagamento cancelado", variant: "destructive" });
   }, [toast]);
 
-  // Poll payment status
   useEffect(() => {
     if (!transactionId || paymentStatus === "approved" || paymentStatus === "cancelled") return;
 
@@ -291,8 +320,30 @@ export default function Checkout() {
     setTimeout(() => setCopied(false), 3000);
   };
 
+  const persistBuyerContact = useCallback(async () => {
+    if (!user?.id) return;
+
+    const cleanEmail = email.trim().toLowerCase();
+    const normalizedPhone = normalizePhone(telefone);
+    const profilePatch: Record<string, string> = {};
+
+    if (cleanEmail) profilePatch.email = cleanEmail;
+    if (normalizedPhone) {
+      profilePatch.phone = normalizedPhone;
+      profilePatch.whatsapp = normalizedPhone;
+    }
+
+    if (!Object.keys(profilePatch).length) return;
+
+    const { error } = await supabase.from("profiles").update(profilePatch).eq("user_id", user.id);
+    if (error) throw error;
+  }, [user?.id, email, telefone]);
+
   const createTransaction = async () => {
     if (!listing || !user) return null;
+
+    await persistBuyerContact();
+
     const { data: tx, error } = await supabase
       .from("transactions")
       .insert({
@@ -306,6 +357,7 @@ export default function Checkout() {
       })
       .select()
       .single();
+
     if (error) {
       toast({ title: "Erro ao criar transação", description: error.message, variant: "destructive" });
       return null;
@@ -337,7 +389,7 @@ export default function Checkout() {
         body: {
           transaction_id: tx.id,
           amount: total,
-          payer_email: email,
+          payer_email: email.trim().toLowerCase(),
           payer_cpf: normalizeCpf(cpf),
           payer_first_name: nome,
           payer_last_name: sobrenome,
@@ -425,7 +477,7 @@ export default function Checkout() {
           token: cardTokenResult.id,
           installments: parseInt(installments),
           payment_method_id: paymentMethodId,
-          payer_email: email,
+          payer_email: email.trim().toLowerCase(),
           payer_cpf: cleanCpf,
           payer_first_name: nome,
           payer_last_name: sobrenome,
@@ -452,6 +504,9 @@ export default function Checkout() {
 
   const handleCheckout = () => {
     if (!listing || !user) return;
+
+    const normalizedPhone = normalizePhone(telefone);
+
     if (!nome || !email || !cpf) {
       toast({ title: "Preencha todos os campos obrigatórios", variant: "destructive" });
       return;
@@ -460,6 +515,11 @@ export default function Checkout() {
       toast({ title: "CPF inválido", description: "Digite um CPF válido para continuar.", variant: "destructive" });
       return;
     }
+    if (!normalizedPhone) {
+      toast({ title: "Informe um WhatsApp válido", description: "Usaremos esse número para enviar a confirmação e as credenciais após o pagamento.", variant: "destructive" });
+      return;
+    }
+
     if (paymentMethod === "pix") {
       handlePixCheckout();
     } else {

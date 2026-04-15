@@ -198,8 +198,14 @@ function getEmailBody(type: string, data: Record<string, any>): { subject: strin
         subject: `🔑 Suas credenciais de acesso — ${data.title}`,
         html: wrapTemplate(`
           <h2 style="color:#111;font-size:20px;margin:0 0 16px">Credenciais recebidas! 🔑</h2>
-          <p style="color:#555;font-size:14px;line-height:1.6">Sua compra de <strong>${data.title}</strong> foi confirmada. Seus dados de acesso estão disponíveis.</p>
-          ${btn("📦 Ver credenciais", `${SITE_URL}/compras/${data.transaction_id}`)}
+          <p style="color:#555;font-size:14px;line-height:1.6">Sua compra de <strong>${data.title}</strong> foi confirmada. Seus dados de acesso estão disponíveis abaixo.</p>
+          ${data.credentials_text ? `
+            <div style="background:#F5F7FF;border:1px solid #D9E4FF;border-radius:10px;padding:16px;margin:16px 0">
+              <p style="color:#111;font-size:13px;font-weight:700;margin:0 0 8px">Dados de acesso</p>
+              <p style="color:#333;font-size:13px;line-height:1.7;white-space:pre-line;margin:0">${data.credentials_text}</p>
+            </div>
+          ` : ""}
+          ${btn("📦 Ver transação", `${SITE_URL}/compras/${data.transaction_id}`)}
           <div style="background:#FFF8E0;border:1px solid #FFD700;border-radius:8px;padding:12px;margin-top:16px">
             <p style="color:#666;font-size:12px;margin:0">⚠️ Troque a senha imediatamente após o primeiro acesso. Você tem <strong>24h</strong> para verificar a conta antes do pagamento ser liberado ao vendedor.</p>
           </div>
