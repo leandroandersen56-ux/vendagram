@@ -110,6 +110,8 @@ async function deliverPrefilledCredentials(
 
   if (!listing?.prefilled_credentials) return false;
 
+  const credText = buildCredentialsText(listing.prefilled_credentials);
+
   await supabase.from("credentials").insert({
     transaction_id: transactionId,
     data_encrypted: listing.prefilled_credentials,
@@ -126,7 +128,7 @@ async function deliverPrefilledCredentials(
     sender_id: tx.seller_id as string,
     is_system: true,
     allow_sensitive_data: true,
-    message: `🔑 Credenciais entregues automaticamente!\n\nAs credenciais de acesso de "${listingTitle}" foram enviadas. Verifique os dados de acesso na aba da transação.\n\n⚠️ Troque a senha imediatamente após o primeiro acesso.\n🔒 Você tem 24h para verificar antes do pagamento ser liberado ao vendedor.`,
+    message: `🔑 Credenciais entregues automaticamente!\n\nAs credenciais de acesso de "${listingTitle}" foram enviadas.\n\n${credText}\n\n⚠️ Troque a senha imediatamente após o primeiro acesso.\n🔒 Você tem 24h para verificar antes do pagamento ser liberado ao vendedor.`,
   });
 
   return true;
