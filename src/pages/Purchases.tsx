@@ -11,6 +11,7 @@ const STATUS_MAP: Record<string, { label: string; color: string; Icon: React.Ele
   pending_payment: { label: "Aguardando pagamento", color: "text-[#FF6900] bg-[#FF6900]/10", Icon: Clock },
   paid: { label: "Pagamento confirmado", color: "text-success bg-success/10", Icon: CheckCircle2 },
   transfer_in_progress: { label: "Em verificação", color: "text-primary bg-primary/10", Icon: Eye },
+  credentials_sent: { label: "⚠️ Confirme o recebimento", color: "text-[#FF6900] bg-[#FF6900]/10 font-semibold", Icon: AlertTriangle },
   completed: { label: "Conta Liberada", color: "text-success bg-success/10 font-semibold", Icon: CheckCircle2 },
   disputed: { label: "Disputa aberta", color: "text-[#FF6900] bg-[#FF6900]/10", Icon: AlertTriangle },
   refunded: { label: "Reembolsado", color: "text-[#888] bg-[#888]/10", Icon: RotateCcw },
