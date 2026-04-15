@@ -28,6 +28,7 @@ import bannerSocialTiktok from "@/assets/banners/banner-social-tiktok.jpg";
 import bannerInstagram from "@/assets/banner-instagram.jpg";
 import bannerHeroOffers from "@/assets/banner-hero-offers.jpg";
 import bannerPartnershipBg from "@/assets/banner-partnership-bg.png";
+import bannerPartnershipDesktop from "@/assets/banner-partnership-desktop.png";
 import logoTopLoginWhite from "@/assets/logo-top-login-white.png";
 import froivIcon3d from "@/assets/froiv-icon-3d.png";
 import TrustedSellers from "@/components/TrustedSellers";
