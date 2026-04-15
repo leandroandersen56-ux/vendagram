@@ -20,6 +20,7 @@ function getAdmin() {
 
 async function sendWhatsApp(token: string, phone: string, text: string) {
   try {
+    console.log(`[WA] Sending to ${phone}, token length: ${token?.length}, url: ${UAZAPI_BASE_URL}/send/text`);
     const res = await fetch(`${UAZAPI_BASE_URL}/send/text`, {
       method: "POST",
       headers: {
@@ -28,10 +29,11 @@ async function sendWhatsApp(token: string, phone: string, text: string) {
       },
       body: JSON.stringify({ number: phone, text }),
     });
-    console.log(`WhatsApp to ${phone}: ${res.status}`);
+    const body = await res.text();
+    console.log(`[WA] Response ${res.status}: ${body.substring(0, 200)}`);
     return res.ok;
   } catch (e) {
-    console.error("WhatsApp send error:", e);
+    console.error("[WA] Send error:", e);
     return false;
   }
 }
@@ -91,6 +93,7 @@ Deno.serve(async (req) => {
 
   try {
     const uazapiToken = Deno.env.get("UAZAPI_TOKEN");
+    console.log(`[INIT] UAZAPI_TOKEN set: ${!!uazapiToken}, length: ${uazapiToken?.length || 0}`);
     const admin = getAdmin();
     const body = await req.json();
     const results = { whatsapp: false, email: false, buyer_whatsapp: false, buyer_email: false };
@@ -139,15 +142,18 @@ Deno.serve(async (req) => {
 
     // ── Mode 2: user_id + message (direct call) ──
     if (body.user_id && body.message) {
-      const { data: profile } = await admin
+      const { data: profile, error: pErr } = await admin
         .from("profiles")
         .select("whatsapp, phone, email")
         .eq("user_id", body.user_id)
         .single();
 
+      console.log(`[MODE2] Profile:`, JSON.stringify(profile), `Error:`, pErr?.message);
+
       const phone = profile?.whatsapp || profile?.phone;
       if (phone && uazapiToken) {
         const cleanPhone = phone.replace(/\D/g, "");
+        console.log(`[MODE2] Sending WA to: ${cleanPhone}`);
         if (cleanPhone.length >= 10) {
           results.whatsapp = await sendWhatsApp(uazapiToken, cleanPhone, body.message);
         }
