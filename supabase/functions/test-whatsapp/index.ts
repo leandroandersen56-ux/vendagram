@@ -10,32 +10,30 @@ Deno.serve(async (req) => {
     const TOKEN = "aac8a7b8-acbd-4941-ae19-965a8e66278f";
     const BASE = "https://ipazua.uazapi.com";
     const phone = "5517997091070";
-    const text = "🔔 *Teste Froiv* - API WhatsApp conectada!";
-
+    const text = "🔔 *Teste Froiv*";
     const results: Record<string, any> = {};
 
-    // 1) Check connection status
-    const r1 = await fetch(`${BASE}/instance/connect`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "token": TOKEN },
-    });
-    results.connect = { status: r1.status, body: await r1.text() };
+    // Try various endpoint patterns
+    const endpoints = [
+      { name: "send-text-chatId", path: "/message/send-text", body: { chatId: `${phone}@s.whatsapp.net`, text } },
+      { name: "send-message", path: "/message/send-message", body: { number: phone, text } },
+      { name: "send", path: "/send", body: { number: phone, text } },
+      { name: "sendText-no-path", path: "/sendText", body: { number: phone, text } },
+      { name: "chat-send-text", path: "/chat/send/text", body: { number: phone, message: text } },
+    ];
 
-    // 2) Try /message/send-text with token header
-    const r2 = await fetch(`${BASE}/message/send-text`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "token": TOKEN },
-      body: JSON.stringify({ number: phone, text }),
-    });
-    results.send_text_token_header = { status: r2.status, body: await r2.text() };
-
-    // 3) Try /sendText/{token} with token header  
-    const r3 = await fetch(`${BASE}/sendText/${TOKEN}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "token": TOKEN },
-      body: JSON.stringify({ number: phone, text }),
-    });
-    results.sendText_path_and_header = { status: r3.status, body: await r3.text() };
+    for (const ep of endpoints) {
+      try {
+        const r = await fetch(`${BASE}${ep.path}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "token": TOKEN },
+          body: JSON.stringify(ep.body),
+        });
+        results[ep.name] = { status: r.status, body: await r.text() };
+      } catch (e) {
+        results[ep.name] = { error: e.message };
+      }
+    }
 
     return new Response(JSON.stringify(results, null, 2), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
