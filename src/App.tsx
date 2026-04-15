@@ -168,6 +168,7 @@ function AppRoutes() {
           <Route path="/configuracoes/2fa" element={<ProtectedRoute><TwoFactorSetup /></ProtectedRoute>} />
           <Route path="/configuracoes/excluir" element={<ProtectedRoute><DeleteAccount /></ProtectedRoute>} />
           <Route path="/historico" element={<ProtectedRoute><ViewHistory /></ProtectedRoute>} />
+          <Route path="/meus-acessos" element={<ProtectedRoute><MyAccesses /></ProtectedRoute>} />
 
           {/* Seller Dashboard - unified */}
           <Route path="/vendedor" element={<ProtectedRoute><SellerDashboard /></ProtectedRoute>} />
