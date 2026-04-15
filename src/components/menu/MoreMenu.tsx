@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Home, Store, HelpCircle, ShoppingCart, Package, Bell, Heart, HelpCircleIcon,
   Star, Clock, Gamepad2, Smartphone, Tag, Link2, Receipt, Settings, LogOut,
-  ChevronRight, Shield, Wallet, MessageCircle
+  ChevronRight, Shield, Wallet, MessageCircle, Key
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { VerifiedBadge } from "@/components/VerifiedBadge";

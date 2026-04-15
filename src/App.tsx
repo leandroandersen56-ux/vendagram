@@ -39,6 +39,7 @@ const HelpPage = lazy(() => import("./pages/HelpPage.tsx"));
 const SearchResults = lazy(() => import("./pages/SearchResults.tsx"));
 const SellerProfile = lazy(() => import("./pages/SellerProfile.tsx"));
 const ViewHistory = lazy(() => import("./pages/ViewHistory.tsx"));
+const MyAccesses = lazy(() => import("./pages/MyAccesses.tsx"));
 const AuthCallback = lazy(() => import("./pages/AuthCallback.tsx"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword.tsx"));
 const TermsPage = lazy(() => import("./pages/TermsPage.tsx"));
