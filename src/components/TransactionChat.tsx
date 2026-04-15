@@ -42,6 +42,7 @@ export default function TransactionChat({
 
   useEffect(() => {
     loadMessages();
+    loadCredentials();
 
     const channel = supabase
       .channel(`chat-order-${transactionId}`)
@@ -98,6 +99,24 @@ export default function TransactionChat({
     if (data) setMessages(data as Message[]);
     setLoading(false);
     markAsRead();
+  };
+
+  const loadCredentials = async () => {
+    const { data } = await supabase
+      .from("credentials")
+      .select("data_encrypted")
+      .eq("transaction_id", transactionId)
+      .maybeSingle();
+
+    if (data?.data_encrypted) {
+      try {
+        const parsed = JSON.parse(data.data_encrypted);
+        setCredentials(parsed);
+      } catch {
+        // Plain text credentials
+        setCredentials({ notes: data.data_encrypted });
+      }
+    }
   };
 
   const markAsRead = async () => {
