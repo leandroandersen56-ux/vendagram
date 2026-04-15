@@ -28,6 +28,7 @@ import bannerSocialTiktok from "@/assets/banners/banner-social-tiktok.jpg";
 import bannerInstagram from "@/assets/banner-instagram.jpg";
 import bannerHeroOffers from "@/assets/banner-hero-offers.jpg";
 import bannerPartnershipBg from "@/assets/banner-partnership-bg.png";
+import bannerPartnershipDesktop from "@/assets/banner-partnership-desktop.png";
 import logoTopLoginWhite from "@/assets/logo-top-login-white.png";
 import froivIcon3d from "@/assets/froiv-icon-3d.png";
 import TrustedSellers from "@/components/TrustedSellers";
@@ -53,7 +54,7 @@ const BANNERS = [
   { img: bannerHeroOffers, title: "Apenas 10% de Taxa\nem Cada Venda", subtitle: "A menor taxa do mercado.\nNegocie direto, sem mensalidade\ne sem custos ocultos", cta: "Começar agora", link: "/marketplace", objectPosition: "right 30%" },
   { img: bannerSecurityHero, title: "Compre e Venda\nContas Digitais\ncom Segurança", subtitle: "Redes sociais e jogos\ncom escrow integrado", cta: "Explorar", link: "/marketplace", objectPosition: "right 40%" },
   { img: bannerHeroSecurity, title: "Só Liberamos o Valor\nApós Sua Confirmação", subtitle: "Pagamento protegido\ncom sistema escrow", cta: "Saiba mais", link: "/ajuda/como-funciona-escrow", objectPosition: "right 40%" },
-  { img: bannerPartnershipBg, title: "A Plataforma Mais\nConfiável do Brasil", subtitle: "Garantia e segurança da\nAgência Top Login", cta: "Explorar", link: "/marketplace", objectPosition: "right 30%", partnership: true },
+  { img: bannerPartnershipBg, imgDesktop: bannerPartnershipDesktop, title: "A Plataforma Mais\nConfiável do Brasil", subtitle: "Garantia e segurança da\nAgência Top Login", cta: "Explorar", link: "/marketplace", objectPosition: "right 30%", partnership: true },
 ];
 
 const QUICK_CATEGORIES = [
@@ -236,7 +237,14 @@ export default function Index() {
             <div className="relative overflow-hidden rounded-xl h-[180px] md:h-[340px]">
               {BANNERS.map((b, i) => (
                 <div key={i} className={`absolute inset-0 transition-opacity duration-500 ${i === bannerIdx ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
-                  <img src={b.img} alt={b.title} className="w-full h-full object-cover" style={b.objectPosition ? { objectPosition: b.objectPosition } : undefined} {...(i === 0 ? {} : { loading: "lazy" as const })} />
+                  {(b as any).imgDesktop ? (
+                    <>
+                      <img src={b.img} alt={b.title} className="w-full h-full object-cover sm:hidden" style={b.objectPosition ? { objectPosition: b.objectPosition } : undefined} {...(i === 0 ? {} : { loading: "lazy" as const })} />
+                      <img src={(b as any).imgDesktop} alt={b.title} className="w-full h-full object-cover hidden sm:block" style={b.objectPosition ? { objectPosition: b.objectPosition } : undefined} {...(i === 0 ? {} : { loading: "lazy" as const })} />
+                    </>
+                  ) : (
+                    <img src={b.img} alt={b.title} className="w-full h-full object-cover" style={b.objectPosition ? { objectPosition: b.objectPosition } : undefined} {...(i === 0 ? {} : { loading: "lazy" as const })} />
+                  )}
                   {b.title && !b.partnership && <div className="absolute inset-y-0 left-0 w-3/5 bg-gradient-to-r from-black/70 via-black/40 to-transparent pointer-events-none" />}
                   {b.partnership ? (
                     <>
