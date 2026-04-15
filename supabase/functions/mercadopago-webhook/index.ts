@@ -123,11 +123,13 @@ async function deliverPrefilledCredentials(
 
   if (!listing?.prefilled_credentials) return false;
 
+  // Decode and store as clean JSON
+  const decoded = decodeCredentials(listing.prefilled_credentials);
   const credText = buildCredentialsText(listing.prefilled_credentials);
 
   await supabase.from("credentials").insert({
     transaction_id: transactionId,
-    data_encrypted: listing.prefilled_credentials,
+    data_encrypted: JSON.stringify(decoded),
     delivered_at: new Date().toISOString(),
   });
 
