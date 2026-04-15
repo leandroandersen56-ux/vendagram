@@ -4,7 +4,8 @@ import { usePartner } from "./PartnerGuard";
 import { useAuth } from "@/contexts/AuthContext";
 import { TrendingUp, DollarSign, Building2, Wallet, Package, Eye, Users } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
-import { format, subDays } from "date-fns";
+import { format, subDays, formatDistanceToNow } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import { useNavigate } from "react-router-dom";
 
 const formatBRL = (v: number) =>
