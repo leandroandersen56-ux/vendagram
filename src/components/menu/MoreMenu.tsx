@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Home, Store, HelpCircle, ShoppingCart, Package, Bell, Heart, HelpCircleIcon,
   Star, Clock, Gamepad2, Smartphone, Tag, Link2, Receipt, Settings, LogOut,
-  ChevronRight, Shield, Wallet, MessageCircle
+  ChevronRight, Shield, Wallet, MessageCircle, Key
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { VerifiedBadge } from "@/components/VerifiedBadge";
@@ -44,6 +44,7 @@ export default function MoreMenu({ open, onClose }: MoreMenuProps) {
       label: "Minha atividade",
       items: [
         { icon: ShoppingCart, label: "Minhas Compras", path: "/compras" },
+        { icon: Key, label: "Meus Acessos", path: "/meus-acessos", badge: { text: "NOVO", color: "bg-primary text-white" } },
         { icon: Package, label: "Minhas Vendas", path: "/vendedor", badge: { text: "NOVO", color: "bg-primary text-white" } },
         { icon: Bell, label: "Notificações", path: "/notificacoes", badge: { text: "1", color: "bg-destructive text-white" } },
         { icon: Heart, label: "Favoritos", path: "/favoritos" },
