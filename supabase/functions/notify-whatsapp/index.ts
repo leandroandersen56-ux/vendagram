@@ -93,6 +93,7 @@ Deno.serve(async (req) => {
 
   try {
     const uazapiToken = Deno.env.get("UAZAPI_TOKEN");
+    console.log(`[INIT] UAZAPI_TOKEN set: ${!!uazapiToken}, length: ${uazapiToken?.length || 0}`);
     const admin = getAdmin();
     const body = await req.json();
     const results = { whatsapp: false, email: false, buyer_whatsapp: false, buyer_email: false };
