@@ -8,13 +8,17 @@ Deno.serve(async (req) => {
 
   try {
     const INSTANCE_TOKEN = "aac8a7b8-acbd-4941-ae19-965a8e66278f";
+    const SERVER_URL = "https://ipazua.uazapi.com";
     const phone = "5517997091070";
     const text = "🔔 *Teste Froiv* - API WhatsApp conectada!";
 
-    // Test: Instance Token as both URL param AND bearer
-    const res = await fetch(`https://ipazua.uazapi.com/sendText/${INSTANCE_TOKEN}`, {
+    // Per docs: POST {server_url}/message/send-text with header "token"
+    const res = await fetch(`${SERVER_URL}/message/send-text`, {
       method: "POST",
-      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${INSTANCE_TOKEN}` },
+      headers: {
+        "Content-Type": "application/json",
+        "token": INSTANCE_TOKEN,
+      },
       body: JSON.stringify({ number: phone, text }),
     });
     const data = await res.text();
