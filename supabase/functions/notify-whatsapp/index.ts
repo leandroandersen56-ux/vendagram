@@ -142,15 +142,18 @@ Deno.serve(async (req) => {
 
     // ── Mode 2: user_id + message (direct call) ──
     if (body.user_id && body.message) {
-      const { data: profile } = await admin
+      const { data: profile, error: pErr } = await admin
         .from("profiles")
         .select("whatsapp, phone, email")
         .eq("user_id", body.user_id)
         .single();
 
+      console.log(`[MODE2] Profile:`, JSON.stringify(profile), `Error:`, pErr?.message);
+
       const phone = profile?.whatsapp || profile?.phone;
       if (phone && uazapiToken) {
         const cleanPhone = phone.replace(/\D/g, "");
+        console.log(`[MODE2] Sending WA to: ${cleanPhone}`);
         if (cleanPhone.length >= 10) {
           results.whatsapp = await sendWhatsApp(uazapiToken, cleanPhone, body.message);
         }
