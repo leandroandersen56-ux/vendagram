@@ -1,1 +1,5 @@
 project_id = "tqfvhfrbeolnvjpcfckl"
+
+[auth]
+# Increase email rate limit to avoid "rate limit exceeded" errors
+rate_limit.email_sent = 30
