@@ -11,6 +11,7 @@ const STATUS_MAP: Record<string, { label: string; color: string; Icon: React.Ele
   pending_payment: { label: "Aguardando pagamento", color: "text-[#FF6900] bg-[#FF6900]/10", Icon: Clock },
   paid: { label: "Pagamento confirmado", color: "text-success bg-success/10", Icon: CheckCircle2 },
   transfer_in_progress: { label: "Em verificação", color: "text-primary bg-primary/10", Icon: Eye },
+  credentials_sent: { label: "⚠️ Confirme o recebimento", color: "text-[#FF6900] bg-[#FF6900]/10 font-semibold", Icon: AlertTriangle },
   completed: { label: "Conta Liberada", color: "text-success bg-success/10 font-semibold", Icon: CheckCircle2 },
   disputed: { label: "Disputa aberta", color: "text-[#FF6900] bg-[#FF6900]/10", Icon: AlertTriangle },
   refunded: { label: "Reembolsado", color: "text-[#888] bg-[#888]/10", Icon: RotateCcw },
@@ -51,7 +52,7 @@ export default function Purchases() {
   const filtered = purchases.filter((p) => {
     const title = p.listings?.title || "";
     if (search && !title.toLowerCase().includes(search.toLowerCase())) return false;
-    if (filter === "Em andamento") return ["pending_payment", "paid", "transfer_in_progress"].includes(p.status);
+    if (filter === "Em andamento") return ["pending_payment", "paid", "transfer_in_progress", "credentials_sent"].includes(p.status);
     if (filter === "Concluídos") return p.status === "completed";
     if (filter === "Disputas") return p.status === "disputed";
     return true;
@@ -152,6 +153,11 @@ export default function Purchases() {
                     </p>
                   </div>
                 </div>
+                {purchase.status === "credentials_sent" && (
+                  <button className="mt-3 w-full flex items-center justify-center gap-1.5 bg-green-600 text-white py-2.5 rounded-lg text-[13px] font-semibold">
+                    <CheckCircle2 className="h-3.5 w-3.5" /> Verificar e confirmar recebimento
+                  </button>
+                )}
                 {purchase.status === "completed" && (
                   <button className="mt-3 w-full flex items-center justify-center gap-1.5 bg-[#FF6900] text-white py-2 rounded-lg text-[13px] font-semibold">
                     <Star className="h-3.5 w-3.5" fill="white" /> Avaliar e ganhar recompensas
