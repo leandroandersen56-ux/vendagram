@@ -59,7 +59,7 @@ export const TRUSTED_SELLER_LIST: TrustedSellerSeed[] = [
     name: "Theus Klunck",
     username: "theus",
     userId: "73740fcc-5a53-4a10-8645-eeb76ec7642b",
-    avatarUrl: "https://yzwncktlibdfycqhvlqg.supabase.co/storage/v1/object/public/avatars/73740fcc-5a53-4a10-8645-eeb76ec7642b/avatar.jpg",
+    avatarUrl: "https://yzwncktlibdfycqhvlqg.supabase.co/storage/v1/object/public/avatars/73740fcc-5a53-4a10-8645-eeb76ec7642b/avatar.jpg?t=1776278471113",
     sales: 42,
     rating: 4.9,
     bio: "Vendedor verificado da plataforma Froiv.",
