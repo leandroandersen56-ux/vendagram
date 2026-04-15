@@ -215,6 +215,13 @@ export default function SuperAdminUsers() {
                         >
                           <LogIn className="h-4 w-4" />
                         </button>
+                        <button
+                          onClick={() => handleDeleteUser(user.email, user.name)}
+                          className="text-red-400 hover:text-red-300"
+                          title="Excluir usuário"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
                       </div>
                     </td>
                   </tr>
