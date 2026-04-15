@@ -20,6 +20,7 @@ function getAdmin() {
 
 async function sendWhatsApp(token: string, phone: string, text: string) {
   try {
+    console.log(`[WA] Sending to ${phone}, token length: ${token?.length}, url: ${UAZAPI_BASE_URL}/send/text`);
     const res = await fetch(`${UAZAPI_BASE_URL}/send/text`, {
       method: "POST",
       headers: {
@@ -28,10 +29,11 @@ async function sendWhatsApp(token: string, phone: string, text: string) {
       },
       body: JSON.stringify({ number: phone, text }),
     });
-    console.log(`WhatsApp to ${phone}: ${res.status}`);
+    const body = await res.text();
+    console.log(`[WA] Response ${res.status}: ${body.substring(0, 200)}`);
     return res.ok;
   } catch (e) {
-    console.error("WhatsApp send error:", e);
+    console.error("[WA] Send error:", e);
     return false;
   }
 }
