@@ -9,7 +9,7 @@ const corsHeaders = {
 const DB_URL = "https://yzwncktlibdfycqhvlqg.supabase.co";
 const UAZAPI_BASE_URL = "https://ipazua.uazapi.com";
 const RESEND_API_KEY_NAME = "RESEND_API_KEY";
-const FROM_EMAIL = "Froiv <onboarding@resend.dev>";
+const FROM_EMAIL = "Froiv <noreply@froiv.com>";
 const SITE_URL = "https://froiv.com";
 
 function getAdmin() {
