@@ -132,6 +132,20 @@ export default function PartnerDashboard() {
     enabled: !!authUserId && eligibleListingIds.length > 0,
   });
 
+  // Últimos usuários cadastrados (sem email/contato)
+  const { data: recentUsers = [] } = useQuery({
+    queryKey: ["partner-recent-users"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("public_profiles")
+        .select("user_id, name, username, avatar_url, created_at")
+        .order("created_at", { ascending: false })
+        .limit(15);
+      return data ?? [];
+    },
+    refetchInterval: 60_000,
+  });
+
   // Cálculos: sócio recebe 10% fixo das suas próprias vendas
   const partnerProfit = totalSales * PARTNER_PROFIT_RATE;
   const available = Math.max(0, partnerProfit - withdrawn);
