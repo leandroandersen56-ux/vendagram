@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { supabase as prodSupabase } from "@/lib/supabase-custom-client";
 import { formatBRL } from "@/hooks/useAdminStats";
-import { Search, ChevronLeft, ChevronRight, X, Eye, Ban, DollarSign, Mail, LogIn } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight, X, Eye, Ban, DollarSign, Mail, LogIn, Trash2 } from "lucide-react";
 import { VerifiedBadge } from "@/components/VerifiedBadge";
 import { toast } from "sonner";
 
@@ -60,6 +61,35 @@ export default function SuperAdminUsers() {
       toast.error(e.message || "Erro de rede ao chamar a função");
     } finally {
       setImpersonating(false);
+    }
+  };
+
+  const handleDeleteUser = async (userId: string, email: string, name: string) => {
+    const confirm = window.confirm(`Excluir permanentemente "${name || email}"? Todos os dados serão removidos.`);
+    if (!confirm) return;
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) { toast.error("Sessão expirada"); return; }
+
+      const res = await supabase.functions.invoke("delete-user", {
+        body: { email },
+      });
+
+      if (res.error) {
+        toast.error("Erro: " + (res.error?.message || "falha"));
+        return;
+      }
+
+      if (res.data?.error) {
+        toast.error(res.data.error);
+        return;
+      }
+
+      toast.success(`Usuário "${name || email}" excluído com sucesso`);
+      refetch();
+    } catch (e: any) {
+      toast.error(e.message || "Erro ao excluir");
     }
   };
 
@@ -184,6 +214,13 @@ export default function SuperAdminUsers() {
                           disabled={impersonating}
                         >
                           <LogIn className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteUser(user.user_id, user.email, user.name)}
+                          className="text-red-400 hover:text-red-300"
+                          title="Excluir usuário"
+                        >
+                          <Trash2 className="h-4 w-4" />
                         </button>
                       </div>
                     </td>
