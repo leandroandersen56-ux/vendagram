@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase-custom-client";
 import { usePartner } from "./PartnerGuard";
 import { useAuth } from "@/contexts/AuthContext";
-import { TrendingUp, DollarSign, Building2, Wallet, Package, Eye } from "lucide-react";
+import { TrendingUp, DollarSign, Building2, Wallet, Package, Eye, Users } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 import { format, subDays } from "date-fns";
 import { useNavigate } from "react-router-dom";
