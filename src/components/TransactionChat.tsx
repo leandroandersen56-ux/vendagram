@@ -272,6 +272,49 @@ export default function TransactionChat({
         )}
       </div>
 
+      {/* Credentials card */}
+      {credentials && !isSeller && (
+        <div className="mx-3 my-2 bg-[#F0FFF4] border border-green-200 rounded-xl p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <Key className="h-4 w-4 text-green-600" />
+            <span className="text-[13px] font-semibold text-green-700">Dados de acesso</span>
+          </div>
+          <div className="space-y-1.5 bg-white rounded-lg p-3 border border-green-100">
+            {credentials.email && (
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] text-[#999]">Email</span>
+                <span className="text-[13px] font-mono text-[#111] select-all">{credentials.email}</span>
+              </div>
+            )}
+            {credentials.login && (
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] text-[#999]">Login</span>
+                <span className="text-[13px] font-mono text-[#111] select-all">{credentials.login}</span>
+              </div>
+            )}
+            {credentials.password && (
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] text-[#999]">Senha</span>
+                <span className="text-[13px] font-mono text-[#111] select-all">{credentials.password}</span>
+              </div>
+            )}
+            {credentials.twofa && (
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] text-[#999]">2FA</span>
+                <span className="text-[13px] font-mono text-[#111] select-all">{credentials.twofa}</span>
+              </div>
+            )}
+            {credentials.notes && (
+              <div className="pt-1 border-t border-[#F0F0F0]">
+                <span className="text-[11px] text-[#999]">Observações</span>
+                <p className="text-[12px] text-[#333] mt-0.5 whitespace-pre-line select-all">{credentials.notes}</p>
+              </div>
+            )}
+          </div>
+          <p className="text-[10px] text-[#999] mt-2">⚠️ Troque a senha imediatamente após o primeiro acesso.</p>
+        </div>
+      )}
+
       {/* Seller hint banner */}
       {isSeller && transactionStatus === "transfer_in_progress" && (
         <div className="mx-3 my-2 bg-[#FFF3CD] rounded-lg px-3 py-2 flex items-start gap-2">
