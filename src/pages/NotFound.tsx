@@ -7,15 +7,17 @@ const NotFound = () => {
   // Detect URLs with invisible Unicode chars (common from WhatsApp copy-paste)
   const decoded = decodeURIComponent(location.pathname);
   const cleaned = decoded.replace(/[\u2000-\u206F\u2800\uFEFF\u200B-\u200F\u00A0\u180E\u3000]/g, "").trim();
-  
-  // If path is only invisible chars or empty after cleaning, redirect to home
-  if (cleaned === "/" || cleaned === "" || cleaned.length <= 1) {
-    return <Navigate to="/" replace />;
-  }
+  const shouldRedirect = cleaned === "/" || cleaned === "" || cleaned.length <= 1;
 
   useEffect(() => {
-    console.error("404 Error: User attempted to access non-existent route:", location.pathname);
-  }, [location.pathname]);
+    if (!shouldRedirect) {
+      console.error("404 Error: User attempted to access non-existent route:", location.pathname);
+    }
+  }, [location.pathname, shouldRedirect]);
+
+  if (shouldRedirect) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted">
