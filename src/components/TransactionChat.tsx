@@ -101,6 +101,20 @@ export default function TransactionChat({
     markAsRead();
   };
 
+  const decodeCredentials = (raw: string): Record<string, string> => {
+    // Try base64 decode first
+    try {
+      const decoded = atob(raw);
+      const json = decodeURIComponent(escape(decoded));
+      return JSON.parse(json);
+    } catch { /* not base64 */ }
+    // Try plain JSON
+    try {
+      return JSON.parse(raw);
+    } catch { /* not JSON */ }
+    return { notes: raw };
+  };
+
   const loadCredentials = async () => {
     const { data } = await supabase
       .from("credentials")
@@ -109,13 +123,7 @@ export default function TransactionChat({
       .maybeSingle();
 
     if (data?.data_encrypted) {
-      try {
-        const parsed = JSON.parse(data.data_encrypted);
-        setCredentials(parsed);
-      } catch {
-        // Plain text credentials
-        setCredentials({ notes: data.data_encrypted });
-      }
+      setCredentials(decodeCredentials(data.data_encrypted));
     }
   };
 

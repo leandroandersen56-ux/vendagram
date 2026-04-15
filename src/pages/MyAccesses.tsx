@@ -54,10 +54,17 @@ export default function MyAccesses() {
     const accessItems: AccessItem[] = transactions.map((tx: any) => {
       const cred = credentials.find((c) => c.transaction_id === tx.id);
       let parsed: Record<string, string> = {};
+      const raw = cred?.data_encrypted || "";
+      // Try base64 decode first
       try {
-        parsed = JSON.parse(cred?.data_encrypted || "{}");
+        const decoded = atob(raw);
+        parsed = JSON.parse(decodeURIComponent(escape(decoded)));
       } catch {
-        parsed = { notes: cred?.data_encrypted || "" };
+        try {
+          parsed = JSON.parse(raw);
+        } catch {
+          parsed = raw ? { notes: raw } : {};
+        }
       }
 
       return {

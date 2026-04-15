@@ -78,21 +78,34 @@ function normalizeBrazilianPhone(value?: string | null) {
   return null;
 }
 
+function decodeCredentials(raw: string): Record<string, string> {
+  // Try base64 decode first
+  try {
+    const decoded = atob(raw);
+    const json = decodeURIComponent(escape(decoded));
+    return JSON.parse(json);
+  } catch { /* not base64 */ }
+
+  // Try plain JSON
+  try {
+    return JSON.parse(raw);
+  } catch { /* not JSON */ }
+
+  // Fallback: plain text
+  return { notes: raw };
+}
+
 function buildCredentialsText(rawCredentials?: string | null) {
   if (!rawCredentials) return "";
 
-  try {
-    const parsed = JSON.parse(rawCredentials);
-    const parts: string[] = [];
-    if (parsed.email) parts.push(`Email: ${parsed.email}`);
-    if (parsed.login || parsed.username) parts.push(`Login: ${parsed.login || parsed.username}`);
-    if (parsed.password || parsed.senha) parts.push(`Senha: ${parsed.password || parsed.senha}`);
-    if (parsed.twofa || parsed["2fa"]) parts.push(`2FA: ${parsed.twofa || parsed["2fa"]}`);
-    if (parsed.notes || parsed.observacoes) parts.push(`Obs: ${parsed.notes || parsed.observacoes}`);
-    return parts.join("\n");
-  } catch {
-    return rawCredentials;
-  }
+  const parsed = decodeCredentials(rawCredentials);
+  const parts: string[] = [];
+  if (parsed.email) parts.push(`📧 Email: ${parsed.email}`);
+  if (parsed.login || parsed.username) parts.push(`👤 Login: ${parsed.login || parsed.username}`);
+  if (parsed.password || parsed.senha) parts.push(`🔑 Senha: ${parsed.password || parsed.senha}`);
+  if (parsed.twofa || parsed["2fa"]) parts.push(`🛡️ 2FA: ${parsed.twofa || parsed["2fa"]}`);
+  if (parsed.notes || parsed.observacoes) parts.push(`📝 Obs: ${parsed.notes || parsed.observacoes}`);
+  return parts.join("\n");
 }
 
 async function deliverPrefilledCredentials(
@@ -110,11 +123,13 @@ async function deliverPrefilledCredentials(
 
   if (!listing?.prefilled_credentials) return false;
 
+  // Decode and store as clean JSON
+  const decoded = decodeCredentials(listing.prefilled_credentials);
   const credText = buildCredentialsText(listing.prefilled_credentials);
 
   await supabase.from("credentials").insert({
     transaction_id: transactionId,
-    data_encrypted: listing.prefilled_credentials,
+    data_encrypted: JSON.stringify(decoded),
     delivered_at: new Date().toISOString(),
   });
 
