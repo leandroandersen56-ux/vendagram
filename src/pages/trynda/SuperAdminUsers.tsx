@@ -64,6 +64,35 @@ export default function SuperAdminUsers() {
     }
   };
 
+  const handleDeleteUser = async (userId: string, email: string, name: string) => {
+    const confirm = window.confirm(`Excluir permanentemente "${name || email}"? Todos os dados serão removidos.`);
+    if (!confirm) return;
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) { toast.error("Sessão expirada"); return; }
+
+      const res = await supabase.functions.invoke("delete-user", {
+        body: { email },
+      });
+
+      if (res.error) {
+        toast.error("Erro: " + (res.error?.message || "falha"));
+        return;
+      }
+
+      if (res.data?.error) {
+        toast.error(res.data.error);
+        return;
+      }
+
+      toast.success(`Usuário "${name || email}" excluído com sucesso`);
+      refetch();
+    } catch (e: any) {
+      toast.error(e.message || "Erro ao excluir");
+    }
+  };
+
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["admin-users", search, page],
     queryFn: async () => {
