@@ -64,32 +64,32 @@ export default function SuperAdminUsers() {
     }
   };
 
-  const handleDeleteUser = async (userId: string, email: string, name: string) => {
-    const confirm = window.confirm(`Excluir permanentemente "${name || email}"? Todos os dados serão removidos.`);
-    if (!confirm) return;
-
+  const handleDeleteUser = async (email: string, name: string) => {
+    const ok = window.confirm(`Excluir permanentemente "${name || email}"?\nTodos os dados serão removidos da produção.`);
+    if (!ok) return;
     try {
-      const { data: { session } } = await supabase.auth.getSession();
+      const { data: { session } } = await prodSupabase.auth.getSession();
       if (!session) { toast.error("Sessão expirada"); return; }
 
-      const res = await supabase.functions.invoke("delete-user", {
-        body: { email },
+      const edgeFnUrl = `https://tqfvhfrbeolnvjpcfckl.supabase.co/functions/v1/delete-user`;
+      const res = await fetch(edgeFnUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({ email }),
       });
-
-      if (res.error) {
-        toast.error("Erro: " + (res.error?.message || "falha"));
+      const json = await res.json();
+      if (!res.ok || json.error) {
+        toast.error(json.error || "Erro ao excluir");
+        console.error("Delete user error:", json);
         return;
       }
-
-      if (res.data?.error) {
-        toast.error(res.data.error);
-        return;
-      }
-
-      toast.success(`Usuário "${name || email}" excluído com sucesso`);
+      toast.success(`"${name || email}" excluído com sucesso`);
       refetch();
     } catch (e: any) {
-      toast.error(e.message || "Erro ao excluir");
+      toast.error(e.message || "Erro de rede");
     }
   };
 
@@ -216,7 +216,7 @@ export default function SuperAdminUsers() {
                           <LogIn className="h-4 w-4" />
                         </button>
                         <button
-                          onClick={() => handleDeleteUser(user.user_id, user.email, user.name)}
+                          onClick={() => handleDeleteUser(user.email, user.name)}
                           className="text-red-400 hover:text-red-300"
                           title="Excluir usuário"
                         >
