@@ -8,7 +8,6 @@ const corsHeaders = {
 // DB lives on personal instance — ALWAYS
 const DB_URL = "https://yzwncktlibdfycqhvlqg.supabase.co";
 const UAZAPI_BASE_URL = "https://ipazua.uazapi.com";
-const UAZAPI_INSTANCE_ID = "c433e432-781e-4f03-a8fc-d9e3cb1c6f4a";
 const RESEND_API_KEY_NAME = "RESEND_API_KEY";
 const FROM_EMAIL = "Froiv <onboarding@resend.dev>";
 const SITE_URL = "https://froiv.com";
@@ -21,11 +20,11 @@ function getAdmin() {
 
 async function sendWhatsApp(token: string, phone: string, text: string) {
   try {
-    const res = await fetch(`${UAZAPI_BASE_URL}/sendText/${UAZAPI_INSTANCE_ID}`, {
+    const res = await fetch(`${UAZAPI_BASE_URL}/send/text`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
+        "token": token,
       },
       body: JSON.stringify({ number: phone, text }),
     });
