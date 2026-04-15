@@ -237,7 +237,14 @@ export default function Index() {
             <div className="relative overflow-hidden rounded-xl h-[180px] md:h-[340px]">
               {BANNERS.map((b, i) => (
                 <div key={i} className={`absolute inset-0 transition-opacity duration-500 ${i === bannerIdx ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
-                  <img src={b.img} alt={b.title} className="w-full h-full object-cover" style={b.objectPosition ? { objectPosition: b.objectPosition } : undefined} {...(i === 0 ? {} : { loading: "lazy" as const })} />
+                  {(b as any).imgDesktop ? (
+                    <>
+                      <img src={b.img} alt={b.title} className="w-full h-full object-cover sm:hidden" style={b.objectPosition ? { objectPosition: b.objectPosition } : undefined} {...(i === 0 ? {} : { loading: "lazy" as const })} />
+                      <img src={(b as any).imgDesktop} alt={b.title} className="w-full h-full object-cover hidden sm:block" style={b.objectPosition ? { objectPosition: b.objectPosition } : undefined} {...(i === 0 ? {} : { loading: "lazy" as const })} />
+                    </>
+                  ) : (
+                    <img src={b.img} alt={b.title} className="w-full h-full object-cover" style={b.objectPosition ? { objectPosition: b.objectPosition } : undefined} {...(i === 0 ? {} : { loading: "lazy" as const })} />
+                  )}
                   {b.title && !b.partnership && <div className="absolute inset-y-0 left-0 w-3/5 bg-gradient-to-r from-black/70 via-black/40 to-transparent pointer-events-none" />}
                   {b.partnership ? (
                     <>
