@@ -20,11 +20,11 @@ function getAdmin() {
 
 async function sendWhatsApp(token: string, phone: string, text: string) {
   try {
-    const res = await fetch(`${UAZAPI_BASE_URL}/sendText/${UAZAPI_INSTANCE_ID}`, {
+    const res = await fetch(`${UAZAPI_BASE_URL}/send/text`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
+        "token": token,
       },
       body: JSON.stringify({ number: phone, text }),
     });
