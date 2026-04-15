@@ -36,6 +36,7 @@ export default function TransactionChat({
   const [sending, setSending] = useState(false);
   const [loading, setLoading] = useState(true);
   const [otherUserOnline, setOtherUserOnline] = useState(false);
+  const [credentials, setCredentials] = useState<{email?:string;login?:string;password?:string;twofa?:string;notes?:string} | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const channelRef = useRef<any>(null);
 
