@@ -2,9 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase-custom-client";
 import { usePartner } from "./PartnerGuard";
 import { useAuth } from "@/contexts/AuthContext";
-import { TrendingUp, DollarSign, Building2, Wallet, Package, Eye } from "lucide-react";
+import { TrendingUp, DollarSign, Building2, Wallet, Package, Eye, Users } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
-import { format, subDays } from "date-fns";
+import { format, subDays, formatDistanceToNow } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import { useNavigate } from "react-router-dom";
 
 const formatBRL = (v: number) =>
@@ -129,6 +130,20 @@ export default function PartnerDashboard() {
       }));
     },
     enabled: !!authUserId && eligibleListingIds.length > 0,
+  });
+
+  // Últimos usuários cadastrados (sem email/contato)
+  const { data: recentUsers = [] } = useQuery({
+    queryKey: ["partner-recent-users"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("public_profiles")
+        .select("user_id, name, username, avatar_url, created_at")
+        .order("created_at", { ascending: false })
+        .limit(15);
+      return data ?? [];
+    },
+    refetchInterval: 60_000,
   });
 
   // Cálculos: sócio recebe 10% fixo das suas próprias vendas
@@ -283,6 +298,36 @@ export default function PartnerDashboard() {
             <Area type="monotone" dataKey="lucro" stroke="#10B981" fill="url(#profitGrad)" strokeWidth={2} strokeDasharray="5 5" />
           </AreaChart>
         </ResponsiveContainer>
+      </div>
+
+      {/* Últimos usuários cadastrados */}
+      <div className="bg-[#142952] rounded-xl border border-[rgba(14,165,233,0.15)] p-5">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-sm font-semibold text-[#7DD3FC] flex items-center gap-2">
+            <Users className="h-4 w-4" />
+            Últimos Cadastros ({recentUsers.length})
+          </h3>
+        </div>
+        {recentUsers.length === 0 ? (
+          <p className="text-[#7DD3FC]/50 text-sm text-center py-8">Nenhum usuário cadastrado</p>
+        ) : (
+          <div className="space-y-2">
+            {recentUsers.map((u: any) => (
+              <div key={u.user_id} className="flex items-center gap-3 py-2 px-3 rounded-lg hover:bg-[rgba(14,165,233,0.05)] transition-colors">
+                <div className="h-8 w-8 rounded-full bg-[#0ea5e9]/20 flex items-center justify-center text-[#7DD3FC] text-xs font-bold shrink-0">
+                  {(u.name || "?")[0]?.toUpperCase()}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm text-[#F0F9FF] font-medium truncate">{u.name || "Usuário"}</p>
+                  {u.username && <p className="text-[10px] text-[#7DD3FC]/50">@{u.username}</p>}
+                </div>
+                <span className="text-[10px] text-[#7DD3FC]/60 shrink-0">
+                  {formatDistanceToNow(new Date(u.created_at), { addSuffix: true, locale: ptBR })}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
