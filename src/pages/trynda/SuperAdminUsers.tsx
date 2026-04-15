@@ -64,6 +64,35 @@ export default function SuperAdminUsers() {
     }
   };
 
+  const handleDeleteUser = async (email: string, name: string) => {
+    const ok = window.confirm(`Excluir permanentemente "${name || email}"?\nTodos os dados serão removidos da produção.`);
+    if (!ok) return;
+    try {
+      const { data: { session } } = await prodSupabase.auth.getSession();
+      if (!session) { toast.error("Sessão expirada"); return; }
+
+      const edgeFnUrl = `https://tqfvhfrbeolnvjpcfckl.supabase.co/functions/v1/delete-user`;
+      const res = await fetch(edgeFnUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({ email }),
+      });
+      const json = await res.json();
+      if (!res.ok || json.error) {
+        toast.error(json.error || "Erro ao excluir");
+        console.error("Delete user error:", json);
+        return;
+      }
+      toast.success(`"${name || email}" excluído com sucesso`);
+      refetch();
+    } catch (e: any) {
+      toast.error(e.message || "Erro de rede");
+    }
+  };
+
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["admin-users", search, page],
     queryFn: async () => {
