@@ -117,19 +117,12 @@ export default function AmbassadorPage() {
     const newUrls: string[] = [];
 
     for (const file of Array.from(files)) {
-      if (file.size > 5 * 1024 * 1024) {
-        toast.error(`${file.name} é muito grande (máx 5MB)`);
-        continue;
+      try {
+        const url = await uploadImage(file, { maxSizeMB: 10 });
+        newUrls.push(url);
+      } catch (err: any) {
+        toast.error(`Erro no upload: ${file.name}`, { description: err?.message });
       }
-      const ext = file.name.split(".").pop();
-      const path = `${user.id}/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
-      const { error } = await supabase.storage.from("ambassador-proofs").upload(path, file, { upsert: true });
-      if (error) {
-        toast.error(`Erro no upload: ${file.name}`);
-        continue;
-      }
-      const { data: urlData } = supabase.storage.from("ambassador-proofs").getPublicUrl(path);
-      newUrls.push(urlData.publicUrl);
     }
 
     setAppScreenshots(prev => [...prev, ...newUrls]);
