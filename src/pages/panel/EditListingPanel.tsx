@@ -220,12 +220,11 @@ export default function EditListingPanel() {
     const newUrls: string[] = [];
 
     for (const file of Array.from(files)) {
-      const ext = file.name.split(".").pop();
-      const path = `${id}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-      const { error } = await supabase.storage.from("listings").upload(path, file);
-      if (!error) {
-        const { data: urlData } = supabase.storage.from("listings").getPublicUrl(path);
-        newUrls.push(urlData.publicUrl);
+      try {
+        const url = await uploadImage(file, { maxSizeMB: 10 });
+        newUrls.push(url);
+      } catch (err: any) {
+        toast({ title: `Erro: ${file.name}`, description: err?.message, variant: "destructive" });
       }
     }
 

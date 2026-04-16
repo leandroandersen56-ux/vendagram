@@ -89,25 +89,16 @@ export default function SellerProfileHeader({ seller, listingsCount, avgRating, 
   async function handleCoverUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file || !user) return;
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error("Imagem muito grande. Máximo 5MB.");
-      return;
-    }
     setUploading(true);
     try {
-      const ext = file.name.split(".").pop() || "jpg";
-      const path = `${user.id}/cover.${ext}`;
-      const { error: uploadError } = await supabase.storage.from("avatars").upload(path, file, { upsert: true });
-      if (uploadError) throw uploadError;
-      const { data: urlData } = supabase.storage.from("avatars").getPublicUrl(path);
-      const publicUrl = `${urlData.publicUrl}?t=${Date.now()}`;
+      const publicUrl = await uploadImage(file, { maxSizeMB: 10 });
       const { error: updateError } = await supabase.from("profiles").update({ cover_url: publicUrl } as any).eq("user_id", user.id);
       if (updateError) throw updateError;
       setCoverUrl(publicUrl);
       toast.success("Capa atualizada!");
     } catch (err: any) {
       console.error(err);
-      toast.error("Erro ao enviar imagem de capa.");
+      toast.error(err?.message || "Erro ao enviar imagem de capa.");
     } finally {
       setUploading(false);
     }

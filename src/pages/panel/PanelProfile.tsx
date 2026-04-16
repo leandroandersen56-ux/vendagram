@@ -10,6 +10,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { CheckCircle2, Star, Loader2, Camera, ShieldCheck } from "lucide-react";
+import { uploadImage } from "@/lib/upload-image";
 
 export default function PanelProfile() {
   const { user } = useAuth();
