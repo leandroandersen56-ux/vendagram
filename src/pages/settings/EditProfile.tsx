@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import DesktopPageShell from "@/components/DesktopPageShell";
 import { Camera, Loader2 } from "lucide-react";
+import { uploadImage } from "@/lib/upload-image";
 
 export default function EditProfile() {
   const { user } = useAuth();
@@ -32,29 +33,9 @@ export default function EditProfile() {
     const file = e.target.files?.[0];
     if (!file || !user?.id) return;
 
-    if (file.size > 2 * 1024 * 1024) {
-      toast({ title: "Imagem muito grande", description: "Máximo 2MB", variant: "destructive" });
-      return;
-    }
-
-    if (!file.type.startsWith("image/")) {
-      toast({ title: "Formato inválido", description: "Envie uma imagem (JPG, PNG, WEBP)", variant: "destructive" });
-      return;
-    }
-
     setUploadingAvatar(true);
     try {
-      const ext = file.name.split(".").pop();
-      const path = `${user.id}/avatar_${Date.now()}.${ext}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from("avatars")
-        .upload(path, file, { upsert: true });
-
-      if (uploadError) throw uploadError;
-
-      const { data: urlData } = supabase.storage.from("avatars").getPublicUrl(path);
-      const publicUrl = urlData.publicUrl;
+      const publicUrl = await uploadImage(file, { maxSizeMB: 5 });
 
       const { error: updateError } = await supabase
         .from("profiles")
