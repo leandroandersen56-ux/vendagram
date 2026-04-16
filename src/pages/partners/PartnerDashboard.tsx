@@ -173,22 +173,22 @@ export default function PartnerDashboard() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <div>
-        <h1 className="text-xl font-bold text-[#F0F9FF]">Olá, {partner.name} 👋</h1>
-        <p className="text-sm text-[#7DD3FC]">Seu dashboard financeiro — dados em tempo real</p>
+        <h1 className="text-lg sm:text-xl font-bold text-[#F0F9FF]">Olá, {partner.name} 👋</h1>
+        <p className="text-xs sm:text-sm text-[#7DD3FC]">Seu dashboard financeiro — dados em tempo real</p>
       </div>
 
       {/* KPIs */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4">
         {kpis.map((kpi) => (
-          <div key={kpi.label} className="bg-[#142952] rounded-xl border border-[rgba(14,165,233,0.15)] p-5">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-[11px] text-[#7DD3FC] uppercase tracking-wider font-medium">{kpi.label}</span>
-              <kpi.icon className="h-5 w-5" style={{ color: kpi.color }} />
+          <div key={kpi.label} className="bg-[#142952] rounded-xl border border-[rgba(14,165,233,0.15)] p-3 sm:p-5">
+            <div className="flex items-center justify-between mb-2 sm:mb-3">
+              <span className="text-[10px] sm:text-[11px] text-[#7DD3FC] uppercase tracking-wider font-medium leading-tight">{kpi.label}</span>
+              <kpi.icon className="h-4 w-4 sm:h-5 sm:w-5 shrink-0 ml-1" style={{ color: kpi.color }} />
             </div>
-            <p className="text-2xl lg:text-[28px] font-black text-[#F0F9FF]">{kpi.value}</p>
-            {kpi.sub && <p className="text-[11px] text-[#7DD3FC]/70 mt-1">{kpi.sub}</p>}
+            <p className="text-lg sm:text-2xl lg:text-[28px] font-black text-[#F0F9FF]">{kpi.value}</p>
+            {kpi.sub && <p className="text-[10px] sm:text-[11px] text-[#7DD3FC]/70 mt-1 leading-tight">{kpi.sub}</p>}
             {kpi.action && (
               <button
                 onClick={() => navigate("/admintoplogin/saque")}
@@ -202,31 +202,31 @@ export default function PartnerDashboard() {
       </div>
 
       {/* Split card — regra de lucro */}
-      <div className="bg-gradient-to-r from-[#0ea5e9] to-[#0369a1] rounded-xl p-6 text-white">
-        <h3 className="font-bold text-lg mb-4 flex items-center gap-2">💰 Como funciona seu lucro</h3>
-        <div className="space-y-2 text-sm">
-          <div className="flex justify-between">
+      <div className="bg-gradient-to-r from-[#0ea5e9] to-[#0369a1] rounded-xl p-4 sm:p-6 text-white">
+        <h3 className="font-bold text-base sm:text-lg mb-3 sm:mb-4 flex items-center gap-2">💰 Como funciona seu lucro</h3>
+        <div className="space-y-2 text-xs sm:text-sm">
+          <div className="flex justify-between gap-2">
             <span>Total das suas vendas:</span>
-            <span className="font-bold">{formatBRL(totalSales)}</span>
+            <span className="font-bold whitespace-nowrap">{formatBRL(totalSales)}</span>
           </div>
           <div className="h-px bg-white/20" />
-          <div className="flex justify-between">
+          <div className="flex justify-between gap-2">
             <span>📊 Taxa da plataforma (10%):</span>
-            <span className="font-semibold">{formatBRL(totalSales * 0.10)}</span>
+            <span className="font-semibold whitespace-nowrap">{formatBRL(totalSales * 0.10)}</span>
           </div>
-          <div className="flex justify-between">
+          <div className="flex justify-between gap-2">
             <span>💰 Seu lucro (10% da venda):</span>
-            <span className="font-semibold">{formatBRL(partnerProfit)}</span>
+            <span className="font-semibold whitespace-nowrap">{formatBRL(partnerProfit)}</span>
           </div>
           <div className="h-px bg-white/20" />
-          <div className="flex justify-between">
+          <div className="flex justify-between gap-2">
             <span>🏦 Já sacado:</span>
-            <span className="font-semibold">{formatBRL(withdrawn)}</span>
+            <span className="font-semibold whitespace-nowrap">{formatBRL(withdrawn)}</span>
           </div>
           <div className="h-px bg-white/20" />
-          <div className="flex justify-between text-base font-bold">
+          <div className="flex justify-between gap-2 text-sm sm:text-base font-bold">
             <span>Disponível para saque:</span>
-            <span>{formatBRL(available)}</span>
+            <span className="whitespace-nowrap">{formatBRL(available)}</span>
           </div>
         </div>
       </div>
