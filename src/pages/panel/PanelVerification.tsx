@@ -12,6 +12,7 @@ import {
   Loader2, CheckCircle2, XCircle, Clock, AlertCircle, User, Building2
 } from "lucide-react";
 import PageHeader from "@/components/menu/PageHeader";
+import DesktopPageShell from "@/components/DesktopPageShell";
 
 type DocType = "cpf" | "cnpj";
 
@@ -139,17 +140,20 @@ export default function PanelVerification() {
   };
 
   if (loading) {
-    return <div className="min-h-screen bg-[#F5F5F5]"><PageHeader title="Verificação de Conta" /><div className="flex justify-center pt-20"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div></div>;
+    return (
+      <DesktopPageShell title="Verificação de Conta" maxWidth="max-w-2xl">
+        <div className="flex justify-center pt-20"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>
+      </DesktopPageShell>
+    );
   }
 
   // Show existing request status
   if (existing && existing.status !== "rejected") {
     const statusInfo = STATUS_CONFIG[existing.status] || STATUS_CONFIG.pending;
     return (
-      <div className="min-h-screen bg-[#F5F5F5] pb-20">
-        <PageHeader title="Verificação de Conta" />
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="p-4">
-        <Card className="bg-card border-border p-6 max-w-lg">
+      <DesktopPageShell title="Verificação de Conta" maxWidth="max-w-2xl">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="p-4 sm:p-0">
+        <Card className="bg-card border-border p-6 max-w-lg mx-auto sm:mx-0">
           <div className="text-center">
             <div className={`inline-flex items-center justify-center h-16 w-16 rounded-full ${statusInfo.color} mb-4`}>
               <statusInfo.Icon className="h-8 w-8" />
@@ -184,7 +188,7 @@ export default function PanelVerification() {
           </div>
         </Card>
       </motion.div>
-      </div>
+      </DesktopPageShell>
     );
   }
 
@@ -192,9 +196,8 @@ export default function PanelVerification() {
   const rejected = existing?.status === "rejected";
 
   return (
-    <div className="min-h-screen bg-[#F5F5F5] pb-20">
-      <PageHeader title="Verificação de Conta" />
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="p-4">
+    <DesktopPageShell title="Verificação de Conta" maxWidth="max-w-2xl">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="p-4 sm:p-0">
       <p className="text-sm text-[#888] mb-4">
         Verifique sua identidade para receber o selo de vendedor verificado e aumentar a confiança dos compradores.
       </p>
@@ -343,6 +346,6 @@ export default function PanelVerification() {
         )}
       </Button>
     </motion.div>
-    </div>
+    </DesktopPageShell>
   );
 }
