@@ -2,10 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase-custom-client";
 import { usePartner } from "./PartnerGuard";
 import { useAuth } from "@/contexts/AuthContext";
-import { TrendingUp, DollarSign, Building2, Wallet, Package, Eye, Users } from "lucide-react";
+import { TrendingUp, DollarSign, Building2, Wallet, Package, Eye } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
-import { format, subDays, formatDistanceToNow } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import { format, subDays } from "date-fns";
 import { useNavigate } from "react-router-dom";
 
 const formatBRL = (v: number) =>
@@ -130,43 +129,6 @@ export default function PartnerDashboard() {
       }));
     },
     enabled: !!authUserId && eligibleListingIds.length > 0,
-  });
-
-  // Últimos usuários cadastrados (sócio tem permissão via RLS "Admins and partners can read all profiles")
-  const { data: recentUsers = [] } = useQuery({
-    queryKey: ["partner-recent-users", authUserId],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("user_id, name, username, avatar_url, created_at")
-        .order("created_at", { ascending: false })
-        .limit(15);
-      if (error) {
-        console.error("[PartnerDashboard] recent users error:", error);
-        return [];
-      }
-     return data ?? [];
-    },
-    enabled: !!authUserId,
-    refetchInterval: 60_000,
-  });
-
-  // Últimos produtos cadastrados na plataforma (apenas visualização)
-  const { data: recentListings = [] } = useQuery({
-    queryKey: ["partner-recent-listings"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("listings")
-        .select("id, title, price, status, category, screenshots, created_at")
-        .order("created_at", { ascending: false })
-        .limit(15);
-      if (error) {
-        console.error("[PartnerDashboard] recent listings error:", error);
-        return [];
-      }
-      return data ?? [];
-    },
-    refetchInterval: 60_000,
   });
 
   // Cálculos: sócio recebe 10% fixo das suas próprias vendas
@@ -373,76 +335,6 @@ export default function PartnerDashboard() {
         </div>
       </SectionCard>
 
-      {/* Grid: usuários + produtos cadastrados */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-        <SectionCard
-          icon={<Users className="h-3.5 w-3.5" />}
-          title="Últimos Cadastros"
-          count={recentUsers.length}
-        >
-          {recentUsers.length === 0 ? (
-            <EmptyState text="Nenhum usuário cadastrado" />
-          ) : (
-            <div className="space-y-0.5">
-              {recentUsers.map((u: any) => (
-                <div key={u.user_id} className="flex items-center gap-3 py-2 px-2 rounded-lg hover:bg-white/[0.03] transition-colors">
-                  {u.avatar_url ? (
-                    <img src={u.avatar_url} alt="" className="h-8 w-8 rounded-full object-cover shrink-0" />
-                  ) : (
-                    <div className="h-8 w-8 rounded-full bg-gradient-to-br from-[#0ea5e9]/30 to-[#0ea5e9]/10 flex items-center justify-center text-[#7DD3FC] text-xs font-bold shrink-0">
-                      {(u.name || "?")[0]?.toUpperCase()}
-                    </div>
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[13px] text-white font-semibold truncate">{u.name || "Usuário"}</p>
-                    {u.username && <p className="text-[11px] text-white/40 font-medium truncate">@{u.username}</p>}
-                  </div>
-                  <span className="text-[10px] font-semibold text-white/40 shrink-0 whitespace-nowrap">
-                    {formatDistanceToNow(new Date(u.created_at), { addSuffix: true, locale: ptBR })}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
-        </SectionCard>
-
-        <SectionCard
-          icon={<Package className="h-3.5 w-3.5" />}
-          title="Últimos Produtos"
-          count={recentListings.length}
-          badge="apenas visualização"
-        >
-          {recentListings.length === 0 ? (
-            <EmptyState text="Nenhum produto cadastrado" />
-          ) : (
-            <div className="space-y-0.5">
-              {recentListings.map((p: any) => (
-                <div key={p.id} className="flex items-center gap-3 py-2 px-2 rounded-lg hover:bg-white/[0.03] transition-colors">
-                  <div className="h-10 w-10 rounded-lg bg-white/[0.04] overflow-hidden shrink-0 flex items-center justify-center">
-                    {p.screenshots?.[0] ? (
-                      <img src={p.screenshots[0]} alt="" className="h-full w-full object-cover" />
-                    ) : (
-                      <Package className="h-4 w-4 text-white/40" />
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[13px] text-white font-semibold truncate">{p.title}</p>
-                    <p className="text-[11px] text-white/45 font-medium truncate">
-                      {categoryLabels[p.category] || p.category} · <span className={p.status === "active" ? "text-emerald-400" : "text-white/40"}>{p.status}</span>
-                    </p>
-                  </div>
-                  <div className="text-right shrink-0">
-                    <p className="text-[13px] font-bold text-white whitespace-nowrap">{formatBRL(Number(p.price))}</p>
-                    <p className="text-[10px] font-semibold text-white/40 whitespace-nowrap">
-                      {formatDistanceToNow(new Date(p.created_at), { addSuffix: true, locale: ptBR })}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </SectionCard>
-      </div>
     </div>
   );
 }
