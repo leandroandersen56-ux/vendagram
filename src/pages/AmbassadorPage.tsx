@@ -86,9 +86,19 @@ export default function AmbassadorPage() {
 
   const activateAmbassador = async () => {
     setActivating(true);
+
+    // Get profile's referral_code to use as ambassador code
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("referral_code")
+      .eq("user_id", user!.id)
+      .single();
+
+    const code = profile?.referral_code || undefined;
+
     const { data, error } = await supabase
       .from("ambassadors")
-      .insert({ user_id: user!.id })
+      .insert({ user_id: user!.id, ...(code ? { code } : {}) })
       .select("id, code")
       .single();
 
