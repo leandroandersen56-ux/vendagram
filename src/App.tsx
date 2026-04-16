@@ -69,7 +69,6 @@ const PartnerPerformance = lazy(() => import("./pages/partners/PartnerPerformanc
 const PartnerWithdrawal = lazy(() => import("./pages/partners/PartnerWithdrawal.tsx"));
 const PartnerAccount = lazy(() => import("./pages/partners/PartnerAccount.tsx"));
 const PartnerUsers = lazy(() => import("./pages/partners/PartnerUsers.tsx"));
-const PartnerListings = lazy(() => import("./pages/partners/PartnerListings.tsx"));
 
 // Super Admin
 const SuperAdminGuard = lazy(() => import("./pages/trynda/SuperAdminGuard.tsx"));
@@ -197,9 +196,7 @@ function AppRoutes() {
             <Route index element={<PartnerDashboard />} />
             <Route path="faturamento" element={<PartnerRevenue />} />
             <Route path="desempenho" element={<PartnerPerformance />} />
-            <Route path="cadastros" element={<PartnerUsers />} />
-            <Route path="usuarios" element={<Navigate to="/admintoplogin/cadastros" replace />} />
-            <Route path="produtos" element={<PartnerListings />} />
+            <Route path="usuarios" element={<PartnerUsers />} />
             <Route path="saque" element={<PartnerWithdrawal />} />
             <Route path="conta" element={<PartnerAccount />} />
           </Route>
