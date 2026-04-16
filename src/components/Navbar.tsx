@@ -397,6 +397,171 @@ export default function Navbar() {
 }
 
 /* ── Notification Dropdown ── */
+function DesktopProfileDropdown({ user, logout, navigate, unreadCount }: {
+  user: any;
+  logout: () => void;
+  navigate: (path: string) => void;
+  unreadCount: number;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  const go = (path: string) => { navigate(path); setOpen(false); };
+
+  const SectionLabel = ({ label }: { label: string }) => (
+    <p className="text-[11px] font-semibold text-[#999] uppercase tracking-wide px-4 pt-3 pb-1.5">{label}</p>
+  );
+
+  const Item = ({ icon: Icon, label, badge, badgeColor, onClick }: {
+    icon: React.ElementType; label: string; badge?: string; badgeColor?: string; onClick: () => void;
+  }) => (
+    <button
+      onClick={onClick}
+      className="w-full flex items-center gap-3 h-11 px-4 hover:bg-[#F8F8F8] transition-colors text-left"
+    >
+      <Icon className="h-[18px] w-[18px] text-[#444] shrink-0" strokeWidth={1.5} />
+      <span className="flex-1 text-[13px] text-[#111]">{label}</span>
+      {badge && (
+        <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full text-white" style={{ background: badgeColor || '#2D6FF0' }}>
+          {badge}
+        </span>
+      )}
+      <ChevronRight className="h-3.5 w-3.5 text-[#CCC] shrink-0" />
+    </button>
+  );
+
+  return (
+    <div className="relative" ref={ref}>
+      <button
+        onClick={() => setOpen(!open)}
+        className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center text-white text-xs font-semibold hover:bg-white/30 transition-colors"
+      >
+        {user?.name?.[0]?.toUpperCase() || <User className="h-4 w-4" />}
+      </button>
+
+      {open && (
+        <div
+          className="absolute right-0 z-[1000] overflow-hidden"
+          style={{
+            top: 44,
+            width: 300,
+            maxHeight: '85vh',
+            background: '#FFFFFF',
+            borderRadius: 16,
+            boxShadow: '0 8px 32px rgba(0,0,0,0.14)',
+            border: '1px solid #E8E8E8',
+          }}
+        >
+          <div className="overflow-y-auto" style={{ maxHeight: '85vh' }}>
+            {/* Header azul */}
+            <div className="bg-primary px-4 pt-4 pb-3">
+              <div className="flex items-center gap-3">
+                <div className="h-11 w-11 rounded-full bg-white/20 flex items-center justify-center text-white text-base font-semibold shrink-0">
+                  {user?.name?.[0]?.toUpperCase() || "U"}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-white text-sm font-semibold truncate flex items-center gap-1">{user?.name || "Usuário"} {user?.isVerified && <VerifiedBadge size={14} />}</p>
+                  <p className="text-white/70 text-[11px] truncate">{user?.email}</p>
+                </div>
+              </div>
+              {/* Card saldo */}
+              <button
+                onClick={() => go("/carteira")}
+                className="mt-3 w-full bg-white/[0.12] border border-white/20 rounded-xl px-3 py-2.5 flex items-center gap-2.5 text-left hover:bg-white/[0.18] transition-colors"
+              >
+                <Shield className="h-4.5 w-4.5 text-white shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-white text-[12px] font-semibold">Saldo disponível: R$ 0,00</p>
+                  <p className="text-white/70 text-[10px]">Gerencie seus pagamentos</p>
+                </div>
+                <ChevronRight className="h-3.5 w-3.5 text-white/60 shrink-0" />
+              </button>
+            </div>
+
+            {/* Sem label */}
+            <Item icon={Home} label="Início" onClick={() => go("/")} />
+            <Item icon={Store} label="Central do Vendedor" badge="NOVO" onClick={() => go("/vendedor")} />
+            <Item icon={HelpCircle} label="Ajuda" onClick={() => go("/ajuda")} />
+            <div className="h-px bg-[#F0F0F0] mx-4" />
+
+            {/* MINHA ATIVIDADE */}
+            <SectionLabel label="Minha atividade" />
+            <Item icon={ShoppingCart} label="Minhas Compras" onClick={() => go("/compras")} />
+            <Item icon={Key} label="Meus Acessos" badge="NOVO" onClick={() => go("/meus-acessos")} />
+            <Item icon={Package} label="Minhas Vendas" badge="NOVO" onClick={() => go("/vendedor")} />
+            <Item icon={Bell} label="Notificações" badge={unreadCount > 0 ? String(unreadCount) : "1"} badgeColor="#dc2626" onClick={() => go("/notificacoes")} />
+            <Item icon={Heart} label="Favoritos" onClick={() => go("/favoritos")} />
+            <Item icon={HelpCircle} label="Minhas Perguntas" onClick={() => go("/perguntas")} />
+            <Item icon={Star} label="Minhas Avaliações" badge="NOVO" onClick={() => go("/avaliacoes")} />
+            <Item icon={Clock} label="Histórico de visualizações" onClick={() => go("/historico")} />
+            <div className="h-px bg-[#F0F0F0] mx-4" />
+
+            {/* DESCUBRA */}
+            <SectionLabel label="Descubra" />
+            <Item icon={Gamepad2} label="Contas de Jogos" onClick={() => go("/marketplace?cat=jogos")} />
+            <Item icon={Smartphone} label="Redes Sociais" onClick={() => go("/marketplace?cat=social")} />
+            <Item icon={Tag} label="Ofertas do dia" onClick={() => go("/marketplace?ofertas=1")} />
+            <Item icon={Link2} label="Programa de Afiliados" badge="GANHA $" badgeColor="#16a34a" onClick={() => go("/afiliados")} />
+            <div className="h-px bg-[#F0F0F0] mx-4" />
+
+            {/* CONTA */}
+            <SectionLabel label="Conta" />
+            <Item icon={Receipt} label="Faturamento / Extrato" onClick={() => go("/carteira")} />
+            <Item icon={Settings} label="Configurações" onClick={() => go("/configuracoes")} />
+
+            {/* WhatsApp */}
+            <div className="px-4 pt-3">
+              <a
+                href="https://wa.me/5519988499681?text=Ol%C3%A1%2C%20preciso%20de%20ajuda%20na%20Froiv!"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 w-full h-11 rounded-[10px] bg-[#25D366] hover:bg-[#1fb855] text-white text-[13px] font-bold transition-all"
+                onClick={() => setOpen(false)}
+              >
+                <MessageCircle className="h-4.5 w-4.5" />
+                Fale conosco no WhatsApp
+              </a>
+            </div>
+
+            {/* Footer links */}
+            <div className="border-t border-[#F0F0F0] mt-2 mx-4 pt-2 pb-1">
+              {[
+                { label: "Termos e condições", path: "/termos" },
+                { label: "Política de privacidade", path: "/privacidade" },
+                { label: "Sobre a Froiv by Top Login", path: "/sobre" },
+              ].map(item => (
+                <button key={item.path} onClick={() => go(item.path)} className="block w-full text-left py-2 text-[12px] text-[#666] hover:text-[#333] transition-colors">
+                  {item.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Sair */}
+            <div className="border-t border-[#F0F0F0] mx-4">
+              <button
+                onClick={() => { logout(); setOpen(false); }}
+                className="w-full flex items-center gap-2 py-3 text-[13px] text-destructive font-medium hover:bg-[#FFF0F0] transition-colors rounded-lg px-1"
+              >
+                <LogOut className="h-4 w-4" />
+                Sair da conta
+              </button>
+            </div>
+            <div className="h-2" />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function NotifDropdown({
   notifications,
   loading,
