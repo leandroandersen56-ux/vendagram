@@ -196,7 +196,6 @@ export default function PanelVerification() {
   const rejected = existing?.status === "rejected";
 
   return (
-    return (
     <DesktopPageShell title="Verificação de Conta" maxWidth="max-w-2xl">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="p-4 sm:p-0">
       <p className="text-sm text-[#888] mb-4">
