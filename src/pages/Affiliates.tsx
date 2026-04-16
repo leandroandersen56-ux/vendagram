@@ -183,7 +183,7 @@ export default function Affiliates() {
         ) : (
           <>
             {/* ═══════════ AFFILIATE SECTION ═══════════ */}
-            <div className="relative overflow-hidden rounded-2xl p-6" style={{ background: 'linear-gradient(135deg, #2D6FF0 0%, #1B4FBF 50%, #1340A0 100%)' }}>
+            <div className="relative overflow-hidden rounded-2xl p-6" style={{ background: '#3483fa' }}>
               <div className="absolute top-0 right-0 w-32 h-32 rounded-full opacity-10" style={{ background: 'radial-gradient(circle, #fff 0%, transparent 70%)', transform: 'translate(30%, -30%)' }} />
               <div className="relative z-10">
                 <div className="flex items-center gap-2.5 mb-1.5">
