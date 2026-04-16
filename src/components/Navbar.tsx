@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   Search, Bell, User, LogOut, LayoutDashboard, ShoppingBag, ShoppingCart, Loader2, Heart, Wallet, Settings, HelpCircle,
-  Home, Store, Key, Package, Star, Clock, Gamepad2, Smartphone, Tag, Link2, Receipt, MessageCircle, Shield, ChevronRight
+  Home, Store, Key, Package, Star, Clock, Gamepad2, Smartphone, Tag, Link2, Receipt, MessageCircle, Shield, ChevronRight, Crown
 } from "lucide-react";
 import { VerifiedBadge } from "@/components/VerifiedBadge";
 import { Input } from "@/components/ui/input";
@@ -510,6 +510,15 @@ function DesktopProfileDropdown({ user, logout, navigate, unreadCount }: {
             <Item icon={Smartphone} label="Redes Sociais" onClick={() => go("/marketplace?cat=social")} />
             <Item icon={Tag} label="Ofertas do dia" onClick={() => go("/marketplace?ofertas=1")} />
             <Item icon={Link2} label="Programa de Afiliados" badge="GANHA $" badgeColor="#16a34a" onClick={() => go("/afiliados")} />
+            <div className="px-4 py-2">
+              <button
+                onClick={() => go("/embaixador")}
+                className="w-full flex items-center justify-center gap-2 h-10 rounded-xl text-[13px] font-semibold transition-all active:scale-[0.98] bg-primary text-white hover:bg-primary/90"
+              >
+                <Crown className="h-4 w-4 text-white" />
+                Torne-se um Embaixador
+              </button>
+            </div>
             <div className="h-px bg-[#F0F0F0] mx-4" />
 
             {/* CONTA */}
