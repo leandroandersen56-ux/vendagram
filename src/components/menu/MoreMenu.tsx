@@ -38,7 +38,7 @@ export default function MoreMenu({ open, onClose }: MoreMenuProps) {
         { icon: Home, label: "Início", path: "/" },
         { icon: Store, label: "Central do Vendedor", path: "/vendedor", badge: { text: "NOVO", color: "bg-primary text-white" } },
         
-        { icon: HelpCircle, label: "Ajuda", path: "/ajuda" },
+        
       ],
     },
     {
@@ -68,6 +68,7 @@ export default function MoreMenu({ open, onClose }: MoreMenuProps) {
       items: [
         { icon: Receipt, label: "Faturamento / Extrato", path: "/carteira" },
         { icon: Settings, label: "Configurações", path: "/configuracoes" },
+        { icon: HelpCircle, label: "Ajuda", path: "/ajuda" },
       ],
     },
   ];
