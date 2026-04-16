@@ -47,6 +47,98 @@ export type Database = {
         }
         Relationships: []
       }
+      ambassador_commissions: {
+        Row: {
+          ambassador_id: string
+          amount: number
+          created_at: string
+          id: string
+          transaction_id: string
+        }
+        Insert: {
+          ambassador_id: string
+          amount?: number
+          created_at?: string
+          id?: string
+          transaction_id: string
+        }
+        Update: {
+          ambassador_id?: string
+          amount?: number
+          created_at?: string
+          id?: string
+          transaction_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ambassador_commissions_ambassador_id_fkey"
+            columns: ["ambassador_id"]
+            isOneToOne: false
+            referencedRelation: "ambassadors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ambassador_commissions_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ambassador_referrals: {
+        Row: {
+          ambassador_id: string
+          created_at: string
+          id: string
+          referred_seller_id: string
+        }
+        Insert: {
+          ambassador_id: string
+          created_at?: string
+          id?: string
+          referred_seller_id: string
+        }
+        Update: {
+          ambassador_id?: string
+          created_at?: string
+          id?: string
+          referred_seller_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ambassador_referrals_ambassador_id_fkey"
+            columns: ["ambassador_id"]
+            isOneToOne: false
+            referencedRelation: "ambassadors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ambassadors: {
+        Row: {
+          code: string
+          created_at: string
+          id: string
+          is_active: boolean
+          user_id: string
+        }
+        Insert: {
+          code?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          user_id: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          user_id?: string
+        }
+        Relationships: []
+      }
       audit_logs: {
         Row: {
           action: string
