@@ -229,7 +229,7 @@ export default function Affiliates() {
               {[
                 { text: "Copie e compartilhe seu link de afiliado", icon: Link2, color: "#2D6FF0" },
                 { text: "Quando alguém se cadastrar pelo seu link e fizer uma compra", icon: Gift, color: "#7C3AED" },
-                { text: "Você recebe 10% da taxa da plataforma (equivale a 1% do valor da venda) por 30 dias após o cadastro", icon: DollarSign, color: "#00A650" },
+                { text: "Você recebe 15% da taxa da plataforma (equivale a 1,5% do valor da venda) por 30 dias após o cadastro", icon: DollarSign, color: "#00A650" },
               ].map((step, i) => (
                 <div key={i} className="flex gap-3 items-center mb-3 last:mb-0">
                   <div className="h-9 w-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: `${step.color}12` }}>
