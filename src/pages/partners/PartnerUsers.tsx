@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase-custom-client";
+import { supabase as cloudSupabase } from "@/integrations/supabase/client";
 import { Users, Search, ShieldCheck, Mail, Calendar } from "lucide-react";
 import { format, formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -9,20 +10,20 @@ export default function PartnerUsers() {
   const [search, setSearch] = useState("");
 
   const { data: users = [], isLoading } = useQuery({
-    queryKey: ["partner-users-list"],
+    queryKey: ["partner-users-list-fn"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select(
-          "user_id, name, username, email, whatsapp, avatar_url, is_verified, total_sales, total_purchases, avg_rating, created_at"
-        )
-        .order("created_at", { ascending: false })
-        .limit(500);
+      const { data: sess } = await supabase.auth.getSession();
+      const token = sess.session?.access_token;
+      if (!token) return [];
+      const { data, error } = await cloudSupabase.functions.invoke("partner-data", {
+        body: { resource: "users" },
+        headers: { Authorization: `Bearer ${token}` },
+      });
       if (error) {
-        console.error("[PartnerUsers] error:", error);
+        console.error("[PartnerUsers] fn error:", error);
         return [];
       }
-      return data ?? [];
+      return (data as any)?.data ?? [];
     },
     refetchInterval: 60_000,
   });

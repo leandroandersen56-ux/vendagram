@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase-custom-client";
+import { supabase as cloudSupabase } from "@/integrations/supabase/client";
 import { Package, Search, Eye } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -35,18 +36,21 @@ export default function PartnerListings() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
 
   const { data: listings = [], isLoading } = useQuery({
-    queryKey: ["partner-all-listings"],
+    queryKey: ["partner-all-listings-fn"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("listings")
-        .select("id, title, price, status, category, screenshots, created_at, views_count, stock")
-        .order("created_at", { ascending: false })
-        .limit(500);
+      // Usa edge function partner-data com service-role para ver TODOS os listings
+      const { data: sess } = await supabase.auth.getSession();
+      const token = sess.session?.access_token;
+      if (!token) return [];
+      const { data, error } = await cloudSupabase.functions.invoke("partner-data", {
+        body: { resource: "listings" },
+        headers: { Authorization: `Bearer ${token}` },
+      });
       if (error) {
-        console.error("[PartnerListings] error:", error);
+        console.error("[PartnerListings] fn error:", error);
         return [];
       }
-      return data ?? [];
+      return (data as any)?.data ?? [];
     },
     refetchInterval: 60_000,
   });
