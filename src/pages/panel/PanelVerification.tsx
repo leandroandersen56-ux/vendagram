@@ -347,6 +347,6 @@ export default function PanelVerification() {
         )}
       </Button>
     </motion.div>
-    </div>
+    </DesktopPageShell>
   );
 }
