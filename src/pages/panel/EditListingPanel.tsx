@@ -12,6 +12,7 @@ import { moderateText, getModerationMessage } from "@/lib/content-moderation";
 import PlatformIcon from "@/components/PlatformIcon";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { uploadImage } from "@/lib/upload-image";
 
 // ── Config por plataforma (same as create) ─────────────────────
 const FEATURES: Record<string, string[]> = {
