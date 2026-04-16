@@ -297,36 +297,34 @@ export default function PartnerDashboard() {
       </div>
 
       {/* Produtos Disponíveis */}
-      <div className="bg-[#142952] rounded-xl border border-[rgba(14,165,233,0.15)] p-4 sm:p-5">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-sm font-semibold text-[#7DD3FC] flex items-center gap-2">
-            <Package className="h-4 w-4" />
-            Seus Produtos ({activeListings.length})
-          </h3>
-        </div>
+      <SectionCard
+        icon={<Package className="h-3.5 w-3.5" />}
+        title="Seus Produtos"
+        count={activeListings.length}
+      >
         {activeListings.length === 0 ? (
-          <p className="text-[#7DD3FC]/50 text-sm text-center py-8">Nenhum produto ativo no momento</p>
+          <EmptyState text="Nenhum produto ativo no momento" />
         ) : (
-          <div className="-mx-4 sm:-mx-5">
-            <div className="overflow-x-auto px-4 sm:px-5">
+          <div className="-mx-4 sm:-mx-6">
+            <div className="overflow-x-auto px-4 sm:px-6">
               <table className="w-full text-sm min-w-[480px]">
                 <thead>
-                  <tr className="text-[#7DD3FC]/70 text-[11px] uppercase tracking-wider border-b border-[rgba(14,165,233,0.1)]">
-                    <th className="text-left py-2 pr-3">Produto</th>
-                    <th className="text-left py-2 pr-3">Categoria</th>
-                    <th className="text-right py-2 pr-3">Preço</th>
-                    <th className="text-center py-2 pr-3">Estoque</th>
-                    <th className="text-center py-2">Views</th>
+                  <tr className="text-white/40 text-[10px] font-semibold uppercase tracking-[0.12em] border-b border-white/[0.06]">
+                    <th className="text-left py-2.5 pr-3">Produto</th>
+                    <th className="text-left py-2.5 pr-3">Categoria</th>
+                    <th className="text-right py-2.5 pr-3">Preço</th>
+                    <th className="text-center py-2.5 pr-3">Estoque</th>
+                    <th className="text-center py-2.5">Views</th>
                   </tr>
                 </thead>
                 <tbody>
                   {activeListings.map((listing) => (
-                    <tr key={listing.id} className="border-b border-[rgba(14,165,233,0.05)] hover:bg-[rgba(14,165,233,0.05)] transition-colors">
-                      <td className="py-3 pr-3 text-[#F0F9FF] font-medium max-w-[180px] truncate">{listing.title}</td>
-                      <td className="py-3 pr-3 text-[#7DD3FC]/80 whitespace-nowrap">{categoryLabels[listing.category] || listing.category}</td>
-                      <td className="py-3 pr-3 text-[#F0F9FF] text-right font-semibold whitespace-nowrap">{formatBRL(Number(listing.price))}</td>
-                      <td className="py-3 pr-3 text-center text-[#7DD3FC]">{listing.stock}</td>
-                      <td className="py-3 text-center text-[#7DD3FC]/70">
+                    <tr key={listing.id} className="border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors">
+                      <td className="py-3 pr-3 text-white font-semibold max-w-[180px] truncate">{listing.title}</td>
+                      <td className="py-3 pr-3 text-white/65 font-medium whitespace-nowrap">{categoryLabels[listing.category] || listing.category}</td>
+                      <td className="py-3 pr-3 text-white text-right font-bold whitespace-nowrap">{formatBRL(Number(listing.price))}</td>
+                      <td className="py-3 pr-3 text-center text-white/80 font-semibold">{listing.stock}</td>
+                      <td className="py-3 text-center text-white/60 font-medium">
                         <span className="inline-flex items-center gap-1">
                           <Eye className="h-3 w-3" />
                           {listing.views_count}
@@ -339,13 +337,12 @@ export default function PartnerDashboard() {
             </div>
           </div>
         )}
-      </div>
+      </SectionCard>
 
       {/* Chart — vendas do sócio */}
-      <div className="bg-[#142952] rounded-xl border border-[rgba(14,165,233,0.15)] p-4 sm:p-5">
-        <h3 className="text-sm font-semibold text-[#7DD3FC] mb-4">Suas Vendas — últimos 30 dias</h3>
+      <SectionCard title="Suas Vendas" subtitle="últimos 30 dias">
         <div className="-mx-2 sm:mx-0">
-          <ResponsiveContainer width="100%" height={220}>
+          <ResponsiveContainer width="100%" height={240}>
             <AreaChart data={chartData ?? []} margin={{ top: 5, right: 5, left: -15, bottom: 0 }}>
               <defs>
                 <linearGradient id="partnerGrad" x1="0" y1="0" x2="0" y2="1">
@@ -357,94 +354,146 @@ export default function PartnerDashboard() {
                   <stop offset="95%" stopColor="#10B981" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(14,165,233,0.1)" />
-              <XAxis dataKey="name" tick={{ fill: "#7DD3FC", fontSize: 9 }} interval="preserveStartEnd" />
-              <YAxis 
-                tick={{ fill: "#7DD3FC", fontSize: 9 }} 
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
+              <XAxis dataKey="name" tick={{ fill: "rgba(255,255,255,0.45)", fontSize: 10, fontWeight: 600 }} interval="preserveStartEnd" />
+              <YAxis
+                tick={{ fill: "rgba(255,255,255,0.45)", fontSize: 10, fontWeight: 600 }}
                 tickFormatter={(v) => v === 0 ? "R$0" : `R$${(v / 1000).toFixed(0)}k`}
                 width={45}
                 tickCount={4}
               />
               <Tooltip
-                contentStyle={{ background: "#0f2040", border: "1px solid rgba(14,165,233,0.2)", borderRadius: 8, color: "#F0F9FF", fontSize: 12 }}
+                contentStyle={{ background: "#0a1424", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, color: "#fff", fontSize: 12, fontWeight: 600 }}
                 formatter={(v: number, name: string) => [formatBRL(v), name === "vendas" ? "Vendas" : "Seu Lucro (10%)"]}
               />
-              <Area type="monotone" dataKey="vendas" stroke="#0ea5e9" fill="url(#partnerGrad)" strokeWidth={2} />
-              <Area type="monotone" dataKey="lucro" stroke="#10B981" fill="url(#profitGrad)" strokeWidth={2} strokeDasharray="5 5" />
+              <Area type="monotone" dataKey="vendas" stroke="#0ea5e9" fill="url(#partnerGrad)" strokeWidth={2.5} />
+              <Area type="monotone" dataKey="lucro" stroke="#10B981" fill="url(#profitGrad)" strokeWidth={2.5} strokeDasharray="5 5" />
             </AreaChart>
           </ResponsiveContainer>
         </div>
-      </div>
+      </SectionCard>
 
-      {/* Últimos usuários cadastrados */}
-      <div className="bg-[#142952] rounded-xl border border-[rgba(14,165,233,0.15)] p-4 sm:p-5">
-        <div className="flex items-center justify-between mb-3 sm:mb-4">
-          <h3 className="text-sm font-semibold text-[#7DD3FC] flex items-center gap-2">
-            <Users className="h-4 w-4" />
-            Últimos Cadastros ({recentUsers.length})
-          </h3>
-        </div>
-        {recentUsers.length === 0 ? (
-          <p className="text-[#7DD3FC]/50 text-sm text-center py-8">Nenhum usuário cadastrado</p>
-        ) : (
-          <div className="space-y-1">
-            {recentUsers.map((u: any) => (
-              <div key={u.user_id} className="flex items-center gap-2.5 py-2 px-2 sm:px-3 rounded-lg hover:bg-[rgba(14,165,233,0.05)] transition-colors">
-                <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-[#0ea5e9]/20 flex items-center justify-center text-[#7DD3FC] text-[11px] sm:text-xs font-bold shrink-0">
-                  {(u.name || "?")[0]?.toUpperCase()}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs sm:text-sm text-[#F0F9FF] font-medium truncate">{u.name || "Usuário"}</p>
-                  {u.username && <p className="text-[10px] text-[#7DD3FC]/50 truncate">@{u.username}</p>}
-                </div>
-                <span className="text-[10px] text-[#7DD3FC]/60 shrink-0 whitespace-nowrap">
-                  {formatDistanceToNow(new Date(u.created_at), { addSuffix: true, locale: ptBR })}
-                </span>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Últimos produtos cadastrados (visualização) */}
-      <div className="bg-[#142952] rounded-xl border border-[rgba(14,165,233,0.15)] p-4 sm:p-5">
-        <div className="flex items-center justify-between mb-3 sm:mb-4">
-          <h3 className="text-sm font-semibold text-[#7DD3FC] flex items-center gap-2">
-            <Package className="h-4 w-4" />
-            Últimos Produtos Cadastrados ({recentListings.length})
-          </h3>
-          <span className="text-[10px] text-[#7DD3FC]/50">apenas visualização</span>
-        </div>
-        {recentListings.length === 0 ? (
-          <p className="text-[#7DD3FC]/50 text-sm text-center py-8">Nenhum produto cadastrado</p>
-        ) : (
-          <div className="space-y-1">
-            {recentListings.map((p: any) => (
-              <div key={p.id} className="flex items-center gap-2.5 py-2 px-2 sm:px-3 rounded-lg hover:bg-[rgba(14,165,233,0.05)] transition-colors">
-                <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-lg bg-[#0ea5e9]/10 overflow-hidden shrink-0 flex items-center justify-center">
-                  {p.screenshots?.[0] ? (
-                    <img src={p.screenshots[0]} alt="" className="h-full w-full object-cover" />
+      {/* Grid: usuários + produtos cadastrados */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+        <SectionCard
+          icon={<Users className="h-3.5 w-3.5" />}
+          title="Últimos Cadastros"
+          count={recentUsers.length}
+        >
+          {recentUsers.length === 0 ? (
+            <EmptyState text="Nenhum usuário cadastrado" />
+          ) : (
+            <div className="space-y-0.5">
+              {recentUsers.map((u: any) => (
+                <div key={u.user_id} className="flex items-center gap-3 py-2 px-2 rounded-lg hover:bg-white/[0.03] transition-colors">
+                  {u.avatar_url ? (
+                    <img src={u.avatar_url} alt="" className="h-8 w-8 rounded-full object-cover shrink-0" />
                   ) : (
-                    <Package className="h-4 w-4 text-[#7DD3FC]/60" />
+                    <div className="h-8 w-8 rounded-full bg-gradient-to-br from-[#0ea5e9]/30 to-[#0ea5e9]/10 flex items-center justify-center text-[#7DD3FC] text-xs font-bold shrink-0">
+                      {(u.name || "?")[0]?.toUpperCase()}
+                    </div>
                   )}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[13px] text-white font-semibold truncate">{u.name || "Usuário"}</p>
+                    {u.username && <p className="text-[11px] text-white/40 font-medium truncate">@{u.username}</p>}
+                  </div>
+                  <span className="text-[10px] font-semibold text-white/40 shrink-0 whitespace-nowrap">
+                    {formatDistanceToNow(new Date(u.created_at), { addSuffix: true, locale: ptBR })}
+                  </span>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs sm:text-sm text-[#F0F9FF] font-medium truncate">{p.title}</p>
-                  <p className="text-[10px] text-[#7DD3FC]/60 truncate">
-                    {p.category} · <span className={p.status === "active" ? "text-emerald-400" : "text-[#7DD3FC]/50"}>{p.status}</span>
-                  </p>
+              ))}
+            </div>
+          )}
+        </SectionCard>
+
+        <SectionCard
+          icon={<Package className="h-3.5 w-3.5" />}
+          title="Últimos Produtos"
+          count={recentListings.length}
+          badge="apenas visualização"
+        >
+          {recentListings.length === 0 ? (
+            <EmptyState text="Nenhum produto cadastrado" />
+          ) : (
+            <div className="space-y-0.5">
+              {recentListings.map((p: any) => (
+                <div key={p.id} className="flex items-center gap-3 py-2 px-2 rounded-lg hover:bg-white/[0.03] transition-colors">
+                  <div className="h-10 w-10 rounded-lg bg-white/[0.04] overflow-hidden shrink-0 flex items-center justify-center">
+                    {p.screenshots?.[0] ? (
+                      <img src={p.screenshots[0]} alt="" className="h-full w-full object-cover" />
+                    ) : (
+                      <Package className="h-4 w-4 text-white/40" />
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[13px] text-white font-semibold truncate">{p.title}</p>
+                    <p className="text-[11px] text-white/45 font-medium truncate">
+                      {categoryLabels[p.category] || p.category} · <span className={p.status === "active" ? "text-emerald-400" : "text-white/40"}>{p.status}</span>
+                    </p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <p className="text-[13px] font-bold text-white whitespace-nowrap">{formatBRL(Number(p.price))}</p>
+                    <p className="text-[10px] font-semibold text-white/40 whitespace-nowrap">
+                      {formatDistanceToNow(new Date(p.created_at), { addSuffix: true, locale: ptBR })}
+                    </p>
+                  </div>
                 </div>
-                <div className="text-right shrink-0">
-                  <p className="text-xs sm:text-sm font-bold text-[#F0F9FF]">{formatBRL(Number(p.price))}</p>
-                  <p className="text-[10px] text-[#7DD3FC]/60 whitespace-nowrap">
-                    {formatDistanceToNow(new Date(p.created_at), { addSuffix: true, locale: ptBR })}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          )}
+        </SectionCard>
       </div>
     </div>
+  );
+}
+
+function SectionCard({
+  icon,
+  title,
+  subtitle,
+  count,
+  badge,
+  children,
+}: {
+  icon?: React.ReactNode;
+  title: string;
+  subtitle?: string;
+  count?: number;
+  badge?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="bg-gradient-to-br from-[#142952] to-[#0f1f3f] rounded-2xl border border-white/[0.06] p-4 sm:p-6">
+      <div className="flex items-center justify-between mb-4 sm:mb-5 gap-2">
+        <div className="flex items-center gap-2 min-w-0">
+          {icon && (
+            <div className="h-6 w-6 rounded-md bg-[#0ea5e9]/15 flex items-center justify-center text-[#0ea5e9] shrink-0">
+              {icon}
+            </div>
+          )}
+          <h3 className="text-[14px] font-bold text-white tracking-tight truncate">
+            {title}
+            {typeof count === "number" && (
+              <span className="ml-1.5 text-white/40 font-semibold">({count})</span>
+            )}
+          </h3>
+          {subtitle && (
+            <span className="text-[11px] font-semibold text-white/40">— {subtitle}</span>
+          )}
+        </div>
+        {badge && (
+          <span className="text-[10px] font-semibold text-white/40 uppercase tracking-wider shrink-0">
+            {badge}
+          </span>
+        )}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function EmptyState({ text }: { text: string }) {
+  return (
+    <p className="text-white/35 text-[13px] font-medium text-center py-10">{text}</p>
   );
 }
