@@ -232,7 +232,7 @@ export default function PartnerDashboard() {
       </div>
 
       {/* Produtos Disponíveis */}
-      <div className="bg-[#142952] rounded-xl border border-[rgba(14,165,233,0.15)] p-5">
+      <div className="bg-[#142952] rounded-xl border border-[rgba(14,165,233,0.15)] p-4 sm:p-5">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-sm font-semibold text-[#7DD3FC] flex items-center gap-2">
             <Package className="h-4 w-4" />
@@ -242,32 +242,36 @@ export default function PartnerDashboard() {
         {activeListings.length === 0 ? (
           <p className="text-[#7DD3FC]/50 text-sm text-center py-8">Nenhum produto ativo no momento</p>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="text-[#7DD3FC]/70 text-[11px] uppercase tracking-wider border-b border-[rgba(14,165,233,0.1)]">
-                  <th className="text-left py-2 pr-3">Produto</th>
-                  <th className="text-left py-2 pr-3">Categoria</th>
-                  <th className="text-right py-2 pr-3">Preço</th>
-                  <th className="text-center py-2 pr-3">Estoque</th>
-                  <th className="text-center py-2">Views</th>
-                </tr>
-              </thead>
-              <tbody>
-                {activeListings.map((listing) => (
-                  <tr key={listing.id} className="border-b border-[rgba(14,165,233,0.05)] hover:bg-[rgba(14,165,233,0.05)] transition-colors">
-                    <td className="py-3 pr-3 text-[#F0F9FF] font-medium max-w-[200px] truncate">{listing.title}</td>
-                    <td className="py-3 pr-3 text-[#7DD3FC]/80">{categoryLabels[listing.category] || listing.category}</td>
-                    <td className="py-3 pr-3 text-[#F0F9FF] text-right font-semibold">{formatBRL(Number(listing.price))}</td>
-                    <td className="py-3 pr-3 text-center text-[#7DD3FC]">{listing.stock}</td>
-                    <td className="py-3 text-center text-[#7DD3FC]/70 flex items-center justify-center gap-1">
-                      <Eye className="h-3 w-3" />
-                      {listing.views_count}
-                    </td>
+          <div className="-mx-4 sm:-mx-5">
+            <div className="overflow-x-auto px-4 sm:px-5">
+              <table className="w-full text-sm min-w-[480px]">
+                <thead>
+                  <tr className="text-[#7DD3FC]/70 text-[11px] uppercase tracking-wider border-b border-[rgba(14,165,233,0.1)]">
+                    <th className="text-left py-2 pr-3">Produto</th>
+                    <th className="text-left py-2 pr-3">Categoria</th>
+                    <th className="text-right py-2 pr-3">Preço</th>
+                    <th className="text-center py-2 pr-3">Estoque</th>
+                    <th className="text-center py-2">Views</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {activeListings.map((listing) => (
+                    <tr key={listing.id} className="border-b border-[rgba(14,165,233,0.05)] hover:bg-[rgba(14,165,233,0.05)] transition-colors">
+                      <td className="py-3 pr-3 text-[#F0F9FF] font-medium max-w-[180px] truncate">{listing.title}</td>
+                      <td className="py-3 pr-3 text-[#7DD3FC]/80 whitespace-nowrap">{categoryLabels[listing.category] || listing.category}</td>
+                      <td className="py-3 pr-3 text-[#F0F9FF] text-right font-semibold whitespace-nowrap">{formatBRL(Number(listing.price))}</td>
+                      <td className="py-3 pr-3 text-center text-[#7DD3FC]">{listing.stock}</td>
+                      <td className="py-3 text-center text-[#7DD3FC]/70">
+                        <span className="inline-flex items-center gap-1">
+                          <Eye className="h-3 w-3" />
+                          {listing.views_count}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </div>
