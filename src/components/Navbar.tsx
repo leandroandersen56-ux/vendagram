@@ -486,10 +486,19 @@ function DesktopProfileDropdown({ user, logout, navigate, unreadCount }: {
               </button>
             </div>
 
-            {/* Sem label */}
+            {/* Sem label — matches mobile first group */}
             <Item icon={Home} label="Início" onClick={() => go("/")} />
             <Item icon={Store} label="Central do Vendedor" badge="NOVO" onClick={() => go("/vendedor")} />
-            <Item icon={HelpCircle} label="Ajuda" onClick={() => go("/ajuda")} />
+            <Item icon={Link2} label="Programa de Afiliados" badge="GANHA $" badgeColor="#16a34a" onClick={() => go("/afiliados")} />
+            <div className="px-4 py-2">
+              <button
+                onClick={() => go("/embaixador")}
+                className="w-full flex items-center justify-center gap-2 h-10 rounded-xl text-[13px] font-semibold transition-all active:scale-[0.98] bg-primary text-white hover:bg-primary/90"
+              >
+                <Crown className="h-4 w-4 text-white" />
+                Torne-se um Embaixador
+              </button>
+            </div>
             <div className="h-px bg-[#F0F0F0] mx-4" />
 
             {/* MINHA ATIVIDADE */}
@@ -509,22 +518,13 @@ function DesktopProfileDropdown({ user, logout, navigate, unreadCount }: {
             <Item icon={Gamepad2} label="Contas de Jogos" onClick={() => go("/marketplace?cat=jogos")} />
             <Item icon={Smartphone} label="Redes Sociais" onClick={() => go("/marketplace?cat=social")} />
             <Item icon={Tag} label="Ofertas do dia" onClick={() => go("/marketplace?ofertas=1")} />
-            <Item icon={Link2} label="Programa de Afiliados" badge="GANHA $" badgeColor="#16a34a" onClick={() => go("/afiliados")} />
-            <div className="px-4 py-2">
-              <button
-                onClick={() => go("/embaixador")}
-                className="w-full flex items-center justify-center gap-2 h-10 rounded-xl text-[13px] font-semibold transition-all active:scale-[0.98] bg-primary text-white hover:bg-primary/90"
-              >
-                <Crown className="h-4 w-4 text-white" />
-                Torne-se um Embaixador
-              </button>
-            </div>
             <div className="h-px bg-[#F0F0F0] mx-4" />
 
             {/* CONTA */}
             <SectionLabel label="Conta" />
             <Item icon={Receipt} label="Faturamento / Extrato" onClick={() => go("/carteira")} />
             <Item icon={Settings} label="Configurações" onClick={() => go("/configuracoes")} />
+            <Item icon={HelpCircle} label="Ajuda" onClick={() => go("/ajuda")} />
 
             {/* WhatsApp */}
             <div className="px-4 pt-3">
