@@ -198,7 +198,7 @@ export default function AmbassadorPage() {
       <div className="space-y-4">
 
         {/* ===== HERO BANNER ===== */}
-        <div className="relative overflow-hidden rounded-2xl" style={{ background: "linear-gradient(135deg, #2D6FF0 0%, #1B4FBF 50%, #0D2E80 100%)" }}>
+        <div className="relative overflow-hidden rounded-2xl bg-primary">
           <div className="absolute top-0 right-0 w-40 h-40 rounded-full opacity-10" style={{ background: "radial-gradient(circle, #fff 0%, transparent 70%)", transform: "translate(30%, -30%)" }} />
           <div className="absolute bottom-0 left-0 w-24 h-24 rounded-full opacity-5" style={{ background: "radial-gradient(circle, #fff 0%, transparent 70%)", transform: "translate(-30%, 30%)" }} />
           <div className="relative z-10 p-6 sm:p-8 text-center">
