@@ -312,8 +312,8 @@ export default function PartnerDashboard() {
       </div>
 
       {/* Últimos usuários cadastrados */}
-      <div className="bg-[#142952] rounded-xl border border-[rgba(14,165,233,0.15)] p-5">
-        <div className="flex items-center justify-between mb-4">
+      <div className="bg-[#142952] rounded-xl border border-[rgba(14,165,233,0.15)] p-4 sm:p-5">
+        <div className="flex items-center justify-between mb-3 sm:mb-4">
           <h3 className="text-sm font-semibold text-[#7DD3FC] flex items-center gap-2">
             <Users className="h-4 w-4" />
             Últimos Cadastros ({recentUsers.length})
@@ -322,17 +322,17 @@ export default function PartnerDashboard() {
         {recentUsers.length === 0 ? (
           <p className="text-[#7DD3FC]/50 text-sm text-center py-8">Nenhum usuário cadastrado</p>
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-1">
             {recentUsers.map((u: any) => (
-              <div key={u.user_id} className="flex items-center gap-3 py-2 px-3 rounded-lg hover:bg-[rgba(14,165,233,0.05)] transition-colors">
-                <div className="h-8 w-8 rounded-full bg-[#0ea5e9]/20 flex items-center justify-center text-[#7DD3FC] text-xs font-bold shrink-0">
+              <div key={u.user_id} className="flex items-center gap-2.5 py-2 px-2 sm:px-3 rounded-lg hover:bg-[rgba(14,165,233,0.05)] transition-colors">
+                <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-[#0ea5e9]/20 flex items-center justify-center text-[#7DD3FC] text-[11px] sm:text-xs font-bold shrink-0">
                   {(u.name || "?")[0]?.toUpperCase()}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-[#F0F9FF] font-medium truncate">{u.name || "Usuário"}</p>
-                  {u.username && <p className="text-[10px] text-[#7DD3FC]/50">@{u.username}</p>}
+                  <p className="text-xs sm:text-sm text-[#F0F9FF] font-medium truncate">{u.name || "Usuário"}</p>
+                  {u.username && <p className="text-[10px] text-[#7DD3FC]/50 truncate">@{u.username}</p>}
                 </div>
-                <span className="text-[10px] text-[#7DD3FC]/60 shrink-0">
+                <span className="text-[10px] text-[#7DD3FC]/60 shrink-0 whitespace-nowrap">
                   {formatDistanceToNow(new Date(u.created_at), { addSuffix: true, locale: ptBR })}
                 </span>
               </div>
