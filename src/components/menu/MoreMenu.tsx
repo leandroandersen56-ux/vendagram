@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Home, Store, HelpCircle, ShoppingCart, Package, Bell, Heart, HelpCircleIcon,
   Star, Clock, Gamepad2, Smartphone, Tag, Link2, Receipt, Settings, LogOut,
-  ChevronRight, Shield, Wallet, MessageCircle, Key
+  ChevronRight, Shield, Wallet, MessageCircle, Key, Crown
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { VerifiedBadge } from "@/components/VerifiedBadge";
@@ -37,6 +37,7 @@ export default function MoreMenu({ open, onClose }: MoreMenuProps) {
       items: [
         { icon: Home, label: "Início", path: "/" },
         { icon: Store, label: "Central do Vendedor", path: "/vendedor", badge: { text: "NOVO", color: "bg-primary text-white" } },
+        { icon: Link2, label: "Programa de Afiliados", path: "/afiliados" },
         { icon: HelpCircle, label: "Ajuda", path: "/ajuda" },
       ],
     },
@@ -175,6 +176,19 @@ export default function MoreMenu({ open, onClose }: MoreMenuProps) {
                       <ChevronRight className="h-4 w-4 text-[#CCC] shrink-0" />
                     </button>
                   ))}
+                  {/* Highlighted Ambassador CTA after first group */}
+                  {gi === 0 && (
+                    <div className="px-5 py-2">
+                      <button
+                        onClick={() => handleNav("/embaixador")}
+                        className="w-full flex items-center justify-center gap-2 h-11 rounded-xl text-sm font-semibold transition-all active:scale-[0.98]"
+                        style={{ background: "linear-gradient(135deg, #2D6FF0 0%, #1B4FBF 100%)", color: "#fff" }}
+                      >
+                        <Crown className="h-4 w-4 text-yellow-300" />
+                        Torne-se um Embaixador
+                      </button>
+                    </div>
+                  )}
                   {gi < menuGroups.length - 1 && <div className="h-px bg-[#F0F0F0] mx-5" />}
                 </div>
               ))}
