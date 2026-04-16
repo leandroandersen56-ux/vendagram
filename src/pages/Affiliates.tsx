@@ -285,7 +285,7 @@ export default function Affiliates() {
               {/* If already ambassador — show dashboard */}
               {ambassador ? (
                 <div className="space-y-4">
-                  <div className="relative overflow-hidden rounded-2xl p-6" style={{ background: "linear-gradient(135deg, #7C3AED 0%, #5B21B6 50%, #4C1D95 100%)" }}>
+                  <div className="relative overflow-hidden rounded-2xl p-6 bg-primary">
                     <div className="absolute top-0 right-0 w-32 h-32 rounded-full opacity-10" style={{ background: "radial-gradient(circle, #fff 0%, transparent 70%)", transform: "translate(30%, -30%)" }} />
                     <div className="relative z-10">
                       <div className="flex items-center gap-2.5 mb-1.5">
