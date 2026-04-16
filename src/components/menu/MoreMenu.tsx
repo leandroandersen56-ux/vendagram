@@ -60,7 +60,7 @@ export default function MoreMenu({ open, onClose }: MoreMenuProps) {
         { icon: Gamepad2, label: "Contas de Jogos", path: "/marketplace?cat=jogos" },
         { icon: Smartphone, label: "Redes Sociais", path: "/marketplace?cat=social" },
         { icon: Tag, label: "Ofertas do dia", path: "/marketplace?ofertas=1" },
-        { icon: Link2, label: "Programa de Afiliados", path: "/afiliados", badge: { text: "GANHA $", color: "bg-success text-white" } },
+        
       ],
     },
     {
