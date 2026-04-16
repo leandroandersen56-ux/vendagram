@@ -190,9 +190,9 @@ export default function Affiliates() {
                   <div className="w-9 h-9 rounded-xl bg-white/15 flex items-center justify-center backdrop-blur-sm">
                     <Gift className="h-5 w-5 text-white" />
                   </div>
-                  <p className="text-xl font-bold text-white tracking-tight">Ganhe 10% de comissão</p>
+                  <p className="text-xl font-bold text-white tracking-tight">Indique e Ganhe</p>
                 </div>
-                <p className="text-sm text-white/70 ml-[46px]">Por cada venda indicada pelo seu link</p>
+                <p className="text-sm text-white/70 ml-[46px]">Ganhe 10% da taxa da plataforma por cada venda indicada (válido por 30 dias)</p>
                 <div className="mt-5 bg-white/10 backdrop-blur-sm rounded-xl px-4 py-3 flex items-center gap-2 border border-white/10">
                   <Link2 className="h-4 w-4 text-white/50 shrink-0" />
                   <p className="text-sm font-mono flex-1 truncate text-white/90">{link}</p>
@@ -229,7 +229,7 @@ export default function Affiliates() {
               {[
                 { text: "Copie seu link de afiliado", icon: Link2, color: "#2D6FF0" },
                 { text: "Compartilhe em redes sociais, grupos, Discord", icon: Gift, color: "#7C3AED" },
-                { text: "Ganhe 10% de cada venda realizada", icon: DollarSign, color: "#00A650" },
+                { text: "Ganhe 10% da taxa da plataforma (1% do valor da venda) por 30 dias", icon: DollarSign, color: "#00A650" },
               ].map((step, i) => (
                 <div key={i} className="flex gap-3 items-center mb-3 last:mb-0">
                   <div className="h-9 w-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: `${step.color}12` }}>
