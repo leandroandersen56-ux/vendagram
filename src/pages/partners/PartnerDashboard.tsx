@@ -132,17 +132,22 @@ export default function PartnerDashboard() {
     enabled: !!authUserId && eligibleListingIds.length > 0,
   });
 
-  // Últimos usuários cadastrados (sem email/contato)
+  // Últimos usuários cadastrados (sócio tem permissão via RLS "Admins and partners can read all profiles")
   const { data: recentUsers = [] } = useQuery({
-    queryKey: ["partner-recent-users"],
+    queryKey: ["partner-recent-users", authUserId],
     queryFn: async () => {
-      const { data } = await supabase
-        .from("public_profiles")
+      const { data, error } = await supabase
+        .from("profiles")
         .select("user_id, name, username, avatar_url, created_at")
         .order("created_at", { ascending: false })
         .limit(15);
+      if (error) {
+        console.error("[PartnerDashboard] recent users error:", error);
+        return [];
+      }
       return data ?? [];
     },
+    enabled: !!authUserId,
     refetchInterval: 60_000,
   });
 
