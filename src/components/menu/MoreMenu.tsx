@@ -37,7 +37,7 @@ export default function MoreMenu({ open, onClose }: MoreMenuProps) {
       items: [
         { icon: Home, label: "Início", path: "/" },
         { icon: Store, label: "Central do Vendedor", path: "/vendedor", badge: { text: "NOVO", color: "bg-primary text-white" } },
-        { icon: Link2, label: "Programa de Afiliados", path: "/afiliados" },
+        
         { icon: HelpCircle, label: "Ajuda", path: "/ajuda" },
       ],
     },
