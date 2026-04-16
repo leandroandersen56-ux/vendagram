@@ -34,6 +34,7 @@ const Reviews = lazy(() => import("./pages/Reviews.tsx"));
 const SellerDashboard = lazy(() => import("./pages/SellerDashboard.tsx"));
 const WalletPage = lazy(() => import("./pages/WalletPage.tsx"));
 const Affiliates = lazy(() => import("./pages/Affiliates.tsx"));
+const AmbassadorPage = lazy(() => import("./pages/AmbassadorPage.tsx"));
 const SettingsPage = lazy(() => import("./pages/SettingsPage.tsx"));
 const HelpPage = lazy(() => import("./pages/HelpPage.tsx"));
 const SearchResults = lazy(() => import("./pages/SearchResults.tsx"));
@@ -160,6 +161,7 @@ function AppRoutes() {
           <Route path="/avaliacoes" element={<ProtectedRoute><Reviews /></ProtectedRoute>} />
           <Route path="/carteira" element={<ProtectedRoute><WalletPage /></ProtectedRoute>} />
           <Route path="/afiliados" element={<ProtectedRoute><Affiliates /></ProtectedRoute>} />
+          <Route path="/embaixador" element={<ProtectedRoute><AmbassadorPage /></ProtectedRoute>} />
           <Route path="/configuracoes" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
           <Route path="/configuracoes/perfil" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
           <Route path="/configuracoes/senha" element={<ProtectedRoute><ChangePassword /></ProtectedRoute>} />
