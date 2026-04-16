@@ -301,42 +301,7 @@ export default function Navbar() {
             </Link>
 
             {isAuthenticated ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center text-white text-xs font-semibold hover:bg-white/30 transition-colors">
-                    {user?.name?.[0]?.toUpperCase() || <User className="h-4 w-4" />}
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-64 bg-card border-border p-0 rounded-xl shadow-lg">
-                  {/* Profile header */}
-                  <div className="bg-gradient-to-br from-primary to-[#1A4BC4] rounded-t-xl px-4 py-3 text-white">
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center text-base font-semibold">
-                        {user?.name?.[0]?.toUpperCase() || "U"}
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-sm font-semibold truncate flex items-center gap-1">{user?.name || "Usuário"} {user?.isVerified && <VerifiedBadge size={16} />}</p>
-                        <p className="text-[11px] text-white/70 truncate">{user?.email}</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="p-1">
-                    <DropdownMenuItem asChild><Link to="/vendedor" className="cursor-pointer gap-2"><LayoutDashboard className="h-4 w-4" /> Meu Painel</Link></DropdownMenuItem>
-                    <DropdownMenuItem asChild><Link to="/vendedor" className="cursor-pointer gap-2"><User className="h-4 w-4" /> Meu Perfil</Link></DropdownMenuItem>
-                    <DropdownMenuItem asChild><Link to="/compras" className="cursor-pointer gap-2"><ShoppingCart className="h-4 w-4" /> Minhas Compras</Link></DropdownMenuItem>
-                    <DropdownMenuItem asChild><Link to="/vendedor" className="cursor-pointer gap-2"><ShoppingBag className="h-4 w-4" /> Central do Vendedor</Link></DropdownMenuItem>
-                    <DropdownMenuItem asChild><Link to="/carteira" className="cursor-pointer gap-2"><Wallet className="h-4 w-4" /> Minha Carteira</Link></DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem asChild><Link to="/configuracoes" className="cursor-pointer gap-2"><Settings className="h-4 w-4" /> Configurações</Link></DropdownMenuItem>
-                    <DropdownMenuItem asChild><Link to="/ajuda" className="cursor-pointer gap-2"><HelpCircle className="h-4 w-4" /> Ajuda</Link></DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem className="cursor-pointer text-destructive gap-2" onClick={logout}>
-                      <LogOut className="h-4 w-4" /> Sair da conta
-                    </DropdownMenuItem>
-                  </div>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <DesktopProfileDropdown user={user} logout={logout} navigate={navigate} unreadCount={unreadCount} />
             ) : (
               <div className="flex items-center gap-2">
                 <Button
