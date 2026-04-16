@@ -371,7 +371,7 @@ export default function Affiliates() {
               ) : (
                 /* Not ambassador — show CTA + application form */
                 <div className="relative overflow-hidden rounded-2xl border border-border">
-                  <div className="p-5 pb-0" style={{ background: "linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%)" }}>
+                  <div className="p-5 pb-0 bg-primary">
                     <div className="text-center pb-5">
                       <Crown className="h-10 w-10 text-yellow-300 mx-auto mb-2" />
                       <h2 className="text-xl font-bold text-white mb-1">Torne-se Embaixador Froiv</h2>
