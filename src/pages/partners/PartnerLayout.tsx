@@ -4,7 +4,7 @@ import { supabase } from "@/lib/supabase-custom-client";
 import { usePartner } from "./PartnerGuard";
 import logoWhite from "@/assets/logo-froiv-white.png";
 import {
-  BarChart3, DollarSign, TrendingUp, Wallet, User, LogOut, Menu, X, ChevronRight, Users
+  BarChart3, DollarSign, TrendingUp, Wallet, User, LogOut, Menu, X, ChevronRight, Users, Package
 } from "lucide-react";
 import { VerifiedBadge } from "@/components/VerifiedBadge";
 
@@ -12,7 +12,8 @@ const navItems = [
   { label: "Dashboard", icon: BarChart3, path: "/admintoplogin" },
   { label: "Faturamento", icon: DollarSign, path: "/admintoplogin/faturamento" },
   { label: "Desempenho", icon: TrendingUp, path: "/admintoplogin/desempenho" },
-  { label: "Usuários", icon: Users, path: "/admintoplogin/usuarios" },
+  { label: "Cadastros", icon: Users, path: "/admintoplogin/usuarios" },
+  { label: "Produtos", icon: Package, path: "/admintoplogin/produtos" },
   { label: "Meu Saque", icon: Wallet, path: "/admintoplogin/saque" },
   { label: "Minha Conta", icon: User, path: "/admintoplogin/conta" },
 ];
