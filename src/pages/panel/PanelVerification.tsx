@@ -12,6 +12,7 @@ import {
   Loader2, CheckCircle2, XCircle, Clock, AlertCircle, User, Building2
 } from "lucide-react";
 import PageHeader from "@/components/menu/PageHeader";
+import DesktopPageShell from "@/components/DesktopPageShell";
 
 type DocType = "cpf" | "cnpj";
 
