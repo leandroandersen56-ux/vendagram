@@ -277,31 +277,38 @@ export default function PartnerDashboard() {
       </div>
 
       {/* Chart — vendas do sócio */}
-      <div className="bg-[#142952] rounded-xl border border-[rgba(14,165,233,0.15)] p-5">
+      <div className="bg-[#142952] rounded-xl border border-[rgba(14,165,233,0.15)] p-4 sm:p-5">
         <h3 className="text-sm font-semibold text-[#7DD3FC] mb-4">Suas Vendas — últimos 30 dias</h3>
-        <ResponsiveContainer width="100%" height={250}>
-          <AreaChart data={chartData ?? []}>
-            <defs>
-              <linearGradient id="partnerGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.4} />
-                <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0} />
-              </linearGradient>
-              <linearGradient id="profitGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#10B981" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#10B981" stopOpacity={0} />
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(14,165,233,0.1)" />
-            <XAxis dataKey="name" tick={{ fill: "#7DD3FC", fontSize: 10 }} />
-            <YAxis tick={{ fill: "#7DD3FC", fontSize: 10 }} tickFormatter={(v) => `R$${(v / 1000).toFixed(0)}k`} />
-            <Tooltip
-              contentStyle={{ background: "#0f2040", border: "1px solid rgba(14,165,233,0.2)", borderRadius: 8, color: "#F0F9FF" }}
-              formatter={(v: number, name: string) => [formatBRL(v), name === "vendas" ? "Vendas" : "Seu Lucro (10%)"]}
-            />
-            <Area type="monotone" dataKey="vendas" stroke="#0ea5e9" fill="url(#partnerGrad)" strokeWidth={2} />
-            <Area type="monotone" dataKey="lucro" stroke="#10B981" fill="url(#profitGrad)" strokeWidth={2} strokeDasharray="5 5" />
-          </AreaChart>
-        </ResponsiveContainer>
+        <div className="-mx-2 sm:mx-0">
+          <ResponsiveContainer width="100%" height={220}>
+            <AreaChart data={chartData ?? []} margin={{ top: 5, right: 5, left: -15, bottom: 0 }}>
+              <defs>
+                <linearGradient id="partnerGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.4} />
+                  <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0} />
+                </linearGradient>
+                <linearGradient id="profitGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#10B981" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="#10B981" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(14,165,233,0.1)" />
+              <XAxis dataKey="name" tick={{ fill: "#7DD3FC", fontSize: 9 }} interval="preserveStartEnd" />
+              <YAxis 
+                tick={{ fill: "#7DD3FC", fontSize: 9 }} 
+                tickFormatter={(v) => v === 0 ? "R$0" : `R$${(v / 1000).toFixed(0)}k`}
+                width={45}
+                tickCount={4}
+              />
+              <Tooltip
+                contentStyle={{ background: "#0f2040", border: "1px solid rgba(14,165,233,0.2)", borderRadius: 8, color: "#F0F9FF", fontSize: 12 }}
+                formatter={(v: number, name: string) => [formatBRL(v), name === "vendas" ? "Vendas" : "Seu Lucro (10%)"]}
+              />
+              <Area type="monotone" dataKey="vendas" stroke="#0ea5e9" fill="url(#partnerGrad)" strokeWidth={2} />
+              <Area type="monotone" dataKey="lucro" stroke="#10B981" fill="url(#profitGrad)" strokeWidth={2} strokeDasharray="5 5" />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
       </div>
 
       {/* Últimos usuários cadastrados */}
