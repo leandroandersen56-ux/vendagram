@@ -173,22 +173,22 @@ export default function PartnerDashboard() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <div>
-        <h1 className="text-xl font-bold text-[#F0F9FF]">Olá, {partner.name} 👋</h1>
-        <p className="text-sm text-[#7DD3FC]">Seu dashboard financeiro — dados em tempo real</p>
+        <h1 className="text-lg sm:text-xl font-bold text-[#F0F9FF]">Olá, {partner.name} 👋</h1>
+        <p className="text-xs sm:text-sm text-[#7DD3FC]">Seu dashboard financeiro — dados em tempo real</p>
       </div>
 
       {/* KPIs */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4">
         {kpis.map((kpi) => (
-          <div key={kpi.label} className="bg-[#142952] rounded-xl border border-[rgba(14,165,233,0.15)] p-5">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-[11px] text-[#7DD3FC] uppercase tracking-wider font-medium">{kpi.label}</span>
-              <kpi.icon className="h-5 w-5" style={{ color: kpi.color }} />
+          <div key={kpi.label} className="bg-[#142952] rounded-xl border border-[rgba(14,165,233,0.15)] p-3 sm:p-5">
+            <div className="flex items-center justify-between mb-2 sm:mb-3">
+              <span className="text-[10px] sm:text-[11px] text-[#7DD3FC] uppercase tracking-wider font-medium leading-tight">{kpi.label}</span>
+              <kpi.icon className="h-4 w-4 sm:h-5 sm:w-5 shrink-0 ml-1" style={{ color: kpi.color }} />
             </div>
-            <p className="text-2xl lg:text-[28px] font-black text-[#F0F9FF]">{kpi.value}</p>
-            {kpi.sub && <p className="text-[11px] text-[#7DD3FC]/70 mt-1">{kpi.sub}</p>}
+            <p className="text-lg sm:text-2xl lg:text-[28px] font-black text-[#F0F9FF]">{kpi.value}</p>
+            {kpi.sub && <p className="text-[10px] sm:text-[11px] text-[#7DD3FC]/70 mt-1 leading-tight">{kpi.sub}</p>}
             {kpi.action && (
               <button
                 onClick={() => navigate("/admintoplogin/saque")}
@@ -202,37 +202,37 @@ export default function PartnerDashboard() {
       </div>
 
       {/* Split card — regra de lucro */}
-      <div className="bg-gradient-to-r from-[#0ea5e9] to-[#0369a1] rounded-xl p-6 text-white">
-        <h3 className="font-bold text-lg mb-4 flex items-center gap-2">💰 Como funciona seu lucro</h3>
-        <div className="space-y-2 text-sm">
-          <div className="flex justify-between">
+      <div className="bg-gradient-to-r from-[#0ea5e9] to-[#0369a1] rounded-xl p-4 sm:p-6 text-white">
+        <h3 className="font-bold text-base sm:text-lg mb-3 sm:mb-4 flex items-center gap-2">💰 Como funciona seu lucro</h3>
+        <div className="space-y-2 text-xs sm:text-sm">
+          <div className="flex justify-between gap-2">
             <span>Total das suas vendas:</span>
-            <span className="font-bold">{formatBRL(totalSales)}</span>
+            <span className="font-bold whitespace-nowrap">{formatBRL(totalSales)}</span>
           </div>
           <div className="h-px bg-white/20" />
-          <div className="flex justify-between">
+          <div className="flex justify-between gap-2">
             <span>📊 Taxa da plataforma (10%):</span>
-            <span className="font-semibold">{formatBRL(totalSales * 0.10)}</span>
+            <span className="font-semibold whitespace-nowrap">{formatBRL(totalSales * 0.10)}</span>
           </div>
-          <div className="flex justify-between">
+          <div className="flex justify-between gap-2">
             <span>💰 Seu lucro (10% da venda):</span>
-            <span className="font-semibold">{formatBRL(partnerProfit)}</span>
+            <span className="font-semibold whitespace-nowrap">{formatBRL(partnerProfit)}</span>
           </div>
           <div className="h-px bg-white/20" />
-          <div className="flex justify-between">
+          <div className="flex justify-between gap-2">
             <span>🏦 Já sacado:</span>
-            <span className="font-semibold">{formatBRL(withdrawn)}</span>
+            <span className="font-semibold whitespace-nowrap">{formatBRL(withdrawn)}</span>
           </div>
           <div className="h-px bg-white/20" />
-          <div className="flex justify-between text-base font-bold">
+          <div className="flex justify-between gap-2 text-sm sm:text-base font-bold">
             <span>Disponível para saque:</span>
-            <span>{formatBRL(available)}</span>
+            <span className="whitespace-nowrap">{formatBRL(available)}</span>
           </div>
         </div>
       </div>
 
       {/* Produtos Disponíveis */}
-      <div className="bg-[#142952] rounded-xl border border-[rgba(14,165,233,0.15)] p-5">
+      <div className="bg-[#142952] rounded-xl border border-[rgba(14,165,233,0.15)] p-4 sm:p-5">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-sm font-semibold text-[#7DD3FC] flex items-center gap-2">
             <Package className="h-4 w-4" />
@@ -242,67 +242,78 @@ export default function PartnerDashboard() {
         {activeListings.length === 0 ? (
           <p className="text-[#7DD3FC]/50 text-sm text-center py-8">Nenhum produto ativo no momento</p>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="text-[#7DD3FC]/70 text-[11px] uppercase tracking-wider border-b border-[rgba(14,165,233,0.1)]">
-                  <th className="text-left py-2 pr-3">Produto</th>
-                  <th className="text-left py-2 pr-3">Categoria</th>
-                  <th className="text-right py-2 pr-3">Preço</th>
-                  <th className="text-center py-2 pr-3">Estoque</th>
-                  <th className="text-center py-2">Views</th>
-                </tr>
-              </thead>
-              <tbody>
-                {activeListings.map((listing) => (
-                  <tr key={listing.id} className="border-b border-[rgba(14,165,233,0.05)] hover:bg-[rgba(14,165,233,0.05)] transition-colors">
-                    <td className="py-3 pr-3 text-[#F0F9FF] font-medium max-w-[200px] truncate">{listing.title}</td>
-                    <td className="py-3 pr-3 text-[#7DD3FC]/80">{categoryLabels[listing.category] || listing.category}</td>
-                    <td className="py-3 pr-3 text-[#F0F9FF] text-right font-semibold">{formatBRL(Number(listing.price))}</td>
-                    <td className="py-3 pr-3 text-center text-[#7DD3FC]">{listing.stock}</td>
-                    <td className="py-3 text-center text-[#7DD3FC]/70 flex items-center justify-center gap-1">
-                      <Eye className="h-3 w-3" />
-                      {listing.views_count}
-                    </td>
+          <div className="-mx-4 sm:-mx-5">
+            <div className="overflow-x-auto px-4 sm:px-5">
+              <table className="w-full text-sm min-w-[480px]">
+                <thead>
+                  <tr className="text-[#7DD3FC]/70 text-[11px] uppercase tracking-wider border-b border-[rgba(14,165,233,0.1)]">
+                    <th className="text-left py-2 pr-3">Produto</th>
+                    <th className="text-left py-2 pr-3">Categoria</th>
+                    <th className="text-right py-2 pr-3">Preço</th>
+                    <th className="text-center py-2 pr-3">Estoque</th>
+                    <th className="text-center py-2">Views</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {activeListings.map((listing) => (
+                    <tr key={listing.id} className="border-b border-[rgba(14,165,233,0.05)] hover:bg-[rgba(14,165,233,0.05)] transition-colors">
+                      <td className="py-3 pr-3 text-[#F0F9FF] font-medium max-w-[180px] truncate">{listing.title}</td>
+                      <td className="py-3 pr-3 text-[#7DD3FC]/80 whitespace-nowrap">{categoryLabels[listing.category] || listing.category}</td>
+                      <td className="py-3 pr-3 text-[#F0F9FF] text-right font-semibold whitespace-nowrap">{formatBRL(Number(listing.price))}</td>
+                      <td className="py-3 pr-3 text-center text-[#7DD3FC]">{listing.stock}</td>
+                      <td className="py-3 text-center text-[#7DD3FC]/70">
+                        <span className="inline-flex items-center gap-1">
+                          <Eye className="h-3 w-3" />
+                          {listing.views_count}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </div>
 
       {/* Chart — vendas do sócio */}
-      <div className="bg-[#142952] rounded-xl border border-[rgba(14,165,233,0.15)] p-5">
+      <div className="bg-[#142952] rounded-xl border border-[rgba(14,165,233,0.15)] p-4 sm:p-5">
         <h3 className="text-sm font-semibold text-[#7DD3FC] mb-4">Suas Vendas — últimos 30 dias</h3>
-        <ResponsiveContainer width="100%" height={250}>
-          <AreaChart data={chartData ?? []}>
-            <defs>
-              <linearGradient id="partnerGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.4} />
-                <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0} />
-              </linearGradient>
-              <linearGradient id="profitGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#10B981" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#10B981" stopOpacity={0} />
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(14,165,233,0.1)" />
-            <XAxis dataKey="name" tick={{ fill: "#7DD3FC", fontSize: 10 }} />
-            <YAxis tick={{ fill: "#7DD3FC", fontSize: 10 }} tickFormatter={(v) => `R$${(v / 1000).toFixed(0)}k`} />
-            <Tooltip
-              contentStyle={{ background: "#0f2040", border: "1px solid rgba(14,165,233,0.2)", borderRadius: 8, color: "#F0F9FF" }}
-              formatter={(v: number, name: string) => [formatBRL(v), name === "vendas" ? "Vendas" : "Seu Lucro (10%)"]}
-            />
-            <Area type="monotone" dataKey="vendas" stroke="#0ea5e9" fill="url(#partnerGrad)" strokeWidth={2} />
-            <Area type="monotone" dataKey="lucro" stroke="#10B981" fill="url(#profitGrad)" strokeWidth={2} strokeDasharray="5 5" />
-          </AreaChart>
-        </ResponsiveContainer>
+        <div className="-mx-2 sm:mx-0">
+          <ResponsiveContainer width="100%" height={220}>
+            <AreaChart data={chartData ?? []} margin={{ top: 5, right: 5, left: -15, bottom: 0 }}>
+              <defs>
+                <linearGradient id="partnerGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.4} />
+                  <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0} />
+                </linearGradient>
+                <linearGradient id="profitGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#10B981" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="#10B981" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(14,165,233,0.1)" />
+              <XAxis dataKey="name" tick={{ fill: "#7DD3FC", fontSize: 9 }} interval="preserveStartEnd" />
+              <YAxis 
+                tick={{ fill: "#7DD3FC", fontSize: 9 }} 
+                tickFormatter={(v) => v === 0 ? "R$0" : `R$${(v / 1000).toFixed(0)}k`}
+                width={45}
+                tickCount={4}
+              />
+              <Tooltip
+                contentStyle={{ background: "#0f2040", border: "1px solid rgba(14,165,233,0.2)", borderRadius: 8, color: "#F0F9FF", fontSize: 12 }}
+                formatter={(v: number, name: string) => [formatBRL(v), name === "vendas" ? "Vendas" : "Seu Lucro (10%)"]}
+              />
+              <Area type="monotone" dataKey="vendas" stroke="#0ea5e9" fill="url(#partnerGrad)" strokeWidth={2} />
+              <Area type="monotone" dataKey="lucro" stroke="#10B981" fill="url(#profitGrad)" strokeWidth={2} strokeDasharray="5 5" />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
       </div>
 
       {/* Últimos usuários cadastrados */}
-      <div className="bg-[#142952] rounded-xl border border-[rgba(14,165,233,0.15)] p-5">
-        <div className="flex items-center justify-between mb-4">
+      <div className="bg-[#142952] rounded-xl border border-[rgba(14,165,233,0.15)] p-4 sm:p-5">
+        <div className="flex items-center justify-between mb-3 sm:mb-4">
           <h3 className="text-sm font-semibold text-[#7DD3FC] flex items-center gap-2">
             <Users className="h-4 w-4" />
             Últimos Cadastros ({recentUsers.length})
@@ -311,17 +322,17 @@ export default function PartnerDashboard() {
         {recentUsers.length === 0 ? (
           <p className="text-[#7DD3FC]/50 text-sm text-center py-8">Nenhum usuário cadastrado</p>
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-1">
             {recentUsers.map((u: any) => (
-              <div key={u.user_id} className="flex items-center gap-3 py-2 px-3 rounded-lg hover:bg-[rgba(14,165,233,0.05)] transition-colors">
-                <div className="h-8 w-8 rounded-full bg-[#0ea5e9]/20 flex items-center justify-center text-[#7DD3FC] text-xs font-bold shrink-0">
+              <div key={u.user_id} className="flex items-center gap-2.5 py-2 px-2 sm:px-3 rounded-lg hover:bg-[rgba(14,165,233,0.05)] transition-colors">
+                <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-[#0ea5e9]/20 flex items-center justify-center text-[#7DD3FC] text-[11px] sm:text-xs font-bold shrink-0">
                   {(u.name || "?")[0]?.toUpperCase()}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-[#F0F9FF] font-medium truncate">{u.name || "Usuário"}</p>
-                  {u.username && <p className="text-[10px] text-[#7DD3FC]/50">@{u.username}</p>}
+                  <p className="text-xs sm:text-sm text-[#F0F9FF] font-medium truncate">{u.name || "Usuário"}</p>
+                  {u.username && <p className="text-[10px] text-[#7DD3FC]/50 truncate">@{u.username}</p>}
                 </div>
-                <span className="text-[10px] text-[#7DD3FC]/60 shrink-0">
+                <span className="text-[10px] text-[#7DD3FC]/60 shrink-0 whitespace-nowrap">
                   {formatDistanceToNow(new Date(u.created_at), { addSuffix: true, locale: ptBR })}
                 </span>
               </div>
