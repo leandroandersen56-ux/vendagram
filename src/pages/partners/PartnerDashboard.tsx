@@ -196,60 +196,102 @@ export default function PartnerDashboard() {
   };
 
   return (
-    <div className="space-y-4 sm:space-y-6">
-      <div>
-        <h1 className="text-lg sm:text-xl font-bold text-[#F0F9FF]">Olá, {partner.name} 👋</h1>
-        <p className="text-xs sm:text-sm text-[#7DD3FC]">Seu dashboard financeiro — dados em tempo real</p>
+    <div className="space-y-6 sm:space-y-8">
+      {/* Header */}
+      <div className="flex items-end justify-between gap-3 flex-wrap">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-[#0ea5e9] mb-1.5">
+            Painel do Sócio
+          </p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+            Olá, {partner.name} <span className="inline-block">👋</span>
+          </h1>
+          <p className="text-[13px] font-medium text-white/50 mt-1">
+            Acompanhe seu desempenho em tempo real
+          </p>
+        </div>
+        <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08]">
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="text-[11px] font-semibold text-white/70">Atualizado agora</span>
+        </div>
       </div>
 
       {/* KPIs */}
-      <div className="grid grid-cols-2 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {kpis.map((kpi) => (
-          <div key={kpi.label} className="bg-[#142952] rounded-xl border border-[rgba(14,165,233,0.15)] p-3 sm:p-5">
-            <div className="flex items-center justify-between mb-2 sm:mb-3">
-              <span className="text-[10px] sm:text-[11px] text-[#7DD3FC] uppercase tracking-wider font-medium leading-tight">{kpi.label}</span>
-              <kpi.icon className="h-4 w-4 sm:h-5 sm:w-5 shrink-0 ml-1" style={{ color: kpi.color }} />
+          <div
+            key={kpi.label}
+            className="group relative bg-gradient-to-br from-[#142952] to-[#0f1f3f] rounded-2xl border border-white/[0.06] p-4 sm:p-5 overflow-hidden hover:border-white/[0.12] transition-all"
+          >
+            <div
+              className="absolute top-0 right-0 h-24 w-24 rounded-full blur-3xl opacity-20 group-hover:opacity-30 transition-opacity"
+              style={{ background: kpi.color }}
+            />
+            <div className="relative">
+              <div className="flex items-start justify-between mb-3 sm:mb-4">
+                <span className="text-[10px] sm:text-[11px] font-semibold text-white/55 uppercase tracking-[0.12em] leading-tight max-w-[70%]">
+                  {kpi.label}
+                </span>
+                <div
+                  className="h-8 w-8 rounded-lg flex items-center justify-center shrink-0"
+                  style={{ background: `${kpi.color}15` }}
+                >
+                  <kpi.icon className="h-4 w-4" style={{ color: kpi.color }} />
+                </div>
+              </div>
+              <p className="text-xl sm:text-[26px] font-bold text-white tracking-tight leading-none">
+                {kpi.value}
+              </p>
+              {kpi.sub && (
+                <p className="text-[11px] font-medium text-white/40 mt-2 leading-tight">
+                  {kpi.sub}
+                </p>
+              )}
+              {kpi.action && (
+                <button
+                  onClick={() => navigate("/admintoplogin/saque")}
+                  className="mt-3 inline-flex items-center gap-1 text-[11px] font-semibold text-[#0ea5e9] hover:text-white transition-colors"
+                >
+                  Sacar agora →
+                </button>
+              )}
             </div>
-            <p className="text-lg sm:text-2xl lg:text-[28px] font-black text-[#F0F9FF]">{kpi.value}</p>
-            {kpi.sub && <p className="text-[10px] sm:text-[11px] text-[#7DD3FC]/70 mt-1 leading-tight">{kpi.sub}</p>}
-            {kpi.action && (
-              <button
-                onClick={() => navigate("/admintoplogin/saque")}
-                className="mt-2 text-xs text-[#0ea5e9] hover:text-[#7DD3FC] font-medium transition-colors"
-              >
-                Sacar →
-              </button>
-            )}
           </div>
         ))}
       </div>
 
       {/* Split card — regra de lucro */}
-      <div className="bg-gradient-to-r from-[#0ea5e9] to-[#0369a1] rounded-xl p-4 sm:p-6 text-white">
-        <h3 className="font-bold text-base sm:text-lg mb-3 sm:mb-4 flex items-center gap-2">💰 Como funciona seu lucro</h3>
-        <div className="space-y-2 text-xs sm:text-sm">
-          <div className="flex justify-between gap-2">
-            <span>Total das suas vendas:</span>
-            <span className="font-bold whitespace-nowrap">{formatBRL(totalSales)}</span>
+      <div className="relative overflow-hidden rounded-2xl p-5 sm:p-7 text-white" style={{ background: "linear-gradient(135deg, #0ea5e9 0%, #0369a1 100%)" }}>
+        <div className="absolute -top-12 -right-12 h-48 w-48 rounded-full bg-white/10 blur-3xl" />
+        <div className="relative">
+          <div className="flex items-center gap-2.5 mb-5">
+            <div className="h-9 w-9 rounded-xl bg-white/15 flex items-center justify-center text-lg">💰</div>
+            <h3 className="font-bold text-base sm:text-lg tracking-tight">Como funciona seu lucro</h3>
           </div>
-          <div className="h-px bg-white/20" />
-          <div className="flex justify-between gap-2">
-            <span>📊 Taxa da plataforma (10%):</span>
-            <span className="font-semibold whitespace-nowrap">{formatBRL(totalSales * 0.10)}</span>
-          </div>
-          <div className="flex justify-between gap-2">
-            <span>💰 Seu lucro (10% da venda):</span>
-            <span className="font-semibold whitespace-nowrap">{formatBRL(partnerProfit)}</span>
-          </div>
-          <div className="h-px bg-white/20" />
-          <div className="flex justify-between gap-2">
-            <span>🏦 Já sacado:</span>
-            <span className="font-semibold whitespace-nowrap">{formatBRL(withdrawn)}</span>
-          </div>
-          <div className="h-px bg-white/20" />
-          <div className="flex justify-between gap-2 text-sm sm:text-base font-bold">
-            <span>Disponível para saque:</span>
-            <span className="whitespace-nowrap">{formatBRL(available)}</span>
+          <div className="space-y-2.5 text-[13px] sm:text-sm">
+            <div className="flex justify-between gap-2">
+              <span className="font-medium text-white/85">Total das suas vendas</span>
+              <span className="font-bold whitespace-nowrap">{formatBRL(totalSales)}</span>
+            </div>
+            <div className="h-px bg-white/15" />
+            <div className="flex justify-between gap-2">
+              <span className="font-medium text-white/85">📊 Taxa da plataforma (10%)</span>
+              <span className="font-semibold whitespace-nowrap">{formatBRL(totalSales * 0.10)}</span>
+            </div>
+            <div className="flex justify-between gap-2">
+              <span className="font-medium text-white/85">💰 Seu lucro (10% da venda)</span>
+              <span className="font-semibold whitespace-nowrap">{formatBRL(partnerProfit)}</span>
+            </div>
+            <div className="h-px bg-white/15" />
+            <div className="flex justify-between gap-2">
+              <span className="font-medium text-white/85">🏦 Já sacado</span>
+              <span className="font-semibold whitespace-nowrap">{formatBRL(withdrawn)}</span>
+            </div>
+            <div className="h-px bg-white/20" />
+            <div className="flex justify-between gap-2 items-baseline pt-1">
+              <span className="text-sm font-semibold">Disponível para saque</span>
+              <span className="text-lg sm:text-xl font-bold whitespace-nowrap">{formatBRL(available)}</span>
+            </div>
           </div>
         </div>
       </div>
