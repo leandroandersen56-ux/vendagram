@@ -112,7 +112,12 @@ export default function PartnerRevenue() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-3">
-        <h1 className="text-xl font-bold text-[#F0F9FF]">💰 Faturamento Detalhado</h1>
+        <div className="flex items-center gap-2.5">
+          <div className="h-9 w-9 rounded-xl bg-[#10B981]/15 border border-[#10B981]/25 flex items-center justify-center shrink-0">
+            <DollarSign className="h-4 w-4 text-[#10B981]" />
+          </div>
+          <h1 className="text-xl font-bold text-[#F0F9FF] tracking-tight">Faturamento Detalhado</h1>
+        </div>
         <div className="flex gap-2">
           {(["7d", "30d", "90d"] as Period[]).map((p) => (
             <button

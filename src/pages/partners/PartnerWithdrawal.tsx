@@ -97,7 +97,12 @@ export default function PartnerWithdrawal() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-bold text-[#F0F9FF]">💸 Meu Saque</h1>
+      <div className="flex items-center gap-2.5">
+        <div className="h-9 w-9 rounded-xl bg-[#0ea5e9]/15 border border-[#0ea5e9]/25 flex items-center justify-center shrink-0">
+          <Wallet className="h-4 w-4 text-[#0ea5e9]" />
+        </div>
+        <h1 className="text-xl font-bold text-[#F0F9FF] tracking-tight">Meu Saque</h1>
+      </div>
 
       {/* Balance card */}
       <div className="bg-[#142952] rounded-xl border border-[rgba(14,165,233,0.15)] p-6">

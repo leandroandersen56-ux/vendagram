@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase-custom-client";
 import { usePartner } from "./PartnerGuard";
 import { useAuth } from "@/contexts/AuthContext";
-import { TrendingUp, DollarSign, Building2, Wallet, Package, Eye, Users } from "lucide-react";
+import { TrendingUp, DollarSign, Building2, Wallet, Package, Eye, Users, Sparkles, PiggyBank, Receipt, Landmark } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 import { format, subDays, formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -197,9 +197,14 @@ export default function PartnerDashboard() {
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      <div>
-        <h1 className="text-lg sm:text-xl font-bold text-[#F0F9FF]">Olá, {partner.name} 👋</h1>
-        <p className="text-xs sm:text-sm text-[#7DD3FC]">Seu dashboard financeiro — dados em tempo real</p>
+      <div className="flex items-center gap-2.5 flex-wrap">
+        <div className="h-9 w-9 rounded-xl bg-[#0ea5e9]/15 border border-[#0ea5e9]/25 flex items-center justify-center shrink-0">
+          <Sparkles className="h-4 w-4 text-[#0ea5e9]" />
+        </div>
+        <div>
+          <h1 className="text-lg sm:text-xl font-bold text-[#F0F9FF] leading-tight">Olá, {partner.name}</h1>
+          <p className="text-xs sm:text-sm text-[#7DD3FC]">Seu dashboard financeiro — dados em tempo real</p>
+        </div>
       </div>
 
       {/* KPIs */}
@@ -207,15 +212,20 @@ export default function PartnerDashboard() {
         {kpis.map((kpi) => (
           <div key={kpi.label} className="bg-[#142952] rounded-xl border border-[rgba(14,165,233,0.15)] p-3 sm:p-5">
             <div className="flex items-center justify-between mb-2 sm:mb-3">
-              <span className="text-[10px] sm:text-[11px] text-[#7DD3FC] uppercase tracking-wider font-medium leading-tight">{kpi.label}</span>
-              <kpi.icon className="h-4 w-4 sm:h-5 sm:w-5 shrink-0 ml-1" style={{ color: kpi.color }} />
+              <span className="text-[10px] sm:text-[11px] text-[#7DD3FC] uppercase tracking-wider font-semibold leading-tight">{kpi.label}</span>
+              <div
+                className="h-7 w-7 rounded-lg flex items-center justify-center shrink-0"
+                style={{ background: `${kpi.color}1a`, border: `1px solid ${kpi.color}30` }}
+              >
+                <kpi.icon className="h-3.5 w-3.5" style={{ color: kpi.color }} />
+              </div>
             </div>
-            <p className="text-lg sm:text-2xl lg:text-[28px] font-black text-[#F0F9FF]">{kpi.value}</p>
-            {kpi.sub && <p className="text-[10px] sm:text-[11px] text-[#7DD3FC]/70 mt-1 leading-tight">{kpi.sub}</p>}
+            <p className="text-lg sm:text-2xl lg:text-[28px] font-bold text-[#F0F9FF] tracking-tight">{kpi.value}</p>
+            {kpi.sub && <p className="text-[10px] sm:text-[11px] text-[#7DD3FC]/70 mt-1 leading-tight font-medium">{kpi.sub}</p>}
             {kpi.action && (
               <button
                 onClick={() => navigate("/admintoplogin/saque")}
-                className="mt-2 text-xs text-[#0ea5e9] hover:text-[#7DD3FC] font-medium transition-colors"
+                className="mt-2 text-xs text-[#0ea5e9] hover:text-[#7DD3FC] font-semibold transition-colors"
               >
                 Sacar →
               </button>
@@ -225,31 +235,51 @@ export default function PartnerDashboard() {
       </div>
 
       {/* Split card — regra de lucro */}
-      <div className="bg-gradient-to-r from-[#0ea5e9] to-[#0369a1] rounded-xl p-4 sm:p-6 text-white">
-        <h3 className="font-bold text-base sm:text-lg mb-3 sm:mb-4 flex items-center gap-2">💰 Como funciona seu lucro</h3>
-        <div className="space-y-2 text-xs sm:text-sm">
-          <div className="flex justify-between gap-2">
-            <span>Total das suas vendas:</span>
-            <span className="font-bold whitespace-nowrap">{formatBRL(totalSales)}</span>
+      <div className="relative overflow-hidden bg-gradient-to-br from-[#0ea5e9] to-[#0369a1] rounded-2xl p-4 sm:p-6 text-white">
+        <div className="absolute -top-12 -right-12 h-48 w-48 rounded-full bg-white/10 blur-3xl pointer-events-none" />
+        <div className="relative">
+          <div className="flex items-center gap-2.5 mb-4">
+            <div className="h-9 w-9 rounded-xl bg-white/15 border border-white/20 flex items-center justify-center shrink-0">
+              <PiggyBank className="h-4 w-4 text-white" />
+            </div>
+            <h3 className="font-bold text-base sm:text-lg tracking-tight">Como funciona seu lucro</h3>
           </div>
-          <div className="h-px bg-white/20" />
-          <div className="flex justify-between gap-2">
-            <span>📊 Taxa da plataforma (10%):</span>
-            <span className="font-semibold whitespace-nowrap">{formatBRL(totalSales * 0.10)}</span>
-          </div>
-          <div className="flex justify-between gap-2">
-            <span>💰 Seu lucro (10% da venda):</span>
-            <span className="font-semibold whitespace-nowrap">{formatBRL(partnerProfit)}</span>
-          </div>
-          <div className="h-px bg-white/20" />
-          <div className="flex justify-between gap-2">
-            <span>🏦 Já sacado:</span>
-            <span className="font-semibold whitespace-nowrap">{formatBRL(withdrawn)}</span>
-          </div>
-          <div className="h-px bg-white/20" />
-          <div className="flex justify-between gap-2 text-sm sm:text-base font-bold">
-            <span>Disponível para saque:</span>
-            <span className="whitespace-nowrap">{formatBRL(available)}</span>
+          <div className="space-y-2.5 text-xs sm:text-sm">
+            <div className="flex justify-between items-center gap-2">
+              <span className="font-medium text-white/90 inline-flex items-center gap-2">
+                <DollarSign className="h-3.5 w-3.5 text-white/70" />
+                Total das suas vendas
+              </span>
+              <span className="font-bold whitespace-nowrap">{formatBRL(totalSales)}</span>
+            </div>
+            <div className="h-px bg-white/20" />
+            <div className="flex justify-between items-center gap-2">
+              <span className="font-medium text-white/90 inline-flex items-center gap-2">
+                <Receipt className="h-3.5 w-3.5 text-white/70" />
+                Taxa da plataforma (10%)
+              </span>
+              <span className="font-semibold whitespace-nowrap">{formatBRL(totalSales * 0.10)}</span>
+            </div>
+            <div className="flex justify-between items-center gap-2">
+              <span className="font-medium text-white/90 inline-flex items-center gap-2">
+                <TrendingUp className="h-3.5 w-3.5 text-white/70" />
+                Seu lucro (10% da venda)
+              </span>
+              <span className="font-semibold whitespace-nowrap">{formatBRL(partnerProfit)}</span>
+            </div>
+            <div className="h-px bg-white/20" />
+            <div className="flex justify-between items-center gap-2">
+              <span className="font-medium text-white/90 inline-flex items-center gap-2">
+                <Landmark className="h-3.5 w-3.5 text-white/70" />
+                Já sacado
+              </span>
+              <span className="font-semibold whitespace-nowrap">{formatBRL(withdrawn)}</span>
+            </div>
+            <div className="h-px bg-white/20" />
+            <div className="flex justify-between items-baseline gap-2 pt-1">
+              <span className="text-sm sm:text-base font-bold">Disponível para saque</span>
+              <span className="text-base sm:text-lg font-bold whitespace-nowrap">{formatBRL(available)}</span>
+            </div>
           </div>
         </div>
       </div>

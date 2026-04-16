@@ -163,7 +163,12 @@ export default function PartnerPerformance() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-bold text-[#F0F9FF]">📈 Desempenho</h1>
+      <div className="flex items-center gap-2.5">
+        <div className="h-9 w-9 rounded-xl bg-[#0ea5e9]/15 border border-[#0ea5e9]/25 flex items-center justify-center shrink-0">
+          <TrendingUp className="h-4 w-4 text-[#0ea5e9]" />
+        </div>
+        <h1 className="text-xl font-bold text-[#F0F9FF] tracking-tight">Desempenho</h1>
+      </div>
 
       {/* Metrics */}
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
