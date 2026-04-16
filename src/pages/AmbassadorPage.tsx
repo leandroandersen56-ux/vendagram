@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Copy, Share2, Loader2, Link2, Users, TrendingUp, DollarSign, Crown, UserPlus, Zap, Upload, ImagePlus, X, CheckCircle2, Clock, XCircle, ShieldCheck } from "lucide-react";
+import { Copy, Share2, Loader2, Link2, Users, TrendingUp, DollarSign, Crown, UserPlus, Zap, Upload, ImagePlus, X, CheckCircle2, Clock, XCircle, ShieldCheck, ArrowRight, Infinity, Banknote, BarChart3, Gift } from "lucide-react";
 import DesktopPageShell from "@/components/DesktopPageShell";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -96,19 +96,6 @@ export default function AmbassadorPage() {
     setLoading(false);
   };
 
-  const affiliateLink = profile?.referral_code ? `froiv.com?ref=${profile.referral_code}` : "";
-
-  const handleCopyAffiliate = () => {
-    navigator.clipboard.writeText(`https://${affiliateLink}`);
-    toast.success("Link copiado!");
-  };
-
-  const handleShareAffiliate = () => {
-    if (navigator.share) {
-      navigator.share({ title: "Froiv", text: "Cadastre-se na Froiv!", url: `https://${affiliateLink}` });
-    } else handleCopyAffiliate();
-  };
-
   const ambassadorLink = ambassador ? `froiv.com?amb=${ambassador.code}` : "";
 
   const handleCopyAmb = () => {
@@ -185,7 +172,6 @@ export default function AmbassadorPage() {
       toast.error("Erro ao enviar solicitação");
     } else {
       toast.success("Solicitação enviada! Analisaremos em breve.");
-      // Notify admins
       await supabase.from("notifications").insert({
         user_id: "b78c563a-41eb-4936-8747-5e939b5ef848",
         title: "📋 Nova solicitação de Embaixador",
@@ -199,7 +185,7 @@ export default function AmbassadorPage() {
 
   if (loading) {
     return (
-      <DesktopPageShell title="Indique & Ganhe">
+      <DesktopPageShell title="Programa Embaixador">
         <div className="flex justify-center py-20">
           <Loader2 className="h-6 w-6 animate-spin text-primary" />
         </div>
@@ -208,60 +194,46 @@ export default function AmbassadorPage() {
   }
 
   return (
-    <DesktopPageShell title="Indique & Ganhe">
+    <DesktopPageShell title="Programa Embaixador">
       <div className="space-y-4">
-        {/* SECTION 1: Affiliate Link (for everyone) */}
-        <div className="bg-card rounded-xl border border-border p-5">
-          <div className="flex items-center gap-2.5 mb-3">
-            <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
-              <Link2 className="h-5 w-5 text-primary" />
-            </div>
-            <div>
-              <h3 className="text-sm font-semibold text-foreground">Seu Link de Indicação</h3>
-              <p className="text-[11px] text-muted-foreground">Compartilhe e ganhe bônus quando indicados comprarem</p>
-            </div>
-          </div>
 
-          {affiliateLink && (
-            <div className="bg-muted/30 rounded-xl px-4 py-3 flex items-center gap-2 border border-border">
-              <Link2 className="h-4 w-4 text-muted-foreground shrink-0" />
-              <p className="text-sm font-mono flex-1 truncate text-foreground">{affiliateLink}</p>
-              <button onClick={handleCopyAffiliate} className="h-8 w-8 rounded-lg bg-primary/10 hover:bg-primary/20 flex items-center justify-center transition-colors">
-                <Copy className="h-4 w-4 text-primary" />
-              </button>
-              <button onClick={handleShareAffiliate} className="h-8 w-8 rounded-lg bg-primary/10 hover:bg-primary/20 flex items-center justify-center transition-colors">
-                <Share2 className="h-4 w-4 text-primary" />
-              </button>
+        {/* ===== HERO BANNER ===== */}
+        <div className="relative overflow-hidden rounded-2xl" style={{ background: "linear-gradient(135deg, #2D6FF0 0%, #1B4FBF 50%, #0D2E80 100%)" }}>
+          <div className="absolute top-0 right-0 w-40 h-40 rounded-full opacity-10" style={{ background: "radial-gradient(circle, #fff 0%, transparent 70%)", transform: "translate(30%, -30%)" }} />
+          <div className="absolute bottom-0 left-0 w-24 h-24 rounded-full opacity-5" style={{ background: "radial-gradient(circle, #fff 0%, transparent 70%)", transform: "translate(-30%, 30%)" }} />
+          <div className="relative z-10 p-6 sm:p-8 text-center">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/15 backdrop-blur-sm mb-4">
+              <Crown className="h-8 w-8 text-yellow-300" />
             </div>
-          )}
+            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Programa Embaixador Froiv</h1>
+            <p className="text-white/80 text-base sm:text-lg max-w-md mx-auto">
+              Ganhe dinheiro indicando vendedores
+            </p>
+          </div>
         </div>
 
-        {/* SECTION 2: Ambassador Dashboard (if approved) */}
+        {/* ===== AMBASSADOR DASHBOARD (if approved) ===== */}
         {ambassador && (
           <>
-            <div className="relative overflow-hidden rounded-2xl p-6" style={{ background: "linear-gradient(135deg, #2D6FF0 0%, #1B4FBF 50%, #1340A0 100%)" }}>
-              <div className="absolute top-0 right-0 w-32 h-32 rounded-full opacity-10" style={{ background: "radial-gradient(circle, #fff 0%, transparent 70%)", transform: "translate(30%, -30%)" }} />
-              <div className="relative z-10">
-                <div className="flex items-center gap-2.5 mb-1.5">
-                  <div className="w-9 h-9 rounded-xl bg-white/15 flex items-center justify-center backdrop-blur-sm">
-                    <Crown className="h-5 w-5 text-yellow-300" />
-                  </div>
-                  <div>
-                    <p className="text-lg font-bold text-white tracking-tight">Embaixador Froiv</p>
-                    <Badge className="bg-yellow-400/20 text-yellow-300 border-0 text-[10px]">3% comissão vitalícia</Badge>
-                  </div>
+            <div className="bg-card rounded-xl border border-border p-5">
+              <div className="flex items-center gap-2.5 mb-3">
+                <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <Link2 className="h-5 w-5 text-primary" />
                 </div>
-
-                <div className="mt-4 bg-white/10 backdrop-blur-sm rounded-xl px-4 py-3 flex items-center gap-2 border border-white/10">
-                  <Link2 className="h-4 w-4 text-white/50 shrink-0" />
-                  <p className="text-sm font-mono flex-1 truncate text-white/90">{ambassadorLink}</p>
-                  <button onClick={handleCopyAmb} className="h-8 w-8 rounded-lg bg-white/15 hover:bg-white/25 flex items-center justify-center transition-colors">
-                    <Copy className="h-4 w-4 text-white" />
-                  </button>
-                  <button onClick={handleShareAmb} className="h-8 w-8 rounded-lg bg-white/15 hover:bg-white/25 flex items-center justify-center transition-colors">
-                    <Share2 className="h-4 w-4 text-white" />
-                  </button>
+                <div>
+                  <h3 className="text-sm font-semibold text-foreground">Seu Link de Embaixador</h3>
+                  <Badge className="bg-yellow-400/20 text-yellow-600 border-0 text-[10px]">Comissão vitalícia</Badge>
                 </div>
+              </div>
+              <div className="bg-muted/30 rounded-xl px-4 py-3 flex items-center gap-2 border border-border">
+                <Link2 className="h-4 w-4 text-muted-foreground shrink-0" />
+                <p className="text-sm font-mono flex-1 truncate text-foreground">{ambassadorLink}</p>
+                <button onClick={handleCopyAmb} className="h-8 w-8 rounded-lg bg-primary/10 hover:bg-primary/20 flex items-center justify-center transition-colors">
+                  <Copy className="h-4 w-4 text-primary" />
+                </button>
+                <button onClick={handleShareAmb} className="h-8 w-8 rounded-lg bg-primary/10 hover:bg-primary/20 flex items-center justify-center transition-colors">
+                  <Share2 className="h-4 w-4 text-primary" />
+                </button>
               </div>
             </div>
 
@@ -294,9 +266,7 @@ export default function AmbassadorPage() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-[13px] font-medium text-foreground truncate">{r.profile?.name || "Vendedor"}</p>
-                        <p className="text-[11px] text-muted-foreground">
-                          Desde {new Date(r.created_at).toLocaleDateString("pt-BR")}
-                        </p>
+                        <p className="text-[11px] text-muted-foreground">Desde {new Date(r.created_at).toLocaleDateString("pt-BR")}</p>
                       </div>
                     </div>
                   ))}
@@ -331,196 +301,197 @@ export default function AmbassadorPage() {
           </>
         )}
 
-        {/* SECTION 3: Ambassador Application (if not yet ambassador) */}
-        {!ambassador && (
-          <div className="relative overflow-hidden rounded-2xl border border-border">
-            {/* Header */}
-            <div className="p-5 pb-0" style={{ background: "linear-gradient(135deg, #2D6FF0 0%, #1B4FBF 100%)" }}>
-              <div className="text-center pb-5">
-                <Crown className="h-10 w-10 text-yellow-300 mx-auto mb-2" />
-                <h2 className="text-xl font-bold text-white mb-1">Programa Embaixador Froiv</h2>
-                <p className="text-white/80 text-[13px] max-w-xs mx-auto">
-                  Ganhe <span className="text-yellow-300 font-bold">3% de comissão vitalícia</span> em cada venda dos vendedores que você indicar
-                </p>
-              </div>
-            </div>
-
-            <div className="bg-card p-5 space-y-4">
-              {/* Application status */}
-              {application?.status === "pending" && (
-                <div className="flex items-center gap-3 bg-warning/10 text-warning rounded-xl px-4 py-3 border border-warning/20">
-                  <Clock className="h-5 w-5 shrink-0" />
-                  <div>
-                    <p className="text-sm font-semibold">Solicitação em análise</p>
-                    <p className="text-[11px] opacity-80">Enviada em {new Date(application.created_at).toLocaleDateString("pt-BR")}. Entraremos em contato pelo WhatsApp.</p>
-                  </div>
-                </div>
-              )}
-
-              {application?.status === "rejected" && (
-                <div className="flex items-center gap-3 bg-destructive/10 text-destructive rounded-xl px-4 py-3 border border-destructive/20">
-                  <XCircle className="h-5 w-5 shrink-0" />
-                  <div>
-                    <p className="text-sm font-semibold">Solicitação não aprovada</p>
-                    <p className="text-[11px] opacity-80">{application.admin_notes || "Você pode enviar uma nova solicitação."}</p>
-                  </div>
-                </div>
-              )}
-
-              {/* How it works */}
-              <div>
-                <h3 className="text-sm font-semibold text-foreground mb-3">Como funciona</h3>
-                {[
-                  { text: "Comprove que é admin de grupos e tem vendas aprovadas", icon: ShieldCheck, color: "#2D6FF0" },
-                  { text: "Aprovamos sua conta e você recebe o link de embaixador", icon: CheckCircle2, color: "#7C3AED" },
-                  { text: "Ganhe 3% de cada venda dos vendedores indicados — para sempre", icon: DollarSign, color: "#00A650" },
-                ].map((step, i) => (
-                  <div key={i} className="flex gap-3 items-center mb-3 last:mb-0">
-                    <div className="h-9 w-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: `${step.color}12` }}>
-                      <step.icon className="h-4 w-4" style={{ color: step.color }} />
-                    </div>
-                    <div>
-                      <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wide">Passo {i + 1}</p>
-                      <p className="text-[13px] text-foreground font-medium">{step.text}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Simulation */}
-              <div className="bg-muted/30 rounded-xl p-4 border border-border">
-                <h4 className="text-[13px] font-semibold text-foreground mb-2">💰 Simulação de ganhos</h4>
-                <div className="space-y-1.5 text-[13px]">
-                  <div className="flex justify-between text-muted-foreground">
-                    <span>5 vendedores × R$ 2.000/mês</span>
-                    <span className="text-success font-bold">R$ 300/mês</span>
-                  </div>
-                  <div className="flex justify-between text-muted-foreground">
-                    <span>10 vendedores × R$ 2.000/mês</span>
-                    <span className="text-success font-bold">R$ 600/mês</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Application Form */}
-              {application?.status !== "pending" && (
-                <div className="space-y-4 pt-2">
-                  <div className="border-t border-border pt-4">
-                    <h3 className="text-sm font-semibold text-foreground mb-1">Solicitar aprovação</h3>
-                    <p className="text-[11px] text-muted-foreground mb-4">
-                      Preencha seus dados reais e envie prints comprovando que é admin de grupos e tem vendas realizadas.
-                    </p>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div className="space-y-1.5">
-                        <Label className="text-[12px] text-muted-foreground">Nome completo *</Label>
-                        <Input
-                          value={appName}
-                          onChange={(e) => setAppName(e.target.value)}
-                          placeholder="Seu nome real"
-                          className="bg-muted/30 border-border h-10"
-                        />
-                      </div>
-                      <div className="space-y-1.5">
-                        <Label className="text-[12px] text-muted-foreground">Email *</Label>
-                        <Input
-                          value={appEmail}
-                          onChange={(e) => setAppEmail(e.target.value)}
-                          placeholder="email@exemplo.com"
-                          type="email"
-                          className="bg-muted/30 border-border h-10"
-                        />
-                      </div>
-                      <div className="space-y-1.5 sm:col-span-2">
-                        <Label className="text-[12px] text-muted-foreground">WhatsApp *</Label>
-                        <Input
-                          value={appWhatsapp}
-                          onChange={(e) => setAppWhatsapp(formatPhone(e.target.value))}
-                          placeholder="(00) 00000-0000"
-                          maxLength={15}
-                          className="bg-muted/30 border-border h-10"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Screenshot uploads */}
-                    <div className="mt-4 space-y-2">
-                      <Label className="text-[12px] text-muted-foreground">
-                        Prints de comprovação * <span className="text-[10px]">(admin de grupo + vendas aprovadas)</span>
-                      </Label>
-
-                      <input
-                        ref={fileRef}
-                        type="file"
-                        accept="image/*"
-                        multiple
-                        className="hidden"
-                        onChange={handleUploadScreenshot}
-                      />
-
-                      {appScreenshots.length > 0 && (
-                        <div className="grid grid-cols-3 gap-2">
-                          {appScreenshots.map((url, idx) => (
-                            <div key={idx} className="relative aspect-video rounded-lg overflow-hidden border border-border bg-muted/20">
-                              <img src={url} alt="" className="w-full h-full object-cover" />
-                              <button
-                                onClick={() => removeScreenshot(idx)}
-                                className="absolute top-1 right-1 h-5 w-5 bg-black/60 rounded-full flex items-center justify-center"
-                              >
-                                <X className="h-3 w-3 text-white" />
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-
-                      <button
-                        onClick={() => fileRef.current?.click()}
-                        disabled={uploading}
-                        className="w-full border-2 border-dashed border-border rounded-xl py-4 flex flex-col items-center gap-1.5 text-muted-foreground hover:border-primary/50 hover:text-primary transition-colors"
-                      >
-                        {uploading ? (
-                          <Loader2 className="h-5 w-5 animate-spin" />
-                        ) : (
-                          <ImagePlus className="h-5 w-5" />
-                        )}
-                        <span className="text-[12px] font-medium">
-                          {uploading ? "Enviando..." : "Adicionar prints"}
-                        </span>
-                      </button>
-                    </div>
-
-                    <Button
-                      variant="hero"
-                      className="w-full mt-4"
-                      onClick={handleSubmitApplication}
-                      disabled={submitting || !appName.trim() || !appEmail.trim() || !appWhatsapp.trim() || appScreenshots.length === 0}
-                    >
-                      {submitting ? (
-                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                      ) : (
-                        <Upload className="h-4 w-4 mr-2" />
-                      )}
-                      Enviar solicitação de Embaixador
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Info section */}
+        {/* ===== HOW IT WORKS ===== */}
         <div className="bg-card rounded-xl border border-border p-5">
-          <h3 className="text-sm font-semibold text-foreground mb-3">💰 Como funciona a comissão</h3>
-          <div className="text-[13px] text-muted-foreground space-y-1.5">
-            <p>Venda de <span className="text-foreground font-medium">R$ 100</span>:</p>
-            <p>→ Vendedor recebe: R$ 90</p>
-            <p>→ Froiv fica com: R$ 7</p>
-            <p>→ Embaixador ganha: <span className="text-success font-bold">R$ 3</span></p>
-            <p className="text-[11px] mt-2 text-muted-foreground/70">A comissão sai da taxa da plataforma. O vendedor não paga nada a mais.</p>
+          <h2 className="text-base font-bold text-foreground mb-1">Como funciona?</h2>
+          <p className="text-[13px] text-muted-foreground leading-relaxed">
+            Você recebe um link exclusivo de embaixador. Todo vendedor que se cadastrar na Froiv pelo seu link fica vinculado a você <span className="font-semibold text-foreground">para sempre</span>.
+          </p>
+          <p className="text-[13px] text-muted-foreground leading-relaxed mt-2">
+            Cada vez que esse vendedor realizar uma venda na plataforma, você ganha <span className="font-semibold text-primary">3% do valor da venda</span> automaticamente na sua carteira.
+          </p>
+        </div>
+
+        {/* ===== EXAMPLE ===== */}
+        <div className="bg-card rounded-xl border border-border p-5">
+          <h2 className="text-base font-bold text-foreground mb-3 flex items-center gap-2">
+            <DollarSign className="h-5 w-5 text-success" />
+            Exemplo prático
+          </h2>
+          <p className="text-[13px] text-muted-foreground mb-3">Venda de <span className="font-bold text-foreground">R$ 100</span>:</p>
+          <div className="space-y-2">
+            {[
+              { label: "Vendedor recebe", value: "R$ 90", color: "text-foreground" },
+              { label: "Froiv fica com", value: "R$ 7", color: "text-muted-foreground" },
+              { label: "Você (embaixador) ganha", value: "R$ 3", color: "text-success font-bold" },
+            ].map((row) => (
+              <div key={row.label} className="flex items-center gap-2 text-[13px]">
+                <ArrowRight className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                <span className="text-muted-foreground">{row.label}:</span>
+                <span className={row.color}>{row.value}</span>
+              </div>
+            ))}
+          </div>
+          <p className="text-[11px] text-muted-foreground/70 mt-3 border-t border-border pt-3">
+            O vendedor não paga nada a mais. A comissão sai da taxa da plataforma.
+          </p>
+        </div>
+
+        {/* ===== SIMULATION ===== */}
+        <div className="bg-card rounded-xl border border-border p-5">
+          <h2 className="text-base font-bold text-foreground mb-3 flex items-center gap-2">
+            <BarChart3 className="h-5 w-5 text-primary" />
+            Simulação real
+          </h2>
+          <div className="space-y-3">
+            <div className="bg-muted/30 rounded-xl p-4 border border-border">
+              <p className="text-[13px] text-muted-foreground">Se indicar <span className="font-bold text-foreground">5 vendedores</span> que vendem R$ 2.000/mês cada:</p>
+              <p className="text-xl font-bold text-success mt-1">R$ 300/mês <span className="text-[12px] font-normal text-muted-foreground">sem fazer nada</span></p>
+            </div>
+            <div className="bg-muted/30 rounded-xl p-4 border border-border">
+              <p className="text-[13px] text-muted-foreground">Indicou <span className="font-bold text-foreground">10 vendedores</span> ativos?</p>
+              <p className="text-xl font-bold text-success mt-1">R$ 600/mês <span className="text-[12px] font-normal text-muted-foreground">de renda passiva</span></p>
+            </div>
           </div>
         </div>
+
+        {/* ===== RULES ===== */}
+        <div className="bg-card rounded-xl border border-border p-5">
+          <h2 className="text-base font-bold text-foreground mb-3 flex items-center gap-2">
+            <CheckCircle2 className="h-5 w-5 text-primary" />
+            Regras
+          </h2>
+          <div className="space-y-2.5">
+            {[
+              { icon: Infinity, text: "Comissão vitalícia — não expira nunca" },
+              { icon: Zap, text: "Sem limite de ganhos ou indicações" },
+              { icon: Banknote, text: "Pagamento automático na carteira" },
+              { icon: BarChart3, text: "Você acompanha tudo no Painel do Embaixador" },
+              { icon: Gift, text: "Saque via Pix quando quiser" },
+            ].map((rule, i) => (
+              <div key={i} className="flex items-center gap-3 text-[13px]">
+                <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                  <rule.icon className="h-3.5 w-3.5 text-primary" />
+                </div>
+                <span className="text-foreground">{rule.text}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ===== HOW TO PARTICIPATE ===== */}
+        <div className="bg-card rounded-xl border border-border p-5">
+          <h2 className="text-base font-bold text-foreground mb-3 flex items-center gap-2">
+            <Link2 className="h-5 w-5 text-primary" />
+            Como participar?
+          </h2>
+          <div className="space-y-3">
+            {[
+              "Acesse a Froiv e ative seu link de embaixador",
+              "Compartilhe nos seus grupos",
+              "Pronto — cada venda dos indicados te gera comissão",
+            ].map((step, i) => (
+              <div key={i} className="flex items-start gap-3">
+                <div className="h-7 w-7 rounded-full bg-primary flex items-center justify-center shrink-0">
+                  <span className="text-[12px] font-bold text-white">{i + 1}</span>
+                </div>
+                <p className="text-[13px] text-foreground pt-1">{step}</p>
+              </div>
+            ))}
+          </div>
+          <p className="text-[13px] text-muted-foreground mt-4 pt-3 border-t border-border">
+            Quanto mais vendedores ativos você trouxer, mais você ganha. Simples assim. 💙
+          </p>
+        </div>
+
+        {/* ===== APPLICATION / STATUS ===== */}
+        {!ambassador && (
+          <div className="bg-card rounded-xl border-2 border-primary/20 p-5">
+            {/* Application status */}
+            {application?.status === "pending" && (
+              <div className="flex items-center gap-3 bg-warning/10 text-warning rounded-xl px-4 py-3 border border-warning/20 mb-4">
+                <Clock className="h-5 w-5 shrink-0" />
+                <div>
+                  <p className="text-sm font-semibold">Solicitação em análise</p>
+                  <p className="text-[11px] opacity-80">Enviada em {new Date(application.created_at).toLocaleDateString("pt-BR")}. Entraremos em contato pelo WhatsApp.</p>
+                </div>
+              </div>
+            )}
+
+            {application?.status === "rejected" && (
+              <div className="flex items-center gap-3 bg-destructive/10 text-destructive rounded-xl px-4 py-3 border border-destructive/20 mb-4">
+                <XCircle className="h-5 w-5 shrink-0" />
+                <div>
+                  <p className="text-sm font-semibold">Solicitação não aprovada</p>
+                  <p className="text-[11px] opacity-80">{application.admin_notes || "Você pode enviar uma nova solicitação."}</p>
+                </div>
+              </div>
+            )}
+
+            {application?.status !== "pending" && (
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-base font-bold text-foreground mb-1">Quero ser Embaixador!</h3>
+                  <p className="text-[11px] text-muted-foreground">
+                    Preencha seus dados e envie prints comprovando que é admin de grupos e tem vendas realizadas.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="space-y-1.5">
+                    <Label className="text-[12px] text-muted-foreground">Nome completo *</Label>
+                    <Input value={appName} onChange={(e) => setAppName(e.target.value)} placeholder="Seu nome real" className="bg-muted/30 border-border h-10" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-[12px] text-muted-foreground">Email *</Label>
+                    <Input value={appEmail} onChange={(e) => setAppEmail(e.target.value)} placeholder="email@exemplo.com" type="email" className="bg-muted/30 border-border h-10" />
+                  </div>
+                  <div className="space-y-1.5 sm:col-span-2">
+                    <Label className="text-[12px] text-muted-foreground">WhatsApp *</Label>
+                    <Input value={appWhatsapp} onChange={(e) => setAppWhatsapp(formatPhone(e.target.value))} placeholder="(00) 00000-0000" maxLength={15} className="bg-muted/30 border-border h-10" />
+                  </div>
+                </div>
+
+                {/* Screenshot uploads */}
+                <div className="space-y-2">
+                  <Label className="text-[12px] text-muted-foreground">
+                    Prints de comprovação * <span className="text-[10px]">(admin de grupo + vendas aprovadas)</span>
+                  </Label>
+
+                  <input ref={fileRef} type="file" accept="image/*" multiple className="hidden" onChange={handleUploadScreenshot} />
+
+                  {appScreenshots.length > 0 && (
+                    <div className="grid grid-cols-3 gap-2">
+                      {appScreenshots.map((url, idx) => (
+                        <div key={idx} className="relative aspect-video rounded-lg overflow-hidden border border-border bg-muted/20">
+                          <img src={url} alt="" className="w-full h-full object-cover" />
+                          <button onClick={() => removeScreenshot(idx)} className="absolute top-1 right-1 h-5 w-5 bg-black/60 rounded-full flex items-center justify-center">
+                            <X className="h-3 w-3 text-white" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  <button onClick={() => fileRef.current?.click()} disabled={uploading} className="w-full border-2 border-dashed border-border rounded-xl py-4 flex flex-col items-center gap-1.5 text-muted-foreground hover:border-primary/50 hover:text-primary transition-colors">
+                    {uploading ? <Loader2 className="h-5 w-5 animate-spin" /> : <ImagePlus className="h-5 w-5" />}
+                    <span className="text-[12px] font-medium">{uploading ? "Enviando..." : "Adicionar prints"}</span>
+                  </button>
+                </div>
+
+                <Button
+                  variant="hero"
+                  className="w-full"
+                  onClick={handleSubmitApplication}
+                  disabled={submitting || !appName.trim() || !appEmail.trim() || !appWhatsapp.trim() || appScreenshots.length === 0}
+                >
+                  {submitting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Upload className="h-4 w-4 mr-2" />}
+                  Enviar solicitação de Embaixador
+                </Button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </DesktopPageShell>
   );
