@@ -1,7 +1,10 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Search, Bell, User, LogOut, LayoutDashboard, ShoppingBag, ShoppingCart, Loader2, Heart, Wallet, Settings, HelpCircle } from "lucide-react";
+import {
+  Search, Bell, User, LogOut, LayoutDashboard, ShoppingBag, ShoppingCart, Loader2, Heart, Wallet, Settings, HelpCircle,
+  Home, Store, Key, Package, Star, Clock, Gamepad2, Smartphone, Tag, Link2, Receipt, MessageCircle, Shield, ChevronRight
+} from "lucide-react";
 import { VerifiedBadge } from "@/components/VerifiedBadge";
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
