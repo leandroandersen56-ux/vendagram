@@ -2,9 +2,9 @@ import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 
-// Capture ambassador referral code from URL
+// Capture ambassador referral code from URL (?amb= or ?ref=)
 const params = new URLSearchParams(window.location.search);
-const ambCode = params.get("amb");
+const ambCode = params.get("amb") || params.get("ref");
 if (ambCode) {
   localStorage.setItem("froiv_amb_code", ambCode);
 }
