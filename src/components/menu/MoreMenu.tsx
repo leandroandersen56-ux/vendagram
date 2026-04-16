@@ -37,7 +37,7 @@ export default function MoreMenu({ open, onClose }: MoreMenuProps) {
       items: [
         { icon: Home, label: "Início", path: "/" },
         { icon: Store, label: "Central do Vendedor", path: "/vendedor", badge: { text: "NOVO", color: "bg-primary text-white" } },
-        { icon: Link2, label: "Programa de Afiliados", path: "/afiliados" },
+        
         { icon: HelpCircle, label: "Ajuda", path: "/ajuda" },
       ],
     },
@@ -60,7 +60,7 @@ export default function MoreMenu({ open, onClose }: MoreMenuProps) {
         { icon: Gamepad2, label: "Contas de Jogos", path: "/marketplace?cat=jogos" },
         { icon: Smartphone, label: "Redes Sociais", path: "/marketplace?cat=social" },
         { icon: Tag, label: "Ofertas do dia", path: "/marketplace?ofertas=1" },
-        { icon: Link2, label: "Programa de Afiliados", path: "/afiliados", badge: { text: "GANHA $", color: "bg-success text-white" } },
+        
       ],
     },
     {
@@ -176,18 +176,29 @@ export default function MoreMenu({ open, onClose }: MoreMenuProps) {
                       <ChevronRight className="h-4 w-4 text-[#CCC] shrink-0" />
                     </button>
                   ))}
-                  {/* Highlighted Ambassador CTA after first group */}
+                  {/* Affiliate + Ambassador CTA after first group */}
                   {gi === 0 && (
-                    <div className="px-5 py-2">
+                    <>
                       <button
-                        onClick={() => handleNav("/embaixador")}
-                        className="w-full flex items-center justify-center gap-2 h-11 rounded-xl text-sm font-semibold transition-all active:scale-[0.98]"
-                        style={{ background: "linear-gradient(135deg, #2D6FF0 0%, #1B4FBF 100%)", color: "#fff" }}
+                        className="w-full flex items-center gap-4 h-14 px-5 hover:bg-[#F8F8F8] active:bg-[#F0F0F0] transition-colors duration-100"
+                        onClick={() => handleNav("/afiliados")}
                       >
-                        <Crown className="h-4 w-4 text-yellow-300" />
-                        Torne-se um Embaixador
+                        <Link2 className="h-[22px] w-[22px] text-[#444] shrink-0" strokeWidth={1.5} />
+                        <span className="flex-1 text-left text-[15px] text-[#111]">Programa de Afiliados</span>
+                        <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-success text-white">GANHA $</span>
+                        <ChevronRight className="h-4 w-4 text-[#CCC] shrink-0" />
                       </button>
-                    </div>
+                      <div className="px-5 py-2">
+                        <button
+                          onClick={() => handleNav("/embaixador")}
+                          className="w-full flex items-center justify-center gap-2 h-11 rounded-xl text-sm font-semibold transition-all active:scale-[0.98]"
+                          style={{ background: "linear-gradient(135deg, #2D6FF0 0%, #1B4FBF 100%)", color: "#fff" }}
+                        >
+                          <Crown className="h-4 w-4 text-yellow-300" />
+                          Torne-se um Embaixador
+                        </button>
+                      </div>
+                    </>
                   )}
                   {gi < menuGroups.length - 1 && <div className="h-px bg-[#F0F0F0] mx-5" />}
                 </div>
