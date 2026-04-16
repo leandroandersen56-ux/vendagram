@@ -145,9 +145,27 @@ export default function PartnerDashboard() {
         console.error("[PartnerDashboard] recent users error:", error);
         return [];
       }
-      return data ?? [];
+     return data ?? [];
     },
     enabled: !!authUserId,
+    refetchInterval: 60_000,
+  });
+
+  // Últimos produtos cadastrados na plataforma (apenas visualização)
+  const { data: recentListings = [] } = useQuery({
+    queryKey: ["partner-recent-listings"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("listings")
+        .select("id, title, price, status, category, screenshots, created_at")
+        .order("created_at", { ascending: false })
+        .limit(15);
+      if (error) {
+        console.error("[PartnerDashboard] recent listings error:", error);
+        return [];
+      }
+      return data ?? [];
+    },
     refetchInterval: 60_000,
   });
 
