@@ -10,6 +10,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { CheckCircle2, Star, Loader2, Camera, ShieldCheck } from "lucide-react";
+import { uploadImage } from "@/lib/upload-image";
 
 export default function PanelProfile() {
   const { user } = useAuth();
@@ -53,32 +54,17 @@ export default function PanelProfile() {
     const file = e.target.files?.[0];
     if (!file || !user?.id) return;
 
-    if (file.size > 2 * 1024 * 1024) {
-      toast({ title: "Arquivo muito grande", description: "Máximo 2MB", variant: "destructive" });
-      return;
-    }
-
     setUploadingAvatar(true);
-    const ext = file.name.split(".").pop();
-    const path = `${user.id}/avatar.${ext}`;
-
-    const { error: uploadError } = await supabase.storage
-      .from("avatars")
-      .upload(path, file, { upsert: true });
-
-    if (uploadError) {
-      toast({ title: "Erro no upload", description: uploadError.message, variant: "destructive" });
+    try {
+      const avatar_url = await uploadImage(file, { maxSizeMB: 5 });
+      await supabase.from("profiles").update({ avatar_url }).eq("user_id", user.id);
+      setProfile((p: any) => ({ ...p, avatar_url }));
+      toast({ title: "Foto atualizada!" });
+    } catch (err: any) {
+      toast({ title: "Erro no upload", description: err.message, variant: "destructive" });
+    } finally {
       setUploadingAvatar(false);
-      return;
     }
-
-    const { data: urlData } = supabase.storage.from("avatars").getPublicUrl(path);
-    const avatar_url = `${urlData.publicUrl}?t=${Date.now()}`;
-
-    await supabase.from("profiles").update({ avatar_url }).eq("user_id", user.id);
-    setProfile((p: any) => ({ ...p, avatar_url }));
-    toast({ title: "Foto atualizada!" });
-    setUploadingAvatar(false);
   };
 
   const handleSave = async () => {
