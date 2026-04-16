@@ -5,7 +5,7 @@ import { usePartner } from "./PartnerGuard";
 import { useAuth } from "@/contexts/AuthContext";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 import { subDays, format } from "date-fns";
-import { Download } from "lucide-react";
+import { Download, DollarSign } from "lucide-react";
 
 const PARTNER_LISTING_CUTOFF = "2026-04-13T00:00:00.000Z";
 
