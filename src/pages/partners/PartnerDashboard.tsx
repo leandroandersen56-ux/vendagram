@@ -145,9 +145,27 @@ export default function PartnerDashboard() {
         console.error("[PartnerDashboard] recent users error:", error);
         return [];
       }
-      return data ?? [];
+     return data ?? [];
     },
     enabled: !!authUserId,
+    refetchInterval: 60_000,
+  });
+
+  // Últimos produtos cadastrados na plataforma (apenas visualização)
+  const { data: recentListings = [] } = useQuery({
+    queryKey: ["partner-recent-listings"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("listings")
+        .select("id, title, price, status, category, screenshots, created_at")
+        .order("created_at", { ascending: false })
+        .limit(15);
+      if (error) {
+        console.error("[PartnerDashboard] recent listings error:", error);
+        return [];
+      }
+      return data ?? [];
+    },
     refetchInterval: 60_000,
   });
 
@@ -340,6 +358,46 @@ export default function PartnerDashboard() {
                 <span className="text-[10px] text-[#7DD3FC]/60 shrink-0 whitespace-nowrap">
                   {formatDistanceToNow(new Date(u.created_at), { addSuffix: true, locale: ptBR })}
                 </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Últimos produtos cadastrados (visualização) */}
+      <div className="bg-[#142952] rounded-xl border border-[rgba(14,165,233,0.15)] p-4 sm:p-5">
+        <div className="flex items-center justify-between mb-3 sm:mb-4">
+          <h3 className="text-sm font-semibold text-[#7DD3FC] flex items-center gap-2">
+            <Package className="h-4 w-4" />
+            Últimos Produtos Cadastrados ({recentListings.length})
+          </h3>
+          <span className="text-[10px] text-[#7DD3FC]/50">apenas visualização</span>
+        </div>
+        {recentListings.length === 0 ? (
+          <p className="text-[#7DD3FC]/50 text-sm text-center py-8">Nenhum produto cadastrado</p>
+        ) : (
+          <div className="space-y-1">
+            {recentListings.map((p: any) => (
+              <div key={p.id} className="flex items-center gap-2.5 py-2 px-2 sm:px-3 rounded-lg hover:bg-[rgba(14,165,233,0.05)] transition-colors">
+                <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-lg bg-[#0ea5e9]/10 overflow-hidden shrink-0 flex items-center justify-center">
+                  {p.screenshots?.[0] ? (
+                    <img src={p.screenshots[0]} alt="" className="h-full w-full object-cover" />
+                  ) : (
+                    <Package className="h-4 w-4 text-[#7DD3FC]/60" />
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs sm:text-sm text-[#F0F9FF] font-medium truncate">{p.title}</p>
+                  <p className="text-[10px] text-[#7DD3FC]/60 truncate">
+                    {p.category} · <span className={p.status === "active" ? "text-emerald-400" : "text-[#7DD3FC]/50"}>{p.status}</span>
+                  </p>
+                </div>
+                <div className="text-right shrink-0">
+                  <p className="text-xs sm:text-sm font-bold text-[#F0F9FF]">{formatBRL(Number(p.price))}</p>
+                  <p className="text-[10px] text-[#7DD3FC]/60 whitespace-nowrap">
+                    {formatDistanceToNow(new Date(p.created_at), { addSuffix: true, locale: ptBR })}
+                  </p>
+                </div>
               </div>
             ))}
           </div>
