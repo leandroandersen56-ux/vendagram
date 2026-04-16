@@ -46,7 +46,7 @@ export const TRUSTED_SELLER_LIST: TrustedSellerSeed[] = [
     name: "Eduardo Klunck",
     username: "eduardo",
     userId: "d7f85dfb-0f1d-4c58-9a64-0544ec5b158d",
-    avatarUrl: null,
+    avatarUrl: "https://yzwncktlibdfycqhvlqg.supabase.co/storage/v1/object/public/avatars/d7f85dfb-0f1d-4c58-9a64-0544ec5b158d/avatar.jpeg?t=1776494396000",
     sales: 31,
     rating: 4.8,
     bio: "Vendedor verificado da plataforma Froiv.",
