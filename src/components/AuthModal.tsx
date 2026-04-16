@@ -52,15 +52,21 @@ export default function AuthModal() {
     setLoading(true);
     try {
       if (mode === "register") {
+        const ambCode = localStorage.getItem("froiv_amb_code") || undefined;
         const { error } = await supabase.auth.signUp({
           email,
           password,
           options: {
-            data: { name: name || email.split("@")[0], role: selectedRole || "buyer" },
+            data: {
+              name: name || email.split("@")[0],
+              role: selectedRole || "buyer",
+              ...(ambCode ? { ambassador_code: ambCode } : {}),
+            },
             emailRedirectTo: window.location.origin,
           },
         });
         if (error) throw error;
+        if (ambCode) localStorage.removeItem("froiv_amb_code");
         toast.success("Conta criada! Verifique seu e-mail para confirmar.");
       } else {
         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
