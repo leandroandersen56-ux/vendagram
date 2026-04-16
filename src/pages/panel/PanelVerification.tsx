@@ -140,7 +140,11 @@ export default function PanelVerification() {
   };
 
   if (loading) {
-    return <div className="min-h-screen bg-[#F5F5F5]"><PageHeader title="Verificação de Conta" /><div className="flex justify-center pt-20"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div></div>;
+    return (
+      <DesktopPageShell title="Verificação de Conta" maxWidth="max-w-2xl">
+        <div className="flex justify-center pt-20"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>
+      </DesktopPageShell>
+    );
   }
 
   // Show existing request status
