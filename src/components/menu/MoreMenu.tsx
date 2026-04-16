@@ -194,7 +194,7 @@ export default function MoreMenu({ open, onClose }: MoreMenuProps) {
                           onClick={() => handleNav("/embaixador")}
                           className="w-full flex items-center justify-center gap-2 h-11 rounded-xl text-sm font-semibold transition-all active:scale-[0.98] bg-primary text-white"
                         >
-                          <Crown className="h-4 w-4 text-yellow-300" />
+                          <Crown className="h-4 w-4 text-white" />
                           Torne-se um Embaixador
                         </button>
                       </div>
