@@ -196,9 +196,9 @@ export default function PanelVerification() {
   const rejected = existing?.status === "rejected";
 
   return (
-    <div className="min-h-screen bg-[#F5F5F5] pb-20">
-      <PageHeader title="Verificação de Conta" />
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="p-4">
+    return (
+    <DesktopPageShell title="Verificação de Conta" maxWidth="max-w-2xl">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="p-4 sm:p-0">
       <p className="text-sm text-[#888] mb-4">
         Verifique sua identidade para receber o selo de vendedor verificado e aumentar a confiança dos compradores.
       </p>
