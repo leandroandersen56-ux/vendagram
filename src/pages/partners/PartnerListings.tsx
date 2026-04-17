@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabase-custom-client";
-import { supabase as cloudSupabase } from "@/integrations/supabase/client";
+import { fetchPartnerResource } from "@/lib/fetch-partner-resource";
 import { Package, Search, Eye } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -35,24 +34,11 @@ export default function PartnerListings() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
 
-  const { data: listings = [], isLoading } = useQuery({
+  const { data: listings = [], isLoading, error } = useQuery({
     queryKey: ["partner-all-listings-fn"],
-    queryFn: async () => {
-      // Usa edge function partner-data com service-role para ver TODOS os listings
-      const { data: sess } = await supabase.auth.getSession();
-      const token = sess.session?.access_token;
-      if (!token) return [];
-      const { data, error } = await cloudSupabase.functions.invoke("partner-data", {
-        body: { resource: "listings" },
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (error) {
-        console.error("[PartnerListings] fn error:", error);
-        return [];
-      }
-      return (data as any)?.data ?? [];
-    },
+    queryFn: () => fetchPartnerResource<any>("listings"),
     refetchInterval: 60_000,
+    retry: 1,
   });
 
   const filtered = listings.filter((l: any) => {
@@ -118,6 +104,11 @@ export default function PartnerListings() {
       <div className="bg-[#142952] rounded-xl border border-[rgba(14,165,233,0.15)] p-3 sm:p-5">
         {isLoading ? (
           <p className="text-[#7DD3FC]/50 text-sm text-center py-12">Carregando...</p>
+        ) : error ? (
+          <div className="text-center py-12 px-4">
+            <p className="text-rose-300 text-sm font-semibold">Falha ao carregar produtos</p>
+            <p className="text-[#7DD3FC]/60 text-xs mt-1">{error instanceof Error ? error.message : "Tente novamente em instantes."}</p>
+          </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-12">
             <Package className="h-10 w-10 text-[#7DD3FC]/30 mx-auto mb-3" />
