@@ -1,7 +1,6 @@
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabase-custom-client";
-import { supabase as cloudSupabase } from "@/integrations/supabase/client";
+import { fetchPartnerResource } from "@/lib/fetch-partner-resource";
 import { Users, Search, ShieldCheck, Mail, Calendar } from "lucide-react";
 import { format, formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -9,23 +8,11 @@ import { ptBR } from "date-fns/locale";
 export default function PartnerUsers() {
   const [search, setSearch] = useState("");
 
-  const { data: users = [], isLoading } = useQuery({
+  const { data: users = [], isLoading, error } = useQuery({
     queryKey: ["partner-users-list-fn"],
-    queryFn: async () => {
-      const { data: sess } = await supabase.auth.getSession();
-      const token = sess.session?.access_token;
-      if (!token) return [];
-      const { data, error } = await cloudSupabase.functions.invoke("partner-data", {
-        body: { resource: "users" },
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (error) {
-        console.error("[PartnerUsers] fn error:", error);
-        return [];
-      }
-      return (data as any)?.data ?? [];
-    },
+    queryFn: () => fetchPartnerResource<any>("users"),
     refetchInterval: 60_000,
+    retry: 1,
   });
 
   const filtered = useMemo(() => {
@@ -70,6 +57,11 @@ export default function PartnerUsers() {
       <div className="bg-[#142952] rounded-xl border border-[rgba(14,165,233,0.15)] overflow-hidden">
         {isLoading ? (
           <p className="text-[#7DD3FC]/50 text-sm text-center py-12">Carregando...</p>
+        ) : error ? (
+          <div className="text-center py-12 px-4">
+            <p className="text-rose-300 text-sm font-semibold">Falha ao carregar usuários</p>
+            <p className="text-[#7DD3FC]/60 text-xs mt-1">{error instanceof Error ? error.message : "Tente novamente em instantes."}</p>
+          </div>
         ) : filtered.length === 0 ? (
           <p className="text-[#7DD3FC]/50 text-sm text-center py-12">
             {search ? "Nenhum usuário encontrado para essa busca." : "Nenhum usuário cadastrado."}
